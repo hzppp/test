@@ -14,10 +14,18 @@
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
 		<view class="zw"></view>
-		<view class="fix-bottom-share-btn">
-			<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
-			<button class="zx-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">我要参与</button>
-			<view v-else class="zx-btn" @tap="formShow">我要参与</view>
+		<view class="operation-list">
+			<view class="type-a">				
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
+			</view>
+			<!-- <view class="type-b">
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+			</view> -->
+			<!-- <view class="type-c">
+				<button class="over-btn" hover-class="none">活动已结束</button>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -191,35 +199,58 @@
 		height: 100rpx;
 	}
 
-	.fix-bottom-share-btn {
-		position: fixed;
-		height: 100rpx;
-		width: 100%;
-		left: 0;
-		bottom: 0;
-		text-align: center;
-		font-weight: bold;
-		white-space: nowrap;
-
-		// overflow: hidden;
-		.share-btn {
-			overflow: initial;
-			width: 496rpx;
-			background: #ce1330;
-			.fixys;
-			// &.share-tip:before{
-			//     display: block;
-			//     .setbg(172rpx,65rpx,'20190909_6.png');
-			//     .pa(50%,-40rpx);
-			//     content: "";
-			//     transform: translate(-50%,0);
-			// }
+	.operation-list {
+			position: fixed;
+			z-index: 999;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 104rpx;
+			font-size: 32rpx;
+			padding-bottom: constant(safe-area-inset-bottom);
+			padding-bottom: env(safe-area-inset-bottom);
+			.type-a {
+				display: flex;
+				justify-content: space-between;
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.share-btn {
+					width: 236rpx;
+					height: 88rpx;
+					color: #fa8845;
+					border: 2rpx solid #fa8845;
+					border-radius: 44rpx;
+					box-sizing: border-box;
+				}
+				.enroll-btn {
+					width: 420rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}			
+			}
+			.type-b {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.share-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}
+			}
+			.type-c {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.over-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #cccccc;
+					border-radius: 44rpx;
+				}
+			}
 		}
-
-		.zx-btn {
-			.fixys;
-			width: 256rpx;
-			background: #f98100;
-		}
-	}
 </style>

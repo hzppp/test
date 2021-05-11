@@ -29,17 +29,8 @@
 				<view class="zw"></view>
 			</view>
 		</getFormidbox>
-		<view class="operation-list">
-			<view class="type-a">
-				<button class="share-btn" open-type="share" plain="true" hover-class="none">分享给好友</button>
-				<button class="enroll-btn" hover-class="none">报名活动</button>
-			</view>
-			<!-- <view class="type-b">
-				<button class="share-btn" open-type="share" plain="true" hover-class="none">分享给好友</button>
-			</view> -->
-			<!-- <view class="type-c">
-				<button class="over-btn" hover-class="none">活动已结束</button>
-			</view> -->
+		<view class="share-btn">
+			<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 		</view>
 	</view>
 </template>
@@ -181,58 +172,20 @@
 		height: 100rpx;
 	}
 
-	.operation-list {
+	.share-btn {
 		position: fixed;
+		width: 100%;
+		.tc;
 		z-index: 999;
 		left: 0;
 		bottom: 0;
-		width: 100%;
-		height: 104rpx;
-		font-size: 32rpx;
-		padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
-		.type-a {
-			display: flex;
-			justify-content: space-between;
-			padding: 0 32rpx;
-			box-sizing: border-box;
-			.share-btn {
-				width: 236rpx;
-				height: 88rpx;
-				color: #fa8845;
-				border: 2rpx solid #fa8845;
-				border-radius: 44rpx;
-				box-sizing: border-box;
-			}
-			.enroll-btn {
-				width: 420rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
-			}			
-		}
-		.type-b {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-			.share-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
-			}
-		}
-		.type-c {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-			.over-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #cccccc;
-				border-radius: 44rpx;
-			}
+		.seth(100rpx, 32rpx, #fff);
+		background: #ce1330;
+
+		button {
+			.pa(0, 0);
+			width: 100%;
+			height: 100%;
 		}
 	}
 
