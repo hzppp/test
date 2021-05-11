@@ -1,0 +1,149 @@
+// @imgURL:"https://www1.pcauto.com.cn/gz/20190715/dazhong/";
+@imgURL:"https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/";
+// @imgURL:"http://192.168.33.36/doc/xcx/audi/xcx_psd/img/";
+.shadow(){
+  box-shadow: 0 0 10rpx #f7f7f7;
+}
+.icon{
+	background: url('@{imgURL}icon.png');
+	background-size: 750rpx 750rpx;
+}
+.pa(@l;@t){
+	position: absolute;
+	left: @l;
+	top: @t;
+}
+.pf(@l;@t;@z){
+	position: fixed;
+	left: @l;
+	top:@t;
+	z-index: @z;
+}
+.setbg(@w;@h;@name){
+	width: @w;
+	height: @h;
+	background: url('@{imgURL}@{name}') 0 0 no-repeat;
+	background-size: 100% 100%;
+}
+.setIcon(@w;@h;@x;@y){
+	background: url('@{imgURL}icon.png');
+	background-size: 750rpx 750rpx;
+	background-origin: 0 0;
+  	width: @w;
+  	height: @h;
+  	background-position: (@x/(750-@w))*100% (@y/(750-@h))*100%;
+}
+.seth(@h;@size:24rpx;@c:#333){
+	height: @h;
+	line-height: @h;
+	font-size: @size;
+	color: @c;
+}
+.arc(@w){
+	width: @w;
+	height: @w;
+	border-radius: @w;
+}
+.ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.db(@t:top){
+	display: inline-block;
+	vertical-align: @t;
+}
+.dflex(@c:center,@b:space-between){
+	display: flex;
+	align-items: @c;
+	justify-content: @b;
+}
+.jb(@a;@b){
+	background: -webkit-linear-gradient(left, @a , @b);
+}
+.before(@w;@h){
+	&:before{
+		display: inline-block;
+		content: "";
+		width: @w;
+		height: @h;
+	}
+}
+.after(@w;@h){
+	&:after{
+		display: inline-block;
+		content: "";
+		width: @w;
+		height: @h;
+	}
+}
+.jt(@w;@h;@c;@deg){
+	&{
+		position: relative;
+	}
+	&:after{
+		display: block;
+		content: "";
+		width: @w;
+  		height: @h;
+  		border:1px solid @c;
+  		border-left: 0;
+  		border-bottom: 0;
+		position: absolute;
+		// transform: rotate(@deg);
+		right: 0px;
+		top: 50%;
+		// margin-top:- (@h/2);
+		transform: translate(0,-50%) rotate(@deg);
+	}
+}
+.mask{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	background: rgba(0,0,0,.6);
+	z-index: 8;
+}
+.tc{
+	text-align: center;
+}
+.yellow{
+	color: #fedb24;
+}
+.red{
+	color: #fd5248;
+}
+.fb{
+	font-weight: bold;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.close-btn{
+    position: absolute;
+    left: 50%;
+    bottom: -100rpx;
+    transform: translate(-50%,0%) rotate(45deg);
+    width: 64rpx;
+    height: 64rpx;
+    border-radius: 64rpx;
+    background: #6e6e6e;
+    &:before,&:after{
+        display: block;
+        content: "";
+        width: 28rpx;
+        height: 4rpx;
+        border-radius: 1rpx;
+        background: #fff;
+        .pa(50%,50%);
+        transform: translate(-50%,-50%);
+    }
+    &:after{
+        transform: translate(-50%,-50%) rotate(90deg);
+    }
+}

@@ -1,0 +1,77 @@
+@import (reference) 'public.less';
+.box{
+    padding: 0 32rpx 32rpx;
+}
+.scroll-view{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+.welfareActivity-top-banner-zw{
+    height: 20rpx;
+}
+.welfareActivity-top-banner{
+    .setbg(686rpx,186rpx,'welfareActivity_top_banner.png');
+    margin: 0 auto 30rpx;
+}
+.box-tit{
+    font-weight: bold;
+    .seth(95rpx,40rpx,#333);
+    .select-city{
+        font-weight: normal;
+        font-size: 24rpx;
+        color: #999;
+        padding-right: 32rpx;
+        float: right;
+        .jt(10rpx,10rpx,#999,135deg);
+        &:after{
+            right: 10rpx;
+        }
+    }
+}
+.welfareActivity-none{
+    .setbg(750rpx,375rpx,'welfareActivity1.png')
+}
+.activity-list-none{
+    .setbg(750rpx,375rpx,'welfareActivity2.png')
+}
+.activity-list{
+    font-size: 0;
+    image{
+        width: 686rpx;
+        height: 306rpx;
+        border-radius: 10rpx;
+    }
+    .activity-label-text{
+        margin-bottom: 36rpx;
+        .label{
+            .db(middle);
+            .seth(32rpx,20rpx,#fff);
+            padding: 0 12rpx;
+            background: #ff852c;
+            border-radius: 6rpx;
+            margin-right: 15rpx;
+            &.red-bg{
+                background: #ce1330;
+            }
+            &.green-bg{
+                background: #3eaf56;
+            }
+        }
+    }
+    .text{
+        .db(middle);
+        .seth(80rpx,32rpx,#333);
+        font-weight: bold;
+        .ellipsis;
+        max-width: 560rpx;
+    }
+}
+.fix-sale{
+    .setIcon(90rpx,125rpx,0,41rpx);
+    position: fixed;
+    right: 32rpx;
+    bottom: 32rpx;
+}

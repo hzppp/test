@@ -1,0 +1,152 @@
+@import (reference) 'public.less';
+@import 'coupon.less';
+page{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.my{
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+}
+.my .topnav{
+    width: 116rpx;
+    height: 38rpx;
+    background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdazhong/img20190819/icon3_03.png) no-repeat;
+    background-size:100% 100%;
+    position: fixed;
+    top:65rpx;
+    left:61rpx;
+    z-index:3;
+    
+}
+.my .return{
+    width: 20rpx;
+    height:38rpx;
+    position: absolute;
+    left:0;
+    top:0;
+}
+.my .toIndex{
+    width: 38rpx;
+    height:38rpx;
+    position: absolute;
+    right:0;
+    top:0;
+}
+.header{
+    height: 170rpx;
+    position: relative;
+    .userAvatarUrl{
+        .arc(100rpx);
+        .pa(40rpx,30rpx);
+        overflow: hidden;
+    }
+    .userNickName{
+        .seth(170rpx,40rpx);
+        .pa(164rpx,0);
+        .fb;
+    }
+}
+.scroll{
+    width:100%;
+    flex: auto;
+    position: relative;
+    background: #f0f2f7;
+    .scroll-view{
+        .pa(0,0);
+        width: 686rpx;
+        padding: 32rpx;
+        height: 100%;
+    }
+    .coupon-box,.coupon-line{
+        &:before,&:after{
+            background: #f0f2f7;
+        }
+    }
+    .zw{
+        height: 62rpx;
+    }
+    .end-text{
+        .seth(82rpx,24rpx,#999);
+        .tc;
+    }
+}
+.close-btn{
+    .close-btn;
+}
+.welfareActivity-none{
+    padding-top: 80rpx;
+    position: relative;
+    .toWelfare{
+        width: 100%;
+        height:88rpx;
+        position: absolute;
+        bottom:0;
+        left:0
+    }
+    &:after{
+        display: block;
+        content: "";
+        // .setbg(406rpx,366rpx,'my-icon1.png');
+        width: 463rpx;
+        height: 558rpx;
+        background:url(https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/noCard_03.png) no-repeat;
+        background-size:100% 100%;
+        margin: 0 auto;
+    }
+}
+// 卡券说明
+.rule-desc{
+    .mask;
+    .title{
+        .seth(58rpx,36rpx,#333);
+        .fb;
+        .pa(35rpx,40rpx);
+        .ellipsis;
+        width: 480rpx;
+    }
+    .sub-title,.date{
+        .seth(42rpx,24rpx,#666);
+        .pa(35rpx,101rpx);
+        .ellipsis;
+        width: 480rpx;
+    }
+    .date{
+        top: 143rpx
+    }
+    .content{
+        padding: 299rpx 0rpx 48rpx;
+        width: 560rpx;
+        .pa(50%,50%);
+        transform: translate(-50%,-50%);
+        background: url(https://www1.pcauto.com.cn/gz/20190715/dazhong/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/gz/20190715/dazhong/rulepopbottombg.png) 0 bottom no-repeat;
+        background-size: 560rpx 301rpx,560rpx 50rpx;
+    }
+    .rule-desc-content{
+        background: #fff;
+    }
+    .p{
+        display: block;
+        padding: 0 40rpx;
+        line-height: 40rpx;
+        font-size: 24rpx;
+        color: #999;
+    }
+    .rule-form-btn{
+        display: block;
+        width: 360rpx;
+        .tc;
+        .fb;
+        background: #ce1330;
+        .seth(88rpx,32rpx,#fff);
+        border-radius: 88rpx;
+        margin: 45rpx auto 0;
+    }
+}

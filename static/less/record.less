@@ -1,0 +1,70 @@
+@import (reference) 'public.less';
+
+.top-tip{
+	padding:20rpx 23rpx 18rpx;
+	background-color: #fff9ea;
+	font-size:24rpx;
+	line-height: 34rpx;
+	color:#c48d37;
+}
+.record-list{
+	padding:0 32rpx 50rpx;
+	// margin-bottom:20rpx;
+	.card {
+		.dflex(center,space-between);
+		margin:24rpx 0;
+		padding:26rpx 30rpx 28rpx;
+		background-color: #fff;
+		border-radius: 10rpx;
+		box-sizing: border-box;
+		.l{
+			width: 224rpx;
+			height: 168rpx;
+			margin-right: 26rpx;
+			.dflex(center,center);
+			image{
+				width: 224rpx;
+			}
+		}
+		.r{
+			flex:1;
+			
+			.name{
+				font-size: 32rpx;
+				color: #333333;
+				margin-bottom: 13rpx;
+			}
+			.time{
+				font-size: 24rpx;
+				color: #999;
+			}
+			.status{
+				font-size: 24rpx;
+				margin-top: 53rpx ;
+				&.access{
+					color:#999;
+					font-size: 24rpx;
+				}
+				&.review{
+					color:#ff852c;
+				}
+				&.reject{
+					color:#ce1330;
+					margin-top:24rpx;
+				}
+			}
+		}
+	}
+}
+.none-list{
+	margin:264rpx auto 0;
+	.bg{
+		.setbg(406rpx,291rpx,'recordBg.png');
+		margin:0 auto 45rpx;
+	}
+	.text{
+		text-align: center;
+		color:#999;
+		font-size: 24rpx;
+	}
+}

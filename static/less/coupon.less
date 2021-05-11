@@ -1,0 +1,154 @@
+@import 'public.less';
+.coupon-box{
+    height: 218rpx;
+    border-radius: 20rpx;
+    position: relative;
+    margin-bottom: 24rpx;
+    &:before,&:after{
+        display: block;
+		content: "";
+        .arc(32rpx);
+        background: #fff;
+        position: absolute;
+        top: 88rpx;
+    }
+    &:before{
+        left: -16rpx;
+    }
+    &:after{
+        right: -16rpx;
+    }
+}
+.coupon-name,.coupon-desc,.coupon-date{
+    .pa(48rpx,35rpx);
+    .ellipsis;
+    width: 420rpx;
+}
+.coupon-name{
+    font-weight: bold;
+    .seth(50rpx,32rpx,#fff);
+}
+.coupon-desc{
+    top: 85rpx;
+    .seth(45rpx,24rpx,rgba(255,255,255,.5))
+}
+.coupon-date{
+    top: 131rpx;
+    .seth(42rpx,24rpx,rgba(255,255,255,.5))
+}
+.coupon-line{
+    .pa(472rpx,0);
+    width: 24rpx;
+    height: 100%;
+    &:before,&:after{
+        display: block;
+		content: "";
+        .arc(24rpx);
+        background: #fff;
+        position: absolute;
+        left: 0rpx;
+    }
+    &:before{
+        top: -12rpx;
+    }
+    &:after{
+        bottom: -12rpx;
+    }
+    .line{
+        .pa(50%,50%);
+        width: 100%;
+        width: 0px;
+        height: 150rpx;
+        border-right: 1px dashed rgba(255,255,255,.5);
+        transform: translate(-50%,-50%);
+    }
+}
+.coupon-btn{
+    text-align: center;
+    width: 140rpx;
+    .seth(64rpx,24rpx,#ce1330);
+    font-weight: bold;
+    .pa(509rpx,72rpx);
+    background: #fff;
+    border-radius: 64rpx;
+}
+.coupon-icon{
+    .setIcon(95rpx,38rpx,82rpx,0);
+    .pa(585rpx,2rpx);
+}
+.bg-red{
+    .jb(#e62834,#f5a868);
+}
+.bg-blue{
+    .jb(#2978d9,#60b1e5);
+    .coupon-btn{
+        color: #2978d9;
+    }
+}
+.bg-yellow{
+    .jb(#d59245,#e1ba72);
+    .coupon-btn{
+        color: #d59245;
+    }
+}
+.bg-gray{
+    .jb(#aaa,#ccc);
+    .coupon-btn{
+        color: #aaa;
+    }
+}
+.load-more-btn{
+    width: 284rpx;
+    .seth(60rpx,24rpx,#999);
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 30rpx;
+    margin: 0 auto;
+}
+.rule-desc{
+    .mask;
+    .title{
+        .seth(58rpx,36rpx,#333);
+        .fb;
+        .pa(35rpx,40rpx);
+        .ellipsis;
+        width: 480rpx;
+    }
+    .sub-title,.date{
+        .seth(42rpx,24rpx,#666);
+        .pa(35rpx,101rpx);
+        .ellipsis;
+        width: 480rpx;
+    }
+    .date{
+        top: 143rpx
+    }
+    .content{
+        padding: 299rpx 0rpx 48rpx;
+        width: 560rpx;
+        .pa(50%,50%);
+        transform: translate(-50%,-50%);
+        background: url(http://www1.pcauto.com.cn/gz/20190715/dazhong/rulepoptopbg.png) 0 0 no-repeat,url(http://www1.pcauto.com.cn/gz/20190715/dazhong/rulepopbottombg.png) 0 bottom no-repeat;
+        background-size: 560rpx 301rpx,560rpx 50rpx;
+    }
+    .rule-desc-content{
+        background: #fff;
+    }
+    .p{
+        display: block;
+        padding: 0 40rpx;
+        line-height: 40rpx;
+        font-size: 24rpx;
+        color: #999;
+    }
+    .rule-form-btn{
+        display: block;
+        width: 360rpx;
+        .tc;
+        .fb;
+        background: #fa8845;
+        .seth(88rpx,32rpx,#fff);
+        border-radius: 88rpx;
+        margin: 45rpx auto 0;
+    }
+}

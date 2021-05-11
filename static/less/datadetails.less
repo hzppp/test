@@ -1,0 +1,112 @@
+@import (reference) 'public.less';
+page{
+    background: #f0f2f7;  
+}
+.details{
+    padding: 40rpx 32rpx;
+}
+.hd-tit{
+    .setIcon(117rpx,54rpx,92rpx,131rpx);
+    .tc;
+    .seth(54rpx,24rpx,#fff);
+    .fb;
+}
+.box-content{
+    background: #fff;
+}
+.ys-item{
+    .db(middle);
+    border: 1px solid #ccc;
+    width: 30rpx;
+    height: 30rpx;
+    margin-right: 10rpx;
+}
+.cs-box{
+    .list{
+        padding: 0 77rpx 0 24rpx;
+        .seth(88rpx,28rpx,#999);
+        .ellipsis;
+        position: relative;
+        border-bottom: 1px solid #ebebeb;
+        &:after{
+            display: block;
+            content: "";
+            .setIcon(28rpx,28rpx,211rpx,131rpx);
+            position: absolute;
+            top: 30rpx;
+            right: 24rpx;
+        }
+    }
+    .fr{
+        float: right;
+        color: #333;
+    }
+    .list-description{
+        padding: 20rpx;
+        background: #fef8ea;
+        font-size: 20rpx;
+        line-height: 40rpx;
+        .description-tit{
+            font-size: 22rpx;
+            color: #333;
+            padding-bottom: 10rpx;
+            .fb;
+        }
+    }
+    .moren-btn{
+        .seth(80rpx,28rpx);
+        .tc;
+        &:after{
+            .db(middle);
+            content: "";
+            width: 12rpx;
+            height: 12rpx;
+            border-left: 1px solid #333;
+            border-bottom: 1px solid #333;
+            transform: rotate(-45deg);
+            margin:-8rpx 0 0 15rpx;
+        }
+        &.sq{
+            &:after{
+                transform: rotate(135deg);
+                margin-top: 0;
+            }
+        }
+    }
+}
+.pz-box{
+    margin-top: 40rpx;
+    .item{
+        .db();
+        width: 33%;
+        padding-top: 40rpx;
+        .tc;
+    }
+    .text{
+        .seth(59rpx,20rpx);
+        // .ellipsis;
+        padding: 0 10rpx;
+        line-height: 30rpx;
+    }
+    .image{
+        width: 120rpx;
+        height: 120rpx;
+    }
+}
+.text-pop{
+    position: fixed;
+    width: 520rpx;
+    background: #fef8ea;
+    padding: 20rpx;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 20rpx;
+    line-height: 40rpx;
+    .text-pop-title{
+        font-size: 22rpx;
+        color: #333;
+        padding-bottom: 10rpx;
+        .fb;
+    }
+}

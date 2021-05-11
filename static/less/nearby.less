@@ -1,0 +1,380 @@
+@import (reference) 'public.less';
+page{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.nearby{
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+}
+.head-tap-nav{
+    position: relative;
+    .seth(87rpx,28rpx,#666);
+    .item{
+        .db();
+        position: relative;
+        margin-left: 40rpx;
+        &.current{
+            font-size: 32rpx;
+            color: #333;
+            &:after{
+                display: block;
+                content: "";
+                width: 50%;
+                height: 6rpx;
+                position: absolute;
+                left: 25%;
+                bottom: 0;
+                background: #ce1330;
+                font-weight: bold;
+                border-radius: 5rpx;
+            }
+        }
+    }
+    .select-city{
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translate(0,-50%);
+        color: #999;
+        view{
+            padding-right: 60rpx;
+            .jt(12rpx,12rpx,#999,135deg);
+            // margin-right: 30rpx;
+            &:after{
+                right: 35rpx;
+            }
+        }
+    }
+}
+.slide{
+    width:100%;
+    flex: auto;
+    background: #f0f2f7;
+    position: relative;
+    .swiper{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+.sales-list{
+    left: 0;
+    top: 0;
+    position: absolute;
+    height: 100%;
+    padding: 32rpx;
+    width: 686rpx;
+    .nearby-sales-zw{
+        height: 64rpx;
+    }
+    .box{
+        background: #fff;
+        height: 250rpx;
+        border-radius: 10rpx;
+        position: relative;
+        margin-bottom: 24rpx;
+    }
+    .sales-head{
+        .arc(100rpx);
+        .pa(30rpx,40rpx);
+    }
+    .sale-name-position{
+        .seth(52rpx,34rpx);
+        .pa(154rpx,43rpx);
+        .name{
+            font-weight: bold;
+            margin-right: 22rpx;
+        }
+        .position{
+            font-size: 24rpx;
+            color: #999;
+            &.v{
+                padding-right: 17rpx;
+                position: relative;
+                &:after{
+                    display: block;
+                    content: "";
+                    .setIcon(21rpx,17rpx,210rpx,0);
+                    position: absolute;
+                    top: 50%;
+                    right: -2rpx;
+                    transform: translate(0,-50%);
+                }
+            }
+        }
+    }
+    .sale-dealer{
+        .seth(43rpx,24rpx,#666);
+        .pa(154rpx,95rpx);
+    }
+    .sale-label{
+        .pa(138rpx,169rpx);
+        .db{
+            .db();
+            .seth(44rpx,22rpx,#999);
+            padding: 0 15rpx;
+            border-radius: 44rpx;
+            background: #f6f7fb;
+            margin-left: 16rpx;
+        }
+    }
+    .call-btn,.im-btn{
+        .pa(482rpx,40rpx);
+        .setbg(72rpx,107rpx,'call-btn-bg.png');
+    }
+    .im-btn{
+        left: 584rpx;
+        .setbg(72rpx,107rpx,'im-btn.png');
+    }
+    .call-btn{
+        z-index: 9;
+    }
+    .im-btn-mask{
+        .pa(0,0);
+        width: 100%;
+        height: 100%;
+        z-index: 8;
+    }
+}
+.nearby-4s-list{
+    // .sales-list;
+    left: 0;
+    top: 0;
+    position: absolute;
+    height: 100%;
+    padding: 32rpx;
+    width: 686rpx;
+    .nearby-4s-zw{
+        .sales-list .nearby-sales-zw;
+    }
+    .box{
+        .sales-list .box;
+        // padding: 32rpx;
+        // height: 216rpx;
+        height: 294rpx;
+        position: relative;
+    }
+    .none-sales{
+        height: 224rpx;
+    }
+    .d-name{
+        .seth(47rpx,32rpx);
+        font-weight: bold;
+        .pa(30rpx,32rpx);
+    }
+    .d-address{
+        .pa(30rpx,79rpx);
+        .seth(40rpx,24rpx,#666);
+        .jl{
+            .db();
+            height: 40rpx;
+            position: relative;
+            padding-right: 43rpx;
+            &:after{
+                display: block;
+                content: "";
+                height: 24rpx;
+                width: 1px;
+                position: absolute;
+                right:22rpx;
+                top: 8rpx;
+                background: #d0d0d0;
+            }
+        }
+        .dz.dz-icon{
+            .db();
+            .ellipsis;
+            max-width: 295rpx;
+            padding-right: 30rpx;
+            position: relative;
+            height: 40rpx;
+            &:after{
+                display: block;
+                content: "";
+                .setIcon(18rpx,20rpx,233rpx,0);
+                position: absolute;
+                right: 0;
+                top: 9rpx;
+            }
+        }
+    }
+    .get-dj,.call-dh{
+        .pa(482rpx,40rpx);
+        .setbg(72rpx,107rpx,'call-btn-bg.png');
+    }
+    .get-dj{
+        left: 584rpx;
+        .setbg(72rpx,107rpx,'dealer-xdj-bg.png');
+    }
+    .d-4s-label{
+        font-size: 0;
+        .pa(30rpx,136rpx);
+        .db{
+            .db();
+            border-radius: 40rpx;
+            padding: 0 16rpx;
+            .seth(40rpx,20rpx,#999);
+            margin-right: 16rpx;
+            background: #f6f7fb;
+        }
+    }
+    .d-4s-sales{
+        font-size: 0;
+        width: 626rpx;
+        .pa(34rpx,206rpx);
+        .navigator{
+            .db();
+        }
+        .sales-head{
+            .arc(48rpx);
+            .db(middle);
+        }
+        .sale-name{
+            .db(middle);
+            .seth(48rpx,24rpx,#666);
+            margin-left: 15rpx;
+        }
+        .more-sale-btn{
+            .seth(48rpx,24rpx,#999);
+            padding-right: 13rpx;
+            .jt(12rpx,12rpx,#999,45deg);
+            position: absolute;
+            top: 0;
+            right: 0;
+            &.none-jt{
+                padding-right: 0;
+                &:after{
+                    display: none;
+                }
+            }
+        }
+    }
+
+
+
+
+
+    .sale-head-btns{
+        margin-top: 31rpx;
+        .seth(64rpx,0rpx,#999);
+        .sales-head{
+            .db(middle);
+            .arc(48rpx);
+            position: relative;
+            z-index: 3;
+        }
+        .sales-head1{
+            z-index: 2;
+            margin-left: -8rpx;
+        }
+        .sales-head2{
+            z-index: 1;
+            margin-left: -8rpx;
+        }
+        .sales-number{
+            .db();
+            font-size: 20rpx;
+            margin-left: 12rpx;
+        }
+    }
+}
+.sales-pop{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    left: 0;
+    top: 0;
+    z-index: 8;
+    .sales-pop-items{
+        max-height: 480rpx;
+        overflow-y: auto;
+    }
+    .sales-pop-content{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 750rpx;
+        padding: 20rpx 0 41rpx;
+        background: #fff;
+        border-top-left-radius: 20rpx;
+        border-top-right-radius: 20rpx;
+    }
+    .sales-pop-tit{
+        .tc;
+        .seth(68rpx,28rpx,#000);
+        position: relative;
+    }
+    .sales-pop-close-btn{
+        .setbg(25rpx,25rpx,'nearby-icon3.png');
+        position: absolute;
+        top: 50%;
+        right: 32rpx;
+        transform: translate(0,-50%);
+    }
+    .sales-pop-item{
+        font-size: 0;
+        padding: 20rpx 0;
+        // height: 120rpx;
+        margin: 0 32rpx;
+        border-bottom: 1px solid #ebebeb;
+    }
+    .sales-pop-text{
+        .db();
+        width: 395rpx;
+        margin-top: -10rpx;
+    }
+    .sales-pop-sale-name{
+        .seth(59rpx,32rpx,#000);
+        .fb;
+    }
+    .label-date,.label-number{
+        .db();
+        .seth(36rpx,20rpx,#999);
+        background: #f6f7fb;
+        border-radius: 36rpx;
+        padding: 0 13rpx;
+        margin-right: 12rpx;
+    }
+    .sales-pop-btn1{
+        .setbg(72rpx,107rpx,'call-btn-bg.png');
+        .db();
+    }
+    .sales-pop-btn2{
+        .setbg(72rpx,107rpx,'im-btn.png');
+        .db();
+        margin-left: 28rpx;
+    }
+    .sales-pop-head{
+        .db();
+        .arc(80rpx);
+        margin-right: 22rpx;
+    }
+}
+.sales-list-none{
+    padding-top: 80rpx;
+    &:after{
+        display: block;
+        content: "";
+        .setbg(448rpx,265rpx,'nearby-none-icon2.png?ad');
+        margin:0 auto;
+    }
+}
+.nearby-4s-list-none{
+    padding-top: 80rpx;
+    &:after{
+        display: block;
+        content: "";
+        .setbg(448rpx,265rpx,'nearby-none-icon1.png?ad');
+        margin:0 auto;
+    }
+}

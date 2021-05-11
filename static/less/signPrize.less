@@ -1,0 +1,227 @@
+@import (reference) 'public.less';
+@imgURL:"https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/";
+page{
+    background:#f0f2f7;
+    padding-bottom:20rpx;
+}
+.sign{
+    background:#f0f2f7;
+    padding-top:276rpx;
+    padding-bottom:20rpx;
+    .zx-btn{
+        background:none!important;
+        text-align:left;
+        color:#cccccc;
+        padding-left:80rpx;
+        height:110rpx;
+        line-height:110rpx;
+        font-size:32rpx;
+    }
+    .topbg{
+        .setbg(750rpx,408rpx,'topbg_02.jpg');
+        position: absolute;
+        top:0;
+        left:0;
+        font-size:40rpx;
+        font-weight:bold;
+        .title{
+            color:#fff;
+            position: absolute;
+            left:32rpx;
+            top:25rpx;
+        }
+        .welcome{
+            color:#fff;
+            position: absolute;
+            left:32rpx;
+            top:83rpx;
+        }
+    }
+    .person{
+        .setbg(259rpx,190rpx,'person_03.png');
+        position: absolute;
+        right:54rpx;
+        top:151rpx;
+        background-size:100% 100%;
+        z-index: 9;
+    }
+    .form{
+        background:#fff;
+        width: 686rpx;
+        height: 750rpx;
+        border-radius:8rpx;
+        margin:0 auto;
+        position: relative;
+        // margin-top:276rpx;
+        text-align:center;
+        
+        .tit{
+            .seth(86rpx;26rpx;#666666);
+            text-indent:26rpx;
+            border-bottom:1rpx solid #ebebeb;
+            text-align:left
+        }
+        .vt{
+            image{
+                width:130rpx;
+                height:130rpx
+            }
+            .pa(50%,50%);
+            transform: translate(-50%,-50%);
+        }
+        
+        .formBox{
+            font-size:0;
+            .inp{
+                .seth(110rpx;32rpx;#666666);
+                width: 626rpx;
+                display: inline-block;
+                text-align:left;
+                border-bottom:1rpx solid #ebebeb;
+                position: relative;
+                font-size:32rpx;
+                .before(38rpx;38rpx)
+            }
+            .inp:last-of-type{
+                border-bottom:0;
+            }
+            .placeholder{
+                color:#cccccc
+            }
+            input{
+                display: inline-block;
+                width:540rpx;
+                padding-left:80rpx;
+                height:110rpx;
+                // &::placeholder{
+                //     color:#cccccc
+                // }
+            }
+            .inp1:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 0;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+            .inp2:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 -111rpx;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+            .inp3:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 -221rpx;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+            .inp4:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 -331rpx;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+            .inp5:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 -444rpx;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+            .inp6:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/icon_03.png);
+                background-size:40rpx 593rpx;
+                background-position:0 -554rpx;
+                position: absolute;
+                left:31rpx;
+                top:35rpx;
+            }
+        }
+        
+    }
+    .shortHeight{
+        height:572rpx;
+    }
+    .btn{
+        width:540rpx;
+        height:88rpx;
+        border-radius:44rpx;
+        background:#ce1330;
+        line-height:88rpx;
+        text-align:center;
+        color:#fff;
+        display: inline-block;
+        margin-top:60rpx;
+        position: relative;
+        left:50%;
+        margin-left:-270rpx;
+    }
+    .tip{
+        text-align:center;
+        line-height:65rpx;
+    }
+    .gray{
+        color:#999999;
+        font-size:26rpx;
+    }
+    .sign_notes{
+        margin-top:30rpx;
+        padding-top:20rpx;
+        .tit{
+            text-align:center;
+            color:#333333;
+            font-size:30rpx;
+            position: relative;
+            .before(156rpx;6rpx);
+            font-weight:bold;
+            &:before{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/titLine_03.png);
+                background-size:158rpx 6rpx;
+                position: absolute;
+                left:136rpx;
+                top:20rpx;
+            }
+            .after(156rpx;6rpx);
+            &:after{
+                background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdz1014/titLine_03.png);
+                background-size:158rpx 6rpx;
+                position: absolute;
+                right:136rpx;
+                top:20rpx;
+                transform:rotate(180deg)
+            }
+        }
+        .notesList{
+            width:613rpx;
+            margin:0 auto;
+            font-size:26rpx;
+            view{
+                margin-bottom:15rpx;
+            }
+        }
+    }
+    .input-view{
+        .seth(110rpx,32rpx);
+        padding: 0 55rpx 0 83rpx;
+        background:none;
+        position: relative;
+    }
+    .auto-input,.city-input,.area-input,.jt-icon{
+        .jt(10rpx,10rpx,#999,45deg);
+        &:after{
+            right: 20rpx;
+        }
+    }
+    .blue{
+        background:#ce1330
+    }
+}

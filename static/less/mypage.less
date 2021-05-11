@@ -1,0 +1,206 @@
+@import (reference) 'public.less';
+page{
+    background:#f0f2f7;
+}
+.top{
+    padding:80rpx 40rpx;
+    background:#fff
+}
+.top{
+    .head{
+        width: 120rpx;
+        height: 120rpx;
+        border-radius:50%;
+        overflow: hidden;
+        .db(top);
+        image{
+            width:100%;
+            max-height:120rpx;
+        }
+    }
+    .info{
+        display: inline-block;
+        position: relative;
+        width:400rpx;
+        height:120rpx;
+        margin-left:25rpx;
+        .name_info{
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+        }
+        .level{
+            margin-top: 10rpx;
+            width: 127rpx;
+            height: 40rpx;
+            background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdazhong/img20190819/carMan_03.png) no-repeat;
+            background-size:100% 100%;
+        }
+    }
+}
+.firstUnload{
+    width:560rpx;
+    height:640rpx;
+    background:url(https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/upload_03.png) no-repeat;
+    background-size:100% 100%;
+    position: fixed;
+    top: 50%;
+    transform: translate(0, -50%);
+    left:95rpx;
+    z-index:3;
+    .uploadbtn{
+        width: 355rpx;
+        height: 80rpx;
+        position: absolute;
+        left:100rpx;
+        bottom:50rpx;
+    }
+}
+.bg{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    background:rgba(0,0,0,0.6);
+    z-index:1;
+}
+.box{
+    margin:20px 0;
+    
+    background:#fff;
+    .box-list{
+        text-indent:75rpx;
+        position: relative;
+        padding:30rpx 40rpx;
+        .p1{
+            font-size:30rpx;
+            color:#333333;
+        }
+        .p2{
+            font-size:22rpx;
+            color:#999999
+        }
+        .right{
+            position: absolute;
+            right:80rpx;
+            font-size:24rpx;
+            color:#ce1330;
+            // height:100%;
+            // line-height:100%;
+            line-height: 1;
+            top:50%;
+            margin-top:-12rpx;
+        }
+        
+    }
+    .box-list:after{
+        width:16rpx;
+        height:28rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(http://www1.pcauto.com.cn/pocket/xcx/yqdazhong/img20190819/icon6_03.png) no-repeat;
+        background-size:16rpx 28rpx;
+        top:50%;
+        transform: translate(0, -50%);
+        right:40rpx;
+        background-position:0 0;
+    }
+    .list1:before{
+        width: 43rpx;
+        height: 42rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(../images/my_1.png) no-repeat center;
+        background-size: 100%;
+        top: 42rpx;
+        left: 38rpx;
+        background-position:0 0;
+    }
+    .list2:before{
+        width: 40rpx;
+        height: 40rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(../images/my_2.png) no-repeat center;
+        background-size: 100%;
+        top:32rpx;
+        left:40rpx;
+    }
+    .list3:before{
+        width: 40rpx;
+        height: 40rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(../images/my_3.png) no-repeat center;
+        background-size: 100%;
+        top:33rpx;
+        left:40rpx;
+    }
+    .list4:before{
+        width: 40rpx;
+        height: 40rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(../images/my_6.png) no-repeat center;
+        background-size: 100%;
+        top:33rpx;
+        left:40rpx;
+    }
+    .list6:before{
+        width: 40rpx;
+        height: 40rpx;
+        display: inline-block;
+        content:"";
+        position: absolute;
+        background:url(../images/my_5.png) no-repeat center;
+        background-size: 100%;
+        top:30rpx;
+        left:40rpx;
+    }
+    .line{
+        height:1px;
+        margin:0 40rpx;
+        background:#ebebeb
+    }
+    .list4 navigator{
+        position: absolute;
+        width:100%;
+        height:100%;
+        top:0;
+        left:0
+    }
+}
+.close{
+    width: 64rpx;
+    height: 64rpx;
+    background:url(https://www1.pcauto.com.cn/pocket/xcx/yqdazhong/img20190819/close_03.png) no-repeat;
+    background-size:100% 100%;
+    position: fixed;
+    bottom:100rpx;
+    left:320rpx;
+    z-index:9;
+}
+.fail{
+    width:560rpx;
+    height:511rpx;
+    background:url(https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/failUpload_03.png) no-repeat;
+    background-size:100% 100%;
+    position: fixed;
+    top: 50%;
+    transform: translate(0, -50%);
+    left:95rpx;
+    z-index:3;
+    .uploadbtn{
+        width: 355rpx;
+        height: 80rpx;
+        position: absolute;
+        left:100rpx;
+        bottom:50rpx;
+    }
+}

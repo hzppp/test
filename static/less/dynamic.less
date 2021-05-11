@@ -1,0 +1,251 @@
+@import 'public.less';
+.dynamic{
+    position: relative;
+    background: #f0f2f7;
+    min-height: 100%;
+}
+.dynamic-box:first-child{
+    padding-top: 53rpx;
+}
+.dynamic-box{
+    padding: 40rpx 32rpx 0;
+    background: #fff;
+    margin-bottom: 12rpx;
+    .head-name{
+        font-size: 0;
+        padding:0 0 20rpx 105rpx;
+        height: 80rpx;
+        position: relative;
+        image{
+            .db(top);
+            .arc(80rpx);
+            .pa(0,0);
+        }
+        .name{
+            .seth(42rpx,30rpx,#777);
+            .nickName{
+                .db(middle);
+                .ellipsis;
+                max-width: 220rpx;
+            }
+            .approve{
+                .db(middle);
+                .setIcon(116rpx,34rpx,32rpx,199rpx);
+                margin-left: 20rpx;
+            }
+            .official{
+                .db(middle);
+                .setIcon(100rpx,28rpx,291rpx,199rpx);
+                margin-left: 12rpx;
+            }
+        }
+        .date{
+            .seth(38rpx,24rpx,#999);
+        }
+        .del-btn{
+            position: absolute;
+            top: 0;
+            right: 0rpx;
+            border: 1px solid #ccc;
+            border-radius: 116rpx;
+            width: 116rpx;
+            height: 46rpx;
+            &:after{
+                display: block;
+                content: "";
+                .setbg(83rpx,23rpx,'dazhong_20191125_4.png');
+                .pa(50%,50%);
+                transform: translate(-50%,-50%);
+            }
+        }
+    }
+    .dynamic-content{
+        line-height: 46rpx;
+        font-size: 32rpx;
+        color: #333;
+    }
+    .image-list{
+        padding-top: 12rpx;
+        font-size: 0;
+        .image-box{
+            width: 222rpx;
+            height: 222rpx;
+            overflow: hidden;
+            font-size: 0;
+            .db(top);
+        }
+        image{
+            width: 222rpx;
+            display: inline;
+        }
+        .image-box:nth-child(3n-1){
+            margin: 0 10rpx 10rpx;
+        }
+    }
+    .image-list4{
+        .image-box{
+            width: 338rpx;
+            height: 338rpx;
+        }
+        .image-box:nth-child(2n){
+            margin-left:10rpx;
+            margin-right: 0;
+        }
+    }
+    .image-list1{
+        // text-align: left;
+        .image-box{
+            width: auto;
+            height: auto;
+        }
+        image{
+            .db();
+            // width: 686rpx;
+        }
+    }
+    .zhuti{
+        color: #ce1330;
+    }
+    .dz-pl-number{
+        height: 76rpx;
+        font-size: 0;
+        position: relative;
+        .dz{
+            .seth(76rpx,24rpx,#999);
+            float: left;
+        }
+        .show-number{
+            .seth(76rpx,26rpx,#666);
+            float: right;
+            padding-left: 46rpx;
+            position: relative;
+            margin-right: 44rpx;
+            &:after{
+                display: block;
+                content: "";
+                .setbg(35rpx,28rpx,"dazhong_20191122_0.png");
+                .pa(0,50%);
+                transform: translate(0,-50%);
+            }
+        }
+        .diznzan{
+            .seth(76rpx,26rpx,#666);
+            padding-left: 42rpx;
+            float:right;
+            margin-left: 42rpx;
+            position: relative;
+            margin-right:50rpx;
+            &:after{
+                display: block;
+                content: "";
+                .setIcon(34rpx,30rpx,0,167rpx);
+                .pa(0,50%);
+                transform: translate(0,-50%);
+            }
+            &.current{
+                &:after{
+                    .setIcon(34rpx,30rpx,34rpx,167rpx);
+                    -webkit-animation:pulse .5s 0s ease both;
+                }
+            }
+        }
+        .viewCount{
+            .seth(76rpx,26rpx,#666);
+            padding-left: 42rpx;
+            float:right;
+            position: relative;
+            margin-right:50rpx;
+            &:before{
+                display: block;
+                content: "";
+                .setbg(35rpx,28rpx,"dazhong_20191122_0.png");
+                .pa(0,50%);
+                transform: translate(0,-50%);
+            }
+        }
+        .pl{
+            .seth(76rpx,26rpx,#666);
+            padding-left: 42rpx;
+            float:right;
+            position: relative;
+            &:after{
+                display: block;
+                content: "";
+                .setIcon(32rpx,30rpx,0,199rpx);
+                .pa(0,50%);
+                transform: translate(0,-50%);
+            }
+        }
+    }
+    .pl-list{
+        position: relative;
+        margin-top: 11rpx;
+        padding: 20rpx 0 30rpx;
+        border-top: 1px solid #ebebeb;
+        &:after{
+            display: block;
+            content: "";
+            width:20rpx;
+            height: 20rpx;
+            position: absolute;
+            border: 1px solid #ebebeb;
+            border-left: 0;
+            border-bottom: 0;
+            transform: rotate(-45deg);
+            left: 50rpx;
+            top: -11rpx;
+            background: #fff;
+        }
+        .list,.more-btn{
+            line-height: 45rpx;
+            font-size: 24rpx;
+            color: #333;
+            .list-name{
+                .db(top);
+                color: #999;
+            }
+            .list-pl-con{
+                .db(top)
+            }
+        }
+    }
+}
+.ubb-image{
+    .db(middle);
+    width: 30rpx;
+    height: 30rpx;
+}
+.bottom-tip{
+    .seth(82rpx,24rpx,#999);
+    background: #f0f2f7;
+    text-align: center;
+}
+.none-data{
+    background: #fff;
+}
+.none-icon{
+    .setbg(406rpx,292rpx,'dynamic-none-data-icon.png');
+    margin: 0 auto;
+}
+.none-text{
+    color: #999;
+    display: block;
+    font-size: 28rpx;
+    line-height: 42rpx;
+    margin-top: 38rpx;
+    .tc;
+}
+.none-btn{
+    width:460rpx;
+    .tc;
+    .fb;
+    .seth(88rpx,32rpx,#fff);
+    background: #ce1330;
+    margin: 42rpx auto 0;
+    border-radius: 88rpx;
+}
+@-webkit-keyframes pulse{
+    0%{-webkit-transform:scale(1) translate(0, -50%)}
+    50%{-webkit-transform:scale(1.1) translate(0, -50%)}
+    100%{-webkit-transform:scale(1) translate(0, -50%)}
+}

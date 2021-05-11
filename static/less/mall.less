@@ -1,0 +1,273 @@
+@import (reference) 'public.less';
+
+.fixed-top{
+	.pf(0,128rpx,7);
+	.seth(48rpx,24rpx,#fff);
+	width:100%;
+	padding:0 32rpx;
+	box-sizing: border-box;
+	background-color: #ce1330;
+	z-index: 7;
+	.arow-r{
+		padding-right:12rpx;
+		position:relative;
+		&::after{
+			content:'';
+			width: 13rpx;
+			height: 13rpx;
+			border-right: 2rpx solid #fff;
+			border-top: 2rpx solid #fff;
+			transform:rotate(45deg);
+			.pa(100%,19rpx)
+		}
+	}
+}
+.fl{float: left;}
+.fr{float: right;}
+.banner{
+	border-top:1px solid #ce1330;
+	box-sizing: border-box;
+	background: linear-gradient(to bottom, #ce1330 60%,#ffffff 100%);
+	position: relative;
+	swiper{
+		width:686rpx;
+		height: 260rpx;
+		margin:20rpx auto 0 32rpx;
+		border-radius: 10rpx;
+		overflow: hidden;
+		.swiper-image{
+			width:686rpx;
+			height: 260rpx;
+		}
+	}
+	.swiper-dot{
+		.pa(50%,90%);
+		.dflex();
+		transform: translate(-50%);
+		z-index: 6;
+		.dot{
+			width: 8rpx;
+			height: 8rpx;
+			margin-right:8rpx;
+			border-radius: 50%;
+			background-color: rgba(255,255,255,.5);
+		}
+		.dot-active{
+			width: 20rpx;
+			border-radius: 4rpx;
+			background-color: #fff;
+		}
+	}
+}
+.list{
+	width: 100%;
+	padding: 0 32rpx;
+	margin-top:40rpx;
+	box-sizing: border-box;
+	.dflex();
+	flex-wrap: wrap;
+	.card{
+		box-sizing: border-box;
+		width: 332rpx;
+		background-color: #fff;
+		margin-bottom:24rpx;
+		border-radius: 10rpx;
+		overflow: hidden;
+		.tc();
+		.img-wrap{
+			height: 270rpx;
+			line-height: 270rpx;
+			font-size:0;
+			.img{
+				height: 230rpx;
+				vertical-align: middle;
+			}
+		}
+		.red{
+			color: #ce1330;
+			font-size: 32rpx;
+			margin-right:6rpx;
+		}
+		.price{
+			color: #999;
+			font-size: 24rpx;
+			margin-left:16rpx;
+			text-decoration: line-through;
+		}
+		.name{
+			width: 285rpx;
+			.ellipsis();
+		}
+		.name,.score{
+			font-size: 24rpx;
+			color:#333;
+			padding-left:32rpx;
+			text-align: left;
+		}
+		.btn{
+			.seth(64rpx,28rpx,#fff);
+			width: 284rpx;
+			background-color: #ce1330;
+			border-radius: 32rpx;
+			margin:24rpx 0 20rpx;
+			padding:0;
+			
+				.tc();
+				color:#fff;
+				&.btn-disabled{
+					background-color: #cccccc;
+				}
+		}
+	}
+}
+.no-data{
+	margin:6rpx 0 38rpx;
+	.tc();
+	.seth(42rpx,24rpx,#999);
+}
+/* 商品详情 */
+.detail{
+	.mian-top{
+		background-color: #fff;
+		padding: 58rpx 0 30rpx;
+		.img{
+			display: block;
+			width: 686rpx;
+			height: 431rpx;
+			margin:0 auto 24rpx;
+		}
+		.name,.score{
+			font-size: 36rpx;
+			padding:0 31rpx;
+		}
+		.score{
+			color:#ce1330;
+			.unit{
+				font-size: 28rpx;
+			}
+			.price{
+				color: #999;
+				font-size: 24rpx;
+				margin-left:16rpx;
+				text-decoration: line-through;
+			}
+		}
+	}
+	.mian-center{
+		background-color: #fff;
+		padding: 40rpx 31rpx 140rpx;
+		margin-top:20rpx;
+		.title{
+			font-size: 28rpx;
+		}
+		.line{
+			font-size: 24rpx;
+			line-height: 44rpx;
+			color:#999;
+		}
+		.img{
+			width: 688rpx;
+		}
+	}
+}
+.fix-btn{
+	width: 100%;
+	height: 100rpx;
+	line-height: 100rpx;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	background-color: #ce1330;
+	color:#fff;
+	.tc();
+	&.disabled{
+		background-color: #cccccc;
+	}
+}
+.mask{
+	.mask();
+	z-index: 667;
+	.body{
+		background-color: #fff;
+		width: 600rpx;
+		border-radius: 20rpx;
+		margin:60rpx auto 63rpx;
+		padding:63rpx 40rpx 40rpx;
+		box-sizing: border-box;
+		.tc();
+		.pa(50%,50%);
+		transform: translate(-50%,-90%);
+	}
+	.btn-group{
+		margin-top:60rpx;
+		.dflex();
+		.btn{
+			width: 248rpx;
+			height: 88rpx;
+			line-height: 88rpx;
+			border: solid 2rpx #d0d0d0;
+			border-radius: 55rpx;
+			&.btn-ensure{
+				border: solid 2rpx #ce1330;
+				background-color: #ce1330;
+				color:#fff;
+			}
+		}
+	}
+}
+
+/* 订单确认 */
+.ensure-order .card{
+	width: 686rpx;
+	background-color: #fff;
+	padding:40rpx 30rpx;
+	margin: 30rpx auto;
+	box-sizing: border-box;
+	border-radius: 10rpx;
+	.order-info{
+		overflow: hidden;
+		padding-bottom: 41rpx;
+		border-bottom: 1px solid #ebebeb;
+		.img{
+			.fl();
+			width:224rpx;
+			margin:0 31rpx 0 0;
+		}
+		.info{
+			.fl();
+			.name{
+				font-size: 32rpx;
+				margin-bottom: 10rpx;
+			}
+			.score{
+				font-size: 28rpx;
+				color: #ce1330;
+				margin-bottom: 10rpx;
+			}
+			.num{
+				font-size: 24rpx;
+				color: #999999;
+			}
+		}
+	}
+	.addr-info{
+		margin-top: 30rpx;
+		color:#999;
+		.title{
+			font-size: 28rpx;
+			color:#333;
+			.dflex();
+			.btn{
+				width: 200rpx;
+					height: 48rpx;
+					line-height: 48rpx;
+					border-radius: 24rpx;
+					border: solid 1px #cccccc;
+					font-size:24rpx;
+					color:#999;
+					.tc()
+			}
+		}
+		.p{font-size:24rpx;margin:12rpx 0;}
+	}
+}
