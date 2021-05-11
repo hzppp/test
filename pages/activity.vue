@@ -102,7 +102,7 @@
 		},
 		methods: {
 			formShow() {
-				this.$refs.formpop.formShow('form', 'activity', this.content)
+				this.$refs.formpop.formShow('form', 'activity', this.content, '完善资料')
 				// this.$invoke('form-pop', 'formShow', 'form', 'activity', this.content)
 			},
 			async getPhoneNumber(e) {
@@ -167,7 +167,7 @@
 		.db {
 			display: inline-block;
 			vertical-align: top;
-			background: #f00;
+			background: #fa8845;
 			height: 40rpx;
 			padding: 0 12rpx;
 			color: #fff;

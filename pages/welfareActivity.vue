@@ -116,8 +116,8 @@
 			}
 		},
 		methods: {
-			formShow(name, from = "", obj = {}) {
-				this.$refs.formpop.formShow(name, from, obj)
+			formShow(name, from = "", obj = {}, title = "完善资料") {
+				this.$refs.formpop.formShow(name, from, obj, title)
 			},
 			loadMoreCoupon() {
 				this.getWelfarePageNumber++

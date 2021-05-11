@@ -2,7 +2,7 @@
 	<view class="formpop" v-if="isShowFormPop">
 		<view class="form" v-if="popName == 'form'">
 			<view class="header">
-				<view class="p1">完善资料</view>
+				<view class="p1">{{title}}</view>
 				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
 			</view>
 			<view class="content">
@@ -87,6 +87,7 @@
 			return {
 				dealerList: [],
 				currentDealerIndex: 0,
+				title: '完善资料',
 				currentObj: {},
 				from: "",
 				serialList: [],
@@ -111,10 +112,11 @@
 			}
 		},
 		methods: {
-			formShow(name, from = "", obj = {}) {
+			formShow(name, from = "", obj = {}, title) {
 				this.popName = name
 				this.from = from
 				this.currentObj = obj
+				this.title = title
 				this.getpreClue()
 			},
 			formHide() {
