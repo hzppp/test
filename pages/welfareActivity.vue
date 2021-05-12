@@ -9,7 +9,7 @@
 			
 			<view class="box">
 				<view class="box-tit">
-					奥迪福利
+					长安福利
 					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
 					 mode="multiSelector" :range="province" range-key="text" class="select-city">
 						<view>{{selectCity ||indexCity.name}}</view>
@@ -116,8 +116,8 @@
 			}
 		},
 		methods: {
-			formShow(name, from = "", obj = {}) {
-				this.$refs.formpop.formShow(name, from, obj)
+			formShow(name, from = "", obj = {}, title = "完善资料") {
+				this.$refs.formpop.formShow(name, from, obj, title)
 			},
 			loadMoreCoupon() {
 				this.getWelfarePageNumber++

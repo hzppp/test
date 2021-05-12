@@ -1075,4 +1075,21 @@ module.exports = {
 		})
 		return data
 	},
+	// 请求所有的省份
+	fetchProvinceList: async() => {
+		let {data} = await request({
+			url:domain.getAPI('fetchProvinceList'),
+			method: "GET",
+		})
+		return data
+	},
+	// 根据省份id请求城市
+	fetchcityListByProvinceId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchcityListByProvinceId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	}
 }

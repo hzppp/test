@@ -2,16 +2,16 @@
 	<view class="formpop" v-if="isShowFormPop">
 		<view class="form" v-if="popName == 'form'">
 			<view class="header">
-				<view class="p1">完善资料</view>
+				<view class="p1">{{title}}</view>
 				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
 			</view>
 			<view class="content">
 				<picker @change="bindMultiPickerColumnChangeser" mode="selector" :range="serialList" :range-key="'name'" class="input-view auto-input">
 					<view>{{serialList[indexSerial].name}}</view>
 				</picker>
-				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="province"
-				 :range-key="'text'" :class="'input-view city-input ' + (showCityText == '请选择' ? 'placeholder':'')">
-					<view>{{showCityText}}</view>
+				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="[provinceList, cityList]"
+				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')">
+					<view>{{showProvinceCityText}}</view>
 				</picker>
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="areaList" :range-key="'areaName'" :class="'input-view area-input ' + (areaList[indexarea].areaName == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{areaList[indexarea].areaName}}</view>
@@ -43,14 +43,14 @@
 		<view class="form-warning-pop" v-if="popName == 'form-warning-pop'">
 			<view class="warning-icon"></view>
 			<view class="p1">您已报名</view>
-			<text class="p2">工作人员会尽快与您电话联系\n请留意接听电话</text>
+			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
 		<!-- 成功 -->
 		<view class="form-success-pop" v-if="popName == 'form-success-pop'">
 			<view class="success-icon"></view>
 			<view class="p1">报名成功</view>
-			<text class="p2">工作人员会尽快与您电话联系\n请留意接听电话</text>
+			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
 		<!--  -->
@@ -64,7 +64,7 @@
 		<view class="coupon-warning-pop" v-if="popName == 'coupon-warning-pop'">
 			<view class="warning-icon"></view>
 			<view class="p1">您已领取过优惠券</view>
-			<text class="p2">请到我的优惠券查看</text>
+			<text class="p2">请到【我的-我的优惠券】查看</text>
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
@@ -72,7 +72,7 @@
 		<view class="coupon-success-pop" v-if="popName == 'coupon-success-pop'">
 			<view class="success-icon"></view>
 			<view class="p1">领取成功</view>
-			<text class="p2">请到我的优惠券查看</text>
+			<text class="p2">请到【我的-我的优惠券】查看</text>
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
@@ -87,20 +87,20 @@
 			return {
 				dealerList: [],
 				currentDealerIndex: 0,
+				title: '完善资料',
 				currentObj: {},
 				from: "",
 				serialList: [],
 				indexSerial: "0",
-				province: [
-					[],
-					[]
-				],
+				provinceList: [],
+				cityList: [],
+				crtProvinceItem: {}, // 当前选择的省份
+				crtCityItem: {}, // 当前选择的城市
 				indexCity: "",
 				indexarea: "0",
 				areaList: [{
 					areaName: "请选择您的地区"
 				}],
-				showCityText: "请选择",
 				isShowFormPop: false,
 				popName: '',
 				phone: "",
@@ -110,11 +110,22 @@
 				isActLink: false
 			}
 		},
+		computed: {
+			showProvinceCityText () {
+				let text = '请选择'
+				if (this.crtProvinceItem.id && this.crtCityItem.id) {
+					text = this.crtProvinceItem.name + ' ' + this.crtCityItem.name
+				}
+				return text 
+			}
+		},
 		methods: {
-			formShow(name, from = "", obj = {}) {
+			formShow(name, from = "", obj = {}, title) {
 				this.popName = name
 				this.from = from
 				this.currentObj = obj
+				this.title = title
+				this.reqProvinceList()
 				this.getpreClue()
 			},
 			formHide() {
@@ -137,7 +148,6 @@
 					detail
 				} = e
 				this.indexarea = detail.value
-				// console.log('this.indexarea', this.areaList[this.indexarea].areaId)
 				this.getFormDealer(true)
 			},
 			bindMultiPickerChange(e) {
@@ -145,25 +155,16 @@
 				let {
 					detail
 				} = e
-				detail.value[0] = detail.value[0] || 0
-				detail.value[1] = detail.value[1] || 0
-				this.indexCity = detail.value
-				this.showCityText = this.province[0][detail.value[0]].text + ' ' + this.province[1][detail.value[1]].text
-				this.getArea()
-				this.getFormDealer()
+				this.crtProvinceItem = this.provinceList[detail.value[0]]
+				this.crtCityItem = this.cityList[detail.value[1]]
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
 					detail
 				} = e
 				if (detail.column == 0) {
-					let index = this.province[0][detail.value]
-					if (this.from == 'coupon' || this.from == 'activity') {
-						this.fsetcity(detail.value)
-					} else {
-						this.getCity(index.provinceId)
-					}
-
+					this.cityList = []
+					this.reqcityListByProvinceId(this.provinceList[detail.value].id)
 				}
 			},
 			getValue(name, e) {
@@ -172,8 +173,6 @@
 						value
 					}
 				} = e
-				// console.log('getValue============',name)
-				// console.log(value)
 				if (name == 'name') {
 					this.name = value
 				} else {
@@ -203,7 +202,6 @@
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
 					source = 2
-					//   sourceId = lydx.serialGroupId
 					sourceId = chexi.serialGroupId
 				} else if (ly == 'dealer') {
 					source = 3
@@ -211,22 +209,17 @@
 				}
 				let isphone = this.isPoneAvailable(this.phone)
 				if (!isphone) {
-					//   console.log('请输入正确手机号')
 					this.showToast('请输入正确手机号')
 					return false
 				}
 				if (!this.name) {
-					//   console.log('请输入姓名')
-					//   this.showToast('请输入姓名')
-					//   return false
+					
 				}
 				if (!cs) {
-					//   console.log("请选择城市")
 					this.showToast('请选择城市')
 					return false
 				}
 				if (!chexi.serialGroupId) {
-					//   console.log('请选择车系')
 					this.showToast('请选择车系')
 					return false
 				}
@@ -281,23 +274,9 @@
 				this.popName = popname
 
 				console.log(data)
-				/*
-				{
-				    mobile:this.phone,
-				    name:"xxx",
-				    regionId:"",
-				    serialGroupId:"",
-				    source:"",//留资来源,0优惠券,1活动报名,2车系页询价,3经销商询价
-				    sourceId:"",//留资来源对应的id，若source=0，sourceId代表优惠券Id。若source=1，sourceId代表活动id。以此类推
-				    userId:"",
-				    areaId:""
-				}
-				*/
-				//   submitClue
 			},
 			toMyPage() {
 				let url = '/pages/my'
-				// uni.reLaunch({url})
 				uni.navigateTo({
 					url
 				})
@@ -402,37 +381,7 @@
 					obj.name = obj.serialGroupName
 				}
 				this.serialList = data.serialGroupList
-				//   城市选择
-				for (let i in data.cityVo) {
-					let obj = data.cityVo[i]
-					obj.text = obj.provinceName
-				}
-				this.province[0] = data.cityVo
 				this.isShowFormPop = true
-				let provinceIndex = 0
-				let sfid = app.globalData.currentLocation.cityData.proId
-				for (let i in data.cityVo) {
-					let id = data.cityVo[i].provinceId
-					if (id == sfid) {
-						provinceIndex = i
-					}
-				}
-				this.fsetcity(provinceIndex)
-				this.toFirst(this.province[0], provinceIndex)
-				let csIndex = 0
-				let csid = app.globalData.currentLocation.cityData.cityId
-				for (let i in this.province[1]) {
-					let id = this.province[1][i].regionId
-					if (id == csid) {
-						csIndex = i
-					}
-				}
-				console.log('provinceIndex', provinceIndex)
-				this.toFirst(this.province[1], csIndex)
-				this.indexCity = [0, 0]
-				this.showCityText = this.province[0][0].text + ' ' + this.province[1][0].text
-				this.getArea()
-
 			},
 			fsetcity(iiii = 0) {
 				let obj = this.province[0]
@@ -467,42 +416,8 @@
 					} else {
 						this.serialList = data
 					}
-
 				})
-				//   获取省份
-				let province = await api.getProvince('form')
-				for (let i in province.data) {
-					province.data[i]['text'] = province.data[i].provinceName
-				}
-				let provinceIndex = 0
-				// if(this.from == 'serial' || true){
-				let sfid = app.globalData.currentLocation.cityData.proId
-				for (let i in province.data) {
-					let id = province.data[i].provinceId
-					if (id == sfid) {
-						provinceIndex = i
-					}
-				}
-				// }
-				await this.getCity(province.data[provinceIndex].provinceId)
-				this.province[0] = province.data
-				this.toFirst(this.province[0], provinceIndex)
-				// if(this.from == 'serial' || true){
-				let csIndex = 0
-				let csid = app.globalData.currentLocation.cityData.cityId
-				for (let i in this.province[1]) {
-					let id = this.province[1][i].regionId
-					if (id == csid) {
-						csIndex = i
-					}
-				}
-				this.toFirst(this.province[1], csIndex)
-				this.indexCity = [0, 0]
-				this.showCityText = this.province[0][0].text + ' ' + this.province[1][0].text
-				this.getArea()
-				// }
 				this.isShowFormPop = true
-
 			},
 			async getCity(id) {
 				let {
@@ -511,7 +426,6 @@
 				for (let i in data) {
 					data[i]['text'] = data[i].regionName
 				}
-				// this.province[1] = data
 				this.$set(this.province, 1, data)
 				return data
 			},
@@ -524,7 +438,6 @@
 				this.areaList = [{
 					areaName: "请选择您的地区"
 				}, ...data]
-				//   this.getFormDealer()
 
 			},
 			async getFormDealer(ff = false) {
@@ -551,6 +464,33 @@
 			isDealerList(text = '该城市没有经销商，请切换城市') {
 				if (this.dealerList.length == 0) {
 					this.showToast(text)
+				}
+			},
+			// 请求所有的省份
+			async reqProvinceList () {
+				try {
+					const res = await api.fetchProvinceList()
+					if (res.code == 1) {
+						this.provinceList = res.data
+						await this.reqcityListByProvinceId(this.provinceList[0].id)
+						this.crtProvinceItem = this.provinceList[0]
+						this.crtCityItem = this.cityList[0]
+					}
+				} catch(err) {
+					this.showToast('获取省份信息失败')
+					console.error(err)
+				}
+			},
+			// 根据省份id请求城市
+			async reqcityListByProvinceId (provinceId) {
+				try {
+					const res = await api.fetchcityListByProvinceId({provinceId})
+					if (res.code == 1) {
+						this.cityList = res.data
+					}
+				} catch (err) {
+					this.showToast('获取城市信息失败')
+					console.error(err)
 				}
 			}
 		}
