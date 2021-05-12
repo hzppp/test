@@ -2,7 +2,7 @@
 	<view class="test">
 		<getFormidbox>
 			<view class="content" slot="content">
-
+                1
 			</view>
 		</getFormidbox>
 	</view>
