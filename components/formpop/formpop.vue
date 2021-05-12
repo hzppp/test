@@ -43,14 +43,14 @@
 		<view class="form-warning-pop" v-if="popName == 'form-warning-pop'">
 			<view class="warning-icon"></view>
 			<view class="p1">您已报名</view>
-			<text class="p2">工作人员会尽快与您电话联系\n请留意接听电话</text>
+			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
 		<!-- 成功 -->
 		<view class="form-success-pop" v-if="popName == 'form-success-pop'">
 			<view class="success-icon"></view>
 			<view class="p1">报名成功</view>
-			<text class="p2">工作人员会尽快与您电话联系\n请留意接听电话</text>
+			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
 		<!--  -->
@@ -64,7 +64,7 @@
 		<view class="coupon-warning-pop" v-if="popName == 'coupon-warning-pop'">
 			<view class="warning-icon"></view>
 			<view class="p1">您已领取过优惠券</view>
-			<text class="p2">请到我的优惠券查看</text>
+			<text class="p2">请到【我的-我的优惠券】查看</text>
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
@@ -72,7 +72,7 @@
 		<view class="coupon-success-pop" v-if="popName == 'coupon-success-pop'">
 			<view class="success-icon"></view>
 			<view class="p1">领取成功</view>
-			<text class="p2">请到我的优惠券查看</text>
+			<text class="p2">请到【我的-我的优惠券】查看</text>
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
