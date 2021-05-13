@@ -1,0 +1,821 @@
+<template>
+	<!-- 参配页 -->
+	<view class='canpei uni'>
+		<!-- 车型对比计数器 S -->
+		<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
+		<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
+		
+		<!-- #ifdef MP-WEIXIN -->
+		<!-- <count :channel="9778" v-if="navigateBack == '1'"></count> -->
+		<!-- <count :channel="9787" v-if="navigateBack == '2'"></count> -->
+		<!-- #endif -->
+		<!-- #ifdef MP-BAIDU -->
+		<!-- <count :channel="9841" v-if="navigateBack == '1'" :__uuid="serialId+':1'"></count> -->
+		<!-- <count :channel="9850" v-if="navigateBack == '2'"></count> -->
+		<!-- #endif -->
+		<!-- 车型对比计数器 D -->
+		<back-home></back-home>
+		<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
+			<view class="icon">
+				<i class="iconfont icondaohangpinlei"></i>
+			</view>
+			<text>导航</text>
+		</view>
+		<!-- <block v-if="nodata">
+			<view class="nodata_box">
+				<view class="nodata">
+					<view class="td">暂无参配信息</view>
+				</view>
+			</view>
+		</block> -->
+		<block>
+			<view class="canpei_top">
+				<view class="canpei_top_left" @tap="toggleHide">
+					<!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
+					<view class="canpei_top_left_title">
+						<!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
+						参数配置
+					</view>
+				</view>
+				<scroll-view scroll-x @scroll="getX" :scroll-left="scrollLeft" @touchend="setLeft" class="canpei_top_right">
+					<view class="car_box" :style="'width:'+width+'rpx'">
+						<block v-for="(item,index) in Data.detailArray" :key="index">
+							<view class="car_list">
+								<view class="item">
+									<text>{{item.modelName}}</text>
+									<view class="close" @tap="delCar(item.modelId,index)">
+										<i class="iconclose iconfont"></i>
+									</view>
+								</view>
+							</view>
+						</block>
+						<view class="car_list">
+							<view :class="max==4||nodata?'add opc':'add'" @tap="addCar">
+								<view class="add_icon">
+									<i class="iconadd iconfont"></i>
+								</view>
+								<view class="add_title">
+									添加车型
+								</view>
+								<view class="add_message">
+									(最多可添加4项)
+								</view>
+							</view>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+			<scroll-view scroll-y class="canpei_bot" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
+				<block v-if="Data.detailArray.length==0">
+					<view class="canpei_bot_none"></view>
+				</block>
+				<block v-else>
+					<view class="canpei_bot_left">
+						<block v-for="(item,index) in dataList" :key="index">
+							<view class="canpei_list_left">
+								<view class="canpei_head" :id="'id_'+index">
+									<view class="canpei_head_left">
+										{{item.name}}
+									</view>
+									<view class="flex-1"></view>
+									<view class="canpei_head_right">
+										●标配 ○选配 -无
+									</view>
+								</view>
+								<block v-if="item.detail.length>0">
+									<block v-for="(it,inds) in item.detail[0]" :key="inds">
+										<block v-if="it.key != '本地最低价' && showOrhide||(!showOrhide&&difData[it.key])">
+                                            <!--  :class="['left_item',difData[it.key]&&Data.detailArray.length>1?'yellow':'']" -->
+											<view class="left_item">
+												<i>{{it.key}}</i>
+											</view>
+										</block>
+									</block>
+								</block>
+							</view>
+						</block>
+					</view>
+					<view class="canpei_box_right_con">
+						<scroll-view scroll-x class="canpei_box_right" @scroll="getX" @touchend="setLeft" :scroll-left="scrollLeft">
+							<block v-for="(item1,index) in dataList" :key="index">
+								<view class="canpei_head_right"></view>
+								<view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
+									<block v-for="(item2,idx) in item1.detail" :key="idx">
+										<view class="right_list">
+											<block v-for="(d,i) in item2" :key="i">
+												<!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
+												<block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
+													<view class="right_list_item">
+                                                        <view :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']">{{d.value}}</view>
+														<view v-if="d.key === '官方报价'">
+															<view class="zdj_box">
+																<view class="zdj" @tap.stop="toXdj(idx)">预约试驾</view>
+															</view>
+														</view>
+													</view>
+												</block>
+											</block>
+										</view>
+									</block>
+									<view class="right_list">
+										<block v-for="(d,i) in item.detail[0]" :key="i">
+											<block v-if="showOrhide||(!showOrhide&&difData[d.key])">
+												<view class="right_list_item"></view>
+											</block>
+										</block>
+									</view>
+								</view>
+							</block>
+						</scroll-view>
+					</view>
+				</block>
+			</scroll-view>
+		</block>
+		<!-- 导航弹窗s -->
+		<block v-if="showNav">
+			<view class="nav_tc" @tap="showNav=!showNav">
+				<scroll-view scroll-y class="tc_win" @tap.stop>
+					<view class="tc_win_box">
+						<block v-for="(item,index) in dataList" :key="index">
+							<view class="nav_list" @tap.stop="toView(index)">
+								{{item.name}}
+							</view>
+						</block>
+					</view>
+				</scroll-view>
+			</view>
+		</block>
+		<!-- 导航弹窗e -->
+	</view>
+</template>
+<script>
+	import { dataInit } from "@/jsfiles/canpei";
+	import ContrastCar from "@/units/ContrastCar.js";
+	import countPage from '@/configs/countPage';
+	export default {
+		data() {
+			return {
+				countPage,//页面计数器id
+				test: '测试字符串',
+				serialId: '', //车系id
+				ids: "",
+				dataList: [], //数据列表
+				Data: {},
+				width: 280,
+				Left: 0, //记录滚动的值
+				scrollLeft: 0, //scroll-view位置
+				difData: "", //不相同的数据
+				difData1: '',
+				showOrhide: true,
+				showNav: false, //显示导航弹窗
+				scrollID: "",
+				offon: true, //防止连续多次点击
+				sidName: "", //车系名
+				stopYearCur: -1, //停售车型年款选择标志
+				max: 0,
+				dataInfo: "",
+				mids: "",
+				Runshow: false,
+				nodata: false,
+				navigateBack: '-1',
+                tag: true
+			}
+		},
+		watch: {
+			"Data.detailArray"(val) {
+				this.max = val.length;
+				this.width = 280 + val.length * 250;
+			}
+		},
+		onUnload() {
+			this.$store.state.selectCars = {}
+		},
+		onLoad(options) {
+			// options = {
+			// 	navigateBack: "1",
+			// 	max: "4",
+			// 	serialId: "3996",
+			// 	ids:"3996"
+			// };
+			// uni.showLoading({
+			// 	title: "加载中"
+			// })
+			this.serialId = options.serialId;
+			this.navigateBack = options.navigateBack;
+			this.mids = options.ids || "";
+			this.max = options.max || 0;
+			let ids = options.ids || "";
+			if (ids) {
+				ids = ids.split(",").slice(0, 4);
+			}
+			this.ids = ids;
+			// if (options.navigateBack == '1') {
+			// 	uni.setNavigationBarTitle({
+			// 		title: '参配'
+			// 	})
+			// } else {
+			// 	uni.setNavigationBarTitle({
+			// 		title: '车型对比'
+			// 	})
+			// }
+			this.addGlobalSelectCar(this.ids)
+			this.init()
+		},
+		onShow() {
+			if (!this.Runshow && this.navigateBack == '1') {
+				this.Runshow = true
+				return
+			};
+			this.addData()
+		},
+		onShareAppMessage() {
+			if (this.navigateBack == '1') { //参数配置
+				return {
+					title: this.data.sidName + '参数配置',
+					desc: '点击查看',
+					path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
+				}
+			} else if (this.navigateBack == '2') { //车型对比
+				return {
+					title: '车型参数配置对比',
+					desc: '点击查看',
+					path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
+				}
+			}
+		},
+		methods: {
+			addGlobalSelectCar(ids) {
+				var ret = {};
+				if (ids.length > 0) {
+					ids.forEach(function(id) {
+						ret['id_' + id] = true;
+					})
+				}
+				this.$store.state.selectCars = ret;
+			},
+			// 打开计算器
+			toCalc(index) {
+				// uni.navigateTo({
+				// 	url: `/pages_car/calc/calc?id=${this.Data.detailArray[index].modelId}&serialId=${this.Data.detailArray[index].serialGorupId}`
+				// })
+			},
+			// 前往询底价
+			// toXdj(index) {
+			// 	uni.navigateTo({
+			// 		url: `/pages_car/xdj/xdj?mid=${this.Data.detailArray[index].modelId}&sid=${this.Data.detailArray[index].serialGorupId}`
+			// 	})
+			// },
+			async init() {
+				try {
+					let data = await this.getCarData(this.mids);
+					//只传车系Id不传mids进来，会导致carNum未被初始化
+					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
+						let carIds = [];
+						data.detailArray.forEach((car) => {
+							carIds.push(car.modelId);
+						})
+						this.addGlobalSelectCar(carIds);
+					}
+					this.width += data.detailArray.length * 250;
+					this.max = data.detailArray.length;
+					this.Data = data;
+					this.sidName = data.detailArray[0].serialGorup;
+					let res = await dataInit(data);
+					this.dataList = res.dataList;
+					this.difData = res.difData;
+					// console.log('-------', this.dataList, this.difData)
+					uni.hideLoading()
+				} catch (e) {
+					if (e == 0) { //没有数据
+						this.nodata = true
+					}
+					uni.hideLoading()
+				}
+			},
+			async addData() {
+				if (this.$store.state.selectCars && this.$store.state.selectCars.newSelect) {
+					// #ifdef MP-BAIDU
+					this.difData = ""
+					// #endif
+					try {
+						let data = await this.getCarData(this.$store.state.selectCars.newSelect);
+						this.Data.detailArray = this.Data.detailArray.concat(data.detailArray[0]);
+						let res = await dataInit(this.Data);
+						this.dataList = res.dataList;
+						this.$nextTick(() => {
+							this.difData = res.difData
+						})
+						delete this.$store.state.selectCars.newSelect;
+					} catch (e) {
+						if (e == 0) { //没有数据
+							this.nodata = true
+						}
+						uni.hideLoading()
+					}
+				}
+			},
+			toggleHide(){
+				if(JSON.stringify(this.Data)!='{}'&&this.Data.detailArray.length>1) {
+					this.showOrhide = !this.showOrhide
+					}
+			},
+			// 添加车型
+			addCar() {
+				if (!this.offon || this.Data.detailArray.length >= 4 || JSON.stringify(this.Data) == '{}') return;
+				this.offon = false;
+				let url = ""
+				if (this.navigateBack == '1') { //从车系首页点击参配过来，点击添加车带车系
+					url = '/pages_car/chooseModels/chooseModels?navigateBack=2&serialId=' + this.serialId + '&serialName=' + this.sidName;
+				} else if (this.navigateBack == '2') { //从车系首页点击开始对比过来，点击添加车型不带车系
+					url = '/pages_car/chooseModels/chooseModels?navigateBack=3&compare=true';
+				}
+				uni.navigateTo({
+					url,
+					success: () => {
+						this.offon = true
+					}
+				})
+			},
+			// 删除车型
+			async delCar(id, index) {
+				// #ifdef MP-BAIDU
+				this.difData = ""
+				// #endif
+				this.Data.detailArray.splice(index, 1);
+				delete this.$store.state.selectCars["id_" + id];
+				if (this.navigateBack == '2') {
+					ContrastCar.remove(id);
+				}
+				let res = await dataInit(this.Data);
+				this.dataList = res.dataList
+				this.$nextTick(() => {
+					this.difData = res.difData
+				})
+			},
+			// 前往锚点位置
+			toView(index) {
+				this.scrollID = "id_" + index
+				this.showNav = false
+			},
+			// 滚动scroll-view获取滚动距离
+			getX(e) {
+				this.Left = e.detail.scrollLeft
+			},
+			// 设置scroll-view的值
+			setLeft(e) {
+				setTimeout(() => {
+					this.scrollLeft = this.Left
+				}, 200);
+			},
+			getCarData(ids) {
+				return new Promise((relove, resject) => {
+					try{
+						uni.request({
+							url: "https://ics.pcauto.com.cn/magear/s/pcauto/info/v1/detailCompare.xsp",
+							data: {
+								serialId: this.serialId,
+								modelIds: ids,
+								rid: 1
+							},
+							header: {
+								'Content-Type': 'application/json'
+							},
+							success: res => {
+								if (res.data.status == -1) { //没有车型比较
+									resject(0)
+								} else {
+									if (!Array.isArray(res.data.detailArray)) {
+										res.data.nodata = true
+										resject(0)
+									} else {
+										relove(res.data)
+									}
+								}
+							},
+							fail: err => {
+								this.$toast("网络异常")
+								resject()
+							}
+						})
+					}catch(e){
+						//TODO handle the exception
+						console.error('eeeeeeeeeee',e)
+					}
+
+				})
+			}
+		}
+	}
+</script>
+<style lang="scss">
+	@import url("@/static/css/icon.css");
+
+	.canpei {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		font-size: 26rpx;
+
+		.nav_btn {
+			text-align: center;
+			position: fixed;
+			z-index: 11;
+			right: 32rpx;
+			bottom: 326rpx;
+			width: 78rpx;
+			height: 78rpx;
+			line-height: 36rpx;
+			background: #fff;
+			border-radius: 88rpx;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+			font-size: 20rpx;
+			z-index: 1999;
+			color: #333;
+
+			.icon {
+				width: 100%;
+				text-align: center;
+				margin-top: 12rpx;
+
+				.iconfont {
+					font-size: 30rpx;
+					color: #333;
+				}
+			}
+
+			text {
+				font-size: 20rpx;
+			}
+		}
+
+		.nav_btn_act {
+			color: #3377d7;
+			box-shadow: 0 0 10px rgba(0, 122, 223, 0.4);
+
+			.icon {
+				.iconfont {
+					color: #3377d7;
+				}
+			}
+		}
+
+		.nav_tc {
+			height: 100%;
+			width: 100%;
+			@include flex_center_center;
+			position: fixed;
+			z-index: 1998;
+			top: 0;
+			left: 0;
+
+			.tc_win {
+				width: 560rpx;
+				height: calc(100% - 240rpx);
+				background: #fff;
+				box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+				padding-bottom: 20rpx;
+
+				.tc_win_box {
+					@include flex_left_top;
+					flex-wrap: wrap;
+					font-size: 28rpx;
+					color: #121c35;
+					height: 100%;
+					width: 100%;
+					align-content: flex-start;
+
+					.nav_list {
+						width: 243rpx;
+						height: 60rpx;
+						border: 1px solid #d6d5d6;
+						border-radius: 5px;
+						margin: 20rpx 0 0 24rpx;
+						@include flex_center_center
+					}
+				}
+
+			}
+		}
+
+		.nodata_box {
+			flex: 1;
+			position: relative;
+			background: #f0f0f5;
+			height: 100%;
+
+			.nodata {
+				position: absolute;
+				top: 0;
+				left: 0;
+				display: table;
+				height: 100%;
+				width: 100%;
+				font-size: 16px;
+				color: #888;
+				background: #f0f0f5;
+				bottom: 0;
+
+				.td {
+					text-align: center;
+					margin-top: 50%;
+				}
+			}
+		}
+
+		.yellow {
+			background: #FFFFCF !important;
+		}
+        .origin {
+            width: 100%;
+            color: #fa8943 !important;
+        }
+
+		.canpei_top {
+			height: 200rpx;
+			width: #fff;
+			border-bottom: 1px solid #D9D9D9;
+			@include flex_left_center;
+
+			.canpei_top_left {
+				width: 250rpx;
+				height: 170rpx;
+				@include flex_center_center;
+				flex-wrap: wrap;
+				align-content: center;
+
+				.icon {
+					background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/weixin/baojia/canpeibg.png) no-repeat;
+					background-size: cover;
+					width: 28px;
+					height: 22px;
+				}
+
+				.icon_none {
+					background-position: -30px 0;
+				}
+
+				.canpei_top_left_title {
+					width: 100%;
+					text-align: center;
+					color: #333333;
+					margin-top: 10rpx;
+					font-size: 26rpx;
+                    font-weight: 800;
+				}
+			}
+
+			.canpei_top_right {
+				height: 170rpx;
+				width: 500rpx;
+				/* #ifdef MP-ALIPAY */
+				padding-left: 2rpx;
+				/* #endif  */
+				.car_box {
+					height: 100%;
+					min-width: 500rpx;
+					@include flex_left_center;
+
+					.car_list {
+						width: 250rpx;
+						margin: 0 5rpx;
+						margin-top: 10rpx;
+						display: inline-block;
+						border: 1px solid #ddd;
+						border-radius: 5px;
+						padding: 5rpx 15rpx;
+						position: relative;
+						font-size: 24rpx !important;
+
+						.item {
+							@include flex_center_center;
+							height: 150rpx;
+							width: 100%;
+
+							text {
+								width: 100%;
+								@include flex_center_center;
+								color: #333333;
+								font-size: 26rpx;
+							}
+
+							.close {
+								position: absolute;
+                                bottom: 0;
+                                right: 0;
+								height: 30rpx;
+								width: 30rpx;
+                                border-top-left-radius: 5px;
+								background: #808080;
+								@include flex_center_center;
+
+								.iconclose {
+									font-size: 25rpx;
+									color: #fff;
+								}
+							}
+						}
+
+						.add {
+							width: 100%;
+							@include flex_center_center;
+							flex-wrap: wrap;
+							align-content: center;
+							height: 100%;
+							white-space: normal;
+
+							.add_icon {
+								width: 100%;
+								text-align: center;
+
+								.iconfont {
+									color: #333333;
+									font-size: 35rpx;
+                                    font-weight: bold;  
+								}
+
+								;
+							}
+
+							.add_title {
+								width: 100%;
+								text-align: center;
+								color: #333333;
+								font-size: 26rpx;
+							}
+
+							.add_message {
+								font-size: 24rpx;
+								color: #aaa;
+								width: 100%;
+								text-align: center;
+							}
+						}
+
+						.opc {
+							opacity: 0.3;
+						}
+					}
+				}
+
+			}
+		}
+
+		.canpei_bot {
+			height: calc(100% - 200rpx);
+			width: 100%;
+			background: #eee;
+			@include flex_left_center;
+			position: relative;
+
+			.canpei_bot_none {
+				background: #fff;
+				height: 100%;
+				width: 100%;
+			}
+
+			.canpei_bot_left {
+				/*#ifdef MP-ALIPAY*/ 
+				position: absolute;
+				top: 0;
+				/*#endif*/
+				width: 250rpx;
+				.canpei_list_left {
+					color: #888;
+					width: 250rpx;
+					border-right: 1px solid #EEEEEE;
+					background: #fff;
+					padding-top: 80rpx;
+					position: relative;
+					min-height: 80rpx;
+
+					.canpei_head {
+						height: 80rpx;
+						width: 750rpx;
+						padding: 0 24rpx;
+						color: #888;
+						position: absolute;
+						left: 0;
+						z-index: 1100;
+						top: 0rpx;
+						background: #eee;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+
+						.canpei_head_left {
+							height: 80rpx;
+							width: 250rpx;
+                            font-weight: 600;
+                            color: #333333;
+							@include flex_left_center;
+
+							.canpei_head_right {
+								width: 234rpx;
+								height: 100%;
+								@include flex_right_center;
+							}
+						}
+					}
+
+					.left_item {
+						height: 50px;
+						width: 100%;
+						@include flex_center_center;
+						border-bottom: 1px solid #EEEEEE;
+						padding: 0 10rpx;
+						text-align: center;
+
+						&:last-child {
+							border-bottom: 0;
+						}
+					}
+				}
+			}
+
+			.canpei_box_right_con {
+				width: 500rpx;
+				position: absolute;
+				left: 250rpx;
+				top: 0;
+
+				.canpei_box_right {
+					width: 500rpx;
+					color: #333;
+					background: #fff;
+
+					.canpei_head_right {
+						width: 100%;
+						height: 100%;
+						@include flex_right_center;
+						height: 80rpx;
+						padding: 0 24rpx;
+						color: #888;
+						background: #eee;
+					}
+
+					.canpei_box_right_box {
+						min-width: 500rpx;
+						@include flex_left_center;
+
+						.right_list {
+							width: calc(250rpx + 1px);
+							border-right: 1px solid #eee;
+
+							&:last-child {
+								width: 270rpx;
+								border: 0;
+							}
+
+							.right_list_item {
+                                display: flex;
+								width: 100%;
+								height: 50px;
+								border-bottom: 1px solid #eee;
+								@include flex_center_center(wrap);
+								padding: 0 10rpx;
+								text-align: center;
+								align-content: center;
+
+								.zdj_box {
+									width: 100%;
+									@include flex_center_center(wrap)
+								}
+
+								.icon {
+									background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/weixin/baojia/canpeibg.png) no-repeat;
+									background-size: cover;
+									display: inline-block;
+									vertical-align: middle;
+									width: 22px;
+									height: 22px;
+									background-position: -58px;
+									text-indent: -999rem;
+								}
+
+								.zdj {
+                                    padding: 1px 15px;
+                                    font-size: 12px;
+									height: 18px;
+									overflow: hidden;
+									color: #fa8943;
+									margin: 3px 10px 0;
+									border-radius: 30px;
+									background: #fa8943;
+                                    color: #ffffff;
+									@include flex_center_center(wrap)
+								}
+
+								&:last-child {
+									border-bottom: 0;
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+</style>

@@ -264,6 +264,32 @@
 				"navigationStyle": "custom"
 		    }
 		}
+		,{
+		    "path" : "pages/LookCar",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+		    }
+		}
+		,{
+		    "path" : "pages/ChooseCity",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "选择城市",
+		        "enablePullDownRefresh": false
+		    }
+		}
+		,{
+		    "path" : "pages/canpei",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "车型对比",
+		        "enablePullDownRefresh": false
+		    }
+		}
+
     ],
 	"tabBar": {
 	  "color": "#999999",

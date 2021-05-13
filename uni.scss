@@ -74,3 +74,80 @@ $uni-color-subtitle: #555555; // 二级标题颜色
 $uni-font-size-subtitle:36rpx;
 $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:30rpx;
+// 超出部分省略号
+@mixin text($num:1){
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: $num;
+    -webkit-box-orient: vertical;
+    word-break:break-all 
+}
+// 超出部分省略号 end
+
+// 左上--->右下渐变色
+@mixin ccolor($color1,$color2){
+    background: linear-gradient(to bottom right, $color1 , $color2);
+  }
+// 从上到下
+@mixin ccolor_top($color1,$color2){
+  background: linear-gradient(to bottom, $color1 , $color2);
+}
+// 左--->右渐变色
+@mixin ccolor2($color1,$color2){
+  background: linear-gradient(to right, $color1 , $color2);
+}
+// flex布局
+@mixin  flex_left_center($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-wrap: $wrap
+}
+@mixin  flex_left_top($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: $wrap
+}
+@mixin  flex_left_bottom($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-end;
+	flex-wrap: $wrap
+}
+@mixin flex_right_center($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	flex-wrap: $wrap
+}
+@mixin flex_right_top($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	flex-wrap: $wrap
+}
+@mixin flex_right_bottom($wrap:nowrap) {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-end;
+	flex-wrap: $wrap
+}
+@mixin flex_center_top($wrap:nowrap) {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+@mixin flex_center_center($wrap:nowrap) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: $wrap
+}
+@mixin flex_center_bottom($wrap:nowrap) {
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	flex-wrap: $wrap
+}
