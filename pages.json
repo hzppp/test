@@ -288,6 +288,14 @@
 		        "enablePullDownRefresh": false
 		    }
 		}
+		,{
+		    "path" : "pages/carSerialsVS",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "车系对比",
+		        "enablePullDownRefresh": false
+		    }
+		}
 
     ],
 	"tabBar": {
