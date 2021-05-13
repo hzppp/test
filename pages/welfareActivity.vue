@@ -5,7 +5,6 @@
 		<form-pop ref="formpop"></form-pop>
 		<scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
 		 scroll-with-animation>
-			<view class="welfareActivity-top-banner" @tap="toMall"></view>
 			<view class="city">
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
 				 mode="multiSelector" :range="province" range-key="text" class="select-city">
@@ -128,21 +127,7 @@
 				// 	console.log('MallLink', res)
 				// })
 			},
-			
-			// 跳转商城页
-			toMall(){
-				uni.navigateTo({
-					url:'/pages/mall/index'
-				})
-				// api.getMallLink().then(res => {
-				// 	let vurl = escape(res.data)
-				// 	let url = `/pages/webview?webURL=${vurl}`
-				// 	uni.navigateTo({
-				// 		url
-				// 	})
-				// 	console.log('MallLink', res)
-				// })
-			},
+
 			bindMultiPickerChange(e) {
 				let {
 					detail = [0, 0]
@@ -154,7 +139,7 @@
 				this.selectCity = this.selectIndex.regionName
 				this.resetjson()
 				this.getWelfare()
-				this.getactivity() 
+				this.getactivity()
 				{
 					// 改变默认定位省市
 					let currentLocation = app.globalData.currentLocation
@@ -288,11 +273,11 @@
 						// this.$invoke('coupon-list', 'morebtnShow')
 						this.$refs.couponlist.morebtnShow()
 					}
-					
+
 					// this.$invoke('coupon-list', 'setcouponList', this.welfareList)
 					this.$refs.couponlist.setcouponList(this.welfareList)
 				})
-				
+
 
 			},
 			async getCity(id) {

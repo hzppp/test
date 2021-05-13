@@ -32,9 +32,9 @@
 				</view>
 				<button class="getUserInfo-name_info" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo">登录</button>
 			</block>
-			<view v-if="!isUserInfoPage" class="right-content" @tap="totaskListPage">{{credits}}个众享币</view>
+<!--			<view v-if="!isUserInfoPage" class="right-content" @tap="totaskListPage">{{credits}}个众享币</view>-->
 		</view>
-		<view class="box" v-if="signInList.length > 0 && !isUserInfoPage">
+		<view class="box" v-if="false && signInList.length > 0 && !isUserInfoPage">
 			<view class="qd-title">
 				连续签到赚众享币
 				<view :class="'qd-btn ' + (isqd ? 'disabled':'')" @tap="qiandao">{{isqd ? '已签到':'签到'}}</view>
@@ -52,27 +52,6 @@
 				</block>
 			</view>
 		</view>
-		<!-- 认证状态：0待审核-，1-审核通过，2-未审核，3-未通过 -->
-		<view class="box">
-			<view class="box-list list1" @tap="jumpConfirm">
-				<view class="p1">个人信息</view>
-				<block v-if="user.isApprove == 0">
-					<view class="p2">成为认证车主，领取车主更多福利</view>
-					<view class="right isApprove">未认证</view>
-				</block>
-				<block v-if="user.isApprove == 1">
-					<view class="p2">已认证成功，可进入查看编辑</view>
-				</block>
-				<block v-if="user.isApprove == 2">
-					<view class="p2">车主认证中，可进入查看编辑</view>
-					<view class="right isApprove">认证中</view>
-				</block>
-				<block v-if="user.isApprove == 3">
-					<view class="p2">车主认证失败，可进入查看编辑</view>
-					<view class="right isApprove">认证失败</view>
-				</block>
-			</view>
-		</view>
 		<view class="box">
 			<view class="box-list list2" @tap="tocard">
 				<view class="p1">我的优惠券</view>
@@ -83,14 +62,9 @@
 				<view class="p1">消息中心</view>
 				<view class="right isApprove" v-if="user.unReadNum">有{{user.unReadNum}}条未读消息</view>
 			</view>
-			<view class="line"></view>
-			<view class="box-list list5" @tap="toMall">
-				<view class="p1">众享币商城</view>
-			</view>
-			<view class="line"></view>
-			<view class="box-list list6" @tap="getPrizeRecord">
+			<!-- <view class="box-list list6" @tap="getPrizeRecord">
 				<view class="p1">我的奖品</view>
-			</view>
+			</view> -->
 			<view class="line"></view>
 			<view class="box-list list4">
 				<navigator version="trial" class="activity-btn" target='miniProgram' app-id='wx1c5c0ec0757002c2' path='pages/index'
@@ -103,7 +77,6 @@
 		<view class="firstUnload" v-if="isshowUpload">
 			<view class="uploadbtn" @tap="chooseImg">
 			</view>
-
 		</view>
 		<view class="close" @tap="close" v-if="isshowUpload || fail"></view>
 		<view class="bg" v-if="isshowUpload || fail">
@@ -137,7 +110,7 @@
 				signInList: [],
 				qdIndex: 0, //第几天签到
 				credits: 0, //众享币数
-				isUserInfoPage:false,  
+				isUserInfoPage:false,
 				user: false,
 				userId: null,
 				isshowUpload: false,
@@ -152,10 +125,10 @@
 			let user = await api.getUser()
 			console.log(user)
 			this.user = user.data
-			
+
 			api.getCredits().then(res => {
 				this.credits = res.data || 0
-				
+
 			})
 			/*
 			api.getMallLink().then(res=>{
@@ -169,7 +142,7 @@
 			if (app.globalData && app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.userId) {
 				this.userId = app.globalData.pocketUserInfo.userId;
 			}
-			
+
 			let data = await api.getsignIn()
 			let list = data.data
 			let isqd = true
@@ -187,7 +160,7 @@
 			this.qdIndex = index
 			this.signInList = data.data
 			this.signInList
-			
+
 			console.log('getsignIn', data)
 		},
 		methods: {
@@ -238,7 +211,7 @@
 			},
 			// 跳转兑换记录
 			getPrizeRecord() {
-				
+
 				uni.navigateTo({
 					url:'/pages/mall/recordList'
 				})
@@ -267,7 +240,7 @@
 						this.credits = this.credits + addNumber
 						// this.$invoke('share-pop', 'shareSuccessShow', addNumber, '连续打卡可获得更多金币哦')
 						this.$refs.sharepop.shareSuccessShow(addNumber, '连续打卡可获得更多金币哦')
-						
+
 					} else {
 						console.log(code)
 					}
