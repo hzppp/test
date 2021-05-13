@@ -207,14 +207,11 @@ const config = {
 		mallGoodDetail:`${DOMAIN.host}/api/audi/xcx/gift/detail`,
 		//创建订单
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
-<<<<<<< HEAD
 		//获取各城市
-		allCityList:`${DOMAIN.changan}/xcx/base/allCities`,
-=======
+		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
 		fetchProvinceList: `${DOMAIN.changan}/xcx/base/provinces`,
 		fetchCityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`,
 		fetchDistrictListByCityId: `${DOMAIN.changan}/xcx/base/getDistricts`
->>>>>>> e06487ac9c8264ea6d331a46a0ddb4f210d33569
 	},
 	getAPI(key) {
 		let url;
