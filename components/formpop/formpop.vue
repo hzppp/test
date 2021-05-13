@@ -16,9 +16,9 @@
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
-				<picker v-if="dealerList.length > 0" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'dealerName'"
-				 :class="'input-view dealer-input jt-icon ' + (dealerList[currentDealerIndex].dealerId < 1 ? 'placeholder':'')">
-					<view>{{dealerList[currentDealerIndex].dealerName}}</view>
+				<picker mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'dealerName'"
+				 :class="'input-view dealer-input jt-icon ' + (!dealerList[currentDealerIndex] ? 'placeholder':'')">
+					<view>{{dealerList[currentDealerIndex] ? dealerList[currentDealerIndex].dealerName : '请选择经销商'}}</view>
 				</picker>
 				<view class="input-view mobile-input name-input">
 					<input type="text" @input="getValue('name',$event)" :value="name" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
@@ -191,15 +191,12 @@
 
 			},
 			async submit() {
-				let sf = this.province[0][this.indexCity[0]]
-				let cs = this.province[1][this.indexCity[1]]
 				let chexi = this.serialList[this.indexSerial]
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
-				console.log('省份', sf)
-				console.log('城市', cs)
-				console.log('地区', dq)
+				console.log('省份', this.crtProvinceItem)
+				console.log('城市', this.crtCityItem)
 				console.log('车系', chexi)
 				console.log('来源', ly)
 				console.log('来源对象', lydx)
@@ -217,37 +214,35 @@
 					sourceId = lydx.id || lydx.dealerId
 				}
 				let isphone = this.isPoneAvailable(this.phone)
-				if (!isphone) {
-					this.showToast('请输入正确手机号')
-					return false
-				}
-				if (!this.name) {
-					
-				}
-				if (!cs) {
-					this.showToast('请选择城市')
-					return false
-				}
 				if (!chexi.serialGroupId) {
 					this.showToast('请选择车系')
 					return false
 				}
-				console.log('this.dealerList', this.dealerList)
-				let dealerId
-				if (this.dealerList.length == 0) {
-					dealerId = ''
-				} else {
-					dealerId = this.dealerList[this.currentDealerIndex].dealerId
+				if (!this.crtProvinceItem.id) {
+					this.showToast('请选择省份')
+					return false
+				}
+				if (!this.crtCityItem.id) {
+					this.showToast('请选择城市')
+					return false
+				}
+				if (!isphone) {
+					this.showToast('请输入正确手机号')
+					return false
+				}
+				if (!this.dealerList[this.currentDealerIndex]) {
+					this.showToast('请选择经销商')
+					return
 				}
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
-					regionId: cs.regionId,
+					regionId: this.crtCityItem.id,
 					serialGroupId: chexi.serialGroupId,
 					source: source,
 					sourceId: sourceId,
-					dealerId: dealerId,
-					areaId: dq.areaId
+					dealerId: this.dealerList[this.currentDealerIndex].dealerId,
+					areaId: this.crtDistrictItem.id
 				})
 				let popname
 				if (data.code == 1) { //成功留资
@@ -371,11 +366,7 @@
 				console.log('preClue-data', data) 
 				{
 					if (data.dealerList) {
-						let dList = [...[{
-							dealerName: data.defaultDealerName || '请选择经销商',
-							dealerId: data.defaultDealerId
-						}], ...data.dealerList]
-						this.dealerList = dList
+						this.dealerList = data.dealerList
 					} else {
 						this.isDealerList()
 					}
