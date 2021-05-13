@@ -1,13 +1,13 @@
 <template>
-    <view class="btn-wrap">
-        <button class="go-canpei">
+    <view class="c-btn-wrap">
+        <button class="go-canpei" @tap="goCanPei">
             查看参数配置
         </button>
         <view class="bottom-btn-wrap">
             <button class="bottom-btn">
                 购车计算
             </button>
-            <button class="bottom-btn">
+            <button class="bottom-btn" @tap="goCanPei">
                 车型对比
             </button>
         </view>
@@ -16,16 +16,27 @@
 
 <script>
     export default {
-        
+		data() {
+			return {
+				
+			}
+		},
+        onload(options) {
+
+        },
+		methods: {
+			goCanPei() {
+				uni.navigateTo({
+					url:"/pages/canpei?navigateBack=2&compare=true&ids=101317,103933"
+				})
+			}
+		}
     }
 </script>
 
 <style lang="scss" scoped>
-.btn-wrap {
-    padding: 0 16px;
-    height: 50px;
-    width: 100%;
-    background-color: #e49;
+.c-btn-wrap {
+    padding: 30px 16px;
     .go-canpei {
         width: 343px;
         height: 44px;
@@ -33,6 +44,7 @@
         color: #ffffff;
         border-radius: 44px;
         background-color: #fa8943;
+        margin-bottom: 12px;
     }
     .bottom-btn-wrap {
         display: flex;

@@ -197,9 +197,9 @@
 			// 	serialId: "3996",
 			// 	ids:"3996"
 			// };
-			// uni.showLoading({
-			// 	title: "加载中"
-			// })
+			uni.showLoading({
+				title: "加载中"
+			})
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
 			this.mids = options.ids || "";
