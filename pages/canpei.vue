@@ -86,8 +86,8 @@
 									<block v-for="(it,inds) in item.detail[0]" :key="inds">
 										<block v-if="it.key != '本地最低价' && showOrhide||(!showOrhide&&difData[it.key])">
                                             <!--  :class="['left_item',difData[it.key]&&Data.detailArray.length>1?'yellow':'']" -->
-											<view class="left_item">
-												<i>{{it.key}}</i>
+											<view :class="['left_item', it.key === '官方报价' ? 'h76px' : '']">
+												{{it.key}}
 											</view>
 										</block>
 									</block>
@@ -105,7 +105,7 @@
 											<block v-for="(d,i) in item2" :key="i">
 												<!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
 												<block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
-													<view class="right_list_item">
+													<view :class="['right_list_item' , d.key === '官方报价' ? 'h76px' : '']">
                                                         <view :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']">{{d.value}}</view>
 														<view v-if="d.key === '官方报价'">
 															<view class="zdj_box">
@@ -689,7 +689,7 @@
 					padding-top: 80rpx;
 					position: relative;
 					min-height: 80rpx;
-
+                    box-sizing: border-box;
 					.canpei_head {
 						height: 80rpx;
 						width: 750rpx;
@@ -721,12 +721,12 @@
 
 					.left_item {
 						height: 50px;
-						width: 100%;
+						// width: 100%;
 						@include flex_center_center;
 						border-bottom: 1px solid #EEEEEE;
+                        border-right: 1px solid #EEEEEE;
 						padding: 0 10rpx;
 						text-align: center;
-
 						&:last-child {
 							border-bottom: 0;
 						}
@@ -795,9 +795,11 @@
 								}
 
 								.zdj {
-                                    padding: 1px 15px;
+                                    // padding: 1px 15px;
                                     font-size: 12px;
-									height: 18px;
+									// height: 18px;
+                                    width: 86px;
+                                    height: 24px;
 									overflow: hidden;
 									color: #fa8943;
 									margin: 3px 10px 0;
@@ -817,5 +819,8 @@
 			}
 
 		}
+        .h76px {
+            height: 76px !important;
+        }
 	}
 </style>
