@@ -10,7 +10,7 @@
 					<view>{{serialList[indexSerial].name}}</view>
 				</picker>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="[provinceList, cityList]"
-				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')">
+				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')" :value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
@@ -122,7 +122,14 @@
 					text = this.crtDistrictItem.name
 				}
 				return text
-			}
+			},
+			selectIndex () {
+				let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+				let cityIndex = this.cityList.findIndex(item => item.id == this.crtCityItem.id)
+				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+				cityIndex = cityIndex > -1 ? cityIndex : 0
+				return [provinceIndex, cityIndex]
+			},
 		},
 		methods: {
 			formShow(name, from = "", obj = {}, title) {
