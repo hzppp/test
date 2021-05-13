@@ -1084,9 +1084,18 @@ module.exports = {
 		return data
 	},
 	// 根据省份id请求城市
-	fetchcityListByProvinceId: async(para) => {
+	fetchCityListByProvinceId: async(para) => {
 		let {data} = await request({
-			url:domain.getAPI('fetchcityListByProvinceId'),
+			url:domain.getAPI('fetchCityListByProvinceId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 根据城市id请求地区
+	fetchDistrictListByCityId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchDistrictListByCityId'),
 			method: "GET",
 			data: para
 		})

@@ -208,7 +208,8 @@ const config = {
 		//创建订单
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
 		fetchProvinceList: `${DOMAIN.changan}/xcx/base/provinces`,
-		fetchcityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`
+		fetchCityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`,
+		fetchDistrictListByCityId: `${DOMAIN.changan}/xcx/base/getDistricts`
 	},
 	getAPI(key) {
 		let url;
