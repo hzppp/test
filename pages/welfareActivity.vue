@@ -6,14 +6,15 @@
 		<scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
 		 scroll-with-animation>
 			<view class="welfareActivity-top-banner" @tap="toMall"></view>
-			
+			<view class="city">
+				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
+				 mode="multiSelector" :range="province" range-key="text" class="select-city">
+					<view>{{selectCity ||indexCity.name}}</view>
+				</picker>
+			</view>
 			<view class="box">
 				<view class="box-tit">
 					长安福利
-					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
-					 mode="multiSelector" :range="province" range-key="text" class="select-city">
-						<view>{{selectCity ||indexCity.name}}</view>
-					</picker>
 				</view>
 				<view v-if="welfareList.length == 0" class="welfareActivity-none"></view>
 				<coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon" @formShow="formShow"></coupon-list>
@@ -22,21 +23,15 @@
 			<view class="box">
 				<view class="box-tit">
 					精选活动
-					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
-					 mode="multiSelector" :range="province" range-key="text" class="select-city">
-						<view>{{selectCity ||indexCity.name}}</view>
-					</picker>
 				</view>
 				<view class="activity-list" v-if="activityList.length > 0">
 					<block v-for="(item,index) in activityList" :key="index">
 						<view class="pic-text" @tap="toActivityPage(item.id)">
 							<image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
-							<view class="activity-label-text">
-								<view :class="'label '+ item.typeClass">
-									{{item.typeText}}
-								</view>
-								<view class="text">{{item.name}}</view>
+							<view :class="'label '+ item.typeClass">
+								{{item.typeText}}
 							</view>
+							<view class="text">{{item.name}}</view>
 						</view>
 					</block>
 				</view>
