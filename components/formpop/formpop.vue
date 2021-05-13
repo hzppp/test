@@ -13,8 +13,8 @@
 				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
-				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="areaList" :range-key="'areaName'" :class="'input-view area-input ' + (areaList[indexarea].areaName == '请选择您的地区' ? 'placeholder':'')">
-					<view>{{areaList[indexarea].areaName}}</view>
+				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
+					<view>{{showDistrictText}}</view>
 				</picker>
 				<picker v-if="dealerList.length > 0" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'dealerName'"
 				 :class="'input-view dealer-input jt-icon ' + (dealerList[currentDealerIndex].dealerId < 1 ? 'placeholder':'')">
@@ -94,13 +94,11 @@
 				indexSerial: "0",
 				provinceList: [],
 				cityList: [],
+				districtList: [],
 				crtProvinceItem: {}, // 当前选择的省份
 				crtCityItem: {}, // 当前选择的城市
+				crtDistrictItem: {}, // 当前选择的地区项
 				indexCity: "",
-				indexarea: "0",
-				areaList: [{
-					areaName: "请选择您的地区"
-				}],
 				isShowFormPop: false,
 				popName: '',
 				phone: "",
@@ -117,6 +115,13 @@
 					text = this.crtProvinceItem.name + ' ' + this.crtCityItem.name
 				}
 				return text 
+			},
+			showDistrictText () {
+				let text = '请选择您的地区'
+				if (this.crtDistrictItem.id) {
+					text = this.crtDistrictItem.name
+				}
+				return text
 			}
 		},
 		methods: {
@@ -147,8 +152,7 @@
 				let {
 					detail
 				} = e
-				this.indexarea = detail.value
-				this.getFormDealer(true)
+				this.crtDistrictItem = this.districtList[detail.value]
 			},
 			bindMultiPickerChange(e) {
 				console.log(e)
@@ -157,14 +161,14 @@
 				} = e
 				this.crtProvinceItem = this.provinceList[detail.value[0]]
 				this.crtCityItem = this.cityList[detail.value[1]]
+				this.reqDistrictListByCityId(this.crtCityItem.id)
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
 					detail
 				} = e
 				if (detail.column == 0) {
-					this.cityList = []
-					this.reqcityListByProvinceId(this.provinceList[detail.value].id)
+					this.reqCityListByProvinceId(this.provinceList[detail.value].id)
 				}
 			},
 			getValue(name, e) {
@@ -183,7 +187,6 @@
 			async submit() {
 				let sf = this.province[0][this.indexCity[0]]
 				let cs = this.province[1][this.indexCity[1]]
-				let dq = this.areaList[this.indexarea]
 				let chexi = this.serialList[this.indexSerial]
 				let ly = this.from
 				let lydx = this.currentObj
@@ -383,16 +386,6 @@
 				this.serialList = data.serialGroupList
 				this.isShowFormPop = true
 			},
-			fsetcity(iiii = 0) {
-				let obj = this.province[0]
-				let list = obj[iiii].regionList
-				for (let i in list) {
-					let vobj = list[i]
-					vobj.text = vobj.regionName
-				}
-				// this.province[1] = list
-				this.$set(this.province, 1, list)
-			},
 			toFirst(list, index) {
 				return list.unshift(list.splice(index, 1)[0])
 			},
@@ -419,27 +412,6 @@
 				})
 				this.isShowFormPop = true
 			},
-			async getCity(id) {
-				let {
-					data
-				} = await api.getRegionByProvince(id)
-				for (let i in data) {
-					data[i]['text'] = data[i].regionName
-				}
-				this.$set(this.province, 1, data)
-				return data
-			},
-			async getArea() { //获取区
-				let cityCode = this.province[1][this.indexCity[1]].regionId
-				let {
-					data
-				} = await api.getAreaInfo(cityCode)
-				this.indexarea = 0
-				this.areaList = [{
-					areaName: "请选择您的地区"
-				}, ...data]
-
-			},
 			async getFormDealer(ff = false) {
 				let cityCode = this.province[1][this.indexCity[1]].regionId
 				let wxPosition = app.globalData.currentLocation.wxPosition
@@ -449,9 +421,6 @@
 				if (!wxPosition.wsq) {
 					cs.latitude = wxPosition.latitude
 					cs.longitude = wxPosition.longitude
-				}
-				if (this.areaList[this.indexarea].areaId && ff) {
-					cs.areaId = this.areaList[this.indexarea].areaId
 				}
 				let {
 					data
@@ -472,9 +441,10 @@
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
 						this.provinceList = res.data
-						await this.reqcityListByProvinceId(this.provinceList[0].id)
 						this.crtProvinceItem = this.provinceList[0]
+						await this.reqCityListByProvinceId(this.crtProvinceItem.id)
 						this.crtCityItem = this.cityList[0]
+						this.reqDistrictListByCityId(this.crtCityItem.id)
 					}
 				} catch(err) {
 					this.showToast('获取省份信息失败')
@@ -482,14 +452,29 @@
 				}
 			},
 			// 根据省份id请求城市
-			async reqcityListByProvinceId (provinceId) {
+			async reqCityListByProvinceId (provinceId) {
+				this.cityList = []
 				try {
-					const res = await api.fetchcityListByProvinceId({provinceId})
+					const res = await api.fetchCityListByProvinceId({provinceId})
 					if (res.code == 1) {
 						this.cityList = res.data
 					}
 				} catch (err) {
 					this.showToast('获取城市信息失败')
+					console.error(err)
+				}
+			},
+			// 根据城市id请求地区
+			async reqDistrictListByCityId (cityId) {
+				this.districtList = []
+				try {
+					const res = await api.fetchDistrictListByCityId({cityId})
+					if (res.code == 1) {
+						this.districtList = res.data
+						this.crtDistrictItem = {}
+					}
+				} catch (err) {
+					this.showToast('获取地区信息失败')
 					console.error(err)
 				}
 			}
