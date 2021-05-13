@@ -484,7 +484,20 @@
 					this.showToast('获取地区信息失败')
 					console.error(err)
 				}
-			}
+			},
+			// 根据城市id请求经销商
+			async reqDealerListByCityId (cityId) {
+				this.dealerList = []
+				try {
+					const res = await api.fetchDealerListByCityId({cityId})
+					if (res.code == 1) {
+						this.dealerList = res.data
+					}
+				} catch (err) {
+					this.showToast('获取经销商信息失败')
+					console.error(err)
+				}
+			},
 		}
 	}
 </script>

@@ -1109,5 +1109,14 @@ module.exports = {
 			data: para
 		})
 		return data
-	}
+	},
+	// 根据城市id请求经销商
+	fetchDealerListByCityId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchDealerListByCityId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
 }
