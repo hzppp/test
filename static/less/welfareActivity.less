@@ -16,58 +16,80 @@
     .setbg(686rpx,186rpx,'welfareActivity_top_banner.png');
     margin: 0 auto 30rpx;
 }
+.city {
+	position: sticky;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	padding: 0 32rpx 15rpx;
+	background-color: #ffffff;
+	.select-city{
+		view {
+			display: flex;
+			align-items: center;
+			font-size: 28rpx;
+			color: #333333;
+			&::before {
+				margin-right: 16rpx;
+				display: view;
+				content: '';
+				.setbg(28rpx,32rpx,'locate-icon.png');
+			}
+		}
+	}
+}
 .box-tit{
     font-weight: bold;
     .seth(95rpx,40rpx,#333);
-    .select-city{
-        font-weight: normal;
-        font-size: 24rpx;
-        color: #999;
-        padding-right: 32rpx;
-        float: right;
-        .jt(10rpx,10rpx,#999,135deg);
-        &:after{
-            right: 10rpx;
-        }
-    }
 }
 .welfareActivity-none{
-    .setbg(750rpx,375rpx,'welfareActivity1.png')
+    .setbg(100%,100%,'welfareActivity1.png');
+	width: 100%;
+	height: 366rpx;
+	background-size: 406rpx 366rpx;
+	background-position: center center;
 }
 .activity-list-none{
-    .setbg(750rpx,375rpx,'welfareActivity2.png')
+    .setbg(100%, 100%, 'welfareActivity2.png');
+	width: 100%;
+	height: 366rpx;
+	background-size: 406rpx 366rpx;
+	background-position: center center;
 }
 .activity-list{
-    font-size: 0;
-    image{
-        width: 686rpx;
-        height: 306rpx;
-        border-radius: 10rpx;
-    }
-    .activity-label-text{
-        margin-bottom: 36rpx;
-        .label{
-            .db(middle);
-            .seth(32rpx,20rpx,#fff);
-            padding: 0 12rpx;
-            background: #ff852c;
-            border-radius: 6rpx;
-            margin-right: 15rpx;
-            &.red-bg{
-                background: #ce1330;
-            }
-            &.green-bg{
-                background: #3eaf56;
-            }
-        }
-    }
-    .text{
-        .db(middle);
-        .seth(80rpx,32rpx,#333);
-        font-weight: bold;
-        .ellipsis;
-        max-width: 560rpx;
-    }
+	.pic-text {
+		position: relative;
+		margin-bottom: 30rpx;
+		border-radius: 20rpx;
+		box-shadow: 5px 5px 17px rgba(#000000, 0.3);
+		overflow: hidden;
+		image{
+			width: 687rpx;
+		}
+		.label{
+			position: absolute;
+			left: 0;
+			top: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100rpx;
+			height: 32rpx;
+			font-size: 20rpx;
+			color: #ffffff;
+			background-color: #ff852c;
+			border-radius: 6rpx;
+		}
+		.text{
+			.db(middle);
+			.seth(90rpx,32rpx,#333);
+			font-weight: bold;
+			padding: 0 30rpx;
+			box-sizing: border-box;
+			.ellipsis;
+			max-width: 100%;
+		}
+	}
 }
 .fix-sale{
     .setIcon(90rpx,125rpx,0,41rpx);

@@ -1075,6 +1075,7 @@ module.exports = {
 		})
 		return data
 	},
+<<<<<<< HEAD
 	//获取城市
 	reqAllCityList:async(para)=>{
 		let {data} = await request({
@@ -1084,4 +1085,32 @@ module.exports = {
 		})
 		return data
 	},
+=======
+	// 请求所有的省份
+	fetchProvinceList: async() => {
+		let {data} = await request({
+			url:domain.getAPI('fetchProvinceList'),
+			method: "GET",
+		})
+		return data
+	},
+	// 根据省份id请求城市
+	fetchCityListByProvinceId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchCityListByProvinceId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 根据城市id请求地区
+	fetchDistrictListByCityId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchDistrictListByCityId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	}
+>>>>>>> e06487ac9c8264ea6d331a46a0ddb4f210d33569
 }

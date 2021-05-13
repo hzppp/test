@@ -15,6 +15,7 @@ var DOMAIN_R = {
 	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	//panorama:"http://t-panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
+	changan:"http://ms-changan-auto.changan-cloud-auto"
 }
 
 //测试环境域名
@@ -26,7 +27,7 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"https://ms-changan-auto.changan-cloud-auto"
+	changan:"http://ms-changan-auto.changan-cloud-auto",
 }
 
 
@@ -206,8 +207,14 @@ const config = {
 		mallGoodDetail:`${DOMAIN.host}/api/audi/xcx/gift/detail`,
 		//创建订单
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
+<<<<<<< HEAD
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/xcx/base/allCities`,
+=======
+		fetchProvinceList: `${DOMAIN.changan}/xcx/base/provinces`,
+		fetchCityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`,
+		fetchDistrictListByCityId: `${DOMAIN.changan}/xcx/base/getDistricts`
+>>>>>>> e06487ac9c8264ea6d331a46a0ddb4f210d33569
 	},
 	getAPI(key) {
 		let url;

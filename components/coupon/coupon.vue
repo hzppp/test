@@ -106,7 +106,7 @@
 				console.log(this.couponList)
 			},
 			formpopShow(name, obj) {
-				this.$emit('formShow', name, 'coupon', obj)
+				this.$emit('formShow', name, 'coupon', obj, '领取优惠券')
 				// this.$invoke('../form-pop','formShow',name,'coupon',obj)
 			}
 		}
