@@ -211,7 +211,8 @@ const config = {
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
-		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`
+		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
+		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`
 	},
 	getAPI(key) {
 		let url;
