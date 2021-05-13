@@ -1075,6 +1075,15 @@ module.exports = {
 		})
 		return data
 	},
+	//获取城市
+	reqAllCityList:async(para)=>{
+		let {data} = await request({
+			url:domain.getAPI('allCityList'),
+			method: "GET",
+			data:para
+		})
+		return data
+	},
 	// 请求所有的省份
 	fetchProvinceList: async() => {
 		let {data} = await request({
