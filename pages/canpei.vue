@@ -78,7 +78,7 @@
 										{{item.name}}
 									</view>
 									<view class="flex-1"></view>
-									<view class="canpei_head_right">
+									<view class="canpei_head_right" style="margin-right:20px">
 										●标配 ○选配 -无
 									</view>
 								</view>
