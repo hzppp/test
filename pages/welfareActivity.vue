@@ -294,7 +294,6 @@
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
 						this.provinceList = res.data
-						this.crtProvinceItem = this.provinceList[0]
 					}
 				} catch(err) {
 					this.$toast('获取省份信息失败', 'none', 1500);

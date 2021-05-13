@@ -130,7 +130,6 @@
 				this.from = from
 				this.currentObj = obj
 				this.title = title
-				this.reqProvinceList()
 				this.getpreClue()
 			},
 			formHide() {
@@ -384,6 +383,20 @@
 					obj.name = obj.serialGroupName
 				}
 				this.serialList = data.serialGroupList
+				// 省市
+				if (currentLocation) {
+					await this.reqProvinceList()
+					const crtLocationProvinceItem = this.provinceList.find(item => item.id == currentLocation.cityData.proId)
+					if (crtLocationProvinceItem) {
+						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+						const crtLocationCityItem = this.cityList.find(item => item.id == currentLocation.cityData.cityId) 
+						if (crtLocationCityItem) {
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.crtCityItem = crtLocationCityItem
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+						}
+					}
+				}
 				this.isShowFormPop = true
 			},
 			toFirst(list, index) {
@@ -441,10 +454,6 @@
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
 						this.provinceList = res.data
-						this.crtProvinceItem = this.provinceList[0]
-						await this.reqCityListByProvinceId(this.crtProvinceItem.id)
-						this.crtCityItem = this.cityList[0]
-						this.reqDistrictListByCityId(this.crtCityItem.id)
 					}
 				} catch(err) {
 					this.showToast('获取省份信息失败')
