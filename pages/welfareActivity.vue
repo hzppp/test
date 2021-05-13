@@ -7,9 +7,9 @@
 		 scroll-with-animation>
 			<view class="welfareActivity-top-banner" @tap="toMall"></view>
 			<view class="city">
-				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="currentSelectIndex"
-				 mode="multiSelector" :range="province" range-key="text" class="select-city">
-					<view>{{selectCity ||indexCity.name}}</view>
+				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+				 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
+					<view>{{selectCity || indexCity.name}}</view>
 				</picker>
 			</view>
 			<view class="box">
@@ -58,12 +58,12 @@
 		mixins: [shouquan],
 		data() {
 			return {
-				currentSelectIndex: [0, 0],
 				indexCity: {},
-				selectCity: "",
-				selectIndex: "",
 				getWelfarePageNumber: 1,
-				province: [],
+				provinceList: [],
+				cityList: [],
+				crtProvinceItem: {}, // 当前选择的省份
+				crtCityItem: {}, // 当前选择的城市
 				isLoadGetWelfare: true,
 				welfarePageNumber: 1,
 				isLoadGetActivity: true,
@@ -73,18 +73,37 @@
 				fixSale: {}
 			}
 		},
+		computed: {
+			selectCity () {
+				let text = ''
+				if (this.crtCityItem.id) {
+					text = this.crtCityItem.name
+				}
+				return text
+			},
+			selectIndex () {
+				let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+				let cityIndex = this.cityList.findIndex(item => item.id == this.crtCityItem.id)
+				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+				cityIndex = cityIndex > -1 ? cityIndex : 0
+				return [provinceIndex, cityIndex]
+			}
+		},
 		async onShow() {
 			this.resetjson()
 			api.getUser()
 			let currentLocation = app.globalData.currentLocation
 			if (currentLocation) {
-				this.indexCity = currentLocation.cityData
-				let province = await api.getProvince()
-				for (let i in province.data) {
-					province.data[i]['text'] = province.data[i].provinceName
+				await this.reqProvinceList()
+				const crtLocationProvinceItem = this.provinceList.find(item => item.id == currentLocation.cityData.proId)
+				if (crtLocationProvinceItem) {
+					await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+					const crtLocationCityItem = this.cityList.find(item => item.id == currentLocation.cityData.cityId) 
+					if (crtLocationCityItem) {
+						this.crtProvinceItem = crtLocationProvinceItem
+						this.crtCityItem = crtLocationCityItem
+					}
 				}
-				this.province[0] = province.data
-				await this.getCity(province.data[this.currentSelectIndex[0]].provinceId)
 				// 精选活动
 				this.getactivity()
 				// 福利列表
@@ -102,7 +121,6 @@
 			if (app.globalData.salesId) {
 				path += `?salesId=${app.globalData.salesId}`
 			}
-			// let imageUrl = 'https://www1.pcauto.com.cn/zt/yqdzhzq/xcxshare/activity.jpg'
 			let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/xcxshare.png'
 			return {
 				title: title,
@@ -117,60 +135,36 @@
 			loadMoreCoupon() {
 				this.getWelfarePageNumber++
 				this.getWelfare()
-			},
-			towebView() {
-				// api.getMallLink().then(res => {
-				// 	let vurl = escape(res.data)
-				// 	let url = `/pages/webview?webURL=${vurl}`
-				// 	uni.navigateTo({
-				// 		url
-				// 	})
-				// 	console.log('MallLink', res)
-				// })
-			},
-			
+			},			
 			// 跳转商城页
 			toMall(){
 				uni.navigateTo({
 					url:'/pages/mall/index'
 				})
-				// api.getMallLink().then(res => {
-				// 	let vurl = escape(res.data)
-				// 	let url = `/pages/webview?webURL=${vurl}`
-				// 	uni.navigateTo({
-				// 		url
-				// 	})
-				// 	console.log('MallLink', res)
-				// })
 			},
 			bindMultiPickerChange(e) {
 				let {
-					detail = [0, 0]
+					detail
 				} = e
-				let i1 = detail.value[0] || 0
-				let i2 = detail.value[1] || 0
-				this.currentSelectIndex = [detail.value[0], i2]
-				this.selectIndex = this.province[1][i2]
-				this.selectCity = this.selectIndex.regionName
+				this.crtProvinceItem = this.provinceList[detail.value[0]]
+				this.crtCityItem = this.cityList[detail.value[1]]
 				this.resetjson()
 				this.getWelfare()
-				this.getactivity() 
-				{
-					// 改变默认定位省市
-					let currentLocation = app.globalData.currentLocation
-					currentLocation.cityData.cityId = this.selectIndex.regionId
-					currentLocation.cityData.name = this.selectIndex.text
-					currentLocation.cityData.proId = this.province[0][i1].provinceId
-					currentLocation.cityData.pro = this.province[0][i1].text
-				}
+				this.getactivity()
+				
+				// 改变默认定位省市
+				let currentLocation = app.globalData.currentLocation
+				currentLocation.cityData.cityId = this.crtCityItem.id
+				currentLocation.cityData.name = this.crtCityItem.name
+				currentLocation.cityData.proId = this.crtProvinceItem.id
+				currentLocation.cityData.pro = this.crtProvinceItem.name
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
 					detail
 				} = e
 				if (detail.column == 0) {
-					let index = this.province[0][detail.value]
-					this.getCity(index.provinceId)
+					this.reqCityListByProvinceId(this.provinceList[detail.value].id)
 				}
 			},
 			scrollGetActivity() {
@@ -183,7 +177,6 @@
 				})
 			},
 			resetjson() {
-				this.selectCity = ''
 				this.getWelfarePageNumber = 1
 				this.isLoadGetWelfare = true
 				this.welfarePageNumber = 1
@@ -209,7 +202,7 @@
 			},
 			async getSalesList() {
 				let currentLocation = app.globalData.currentLocation
-				let cityId = this.selectIndex.regionId || currentLocation.cityData.cityId
+				let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
 				let salesId = ''
 				if (app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.salesId) {
 					salesId = app.globalData.pocketUserInfo.salesId
@@ -235,7 +228,7 @@
 				if (this.isLoadGetActivity) {
 					this.isLoadGetActivity = false
 					let currentLocation = app.globalData.currentLocation
-					let cityId = this.selectIndex.regionId || currentLocation.cityData.cityId
+					let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
 					let {
 						rows
 					} = await api.getactivity(cityId, 3, this.activityListPageNumber)
@@ -269,7 +262,7 @@
 			// 获取福利列表
 			async getWelfare() {
 				let currentLocation = app.globalData.currentLocation
-				let cityId = this.selectIndex.regionId || currentLocation.cityData.cityId
+				let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
 
 				let data = await api.getWelfare(cityId, 3, this.welfarePageNumber)
 				this.welfarePageNumber++
@@ -295,17 +288,32 @@
 				
 
 			},
-			async getCity(id) {
-				let {
-					data
-				} = await api.getRegionByProvince(id)
-				for (let i in data) {
-					data[i]['text'] = data[i].regionName
+			// 请求所有的省份
+			async reqProvinceList () {
+				try {
+					const res = await api.fetchProvinceList()
+					if (res.code == 1) {
+						this.provinceList = res.data
+						this.crtProvinceItem = this.provinceList[0]
+					}
+				} catch(err) {
+					this.$toast('获取省份信息失败', 'none', 1500);
+					console.error(err)
 				}
-				// this.province[1] = data
-				this.$set(this.province, 1, data)
-				return data
-			}
+			},
+			// 根据省份id请求城市
+			async reqCityListByProvinceId (provinceId) {
+				this.cityList = []
+				try {
+					const res = await api.fetchCityListByProvinceId({provinceId})
+					if (res.code == 1) {
+						this.cityList = res.data
+					}
+				} catch (err) {
+					this.$toast('获取城市信息失败', 'none', 1500);
+					console.error(err)
+				}
+			},
 		}
 	}
 </script>

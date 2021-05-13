@@ -140,10 +140,10 @@ module.exports = {
 
 		} else {
 			data = {
-				"pro": "浙江省",
-				"proCode": "330000",
-				"city": "杭州市",
-				"cityCode": "330100",
+				"pro": "重庆市",
+				"proCode": "500000",
+				"city": "重庆",
+				"cityCode": "500000",
 				"region": "",
 				"regionCode": "",
 				"error": ""
