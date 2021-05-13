@@ -57,11 +57,11 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx6076f5f36310924c",
+        "appid" : "wxa860d5a996074dbb",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
-            "postcss" : true,
+            "postcss" : false,
             "minified" : true
         },
         "usingComponents" : true,

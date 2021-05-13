@@ -5,7 +5,6 @@
 		<form-pop ref="formpop"></form-pop>
 		<scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
 		 scroll-with-animation>
-			<view class="welfareActivity-top-banner" @tap="toMall"></view>
 			<view class="city">
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
 				 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
@@ -281,11 +280,11 @@
 						// this.$invoke('coupon-list', 'morebtnShow')
 						this.$refs.couponlist.morebtnShow()
 					}
-					
+
 					// this.$invoke('coupon-list', 'setcouponList', this.welfareList)
 					this.$refs.couponlist.setcouponList(this.welfareList)
 				})
-				
+
 
 			},
 			// 请求所有的省份
