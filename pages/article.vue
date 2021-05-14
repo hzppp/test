@@ -1,8 +1,7 @@
 <template>
 	<view class="article">
-		<button v-if="isUserInfoPage" class="getUserInfo_name_info_mask_body" lang="zh_CN" @getuserinfo="getWxUserInfoButton"
-		 open-type="getUserInfo"></button>
-		<loading ref="loading"></loading>
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <loading ref="loading"></loading>
 		<share-pop ref="sharepop"></share-pop>
 		<getFormidbox>
 			<view class="content" slot="content">

@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<loading ref="loading"></loading>
-		<view class="authorization" v-if="isUserInfoPage">
-			<view class="authorization-pop">
-				<button class="getUserInfo-btn" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>
-			</view>
-		</view>
+<!--		<view class="authorization" v-if="isUserInfoPage">-->
+<!--			<view class="authorization-pop">-->
+<!--				<button class="getUserInfo-btn" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>-->
+<!--			</view>-->
+<!--		</view>-->
 	</view>
 </template>
 
@@ -17,9 +17,7 @@
 	let app = getApp()
 	export default {
 		data() {
-			return {
-				isUserInfoPage:false
-			}
+			return {}
 		},
 		mixins: [getUserInfo],
 		async onLoad(options) {
@@ -40,25 +38,26 @@
 						options[iobj] = value
 					}
 				}
-				
+
 			}
 			if(options.salesId){
 				app.globalData.salesId = options.salesId
 			}
 			let loginJson = await login.login()
 			if(!app.globalData.wxUserInfo){
-				await this.getWxUserInfo()
+				// await this.getWxUserInfo()
+
 			}
 			if (!app.globalData.isUserInfoPage) {
-				let info = app.globalData.wxUserInfo
-				await api.saveWXuserInfo({
-					encryptedData:info.encryptedData,
-					iv:info.iv,
-					rawData:info.rawData,
-					signature:info.signature
-				})
+				// let info = app.globalData.wxUserInfo
+				// await api.saveWXuserInfo({
+				// 	encryptedData:info.encryptedData,
+				// 	iv:info.iv,
+				// 	rawData:info.rawData,
+				// 	signature:info.signature
+				// })
 			}
-			
+
 			if(!app.globalData.getUserData){
 				let {data} = await api.getUser()
 				app.globalData.getUserData = data
@@ -84,7 +83,7 @@
 						app.globalData.currentLocation.pro_city = wz
 						app.globalData.currentLocation.cityData = cityData
 					}
-					
+
 				}
 			}
 			let cs = ''

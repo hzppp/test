@@ -7,9 +7,8 @@
 				<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 			</view>
 		</block>
-		<button v-if="isUserInfoPage" class="getUserInfo_name_info_mask_body" lang="zh_CN" @getuserinfo="getWxUserInfoButton"
-		 open-type="getUserInfo"></button>
-		<scroll-view class="dynamicDetails" :class="!isArticleOver ? 'bg-white':''" lower-threshold="200" @scrolltolower="scrollGetData"
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <scroll-view class="dynamicDetails" :class="!isArticleOver ? 'bg-white':''" lower-threshold="200" @scrolltolower="scrollGetData"
 		 scroll-y="true" scroll-with-animation="true">
 			<loading ref="loading"></loading>
 			<!-- <getFormidbox> -->
@@ -461,7 +460,7 @@
 				ctx.beginPath();
 				ctx.arc(avatarurl_width / 2 + avatarurl_x, avatarurl_heigth / 2 + avatarurl_y, avatarurl_width / 2, 0, Math.PI * 2,
 					false);
-					
+
 				ctx.clip();
 				ctx.drawImage(url, avatarurl_x, avatarurl_y, avatarurl_width, avatarurl_heigth);
 				ctx.restore();
@@ -543,7 +542,7 @@
 				//         length=length+1
 				//     }
 				//     for(let j = 0;j<length;j++){
-				//         let yushu;  
+				//         let yushu;
 				//         for (let i = 0; i < sStr.length; i++) {
 				//         let strTemp = escape(sStr[i]);
 				//         if (strTemp.indexOf("%u", 0) == -1) {
@@ -684,7 +683,7 @@
 								}
 							}
 						})
-					}) 
+					})
 				})();
 				that.canvasCode = da.tempFilePath
 				// 背景
@@ -744,7 +743,7 @@
 					that.canvasHeight = 700
 					ctx.drawImage(bgURL, 0, 0, 600, 700) //画背景
 					ctx.drawImage(that.canvasCode, 214, 430, 172, 172) //画二维码
-					
+
 					ctx.arc(300, 170, 50, 0, 2 * Math.PI)
 					ctx.setFillStyle('#ffffff')
 					ctx.fill()
@@ -773,7 +772,7 @@
 				ctx.draw(false, () => {
 					that.save()
 				})
-				
+
 			},
 			splitString(text = '', ctx, fontSize = 18, width = 456) {
 				let chr = text.split("");
@@ -859,23 +858,23 @@
 				var timeDate = new Date(time)
 				var o = {
 					'y': timeDate.getFullYear(),
-					'M': timeDate.getMonth() + 1, //月份 
-					'd': timeDate.getDate(), //日 
-					'h': timeDate.getHours(), //小时 
-					'm': timeDate.getMinutes(), //分 
-					's': timeDate.getSeconds(), //秒 
-					'q': Math.floor((timeDate.getMonth() + 3) / 3), //季度 
-					'S': timeDate.getMilliseconds() //毫秒 
+					'M': timeDate.getMonth() + 1, //月份
+					'd': timeDate.getDate(), //日
+					'h': timeDate.getHours(), //小时
+					'm': timeDate.getMinutes(), //分
+					's': timeDate.getSeconds(), //秒
+					'q': Math.floor((timeDate.getMonth() + 3) / 3), //季度
+					'S': timeDate.getMilliseconds() //毫秒
 				}
 				var thisDate = new Date()
 				var p = {
 					'y': thisDate.getFullYear(),
-					'M': thisDate.getMonth() + 1, //月份 
-					'd': thisDate.getDate(), //日 
-					'h': thisDate.getHours(), //小时 
-					'm': thisDate.getMinutes(), //分 
-					's': thisDate.getSeconds(), //秒 
-					'q': Math.floor((thisDate.getMonth() + 3) / 3), //季度 
+					'M': thisDate.getMonth() + 1, //月份
+					'd': thisDate.getDate(), //日
+					'h': thisDate.getHours(), //小时
+					'm': thisDate.getMinutes(), //分
+					's': thisDate.getSeconds(), //秒
+					'q': Math.floor((thisDate.getMonth() + 3) / 3), //季度
 					'S': thisDate.getMilliseconds() //毫秒
 				}
 				if (o.y == p.y) { //同年
@@ -934,7 +933,7 @@
 			.diznzan{
 				margin: 0 42rpx 0 0;
 			}
-		} 
+		}
 	}
 	.dynamicDetails {
 		.pa(0, 0);

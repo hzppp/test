@@ -3,7 +3,7 @@ let app = getApp()
 export default {
 	data() {
 		return {
-			isUserInfoPage: false
+			withoutUserInfoAuth: false
 		}
 	},
 	methods: {
@@ -23,7 +23,7 @@ export default {
 		},
 		async getWxUserInfo() {
 			let that = this
-			console.log('getWxUserInfo')
+			console.log('getWxUserInfo----------')
 			return new Promise(async (resolve, reject) => {
 				uni.getSetting({
 					success(data) {
@@ -34,16 +34,11 @@ export default {
 						let issq = authSetting['scope.userInfo']
 						// let {loginJson={}}=app.globalData
 						if (issq) { //已经授权
-							uni.getUserInfo({
-								lang: "zh_CN",
-								success(u) {
-									console.log('已经授权==============',u)
-									that.setWxUserInfo(u)
-									resolve(true)
-								}
-							})
+							let u = uni.getStorageSync('wxUserInfo')
+							that.setWxUserInfo(u)
 						} else {
-							app.globalData.isUserInfoPage = true //没有授权
+							app.globalData.withoutUserInfoAuth = true //没有授权
+							uni.getStorageSync('withoutUserInfoAuth',true)
 							resolve(true)
 						}
 					}

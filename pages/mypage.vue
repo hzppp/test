@@ -1,10 +1,10 @@
 <template>
 	<view>
-		<button v-if="isUserInfoPage" class="getUserInfo_name_info_mask_body" lang="zh_CN" @getuserinfo="getWxUserInfoButton"
-		 open-type="getUserInfo"></button>
-		<share-pop ref="sharepop"></share-pop>
+    <viewTabBar :current="4"></viewTabBar>
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <share-pop ref="sharepop"></share-pop>
 		<view class="top">
-			<block v-if="!isUserInfoPage">
+			<block v-if="withoutUserInfoAuth">
 				<view class="head" @tap="toMyFollowPage">
 					<open-data type="userAvatarUrl"></open-data>
 				</view>
@@ -32,9 +32,9 @@
 				</view>
 				<button class="getUserInfo-name_info" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo">登录</button>
 			</block>
-<!--			<view v-if="!isUserInfoPage" class="right-content" @tap="totaskListPage">{{credits}}个众享币</view>-->
+<!--			<view v-if="!withoutUserInfoAuth" class="right-content" @tap="totaskListPage">{{credits}}个众享币</view>-->
 		</view>
-		<view class="box" v-if="false && signInList.length > 0 && !isUserInfoPage">
+		<view class="box" v-if="false && signInList.length > 0 && !withoutUserInfoAuth">
 			<view class="qd-title">
 				连续签到赚众享币
 				<view :class="'qd-btn ' + (isqd ? 'disabled':'')" @tap="qiandao">{{isqd ? '已签到':'签到'}}</view>
@@ -97,11 +97,14 @@
 	import chooseImg from '@/units/chooseImg'
 	import getUserInfo from '@/units/getUserInfo'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	let app = getApp()
+  import tabBar from '@/components/tabBar/tabBar'
+
+  let app = getApp()
 	export default {
 		components: {
-			'share-pop': shareSuccess
-		},
+			'share-pop': shareSuccess,
+      viewTabBar:tabBar
+    },
 		mixins: [shouquan],
 		data() {
 			return {
@@ -110,7 +113,7 @@
 				signInList: [],
 				qdIndex: 0, //第几天签到
 				credits: 0, //众享币数
-				isUserInfoPage:false,
+				withoutUserInfoAuth:false,
 				user: false,
 				userId: null,
 				isshowUpload: false,
