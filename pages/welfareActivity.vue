@@ -97,7 +97,7 @@ export default {
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.name == currentLocation.cityData.pro)
+      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
       if (crtLocationProvinceItem) {
         await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
         const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
