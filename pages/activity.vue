@@ -13,19 +13,32 @@
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
+		<view class="serial-list">
+			<view class="serial-item">
+				<view class="top-text">
+					<view class="desc">第二代逸动XT</view>
+					<view class="sub-desc">自领风潮</view>
+				</view>
+				<view class="bottom-text">
+					<view class="desc">官方指导价：</view>
+					<view class="price">77,900起</view>
+				</view>
+				<image class="cover" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3689751919,2543434411&fm=224&gp=0.jpg" mode="aspectFill" lazy-load="true"></image>
+			</view>
+		</view>
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-a">
+			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
+				<button class="over-btn" hover-class="none">活动已结束</button>
+			</view>
+			<view class="type-a" v-else-if="content.needApply == 1">			
 				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
 				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
-			<!-- <view class="type-b">
+			<view class="type-b" v-else-if="content.needApply == 0">
 				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
-			</view> -->
-			<!-- <view class="type-c">
-				<button class="over-btn" hover-class="none">活动已结束</button>
-			</view> -->
+			</view>
 		</view>
 	</view>
 </template>
@@ -50,10 +63,9 @@
 		data() {
 			return {
 				phone: false,
-				// title:"",
 				artDownDate: [],
 				activityId: '',
-				content: ""
+				content: "",
 			}
 		},
 		mixins: [shouquan],
@@ -68,7 +80,7 @@
 			let {
 				data
 			} = await api.getActivityContent(this.activityId)
-			// this.title = data.name
+			this.downDate(data.endTime)
 			app.Interval = setInterval(() => {
 				this.downDate(data.endTime)
 			}, 1000)
@@ -87,9 +99,6 @@
 			api.shareActivity(this.content.id).then(res => {
 				console.log(res)
 				if (res.data > 0) {
-					// setTimeout(()=>{
-					//     this.$invoke('share-pop','shareSuccessShow',res.data,'转发成功')
-					// },800)
 					this.content.shareStatus = 1
 				}
 			})
@@ -103,7 +112,6 @@
 		methods: {
 			formShow() {
 				this.$refs.formpop.formShow('form', 'activity', this.content, '完善资料')
-				// this.$invoke('form-pop', 'formShow', 'form', 'activity', this.content)
 			},
 			async getPhoneNumber(e) {
 				let {
@@ -117,7 +125,6 @@
 					this.phone = data.phoneNumber
 
 					this.$refs.formpop.formShow('form', 'activity', this.content)
-					// this.$invoke('formpop', 'formShow', 'form', 'activity', this.content)
 				} else {
 					uni.showToast({
 						title: '需要授权后才能报名',
@@ -135,6 +142,18 @@
 				let hours = parseInt((j % (tt * 24)) / (tt))
 				let minutes = parseInt((j % (tt)) / (1000 * 60))
 				let ss = Math.floor(j / 1000 % 60)
+				if (days < 0) {
+					days = 0
+				}
+				if (hours < 0) {
+					hours = 0
+				}
+				if (minutes < 0) {
+					minutes = 0
+				}
+				if (ss < 0) {
+					ss = 0
+				}
 				let v = [this.add0(days), this.add0(hours), this.add0(minutes), ss]
 				this.artDownDate = v
 			},
@@ -184,7 +203,54 @@
 	.content-image {
 		width: 750rpx;
 	}
-
+	.serial-list {
+		margin: 40rpx 0;
+		.serial-item {
+			position: relative;
+			margin: 0 auto 30rpx;
+			width: 686rpx;
+			height: 270rpx;
+			background-color: #DFE1E2;
+			border-radius: 20rpx;
+			.top-text {
+				position: absolute;
+				top: 30rpx;
+				left: 30rpx;
+				.desc {
+					font-size: 32rpx;
+					color: #333333;
+					font-weight: bold;
+				}
+				.sub-desc {
+					margin-top: 15rpx;
+					font-size: 24rpx;
+					color: #333333;
+				}
+			}
+			.bottom-text {
+				position: absolute;
+				bottom: 40rpx;
+				left: 30rpx;
+				.desc {
+					font-size: 20rpx;
+					color: #999999;
+				}
+				.price {
+					margin-top: 10rpx;
+					font-size: 28rpx;
+					color: #333333;
+					font-weight: bold;
+				}
+			}
+			.cover {
+				position: absolute;
+				right: 17rpx;
+				bottom: 31rpx;
+				width: 408rpx;
+				height: 161rpx;
+			}
+		}
+	}
 	.fixys {
 		height: 100rpx;
 		font-size: 32rpx;
@@ -196,68 +262,64 @@
 	}
 
 	.zw {
-		height: 100rpx;
+		height: 104rpx;
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 
 	.operation-list {
-		position: fixed;
-		z-index: 1;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		height: 104rpx;
-		font-size: 32rpx;
-		padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
-
-		.type-a {
-			display: flex;
-			justify-content: space-between;
-			padding: 0 32rpx;
-			box-sizing: border-box;
-
-			.share-btn {
-				width: 236rpx;
-				height: 88rpx;
-				color: #fa8845;
-				border: 2rpx solid #fa8845;
-				border-radius: 44rpx;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 104rpx;
+			font-size: 32rpx;
+			background-color: #ffffff;
+			padding-bottom: constant(safe-area-inset-bottom);
+			padding-bottom: env(safe-area-inset-bottom);
+			.type-a {
+				display: flex;
+				justify-content: space-between;
+				padding: 0 32rpx;
 				box-sizing: border-box;
+				.share-btn {
+					width: 236rpx;
+					height: 88rpx;
+					color: #fa8845;
+					border: 2rpx solid #fa8845;
+					border-radius: 44rpx;
+					box-sizing: border-box;
+				}
+				.enroll-btn {
+					width: 420rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}
 			}
-
-			.enroll-btn {
-				width: 420rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
+			.type-b {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.share-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}
+			}
+			.type-c {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.over-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #cccccc;
+					border-radius: 44rpx;
+				}
 			}
 		}
-
-		.type-b {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-
-			.share-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
-			}
-		}
-
-		.type-c {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-
-			.over-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #cccccc;
-				border-radius: 44rpx;
-			}
-		}
-	}
 </style>
