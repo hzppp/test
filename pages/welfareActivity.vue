@@ -97,10 +97,10 @@ export default {
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.id == currentLocation.cityData.proId)
+      const crtLocationProvinceItem = this.provinceList.find(item => item.name == currentLocation.cityData.pro)
       if (crtLocationProvinceItem) {
         await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-        const crtLocationCityItem = this.cityList.find(item => item.id == currentLocation.cityData.cityId)
+        const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
         if (crtLocationCityItem) {
           this.crtProvinceItem = crtLocationProvinceItem
           this.crtCityItem = crtLocationCityItem

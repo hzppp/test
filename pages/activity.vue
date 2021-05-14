@@ -283,41 +283,43 @@
 				justify-content: space-between;
 				padding: 0 32rpx;
 				box-sizing: border-box;
+				.share-btn {
+					width: 236rpx;
+					height: 88rpx;
+					color: #fa8845;
+					border: 2rpx solid #fa8845;
+					border-radius: 44rpx;
+					box-sizing: border-box;
+				}
+				.enroll-btn {
+					width: 420rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}
 			}
-
-			.enroll-btn {
-				width: 420rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
+			.type-b {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.share-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #fa8845;
+					border-radius: 44rpx;
+				}
+			}
+			.type-c {
+				padding: 0 32rpx;
+				box-sizing: border-box;
+				.over-btn {
+					width: 686rpx;
+					height: 88rpx;
+					color: #ffffff;
+					background-color: #cccccc;
+					border-radius: 44rpx;
+				}
 			}
 		}
-
-		.type-b {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-
-			.share-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #fa8845;
-				border-radius: 44rpx;
-			}
-		}
-
-		.type-c {
-			padding: 0 32rpx;
-			box-sizing: border-box;
-
-			.over-btn {
-				width: 686rpx;
-				height: 88rpx;
-				color: #ffffff;
-				background-color: #cccccc;
-				border-radius: 44rpx;
-			}
-		}
-	}
 </style>
