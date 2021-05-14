@@ -11,7 +11,7 @@
             <view class="text-dec">
                 <view class="title">长安</view>
                 <view class="serial">2021款</view>
-                <view class="price">指导价:11:55万</view>
+                <view class="price">指导价:    11:55万</view>
             </view>
             <view class="arrow"></view>
         </view>
