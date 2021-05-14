@@ -1,13 +1,37 @@
 <template>
-    <view class="yuyue">
-        <image mode="widthFix" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3223779882,3129702493&fm=26&gp=0.jpg" />
-        <view class="content">
-            <view class="title">预约试驾</view>
-            <view class="list models">
-                <view class="list-title">车型</view>
-                <view class="select">{{currentCaraSerial}}</view>
-                <view class="arrow"></view>
+    <view class="get-preferential">
+        <!--提交弹窗 -->
+        <pop ref="pop"></pop>
+        <!-- 顶部提示S -->
+        <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
+        <!-- 顶部提示E -->
+        <!-- 头部信息S -->
+        <view class="head-info">
+            <image mode="heightFix" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1361135963,570304265&fm=26&gp=0.jpg" />
+            <view class="text-dec">
+                <view class="title">长安</view>
+                <view class="serial">2021款</view>
+                <view class="price">指导价:    11:55万</view>
             </view>
+            <view class="arrow"></view>
+        </view>
+        <!-- 头部信息E -->
+        <view class="content">
+            <!-- 手机号S -->
+            <view class="list models">
+                <view class="list-title">手机号</view>
+                <input class="select" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+            </view>
+            <!-- 手机号E -->
+            <!-- 验证码S -->
+            <view class="list models">
+                <view class="list-title">验证码</view>
+                <input class="select" placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" />
+                <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
+                <view class="downcount" v-else>{{downNum}}s</view>
+            </view>
+            <!-- 验证码E -->
+            <!-- 城市选择S -->
             <view class="list models">
                 <view class="list-title">城市</view>
                 <view class="select">
@@ -24,6 +48,8 @@
                 </view>
                 <view class="arrow"></view>
             </view>
+            <!-- 城市选择E -->
+            <!-- 经销商S -->
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select">
@@ -39,19 +65,10 @@
                 </view>
                 <view class="arrow"></view>
             </view>
-            <view class="list models">
-                <view class="list-title">手机号</view>
-                <input class="select" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
-            </view>
-            <view class="list models">
-                <view class="list-title">验证码</view>
-                <input class="select" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
-                <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
-                <view class="downcount" v-else>{{downNum}}s</view>
-            </view>
+            <!-- 经销商E -->
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
-                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即预约</button>
+                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
                 <view class="tit">点击按钮即视为同意《个人信息保护声明》</view>
             </view>
         </view>
@@ -60,12 +77,16 @@
 
 <script>
 import api from '@/public/api/index'
+import pop from '@/components/apop/aPop'
+
 /* *
 * 倒计时默认时间
 */
 const COUNTDOWN = 60
+let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
     export default {
+        components: {pop},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -90,14 +111,6 @@ const COUNTDOWN = 60
             this.reqAllCityList(0)
         },
         methods: {
-            //检测信息是否齐全
-            checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity) {
-                    this.isAllSelect = true
-                }else {
-                    this.isAllSelect = false
-                }
-            },
 
             //获取城市列表
             async reqAllCityList() {
@@ -132,7 +145,6 @@ const COUNTDOWN = 60
 
             //获取验证码
             getCode() {
-                let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -148,10 +160,16 @@ const COUNTDOWN = 60
                     }
                 },1000)
             },
-
+            //检测信息是否齐全
+            checkInfo() {
+                if(this.phoneNum && this.codeNum && this.currentCity) {
+                    this.isAllSelect = true
+                }else {
+                    this.isAllSelect = false
+                }
+            },
             //立即预约
             yuYue() {
-                let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -160,7 +178,7 @@ const COUNTDOWN = 60
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
-
+                this.$refs.pop.isShow = true
             },
             cityPickerChange: function(e) {
                 this.reqDealersList(this.cityList[e.target.value].id)
@@ -177,11 +195,45 @@ const COUNTDOWN = 60
 </script>
 
 <style lang="scss" scoped>
-.yuyue {
-	image {
-		width: 100%;
-        vertical-align: middle;
-	}
+.get-preferential {
+    .top-tit {
+        width: 100%;
+        height: 32px;
+        background-color: #f5f5f5;
+        font-size: 12px;
+        color: #999999;
+        padding: 0 13px;
+        line-height: 32px;
+    }
+    .head-info {
+        padding: 20px 20px;
+        display: flex;
+        align-items: center;
+        image {
+            height: 68px;
+            vertical-align: middle;
+        }
+        .text-dec {
+            margin-left: 10px;
+            height: 68px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            color: #333333;
+            justify-content: space-between;
+            .title {
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .serial {
+                font-size: 12px;
+            }
+            .price {
+                font-size: 12px;
+                color: #999999;
+            }
+        }
+    }
     .content {
         padding: 32rpx 32rpx 10rpx;
         box-sizing: border-box;
@@ -210,13 +262,6 @@ const COUNTDOWN = 60
                 color: #999999;
                 font-size: 28rpx;
             }
-            .arrow {
-                width: 6px;
-                height: 6px;
-                transform: rotate(45deg);
-                border-top: 1px solid #999999;
-                border-right: 1px solid #999999;
-            }
         }
         .btn-area {
             text-align: center;
@@ -231,13 +276,20 @@ const COUNTDOWN = 60
                 border-radius: 88rpx;
                 line-height: 88rpx;
                 color: #ffffff;
-                background-color: #cdcdcd;
                 font-size: 32rpx;
+                background-color: #cdcdcd;
                 &.origin {
                     background-color: #fa8943;
                 }
             }
         }
+    }
+    .arrow {
+        width: 6px;
+        height: 6px;
+        transform: rotate(45deg);
+        border-top: 1px solid #999999;
+        border-right: 1px solid #999999;
     }
 }
 </style>
