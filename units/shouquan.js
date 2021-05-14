@@ -4,7 +4,7 @@ const app = getApp()
 export default {
     data() {
         return {
-            withoutUserInfoAuth: false
+            haveUserInfoAuth: false
         }
     },
     onLoad() {
@@ -16,10 +16,10 @@ export default {
     },
     methods: {
         getStorageUserInfo() {
-            let userAuth = uni.getStorageSync('withoutUserInfoAuth')
+            let userAuth = uni.getStorageSync('haveUserInfoAuth')
             if (userAuth) {
-                app.globalData.withoutUserInfoAuth = userAuth
-                this.withoutUserInfoAuth = app.globalData.withoutUserInfoAuth
+                app.globalData.haveUserInfoAuth = userAuth
+                this.haveUserInfoAuth = app.globalData.haveUserInfoAuth
             }
         },
         getWxUserInfoAuth(e) {
@@ -28,8 +28,9 @@ export default {
                 desc: '完善信息',
                 success: (res) => {
                     console.log('成功授权', res)
-                    uni.setStorageSync('withoutUserInfoAuth',true)
-                    app.globalData.withoutUserInfoAuth = true
+                    uni.setStorageSync('haveUserInfoAuth',true)
+                    app.globalData.haveUserInfoAuth = true
+                    this.haveUserInfoAuth = true
                     uni.setStorageSync('wxUserInfo',res.userInfo)
                     app.globalData.wxUserInfo = res.userInfo
                     //成功授权
@@ -37,8 +38,9 @@ export default {
                 fail: (res) => {
                     //拒绝授权
                     console.log('拒绝授权', res)
-                    uni.setStorageSync('withoutUserInfoAuth',false)
-                    app.globalData.withoutUserInfoAuth = false
+                    uni.setStorageSync('haveUserInfoAuth',false)
+                    app.globalData.haveUserInfoAuth = false
+                    this.haveUserInfoAuth = false
                     uni.setStorageSync('wxUserInfo',null)
                     app.globalData.wxUserInfo = null
                 }

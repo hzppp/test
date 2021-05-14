@@ -3,7 +3,7 @@ let app = getApp()
 export default {
 	data() {
 		return {
-			withoutUserInfoAuth: false
+			haveUserInfoAuth: false
 		}
 	},
 	methods: {
@@ -37,8 +37,8 @@ export default {
 							let u = uni.getStorageSync('wxUserInfo')
 							that.setWxUserInfo(u)
 						} else {
-							app.globalData.withoutUserInfoAuth = true //没有授权
-							uni.getStorageSync('withoutUserInfoAuth',true)
+							app.globalData.haveUserInfoAuth = true //没有授权
+							uni.getStorageSync('haveUserInfoAuth',true)
 							resolve(true)
 						}
 					}

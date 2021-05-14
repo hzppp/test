@@ -1,7 +1,7 @@
 <template>
   <view class="welfareActivity">
     <viewTabBar :current="3"></viewTabBar>
-    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <form-pop ref="formpop"></form-pop>
     <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
                  scroll-with-animation>
