@@ -210,9 +210,13 @@ const config = {
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
+		// 获取省份
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
+		// 根据省份id获取城市
 		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
+		// 根据城市id获取地区
 		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
+		// 根据城市id获取经销商
 		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`
 	},
 	getAPI(key) {
