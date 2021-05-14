@@ -76,14 +76,12 @@
 						api.getRegionIpArea(app.globalData.currentLocation.realPositionSF.cityCode).then(res=>{
 							console.log('真实定位城市', res)
 							app.globalData.currentLocation.realPositionCS = res.cityData
+							app.globalData.currentLocation.cityData = res.cityData
+						}).catch(err => {
+							app.globalData.currentLocation.cityData = cityData
 						})
 					}
-					{
-						app.globalData.currentLocation.wxPosition = position
-						app.globalData.currentLocation.pro_city = wz
-						app.globalData.currentLocation.cityData = cityData
-					}
-
+					app.globalData.currentLocation.wxPosition = position
 				}
 			}
 			let cs = ''

@@ -225,6 +225,14 @@
             "enablePullDownRefresh": false
         }
     }
+    ,{
+        "path" : "pages/GetPreferential",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "获取优惠",
+            "enablePullDownRefresh": false
+        }
+    }
   ],
   "tabBar": {
     "color": "#999999",
