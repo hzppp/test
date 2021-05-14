@@ -7,7 +7,7 @@
 				<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 			</view>
 		</block>
-    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <scroll-view class="dynamicDetails" :class="!isArticleOver ? 'bg-white':''" lower-threshold="200" @scrolltolower="scrollGetData"
 		 scroll-y="true" scroll-with-animation="true">
 			<loading ref="loading"></loading>

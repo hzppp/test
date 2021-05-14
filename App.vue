@@ -2,7 +2,7 @@
 	import '@/public/ald/ald-stat.js'
 	export default {
 		globalData: {
-		  withoutUserInfoAuth:false,//是否缺少授权 false:已经授权
+		  haveUserInfoAuth:false,//是否缺少授权 false:已经授权
 		  csbHost:"https://price.pcauto.com.cn",//基础信息
 		  whoisHost:"https://whois.pconline.com.cn",//位置信息
 		  magearHost:"https://magear.pcauto.com.cn",

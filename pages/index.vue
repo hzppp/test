@@ -1,12 +1,12 @@
 <template>
 	<view class="index">
-    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <!--    <getUserInfoAuth></getUserInfoAuth>-->
 	<viewTabBar :current="0"></viewTabBar>
 <!--		<button @tap="getUserInfo">获取用户信息授权</button>-->
 		首页
     <view @tap="goArticlePage">
-      文章页面{{withoutUserInfoAuth}}
+      跳转：文章页面
     </view>
 	</view>
 </template>
@@ -38,7 +38,6 @@
 			}
 		},
 		async onLoad(options) {
-      app.globalData.withoutUserInfoAuth = uni.getStorageSync('withoutUserInfoAuth')
     },
 		onUnload() {},
 		onShareAppMessage() {

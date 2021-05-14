@@ -1,6 +1,6 @@
 <template>
 	<view class="article">
-    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <loading ref="loading"></loading>
 		<share-pop ref="sharepop"></share-pop>
 		<getFormidbox>

@@ -1,6 +1,6 @@
 <template>
 	<view class="nearby">
-    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <form-pop ref="formpop"></form-pop>
 	        <view class="head-tap-nav">
 	            <block v-for="(ietm,index) in ['附近销售','附近4S']" :key="index">
