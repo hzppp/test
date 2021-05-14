@@ -1,6 +1,6 @@
 <template>
   <view>
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
     <view>直播</view>
     <viewTabBar :current="1"></viewTabBar>
   </view>

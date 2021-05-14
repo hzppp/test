@@ -1,6 +1,6 @@
 <template>
 	<view class="index">
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
     <!--    <getUserInfoAuth></getUserInfoAuth>-->
 	<viewTabBar :current="0"></viewTabBar>
 <!--		<button @tap="getUserInfo">获取用户信息授权</button>-->

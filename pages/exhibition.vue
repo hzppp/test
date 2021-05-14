@@ -1,6 +1,6 @@
 <template>
   <view>
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
     exhibition 云展馆
     <viewTabBar :current="2"></viewTabBar>
   </view>
