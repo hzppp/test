@@ -4,8 +4,8 @@ export default {
         return new Promise(async (resolve)=>{
               let data = {
                 wsq:true,
-                latitude:36.40,
-                longitude:117.00
+                latitude:29.57,
+                longitude:106.5
                 // longitude:113.62,
                 // latitude:34.75
               }

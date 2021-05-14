@@ -10,15 +10,15 @@
 					<view>{{serialList[indexSerial].name}}</view>
 				</picker>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="[provinceList, cityList]"
-				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')">
+				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')" :value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
-				<picker v-if="dealerList.length > 0" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'dealerName'"
-				 :class="'input-view dealer-input jt-icon ' + (dealerList[currentDealerIndex].dealerId < 1 ? 'placeholder':'')">
-					<view>{{dealerList[currentDealerIndex].dealerName}}</view>
+				<picker mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
+				 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
+					<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 				</picker>
 				<view class="input-view mobile-input name-input">
 					<input type="text" @input="getValue('name',$event)" :value="name" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
@@ -85,8 +85,6 @@
 	export default {
 		data() {
 			return {
-				dealerList: [],
-				currentDealerIndex: 0,
 				title: '完善资料',
 				currentObj: {},
 				from: "",
@@ -95,16 +93,16 @@
 				provinceList: [],
 				cityList: [],
 				districtList: [],
+				dealerList: [],
 				crtProvinceItem: {}, // 当前选择的省份
 				crtCityItem: {}, // 当前选择的城市
 				crtDistrictItem: {}, // 当前选择的地区项
-				indexCity: "",
+				crtDealerItem: {}, // 当前选择的经销商项
 				isShowFormPop: false,
 				popName: '',
 				phone: "",
 				isphone: false,
 				name: "",
-				isName: "",
 				isActLink: false
 			}
 		},
@@ -122,7 +120,14 @@
 					text = this.crtDistrictItem.name
 				}
 				return text
-			}
+			},
+			selectIndex () {
+				let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+				let cityIndex = this.cityList.findIndex(item => item.id == this.crtCityItem.id)
+				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+				cityIndex = cityIndex > -1 ? cityIndex : 0
+				return [provinceIndex, cityIndex]
+			},
 		},
 		methods: {
 			formShow(name, from = "", obj = {}, title) {
@@ -130,7 +135,6 @@
 				this.from = from
 				this.currentObj = obj
 				this.title = title
-				this.reqProvinceList()
 				this.getpreClue()
 			},
 			formHide() {
@@ -140,7 +144,7 @@
 				let {
 					detail
 				} = e
-				this.currentDealerIndex = detail.value
+				this.crtDealerItem = this.dealerList[detail.value]
 			},
 			bindMultiPickerColumnChangeser(e) {
 				let {
@@ -161,6 +165,7 @@
 				} = e
 				this.crtProvinceItem = this.provinceList[detail.value[0]]
 				this.crtCityItem = this.cityList[detail.value[1]]
+				this.reqDealerListByCityId(this.crtCityItem.id)
 				this.reqDistrictListByCityId(this.crtCityItem.id)
 			},
 			bindMultiPickerColumnChange(e) {
@@ -185,15 +190,12 @@
 
 			},
 			async submit() {
-				let sf = this.province[0][this.indexCity[0]]
-				let cs = this.province[1][this.indexCity[1]]
 				let chexi = this.serialList[this.indexSerial]
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
-				console.log('省份', sf)
-				console.log('城市', cs)
-				console.log('地区', dq)
+				console.log('省份', this.crtProvinceItem)
+				console.log('城市', this.crtCityItem)
 				console.log('车系', chexi)
 				console.log('来源', ly)
 				console.log('来源对象', lydx)
@@ -211,37 +213,35 @@
 					sourceId = lydx.id || lydx.dealerId
 				}
 				let isphone = this.isPoneAvailable(this.phone)
-				if (!isphone) {
-					this.showToast('请输入正确手机号')
-					return false
-				}
-				if (!this.name) {
-					
-				}
-				if (!cs) {
-					this.showToast('请选择城市')
-					return false
-				}
 				if (!chexi.serialGroupId) {
 					this.showToast('请选择车系')
 					return false
 				}
-				console.log('this.dealerList', this.dealerList)
-				let dealerId
-				if (this.dealerList.length == 0) {
-					dealerId = ''
-				} else {
-					dealerId = this.dealerList[this.currentDealerIndex].dealerId
+				if (!this.crtProvinceItem.id) {
+					this.showToast('请选择省份')
+					return false
+				}
+				if (!this.crtCityItem.id) {
+					this.showToast('请选择城市')
+					return false
+				}
+				if (!isphone) {
+					this.showToast('请输入正确手机号')
+					return false
+				}
+				if (!this.crtDealerItem.id) {
+					this.showToast('请选择经销商')
+					return
 				}
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
-					regionId: cs.regionId,
+					regionId: this.crtCityItem.id,
 					serialGroupId: chexi.serialGroupId,
 					source: source,
 					sourceId: sourceId,
-					dealerId: dealerId,
-					areaId: dq.areaId
+					dealerId: this.crtDealerItem.id,
+					areaId: this.crtDistrictItem.id
 				})
 				let popname
 				if (data.code == 1) { //成功留资
@@ -360,20 +360,8 @@
 				console.log('phone', this.phone)
 				this.isphone = this.phone
 				this.name = data.userName
-				this.isName = this.name
 				//   经销商选择
 				console.log('preClue-data', data) 
-				{
-					if (data.dealerList) {
-						let dList = [...[{
-							dealerName: data.defaultDealerName || '请选择经销商',
-							dealerId: data.defaultDealerId
-						}], ...data.dealerList]
-						this.dealerList = dList
-					} else {
-						this.isDealerList()
-					}
-				}
 				if (!data.serialGroupList || data.serialGroupList.length == 0) {
 					this.getJson()
 					return false
@@ -384,6 +372,21 @@
 					obj.name = obj.serialGroupName
 				}
 				this.serialList = data.serialGroupList
+				// 省市
+				if (currentLocation) {
+					await this.reqProvinceList()
+					const crtLocationProvinceItem = this.provinceList.find(item => item.id == currentLocation.cityData.proId)
+					if (crtLocationProvinceItem) {
+						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+						const crtLocationCityItem = this.cityList.find(item => item.id == currentLocation.cityData.cityId) 
+						if (crtLocationCityItem) {
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.crtCityItem = crtLocationCityItem
+							this.reqDealerListByCityId(this.crtCityItem.id)
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+						}
+					}
+				}
 				this.isShowFormPop = true
 			},
 			toFirst(list, index) {
@@ -412,39 +415,12 @@
 				})
 				this.isShowFormPop = true
 			},
-			async getFormDealer(ff = false) {
-				let cityCode = this.province[1][this.indexCity[1]].regionId
-				let wxPosition = app.globalData.currentLocation.wxPosition
-				let cs = {
-					regionId: cityCode
-				}
-				if (!wxPosition.wsq) {
-					cs.latitude = wxPosition.latitude
-					cs.longitude = wxPosition.longitude
-				}
-				let {
-					data
-				} = await api.getFormDealer(cs)
-				this.currentDealerIndex = 0
-				this.dealerList = data
-				this.isDealerList('该地区没有经销商，请切换地区')
-
-			},
-			isDealerList(text = '该城市没有经销商，请切换城市') {
-				if (this.dealerList.length == 0) {
-					this.showToast(text)
-				}
-			},
 			// 请求所有的省份
 			async reqProvinceList () {
 				try {
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
 						this.provinceList = res.data
-						this.crtProvinceItem = this.provinceList[0]
-						await this.reqCityListByProvinceId(this.crtProvinceItem.id)
-						this.crtCityItem = this.cityList[0]
-						this.reqDistrictListByCityId(this.crtCityItem.id)
 					}
 				} catch(err) {
 					this.showToast('获取省份信息失败')
@@ -477,7 +453,23 @@
 					this.showToast('获取地区信息失败')
 					console.error(err)
 				}
-			}
+			},
+			// 根据城市id请求经销商
+			async reqDealerListByCityId (cityId) {
+				this.dealerList = []
+				try {
+					const res = await api.fetchDealerListByCityId({cityId})
+					if (res.code == 1) {
+						this.dealerList = res.data
+						if (this.dealerList && this.dealerList.length) {
+							this.crtDealerItem = this.dealerList[0]
+						}
+					}
+				} catch (err) {
+					this.showToast('获取经销商信息失败')
+					console.error(err)
+				}
+			},
 		}
 	}
 </script>

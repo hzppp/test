@@ -26,7 +26,8 @@
 			};
 		},
 		async created(){
-			let {
+      console.log('tttttt')
+      let {
 				bottom,height,left,right,top,width
 			} = uni.getMenuButtonBoundingClientRect()
 			this.height = height + top + Math.floor(top/3)
@@ -124,7 +125,7 @@
     .ellipsis;
     .pa(50%,50%);
     transform: translate(-50%,-50%);
-    
+
 }
 
 .white{

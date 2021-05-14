@@ -1,7 +1,7 @@
 <template>
 	<view class="nearby">
-	        <button v-if="isUserInfoPage" class="getUserInfo_name_info_mask_body" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>
-	        <form-pop ref="formpop"></form-pop>
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <form-pop ref="formpop"></form-pop>
 	        <view class="head-tap-nav">
 	            <block v-for="(ietm,index) in ['附近销售','附近4S']" :key="index">
 	                <view @tap="tabSwiper(index)" :class="'item ' + (current == index ? 'current':'')">{{item}}</view>
@@ -96,10 +96,10 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-	
+
 	import formpop from '@/components/formpop/formpop'
 	  import distance from '@/units/distance'
-	
+
 	let app = getApp()
 	export default {
 		components: {
@@ -146,7 +146,7 @@
 		        }
 		        this.phone = app.globalData.pocketUserInfo.phone
 		        this.swiperChange()
-		        
+
 		    },
 		    async onLoad(options) {
 		        /* let currentLocation = app.globalData.currentLocation
@@ -196,7 +196,7 @@
 			            }
 			            // this.$invoke('form-pop','formShow','form','activity',this.content)
 			            this.$invoke('form-pop','formShow','form','dealer',obj)
-			            
+
 			        },
 			        getPhoneNumberstop(){
 			            console.log('-')
@@ -313,7 +313,7 @@
 					        this.isgetNearbySalesList = true
 					        this.dealersList = []
 					        this.nearbySalesList = []
-					        
+
 					    },
 						async getCity(id){
 						        let {data} = await api.getRegionByProvince(id)
@@ -321,7 +321,7 @@
 						            data[i]['text'] = data[i].regionName
 						        }
 						        this.province[1] = data
-						        
+
 						        return data
 						    },
 						    toFirst(list,index){
@@ -343,7 +343,7 @@
 						                regionId:cityId,
 						                salesId:salesId
 						            })
-						
+
 						            if(data.list.length>0){
 						                this.isgetNearbySalesList = true
 						            }
@@ -371,7 +371,7 @@
 						            }
 						            let a = [...this.nearbySalesList,...list]
 						            this.nearbySalesList = a
-						            
+
 						            console.log(this.nearbySalesList)
 						        }
 						    },
@@ -427,7 +427,7 @@
 						            }
 						            let a = [...this.dealersList,...list]
 						            this.dealersList = a
-						            
+
 						        }
 						    },
 						    isChangeCity(){
@@ -438,7 +438,7 @@
 						            this.isgetNearbySalesList = true
 						            this.getNearbySalesListPageNumber = 1
 						            this.nearbySalesList = []
-						            // 
+						            //
 						            this.isLoad4sList = true
 						            this.load4sPageNumber = 1
 						            this.dealersList = []

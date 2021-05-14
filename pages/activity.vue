@@ -1,13 +1,13 @@
 <template>
 	<view class="activity">
-		<button v-if="isUserInfoPage" class="getUserInfo_name_info_mask_body" lang="zh_CN" @getuserinfo="getWxUserInfoButton"
-		 open-type="getUserInfo"></button>
-		<share-pop ref="shareSuccess"></share-pop>
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <share-pop ref="shareSuccess"></share-pop>
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
 		<view class="date">
-			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分<view class="db">{{artDownDate[3]}}</view>秒
+			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分<view
+			 class="db">{{artDownDate[3]}}</view>秒
 		</view>
 
 		<view class="content">
@@ -15,7 +15,7 @@
 		</view>
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-a">				
+			<view class="type-a">
 				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
 				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
@@ -115,7 +115,7 @@
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
 					app.globalData.pocketUserInfo.phone = data.phoneNumber
 					this.phone = data.phoneNumber
-					
+
 					this.$refs.formpop.formShow('form', 'activity', this.content)
 					// this.$invoke('formpop', 'formShow', 'form', 'activity', this.content)
 				} else {
@@ -200,57 +200,64 @@
 	}
 
 	.operation-list {
-			position: fixed;
-			z-index: 1;
-			left: 0;
-			bottom: 0;
-			width: 100%;
-			height: 104rpx;
-			font-size: 32rpx;
-			padding-bottom: constant(safe-area-inset-bottom);
-			padding-bottom: env(safe-area-inset-bottom);
-			.type-a {
-				display: flex;
-				justify-content: space-between;
-				padding: 0 32rpx;
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 104rpx;
+		font-size: 32rpx;
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+
+		.type-a {
+			display: flex;
+			justify-content: space-between;
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.share-btn {
+				width: 236rpx;
+				height: 88rpx;
+				color: #fa8845;
+				border: 2rpx solid #fa8845;
+				border-radius: 44rpx;
 				box-sizing: border-box;
-				.share-btn {
-					width: 236rpx;
-					height: 88rpx;
-					color: #fa8845;
-					border: 2rpx solid #fa8845;
-					border-radius: 44rpx;
-					box-sizing: border-box;
-				}
-				.enroll-btn {
-					width: 420rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #fa8845;
-					border-radius: 44rpx;
-				}			
 			}
-			.type-b {
-				padding: 0 32rpx;
-				box-sizing: border-box;
-				.share-btn {
-					width: 686rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #fa8845;
-					border-radius: 44rpx;
-				}
-			}
-			.type-c {
-				padding: 0 32rpx;
-				box-sizing: border-box;
-				.over-btn {
-					width: 686rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #cccccc;
-					border-radius: 44rpx;
-				}
+
+			.enroll-btn {
+				width: 420rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #fa8845;
+				border-radius: 44rpx;
 			}
 		}
+
+		.type-b {
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.share-btn {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #fa8845;
+				border-radius: 44rpx;
+			}
+		}
+
+		.type-c {
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.over-btn {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #cccccc;
+				border-radius: 44rpx;
+			}
+		}
+	}
 </style>

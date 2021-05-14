@@ -140,10 +140,10 @@ module.exports = {
 
 		} else {
 			data = {
-				"pro": "浙江省",
-				"proCode": "330000",
-				"city": "杭州市",
-				"cityCode": "330100",
+				"pro": "重庆市",
+				"proCode": "500000",
+				"city": "重庆",
+				"cityCode": "500000",
 				"region": "",
 				"regionCode": "",
 				"error": ""
@@ -184,7 +184,7 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('getactivity'),
 			data: {
-				regionId: regionId,
+				cityId: regionId,
 				size: size,
 				pageNum: pageNum
 			}
@@ -225,8 +225,10 @@ module.exports = {
 		let {
 			data
 		} = await request({
-			url: domain.getAPI('getActivityContent') + id,
-			data: {}
+			url: domain.getAPI('getActivityContent'),
+			data: {
+				id: id
+			}
 		})
 		return data
 	},
@@ -238,7 +240,7 @@ module.exports = {
 			data: {
 				pageNum: pageNum,
 				pageSize: pageSize,
-				regionId: regionId
+				cityId: regionId
 			}
 		})
 		return data
@@ -1116,6 +1118,15 @@ module.exports = {
 			url:domain.getAPI('fetchdealersList'),
 			method: "GET",
 			data:para
+        })
+		return data
+    },
+	// 根据城市id请求经销商
+	fetchDealerListByCityId: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchDealerListByCityId'),
+			method: "GET",
+			data: para
 		})
 		return data
 	},

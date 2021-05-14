@@ -28,8 +28,9 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"https://devqd-changan.pcauto.com.cn/",
     pcauto: 'https://magear.pcauto.com.cn', //测试域名 
+	changan:"https://devqd-changan.pcauto.com.cn",
+	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
 
@@ -66,15 +67,15 @@ const config = {
 		// 
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
-		getactivity: `${DOMAIN.host}/api/audi/xcx/activity`,
+		getactivity: `${DOMAIN.mock}/api/xcx/activity/list`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
-		getActivityContent: `${DOMAIN.host}/api/audi/xcx/activity/`,
-		// 
-		getWelfare: `${DOMAIN.host}/api/audi/xcx/index/welfare`,
+		getActivityContent: `${DOMAIN.mock}/api/xcx/activity/detail`,
+		// 获取优惠券列表
+		getWelfare: `${DOMAIN.mock}/api/xcx/coupon/list`,
 		// 用户留资
 		submitClue: `${DOMAIN.host}/api/audi/xcx/clue`,
 		// 获取用户信息
@@ -215,9 +216,14 @@ const config = {
         fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
         //获取经销商列表
         fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
-		fetchProvinceList: `${DOMAIN.changan}/xcx/base/provinces`,
-		fetchCityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`,
-		fetchDistrictListByCityId: `${DOMAIN.changan}/xcx/base/getDistricts`
+		// 获取省份
+		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
+		// 根据省份id获取城市
+		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
+		// 根据城市id获取地区
+		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
+		// 根据城市id获取经销商
+		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`
 	},
 	getAPI(key) {
 		let url;

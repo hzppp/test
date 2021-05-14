@@ -1,40 +1,48 @@
-
 import api from '@/public/api/index'
+
 const app = getApp()
 export default {
-  data() {
-  	return {
-  		isUserInfoPage: false
-  	}
-  },
-  onLoad(){
-    this.isUserInfoPage = app.globalData.isUserInfoPage
-  },
-  onShow(){
-    this.isUserInfoPage = app.globalData.isUserInfoPage
-  },
-  methods: {
-    getWxUserInfoButton(e) {
-        let {
-            detail={}
-        }=e
-		console.log('getWxUserInfoButton============',detail)
-        if (detail.errMsg.indexOf("ok")>-1) {
-            console.log('成功授权,来源按钮')
-            // this.setWxUserInfo(detail)
-            app.globalData.wxUserInfo = detail
-            this.isUserInfoPage = false
-            app.globalData.isUserInfoPage = false
-            let info = app.globalData.wxUserInfo
-            api.saveWXuserInfo({
-                encryptedData:info.encryptedData,
-                iv:info.iv,
-                rawData:info.rawData,
-                signature:info.signature
+    data() {
+        return {
+            withoutUserInfoAuth: false
+        }
+    },
+    onLoad() {
+        console.log('mixins shouquan')
+        this.getStorageUserInfo()
+    },
+    onShow() {
+        this.getStorageUserInfo()
+    },
+    methods: {
+        getStorageUserInfo() {
+            let userAuth = uni.getStorageSync('withoutUserInfoAuth')
+            if (userAuth) {
+                app.globalData.withoutUserInfoAuth = userAuth
+                this.withoutUserInfoAuth = app.globalData.withoutUserInfoAuth
+            }
+        },
+        getWxUserInfoAuth(e) {
+            console.log('getWxUserInfoAuth', e)
+            wx.getUserProfile({
+                desc: '完善信息',
+                success: (res) => {
+                    console.log('成功授权', res)
+                    uni.setStorageSync('withoutUserInfoAuth',true)
+                    app.globalData.withoutUserInfoAuth = true
+                    uni.setStorageSync('wxUserInfo',res.userInfo)
+                    app.globalData.wxUserInfo = res.userInfo
+                    //成功授权
+                },
+                fail: (res) => {
+                    //拒绝授权
+                    console.log('拒绝授权', res)
+                    uni.setStorageSync('withoutUserInfoAuth',false)
+                    app.globalData.withoutUserInfoAuth = false
+                    uni.setStorageSync('wxUserInfo',null)
+                    app.globalData.wxUserInfo = null
+                }
             })
-        }else{
-            console.log('拒绝授权,来源按钮')
         }
     }
-  }
 }
