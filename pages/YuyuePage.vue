@@ -122,6 +122,11 @@ const COUNTDOWN = 60
 
             //获取验证码
             getCode() {
+                let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
+                if(!reg.test(this.phoneNum)) return uni.showToast({
+                    title:"请输入正确的手机号码",
+                    icon:"none"
+                })
                 this.timeDownFalg = false
                 this.isFirst = false
                 this.timer = setInterval(()=>{
