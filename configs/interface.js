@@ -27,7 +27,7 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
+	changan:"https://devqd-changan.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
@@ -210,9 +210,13 @@ const config = {
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
+		// 获取省份
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
+		// 根据省份id获取城市
 		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
+		// 根据城市id获取地区
 		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
+		// 根据城市id获取经销商
 		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`
 	},
 	getAPI(key) {
