@@ -1076,7 +1076,7 @@ module.exports = {
 		return data
 	},
 	//获取城市
-	reqAllCityList:async(para)=>{
+	fetchAllCityList:async(para)=>{
 		let {data} = await request({
 			url:domain.getAPI('allCityList'),
 			method: "GET",
@@ -1109,5 +1109,14 @@ module.exports = {
 			data: para
 		})
 		return data
-	}
+	},
+    //获取经销商列表
+	fetchDealersList:async(para)=>{
+		let {data} = await request({
+			url:domain.getAPI('fetchdealersList'),
+			method: "GET",
+			data:para
+		})
+		return data
+	},
 }

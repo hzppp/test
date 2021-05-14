@@ -104,7 +104,7 @@
              getVsData(ids,rid){
                 return new Promise((reolve,resject)=>{
                     uni.request({
-                        url:domain.getAPI('getVSserials'),
+                        url:domain.getAPI('fetchVSserials'),
                         data:{
                             rid,
                             leftSerialId:ids.split(",")[0],

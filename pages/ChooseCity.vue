@@ -18,7 +18,7 @@ import api from '@/public/api/index'
 		methods: {
 			async getAllCityList() {
 				try{
-					const res = await api.reqAllCityList({hasHot:0})
+					const res = await api.fetchAllCityList({hasHot:0})
 					console.log('allcity==>',res)
 				}catch(e){
 					console.error(e)

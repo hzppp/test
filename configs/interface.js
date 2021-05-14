@@ -28,7 +28,7 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
+	changan:"https://devqd-changan.pcauto.com.cn/",
     pcauto: 'https://magear.pcauto.com.cn', //测试域名 
 }
 
@@ -212,7 +212,9 @@ const config = {
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
         //获取车系对比
-        getVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
+        fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
+        //获取经销商列表
+        fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		fetchProvinceList: `${DOMAIN.changan}/xcx/base/provinces`,
 		fetchCityListByProvinceId: `${DOMAIN.changan}/xcx/base/getCities`,
 		fetchDistrictListByCityId: `${DOMAIN.changan}/xcx/base/getDistricts`
