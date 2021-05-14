@@ -77,7 +77,7 @@ const config = {
 		// 获取优惠券列表
 		getWelfare: `${DOMAIN.mock}/api/xcx/coupon/list`,
 		// 用户留资
-		submitClue: `${DOMAIN.host}/api/audi/xcx/clue`,
+		submitClue: `${DOMAIN.changan}/api/xcx/clue/user`,
 		// 获取用户信息
 		getPocketUserInfo: `${DOMAIN.host}/api/audi/xcx/user/info`,
 		// 记录活动访问

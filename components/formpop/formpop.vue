@@ -236,12 +236,13 @@
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
-					regionId: this.crtCityItem.id,
+					cityId: this.crtCityItem.id,
 					serialGroupId: chexi.serialGroupId,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,
-					areaId: this.crtDistrictItem.id
+					areaId: this.crtDistrictItem.id,
+					provinceId: this.crtProvinceItem.id,
 				})
 				let popname
 				if (data.code == 1) { //成功留资
