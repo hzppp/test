@@ -1,34 +1,45 @@
 <template>
 	<view class="index">
+    <button v-if="!withoutUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+    <!--    <getUserInfoAuth></getUserInfoAuth>-->
+	<viewTabBar :current="0"></viewTabBar>
+<!--		<button @tap="getUserInfo">获取用户信息授权</button>-->
 		首页
+    <view @tap="goArticlePage">
+      文章页面{{withoutUserInfoAuth}}
+    </view>
 	</view>
 </template>
 
 <script>
 	import login from '@/units/login'
 	import api from '@/public/api/index'
-	import shouquan from '@/units/shouquan'
+	import tabBar from '@/components/tabBar/tabBar'
+  import shouquan from '@/units/shouquan'
 
-	let app = getApp()
+  let app = getApp()
 	export default {
-		components: {
-		},
-		data() {
+		components: {viewTabBar:tabBar},
+    mixins: [shouquan],
+    data() {
 			return {
-				
+        userInfoObj:{}
 			}
 		},
-		mixins: [shouquan],
+		onShow() {
+		  console.log('index_app.globalData.currentLocation',app.globalData.currentLocation)
+			uni.hideTabBar({
+			    animation: false
+			})
+		},
 		watch: {
 			indexCity: function(newVal) {
 				console.log('indexCity===========', newVal)
 			}
 		},
 		async onLoad(options) {
-
-		},
-		async onShow() {
-		},
+      app.globalData.withoutUserInfoAuth = uni.getStorageSync('withoutUserInfoAuth')
+    },
 		onUnload() {},
 		onShareAppMessage() {
 			let title = '奥迪东海汇：轻松开启精彩车生活'
@@ -44,7 +55,22 @@
 			}
 		},
 		methods: {
-			
+		  goArticlePage() {
+        uni.navigateTo({
+          url: `/pages/articleListPage`
+        })
+      },
+			getUserInfo(e) {
+				wx.getUserProfile({
+					desc: '完善用户信息',
+					success: (res) => {
+
+					},
+					complete: (res) => {
+
+					}
+				})
+			}
 
 		}
 	}
@@ -52,5 +78,4 @@
 
 <style lang="less">
 	@import '@/static/less/index.less';
-
 </style>

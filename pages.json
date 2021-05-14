@@ -60,6 +60,13 @@
       }
     },
     {
+      "path": "pages/articleListPage",
+      "style": {
+        "navigationBarTitleText": "文章列表",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/article",
       "style": {
         "navigationBarTitleText": "",

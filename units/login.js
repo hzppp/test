@@ -34,10 +34,12 @@ export default {
 		return new Promise((resolve, reject) => {
 			uni.login({
 				success: (res) => {
+				    console.log('uni login',res)
 					resolve(res);
 				},
 				fail: (err) => {
-					reject();
+                    console.log('uni login',err)
+                    reject();
 				}
 			})
 		})
@@ -89,6 +91,6 @@ export default {
                 return d;
             }
         }
-        return data; 
+        return data;
     }
 }

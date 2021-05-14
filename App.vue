@@ -1,22 +1,18 @@
 <script>
-	
 	import '@/public/ald/ald-stat.js'
 	export default {
 		globalData: {
-		  isUserInfoPage:false,//是否授权 false:已经授权
+		  withoutUserInfoAuth:false,//是否缺少授权 false:已经授权
 		  csbHost:"https://price.pcauto.com.cn",//基础信息
 		  whoisHost:"https://whois.pconline.com.cn",//位置信息
 		  magearHost:"https://magear.pcauto.com.cn",
-		  // host:"http://192.168.33.11:8087",
-		  // host:"http://192.168.33.173:8087",
-		  // host:"https://pocket.pcauto.com.cn",
-		  // host:"https://pocket2.pcauto.com.cn",
 		  host:"https://testpocket.pcauto.com.cn",
 		  panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 		  //panorama:"http://t-panorama.pcauto.com.cn",
 		  currentLocation:{},//当前位置
 		  userInfo: null,
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
+      wxUserInfo: null
 		},
 		onLaunch: function() {
 			console.log('App Launch')
@@ -43,7 +39,7 @@
 	page{
 	  word-break: break-all;
 	}
-	
+
 	button{
 	    border: 0;
 	    padding: 0;
@@ -54,7 +50,7 @@
 	  border-radius: 0;
 	  border: 0;
 	}
-	
+
 	button[plain]{
 	  border:0;
 	  border-radius: 0;
