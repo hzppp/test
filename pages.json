@@ -31,20 +31,6 @@
       }
     },
     {
-      "path": "pages/lookCar",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/chooseCity",
-      "style": {
-        "navigationBarTitleText": "选择城市",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/welfareActivity",
       "style": {
         "navigationBarTitleText": "活动",
@@ -200,11 +186,44 @@
       "style": {}
     },
     {
-      "path": "pages/canpei",
-      "style": {
-        "navigationBarTitleText": "车型对比",
-        "enablePullDownRefresh": false
-      }
+        "path" : "pages/LookCar",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseCity",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择城市",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/canpei",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "车型对比",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/carSerialsVS",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "车系对比",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/YuyuePage",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "预约试驾",
+            "enablePullDownRefresh": false
+        }
     }
   ],
   "tabBar": {
