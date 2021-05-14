@@ -273,15 +273,11 @@
 				if(this.welfareList.length == 0){return;}
 				this.$nextTick(function(){
 					if (this.welfarePageNumber > total || rows.length < 3) {
-						// this.$invoke('coupon-list', 'morebtnHide')
 						console.log('couponlist=================',this.$refs.couponlist)
 						this.$refs.couponlist.morebtnHide()
 					} else {
-						// this.$invoke('coupon-list', 'morebtnShow')
 						this.$refs.couponlist.morebtnShow()
 					}
-
-					// this.$invoke('coupon-list', 'setcouponList', this.welfareList)
 					this.$refs.couponlist.setcouponList(this.welfareList)
 				})
 

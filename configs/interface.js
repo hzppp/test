@@ -28,6 +28,7 @@ var DOMAIN_T = {
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
 	changan:"http://ms-changan-auto.changan-cloud-auto",
+	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
 
@@ -64,15 +65,15 @@ const config = {
 		// 
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
-		getactivity: `${DOMAIN.host}/api/audi/xcx/activity`,
+		getactivity: `${DOMAIN.mock}/api/xcx/activity/list`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
-		getActivityContent: `${DOMAIN.host}/api/audi/xcx/activity/`,
-		// 
-		getWelfare: `${DOMAIN.host}/api/audi/xcx/index/welfare`,
+		getActivityContent: `${DOMAIN.mock}/api/xcx/activity/detail`,
+		// 获取优惠券列表
+		getWelfare: `${DOMAIN.mock}/api/xcx/coupon/list`,
 		// 用户留资
 		submitClue: `${DOMAIN.host}/api/audi/xcx/clue`,
 		// 获取用户信息
@@ -212,7 +213,7 @@ const config = {
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
 		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
-		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`
+		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`
 	},
 	getAPI(key) {
 		let url;
