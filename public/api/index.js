@@ -225,8 +225,10 @@ module.exports = {
 		let {
 			data
 		} = await request({
-			url: domain.getAPI('getActivityContent') + id,
-			data: {}
+			url: domain.getAPI('getActivityContent'),
+			data: {
+				id: id
+			}
 		})
 		return data
 	},

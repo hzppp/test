@@ -71,7 +71,7 @@ const config = {
 		// 获取价格
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
-		getActivityContent: `${DOMAIN.host}/api/audi/xcx/activity/`,
+		getActivityContent: `${DOMAIN.mock}/api/xcx/activity/detail`,
 		// 获取优惠券列表
 		getWelfare: `${DOMAIN.mock}/api/xcx/coupon/list`,
 		// 用户留资
