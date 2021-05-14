@@ -1,6 +1,7 @@
 <template>
     <view class="get-preferential">
-        <pop></pop>
+        <!--提交弹窗 -->
+        <pop ref="pop"></pop>
         <!-- 顶部提示S -->
         <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
         <!-- 顶部提示E -->
@@ -85,7 +86,7 @@ const COUNTDOWN = 60
 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
     export default {
-        comments: {pop},
+        components: {pop},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -177,7 +178,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
-
+                this.$refs.pop.isShow = true
             },
             cityPickerChange: function(e) {
                 this.reqDealersList(this.cityList[e.target.value].id)
