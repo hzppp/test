@@ -36,8 +36,6 @@
         </view>
         <view v-else class="activity-list-none"></view>
       </view>
-      <!--			<navigator v-if="fixSale.salesId" class="fix-sale" target='miniProgram' app-id='wx6986c1a258647aae' :path="'pages/chat?salesId=' + fixSale.salesId"-->
-      <!--			 hover-class="none" redirect version="trial"></navigator>-->
     </scroll-view>
   </view>
 </template>
@@ -72,7 +70,6 @@ export default {
       activityListPageNumber: 1,
       activityList: [],
       welfareList: [],
-      fixSale: {}
     }
   },
   computed: {
@@ -110,8 +107,6 @@ export default {
       this.getactivity()
       // 福利列表
       this.getWelfare()
-      // this.getSalesList()
-      this.getChatSales()
     }
   },
   async onLoad() {
@@ -186,44 +181,6 @@ export default {
       this.activityListPageNumber = 1
       this.activityList = []
       this.welfareList = []
-    },
-    async getChatSales() {
-      let {
-        data
-      } = await api.getSalesId()
-      // data = 108349;
-      if (data > 0) {
-        this.fixSale = {
-          'salesId': data
-        }
-      } else {
-        this.getSalesList()
-      }
-      console.log(data)
-
-    },
-    async getSalesList() {
-      let currentLocation = app.globalData.currentLocation
-      let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
-      let salesId = ''
-      if (app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.salesId) {
-        salesId = app.globalData.pocketUserInfo.salesId
-      }
-      let {
-        data
-      } = await api.getSalesList({
-        manufacturerId: 1,
-        orderByRanking: 1,
-        pageNum: 1,
-        pageSize: 10,
-        regionId: cityId,
-        salesId: salesId
-      })
-      if (data.list[0]) {
-        this.fixSale = data.list[0]
-      }
-
-      console.log('getSalesList', this.fixSale)
     },
     // 获取精选活动
     async getactivity() {
