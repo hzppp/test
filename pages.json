@@ -186,7 +186,7 @@
       "style": {}
     },
     {
-        "path" : "pages/LookCar",
+        "path" : "pages/lookCar",
         "style" :                                                                                    
         {
             "navigationBarTitleText": "",
@@ -194,7 +194,7 @@
         }
     }
     ,{
-        "path" : "pages/ChooseCity",
+        "path" : "pages/chooseCity",
         "style" :                                                                                    
         {
             "navigationBarTitleText": "选择城市",

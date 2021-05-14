@@ -22,9 +22,7 @@
 		components: {viewTabBar:tabBar},
     mixins: [shouquan],
     data() {
-			return {
-        userInfoObj:{}
-			}
+			return {}
 		},
 		onShow() {
 		  console.log('index_app.globalData.currentLocation',app.globalData.currentLocation)
