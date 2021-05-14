@@ -27,7 +27,7 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
+	changan:"https://devqd-changan.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
