@@ -14,16 +14,16 @@
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
 		<view class="serial-list">
-			<view class="serial-item">
+			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index">
 				<view class="top-text">
-					<view class="desc">第二代逸动XT</view>
-					<view class="sub-desc">自领风潮</view>
+					<view class="desc">{{serialGroupItem.name}}</view>
+					<view class="sub-desc">{{serialGroupItem.serialGroupMemo}}</view>
 				</view>
 				<view class="bottom-text">
 					<view class="desc">官方指导价：</view>
 					<view class="price">77,900起</view>
 				</view>
-				<image class="cover" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3689751919,2543434411&fm=224&gp=0.jpg" mode="aspectFill" lazy-load="true"></image>
+				<image class="cover" :src="serialGroupItem.serialGroupOutVoList[0].picUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
 		<view class="zw"></view>

@@ -236,12 +236,13 @@
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
-					regionId: this.crtCityItem.id,
+					cityId: this.crtCityItem.id,
 					serialGroupId: chexi.serialGroupId,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,
-					areaId: this.crtDistrictItem.id
+					areaId: this.crtDistrictItem.id,
+					provinceId: this.crtProvinceItem.id,
 				})
 				let popname
 				if (data.code == 1) { //成功留资
@@ -375,7 +376,7 @@
 				// 省市
 				if (currentLocation) {
 					await this.reqProvinceList()
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name == currentLocation.cityData.pro)
+					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
 					if (crtLocationProvinceItem) {
 						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
 						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
