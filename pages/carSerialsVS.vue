@@ -1,14 +1,7 @@
 <template>
 	<!-- 车系对比页面 -->
 	<view class='carSerialsVS uni'>
-		<count v-if="countPage.car.carSerialsVS" :channel="countPage.car.carSerialsVS"></count>
-		<!-- #ifdef MP-WEIXIN -->
-		<!-- <count :channel="10144"></count> -->
-		<!-- #endif -->
-		<!-- #ifdef MP-BAIDU -->
-		<!-- <count :channel="10149"></count> -->
-		<!-- #endif -->
-		<load-fail v-if="loadFail" @init="init"></load-fail>
+		<!-- <load-fail v-if="loadFail" @init="init"></load-fail> -->
 		<!-- 车系信息s -->
 		<block v-if="leftSerial!=''&& rightSerial!=''">
 			<car-info @changeCarSearial="changeCarSearial" :leftSerial="leftSerial" :rightSerial="rightSerial" :types="types"></car-info>
@@ -24,8 +17,7 @@
 <script>
 	import carInfo from "@/components/carSerialsVS/carInfo.vue";
 	import basicInfo from "@/components/carSerialsVS/basicInfo.vue";
-	import Location from "@/units/Location.js";
-	import { getVsData } from "@/jsfiles/carSerialsVS.js"; 
+    import domain from '@/configs/interface';
 	import countPage from '@/configs/countPage';
 	export default {
 		components: {
@@ -59,7 +51,6 @@
 				city: "广州",
 				cityId: 1,
 				offon: true, //true走onload的init，false走onshow的init；防止onload数据还未初始化就执行了init(百度小程序)
-				imagePklist: [], //pk对比图片
 				worthRead: [], //买车必看pk
 				leftSerial: "", //左边数据
 				rightSerial: "", //右边数据
@@ -67,12 +58,9 @@
 			}
 		},
 		onPageScroll(e) {
-			console.log(e.scrollTop,"scrollTop")
 			if (e.scrollTop <= 90) {
-				console.log("types0")
 				this.types = 0
 			} else {
-				console.log("types1")
 				this.types = 1
 			}
 		},
@@ -92,21 +80,46 @@
 		methods: {
 			async init() {
 				try {
-					let data = await getVsData(this.SerialIds, this.cityId);
+					let data = await this.getVsData(this.SerialIds);
                     console.log('data :>> ', data);
-					this.imagePklist = data.imagePklist;
 					this.worthRead = data.worthRead;
 					this.leftSerial = data.leftSerial;
 					this.rightSerial = data.rightSerial;
 					this.offon = false
-					console.log(data)
 					uni.hideLoading()
 				} catch (e) {
 					uni.hideLoading()
-					console.log(e)
+					console.error(e)
 					this.loadFail = true
 				}
 			},
+            // 数组交叉排序重组
+            setArr(arr1,arr2){
+                for (let i in arr2) {
+                    arr1.splice(2 * i + 1, 0, arr2[i])
+                }
+                return arr1;
+            },
+            //获取对比车系
+             getVsData(ids,rid){
+                return new Promise((reolve,resject)=>{
+                    uni.request({
+                        url:domain.getAPI('getVSserials'),
+                        data:{
+                            rid,
+                            leftSerialId:ids.split(",")[0],
+                            rightSerialId:ids.split(",")[1]
+                        },
+                        success:res=>{
+                            let data =res.data;
+                            reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
+                        },
+                        fail:err=>{
+                            resject(err)
+                        }
+                    })
+                })
+            },
 			// 更换车系
 			changeCarSearial(e) {
 				this.tip = e;
@@ -130,5 +143,6 @@
 <style lang="scss">
 	.page {
 		padding-top: 425rpx;
+        height: 200vh;
 	}
 </style>

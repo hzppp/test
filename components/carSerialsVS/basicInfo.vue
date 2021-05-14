@@ -29,7 +29,7 @@
 				<view class="item">月度销量</view>
 				<view class="item">{{rightSerial.saleNum == 0 ?"暂无" : rightSerial.saleNum}}</view>
 			</view>
-			<view class="btn_group">
+			<!-- <view class="btn_group">
 				<view class="btn_item" @tap="toCanpei(leftSerial.serialId)">
 					<text>查看参数配置</text>
 					<image src="https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/zt/pcautoWX/img/arrow_right_gray.png" mode="aspectFill"></image>
@@ -38,7 +38,7 @@
 					<text>查看参数配置</text>
 					<image src="https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/zt/pcautoWX/img/arrow_right_gray.png" mode="aspectFill"></image>
 				</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -46,11 +46,11 @@
 	export default {
 		props:['leftSerial','rightSerial'],
 		methods:{
-			toCanpei(serialId){
-				uni.navigateTo({
-					url:"/pages_car/canpei/canpei?navigateBack=1&max=4&serialId="+serialId
-				})
-			}
+			// toCanpei(serialId){
+			// 	uni.navigateTo({
+			// 		url:"/pages_car/canpei/canpei?navigateBack=1&max=4&serialId="+serialId
+			// 	})
+			// }
 		}
 	}
 </script>
@@ -67,13 +67,13 @@
 			.list{
 				width: 100%;
 				@include flex_left_center;
-				margin-top: 30rpx;
+				margin-top: 10rpx;
 				.item{
 					flex: 1;
 					padding: 5rpx 0;
 					@include flex_center_center;
 					color: rgb(51, 51, 51);
-					font-size: 28rpx;
+					font-size: 24rpx;
 					&:first-child{
 						justify-content: flex-end;
 					}

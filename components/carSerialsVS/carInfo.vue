@@ -13,10 +13,10 @@
 					<view class="car_name">
 						<text>{{leftSerial.name}}</text>
 					</view>
-					<view class="car_price">
+					<view class="car_price left">
 						<text>{{leftSerial.price}}</text>
 					</view>
-					<block v-if="leftSerial.maxDiscount !=''">
+					<!-- <block v-if="leftSerial.maxDiscount !=''">
 						<view class="car_message">
 							最高优惠: <text :style="[{color:'#ff4444'}]">99万</text>
 						</view>
@@ -25,17 +25,17 @@
 						<view class="car_message">
 							<text>暂无优惠</text>
 						</view>
-					</block>
+					</block> -->
 					<view class="car_btn">
 						<block v-if="leftSerial.jumpType == 1">
-							<view @tap.stop="toXdj(leftSerial.serialId)">获取底价</view>
+							<view @tap.stop="toXdj(leftSerial.serialId)" class="left-btn">预约试驾</view>
 						</block>
 						<block v-else>
-							<view class="none" @tap.stop>获取底价</view>
+							<view class="none left-btn" @tap.stop>预约试驾</view>
 						</block>
 					</view>
 				</view>
-				<view class="line"></view>
+				<view class="line">官方价</view>
 				<view class="list" @tap="tofirmIndex(rightSerial.serialId)">
 					<view class="car_img_box">
 						<image :src="rightSerial.baiPic" mode="aspectFill"></image>
@@ -46,10 +46,10 @@
 					<view class="car_name">
 						<text>{{rightSerial.name}}</text>
 					</view>
-					<view class="car_price">
+					<view class="car_price right">
 						<text>{{rightSerial.price}}</text>
 					</view>
-					<block v-if="rightSerial.maxDiscount !=''">
+					<!-- <block v-if="rightSerial.maxDiscount !=''">
 						<view class="car_message">
 							最高优惠: <text :style="[{color:'#ff4444'}]">99万</text>
 						</view>
@@ -58,13 +58,13 @@
 						<view class="car_message">
 							<text>暂无优惠</text>
 						</view>
-					</block>
+					</block> -->
 					<view class="car_btn">
 						<block v-if="rightSerial.jumpType == 1">
-							<view @tap.stop="toXdj(rightSerial.serialId)">获取底价</view>
+							<view @tap.stop="toXdj(rightSerial.serialId)" class="right-btn">预约试驾</view>
 						</block>
 						<block v-else>
-							<view class="none" @tap.stop>获取底价</view>
+							<view class="none right-btn" @tap.stop>预约试驾</view>
 						</block>
 					</view>
 				</view>
@@ -86,7 +86,7 @@
 					</view>
 				</view>
 				<view class="pk">
-					<image src="http://www1.pcauto.com.cn/zt/20190513/cxdb/wap/img/pk.png" mode="aspectFill"></image>
+					<image src="../../static/images/PK.png" mode="aspectFill"></image>
 				</view>
 				<view class="list" @tap="tofirmIndex(rightSerial.serialId)">
 					<view class="car_message">
@@ -182,9 +182,13 @@
 					width: 100%;
 					text-align: center;
 					margin-top: 18rpx;
-					font-size: 28rpx;
-					font-weight: bold;
-					color: #f44;
+					font-size: 24rpx;
+                    &.left {
+                        color: #fa8943;
+                    }
+                    &.right {
+                        color: #55a4f1;
+                    }
 					tetx{
 						@include text()
 					}
@@ -215,12 +219,28 @@
 					.none{
 						background: #cfd2d5;
 					}
+                    .left-btn {
+                        width: 100px;
+                        height: 32px;
+                        border-radius: 32px;
+                        line-height: 32px;
+                        color: #ffffff;
+                        background-color: #fa8943;
+                    }
+                    .right-btn {
+                        width: 100px;
+                        height: 32px;
+                        border-radius: 32px;
+                        line-height: 32px;
+                        color: #ffffff;
+                        background-color: #55a4f1;
+                    }
 				}
 			}
 			.line{
-				width: 1px;
-				height: 200rpx;
-				background: #ececec;
+                margin-top: 60px;
+                color: #999999;
+                font-size: 24rpx;
 			}
 		}
 		.info_box2{
