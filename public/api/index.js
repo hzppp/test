@@ -184,7 +184,7 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('getactivity'),
 			data: {
-				regionId: regionId,
+				cityId: regionId,
 				size: size,
 				pageNum: pageNum
 			}
@@ -238,7 +238,7 @@ module.exports = {
 			data: {
 				pageNum: pageNum,
 				pageSize: pageSize,
-				regionId: regionId
+				cityId: regionId
 			}
 		})
 		return data
