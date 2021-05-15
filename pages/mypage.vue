@@ -16,11 +16,11 @@
 							</view>
 						</view>
 					</view>
-			
+
 					<view class="head">
 						<open-data type="userAvatarUrl"></open-data>
 					</view>
-			
+
 				</block>
 				<block v-else>
 					<button class="getUserInfo-name_info" lang="zh_CN">登录</button>
@@ -42,14 +42,14 @@
 						path='pages/index' hover-class="" redirect></navigator>
 					<view class="p1">车贷计算器</view>
 					<view class="right isApprove"></view>
-			
+
 				</view> -->
 			</view>
 		</view>
 		<view class="banner_bot">
-			<image src=""></image>
+<!--			<image src=""></image>-->
 		</view>
-		
+
 	</view>
 </template>
 

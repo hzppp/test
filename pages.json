@@ -195,7 +195,7 @@
     },
     {
         "path" : "pages/lookCar",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "",
             "enablePullDownRefresh": false
@@ -203,7 +203,7 @@
     }
     ,{
         "path" : "pages/chooseCity",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择城市",
             "enablePullDownRefresh": false
@@ -211,7 +211,7 @@
     }
     ,{
         "path" : "pages/canpei",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "车型对比",
             "enablePullDownRefresh": false
@@ -219,7 +219,7 @@
     }
     ,{
         "path" : "pages/carSerialsVS",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "车系对比",
             "enablePullDownRefresh": false
@@ -227,7 +227,7 @@
     }
     ,{
         "path" : "pages/YuyuePage",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "预约试驾",
             "enablePullDownRefresh": false
@@ -235,7 +235,7 @@
     }
     ,{
         "path" : "pages/GetPreferential",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "获取优惠",
             "enablePullDownRefresh": false
@@ -243,6 +243,7 @@
     }
   ],
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#ce1330",
     "backgroundColor": "#fff",

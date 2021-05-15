@@ -13,13 +13,11 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import distance from '@/units/distance'
-	import getUserInfo from '@/units/getUserInfo'
 	let app = getApp()
 	export default {
 		data() {
 			return {}
 		},
-		mixins: [getUserInfo],
 		async onLoad(options) {
 			this.$refs.loading.changeLoading(true);
 			console.log('页面参数', options)
@@ -48,8 +46,8 @@
 				// await this.getWxUserInfo()
 
 			}
-			if (!app.globalData.isUserInfoPage) {
-				// let info = app.globalData.wxUserInfo
+			if (app.globalData.haveUserInfoAuth) {
+				// let info = app.globalData.getUserData
 				// await api.saveWXuserInfo({
 				// 	encryptedData:info.encryptedData,
 				// 	iv:info.iv,

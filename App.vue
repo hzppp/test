@@ -15,6 +15,9 @@
       wxUserInfo: null
 		},
 		onLaunch: function() {
+			uni.hideTabBar({
+			    animation: false
+			})
 			console.log('App Launch')
 		},
 		onShow: function() {

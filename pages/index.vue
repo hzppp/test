@@ -26,9 +26,6 @@
 		},
 		onShow() {
 		  console.log('index_app.globalData.currentLocation',app.globalData.currentLocation)
-			uni.hideTabBar({
-			    animation: false
-			})
 		},
 		watch: {
 			indexCity: function(newVal) {

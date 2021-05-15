@@ -31,9 +31,9 @@
 			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
-			<view class="type-a" v-else-if="content.needApply == 1">			
+			<view class="type-a" v-else-if="content.needApply == 1">
 				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
-				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
 			<view class="type-b" v-else-if="content.needApply == 0">
@@ -114,6 +114,7 @@
 				this.$refs.formpop.formShow('form', 'activity', this.content, '完善资料')
 			},
 			async getPhoneNumber(e) {
+			  console.log('eeeeee',e)
 				let {
 					detail = {}
 				} = e
