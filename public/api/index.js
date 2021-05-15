@@ -1115,7 +1115,7 @@ module.exports = {
     //获取经销商列表
 	fetchDealersList:async(para)=>{
 		let {data} = await request({
-			url:domain.getAPI('fetchdealersList'),
+			url:domain.getAPI('fetchDealerListByCityId'),
 			method: "GET",
 			data:para
         })
@@ -1125,6 +1125,15 @@ module.exports = {
 	fetchDealerListByCityId: async(para) => {
 		let {data} = await request({
 			url:domain.getAPI('fetchDealerListByCityId'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车型对比数据
+	fetchCarSerialContrast: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchCarSerialContrast'),
 			method: "GET",
 			data: para
 		})

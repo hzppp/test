@@ -83,11 +83,13 @@ const COUNTDOWN = 60
                 currentCity:{}, //当前选择的城市
                 test: '默认全局城市广州test',
                 cityIndex: 71, //城市默认下标(广州)
+                dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
             }
         },
         onLoad() {
             this.reqAllCityList(0)
+            this.reqDealersList(1)
         },
         methods: {
             //检测信息是否齐全
