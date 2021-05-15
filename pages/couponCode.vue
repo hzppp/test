@@ -1,23 +1,24 @@
 <template>
 	<view class="couponCode">
-		<page-top ref="pagetop" :background="'#ce1330'" :titleys="'#fff'" :btnys="'white'" :title.sync="title"></page-top>
+		<page-top ref="pagetop" :background="'#fa8943'" :titleys="'#fff'" :btnys="'white'" :title.sync="title"></page-top>
 		<view class="couponCode-content">
 			<view class="coupon-info">
 				<view class="p1">{{currentCoupon.title}}</view>
 				<view class="txt">{{currentCoupon.subhead}}</view>
 				<view class="txt">有效期：{{currentCoupon.startTime}}-{{currentCoupon.endTime}}</view>
-				<view class="btn" v-if="currentCoupon.status == 2" @tap="popShow">确认使用</view>
+				<!-- <view class="btn" v-if="currentCoupon.status == 2" @tap="popShow">确认使用</view>
 				<view class="btn disabled" v-else>{{currentCoupon.status == 1 && "已使用" || "已过期"}}</view>
-				<text class="txt">请确认使用规则后点击确认兑换权益 \n 确认后无法撤销</text>
+				<text class="txt">请确认使用规则后点击确认兑换权益 \n 确认后无法撤销</text> -->
 			</view>
-			<!-- <image class="code" mode="aspectFill" :src="currentCoupon.qrCode" lazy-load="true"></image> -->
+			<image class="code" mode="aspectFill" :src="currentCoupon.qrCode" style="background-color: #ccc;" lazy-load="true"></image>
 			<!-- <view class="p3">{{currentCoupon.code}}</view> -->
+			<view class="p3">148 965 485 456 123 457</view>
 			<view class="rule-con">
-				<view class="p3">使用说明</view>
-				<text class="txt">{{currentCoupon.instructions}}</text>
+				<!-- <view class="p3">到店出示优惠券二维码</view> -->
+				<text class="txt">到店出示优惠券二维码</text>
 			</view>
 		</view>
-		<block v-if="delboxShow">
+		<!-- <block v-if="delboxShow">
 			<view class="del-dynamic-mask"></view>
 			<view class="del-dynamic-box">
 				<text class="text">请确认使用规则后点击兑换权益 \n 确认后无法撤销</text>
@@ -26,7 +27,7 @@
 					<view class="btn" @tap="hxCoupon">确定</view>
 				</view>
 			</view>
-		</block>
+		</block> -->
 	</view>
 </template>
 
@@ -84,15 +85,20 @@
 	@import (reference) '@/static/less/public.less';
 
 	page {
-		background: #ce1330;
+		background: #fa8943;
 	}
 
 	.couponCode {
 		.tc;
 
 		&-content {
-			.setbg(750rpx, 1206rpx, 'code.png');
+			width: 670rpx;
+			height: 1096rpx;
+			background: url("https://www1.pcauto.com.cn/gz20210514/changan/cupons_bg3.png") no-repeat;
+			background-size: 100% 100%;
+			// .setbg(670rpx, 1206rpx, 'code.png');
 			position: relative;
+			margin:60rpx auto;
 		}
 		
 		.p1 {
@@ -110,11 +116,9 @@
 		}
 
 		.p3 {
-			font-size: 28rpx;
-			color: #333;
-			margin-bottom: 20rpx;
-			text-align: left;
-			font-weight: 700;
+			color: #666666;
+			margin-bottom: 100rpx;
+			text-align: center;
 		}
 		.txt{
 			font-size: 24rpx;
@@ -126,18 +130,21 @@
 		}
 		
 		.code {
-			width: 378rpx;
-			height: 378rpx;
-			.pa(186rpx, 531rpx);
+			width: 400rpx;
+			height: 400rpx;
+			// .pa(186rpx, 531rpx);
 		}
 		.rule-con{
 			padding: 0 80rpx;
+			text{
+				text-align: center;
+			}
 		}
 		.coupon-info{
-			height: 470rpx;
-			padding-top: 187rpx;
-			margin: 0 70rpx 65rpx;
-			border-bottom: 1px dashed #ebebeb;
+			// height: 470rpx;
+			padding-top: 150rpx;
+			margin: 0 70rpx 155rpx;
+			// border-bottom: 1px dashed #ebebeb;
 			.txt{
 				text-align: center;
 			}
