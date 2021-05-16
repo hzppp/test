@@ -15,7 +15,7 @@
 		</block>
 		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">更多福利></view>
 		<block v-if="isRuleShow">
-			<view class="rule-desc">
+			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 && 'red' || couponList[couponListIndex].type == 2 && 'blue' || 'yellow')">
 				<view class="content">
 					<view class="rule-desc-content">
 						<view class="title">
@@ -27,6 +27,7 @@
 						<view class="date">
 							有效期：{{couponList[couponListIndex].startTime}}-{{couponList[couponListIndex].endTime}}
 						</view>
+						<text class="explain">使用说明</text>
 						<text class="p">{{couponList[couponListIndex].instructions}}</text>
 						<button class="rule-form-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber(couponListIndex,$event)"
 						 @tap.stop="stop" v-if="!phone">一键抢券</button>
