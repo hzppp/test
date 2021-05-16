@@ -15,7 +15,8 @@ var DOMAIN_R = {
 	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	//panorama:"http://t-panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto"
+	changan:"http://ms-changan-auto.changan-cloud-auto",
+	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
 //测试环境域名
@@ -28,6 +29,7 @@ var DOMAIN_T = {
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
 	changan:"http://ms-changan-auto.changan-cloud-auto",
+	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
 
@@ -212,7 +214,9 @@ const config = {
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
 		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
-		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`
+		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
+		//计算费用
+		calcPrice: `${DOMAIN.pcauto}/s/pcauto/info/v1/serials.xsp`,
 	},
 	getAPI(key) {
 		let url;

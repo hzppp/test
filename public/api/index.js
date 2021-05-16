@@ -1119,4 +1119,13 @@ module.exports = {
 		})
 		return data
 	},
+	// 根据城市id请求经销商
+	calcPrice: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('calcPrice'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
 }
