@@ -17,29 +17,29 @@ export default {
       paddingBottomHeight: 0,  //苹果X以上手机底部适配高度
       list: [{
         text: '首页',
-        icon: '/static/images/2.png',  //未选中图标
-        icon_a: '/static/images/1.png',  //选中图片
+        icon: '/static/images/tab1_icon.png',  //未选中图标
+        icon_a: '/static/images/tab1_icon_c.png',  //选中图片
         path: "index",  //页面路径
       }, {
         text: '直播',
-        icon: '/static/images/4.png',
-        icon_a: '/static/images/3.png',
+        icon: '/static/images/tab2_icon.png',
+        icon_a: '/static/images/tab2_icon_c.png',
         path: "live",
       }
         , {
           text: '云展厅',
-          icon: '/static/images/6.png',
-          icon_a: '/static/images/5.png',
+          icon: '/static/images/tab3_icon.png',
+          icon_a: '/static/images/tab3_icon_c.png',
           path: 'exhibition',
         }, {
           text: '活动',
-          icon: '/static/images/8.png',
-          icon_a: '/static/images/7.png',
+          icon: '/static/images/tab4_icon.png',
+          icon_a: '/static/images/tab4_icon_c.png',
           path: "welfareActivity",
         },{
           text: '我的',
-          icon: '/static/images/12.png',
-          icon_a: '/static/images/11.png',
+          icon: '/static/images/tab5_icon.png',
+          icon_a: '/static/images/tab5_icon_c.png',
           path: "mypage",
         }
       ]
@@ -94,8 +94,8 @@ export default {
     justify-content: flex-end;
     height: 100rpx;
     .item-img{
-      width: 46rpx;
-      height: 46rpx;
+      width: 48rpx;
+      height: 48rpx;
       margin-bottom: 4rpx;
     }
     .item-name{
@@ -104,8 +104,8 @@ export default {
     }
     &.mainMenu {
       .item-img{
-        width: 66rpx;
-        height: 66rpx;
+        width: 72rpx;
+        height: 72rpx;
         margin-bottom: 4rpx;
       }
     }

@@ -18,17 +18,17 @@ export default function request(options = {}) {
 	const {
 		url = '', header, method, data
 	} = options;
-	
+
 	if (header === undefined) {
 		options.header = {
 			// #ifdef MP-WEIXIN
 			'App': 'wechat'
 			// #endif
-			
+
 			// #ifdef MP-BAIDU
 			'App': 'baidu'
 			// #endif
-			
+
 			// #ifdef MP-ALIPAY
 			'App': 'alipay'
 			// #endif
@@ -41,7 +41,7 @@ export default function request(options = {}) {
 		// #ifdef MP-BAIDU
 		options.header['App'] = 'baidu';
 		// #endif
-		
+
 		// #ifdef MP-ALIPAY
 		options.header['App'] = 'alipay';
 		// #endif
@@ -51,15 +51,15 @@ export default function request(options = {}) {
 	  if(options.method == 'POST'){
 		// p.header['content-type'] = 'application/x-www-form-urlencoded'
 	  }
-	  if(session3rd && options.url.indexOf(config.DOMAIN.host) > -1){
+	  if(session3rd && options.url.indexOf(config.DOMAIN.changan) > -1){
 		options.header['token'] = session3rd
 	  }
-	   if(session3rd && options.url.indexOf(config.DOMAIN.host2) > -1){
+	   if(session3rd && options.url.indexOf(config.DOMAIN.host) > -1){
 		options.header['token'] = session3rd
 	  }
 	// 支持直接传接口名字请求
 	options.url = options.url.indexOf("http") != -1 ? options.url : config.getAPI(options.url)
-	
+
 	return new Promise((resolve, reject) => {
 		uni.request({
 		    ...options,
@@ -71,7 +71,7 @@ export default function request(options = {}) {
 				reject();
 			}
 		})
-	}) 
+	})
 }
 
 function _complete(res, options, isIcs) {

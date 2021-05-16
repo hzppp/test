@@ -8,6 +8,7 @@
     <view @tap="goArticlePage">
       跳转：文章页面
     </view>
+    <askOnline></askOnline>
 	</view>
 </template>
 
@@ -16,10 +17,11 @@
 	import api from '@/public/api/index'
 	import tabBar from '@/components/tabBar/tabBar'
   import shouquan from '@/units/shouquan'
+  import askOnline from '@/components/askOnline/askOnline'
 
   let app = getApp()
 	export default {
-		components: {viewTabBar:tabBar},
+		components: {viewTabBar:tabBar,askOnline},
     mixins: [shouquan],
     data() {
 			return {}

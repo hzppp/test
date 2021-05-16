@@ -16,7 +16,7 @@ var DOMAIN_R = {
 	//panorama:"http://t-panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
 	changan:"http://ms-changan-auto.changan-cloud-auto",
-    pcauto: 'https://magear.pcauto.com.cn', //测试域名 
+    pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
 //测试环境域名
@@ -28,7 +28,7 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-    pcauto: 'https://magear.pcauto.com.cn', //测试域名 
+    pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://devqd-changan.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
@@ -41,13 +41,13 @@ const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 const config = {
 
 	appName: '奥迪部落',
-	
+
 	DOMAIN: DOMAIN,
-	
+
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
-	
+
 	api: {
-		login:  `${DOMAIN.host}/api/audi/xcx/user/login`,
+		login:  `${DOMAIN.changan}/api/xcx/user/login`,
 		// 获取车型基础信息
 		getModelData: `${DOMAIN.csbHost}/price/api/v1/model/atom/99999/params`,
 		// 获取车型外观
@@ -60,11 +60,11 @@ const config = {
 		getRegionByProvince: `${DOMAIN.host}/api/audi/base/getRegionByProvince`,
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
-		// 
+		//
 		getIpAreaCoord: `${DOMAIN.whoisHost}/ipAreaCoordJson.jsp`,
-		// 
+		//
 		getAreaByRegion: `${DOMAIN.host}/api/audi/base/getAreaByRegion`,
-		// 
+		//
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
 		getactivity: `${DOMAIN.mock}/api/xcx/activity/list`,
@@ -98,7 +98,7 @@ const config = {
 		getSalesList: `${DOMAIN.host}/interface/sales/get_sales_list.jsp`,
 		// 获取车型
 		getModelListBySerialId: `${DOMAIN.magearHost}/s/pcauto/price/v1/getModelListBySerialId.xsp`,
-		// 
+		//
 		getpreClue: `${DOMAIN.host}/api/audi/xcx/preClue`,
 		// 提交formid
 		saveFormId: `${DOMAIN.host}/api/audi/xcx/base/formId`,
@@ -118,7 +118,7 @@ const config = {
 		// 上传到 UPC
 		uploadPhoto: `${DOMAIN.UPCHost}/upload_quick.jsp?application=autopocket`,
 		// 获取文章列表
-		getArticleList: `${DOMAIN.host}/api/audi/xcx/carFriend/article`,
+		getArticleList: `${DOMAIN.changan}/api/xcx/article/list`,
 		// 获取动态列表
 		getDynamicList: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic`,
 		// 获取主题列表
@@ -137,8 +137,8 @@ const config = {
 		//
 		getThemeData: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/`,
 		// 获取文章内容
-		getArticleContent: `${DOMAIN.host}/api/audi/xcx/carFriend/articleContent`,
-		// 
+		getArticleContent: `${DOMAIN.host}/api/xcx/article/detail`,
+		//
 		getAllTheme: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/all`,
 		// 上传图片到upc
 		uploadUPC: `${DOMAIN.UPCHost}/upload_quick.jsp?referer=https://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
@@ -170,9 +170,9 @@ const config = {
 		getSignInActData: `${DOMAIN.host}/api/audi/xcx/signActivity/`,
 		//获取二维码
 		getCode: `${DOMAIN.host}/xcx/qrCode.do`,
-		// 
+		//
 		getSalesId: `${DOMAIN.host}/api/audi/xcx/activity/getSalesId`,
-		// 
+		//
 		getH5URL: `${DOMAIN.host}/api/audi/xcx/h5/url`,
 		// 我的关注
 		getMyFocus: `${DOMAIN.host}/api/audi/xcx/user/myFocus`,
@@ -198,7 +198,7 @@ const config = {
 		getDynamicArticle: `${DOMAIN.host}/api/audi/xcx/carFriend/article/`,
 		// 动态被访问
 		visitDynamic: `${DOMAIN.host}/api/audi/xcx/visitDynamic`,
-		// 
+		//
 		getVehicleExhibitionSalesInfo: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/salesAndDealer`,
 		// 核销接口
 		doCouponVerifiy: `${DOMAIN.host}/api/audi/xcx/doCouponVerifiy`,

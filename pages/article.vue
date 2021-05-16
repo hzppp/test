@@ -28,6 +28,7 @@
 				<view class="zw"></view>
 			</view>
 		</getFormidbox>
+    <askOnline></askOnline>
 		<view class="share-btn">
 			<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 		</view>
@@ -39,6 +40,7 @@
 	import pageTop from '@/components/pageTop/pageTop'
 	import mpHtml from '@/components/mp-html/mp-html'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
+	import askOnline from '@/components/askOnline/askOnline'
 
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
@@ -47,6 +49,7 @@
 		components: {
 			getFormidbox,
 			htmlParser: mpHtml,
+      askOnline,
 			'page-top': pageTop,
 			'share-pop': shareSuccess
 		},
@@ -66,9 +69,9 @@
 			// this.$invoke('loading','changeLoading',true)
 			this.$refs.loading.changeLoading(true)
 			console.log('options',options)
-			this.articleType = options.type
+			this.articleType = 2
 			this.articleId = options.articleId
-			let data = await api.getArticleContent(options.articleId,this.articleType)
+			let data = await api.getArticleContent(options.articleId)
 			if(data.code !=1){
 				// this.$invoke('loading','changeLoading')
 				this.$refs.loading.changeLoading(false)
