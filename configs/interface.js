@@ -79,13 +79,13 @@ const config = {
 		// 用户留资
 		submitClue: `${DOMAIN.changan}/api/xcx/clue/user`,
 		// 获取用户信息
-		getPocketUserInfo: `${DOMAIN.host}/api/audi/xcx/user/info`,
+		getPocketUserInfo: `${DOMAIN.host}/api/xcx/user/info`,
 		// 记录活动访问
 		visitActivity: `${DOMAIN.host}/api/audi/xcx/visitActivity`,
 		// 保存用户信息
-		saveWXuserInfo: `${DOMAIN.host}/api/audi/xcx/user/decryptInfo`,
+		saveWXuserInfo: `${DOMAIN.host}/api/xcx/user/decryptInfo`,
 		// 手机号解密
-		decryptPhone: `${DOMAIN.host}/api/audi/xcx/user/decryptPhone`,
+		decryptPhone: `${DOMAIN.host}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.host}/api/audi/xcx/getUserOupons`,
 		// getPanosInfo2 获取vr看车图片
@@ -223,7 +223,9 @@ const config = {
 		// 根据城市id获取地区
 		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
 		// 根据城市id获取经销商
-		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`
+		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		// 获取首页banner&活动数据
+		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`
 	},
 	getAPI(key) {
 		let url;

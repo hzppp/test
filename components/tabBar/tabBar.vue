@@ -73,7 +73,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tabbarActive{
-  color: #79D5AD !important;
+  color: #FA8845 !important;
 }
 .tabbar{
   position: fixed;

@@ -20,14 +20,14 @@
 		},
 		async onLoad(options) {
 			this.$refs.loading.changeLoading(true);
+      app.globalData.haveUserInfoAuth = uni.getStorageSync('haveUserInfoAuth')
+      app.globalData.getUserData = uni.getStorageSync('getUserData')
 			console.log('页面参数', options)
-			console.time('start')
 			// to=dynamicDetails-dynamicId=205扫码进来带参方式
 			// options.scene = 'salesId=386-to=carShow-id=89-wxacode'
 			var scene = decodeURIComponent(options.scene)
 			// let iswxacode = scene.indexOf('-wxacode') > -1
 			let scenecs = ['salesId','to','id','dynamicId','isArt','aid']
-			console.log(scene)
 			if(scene){
 				for(let i in scenecs){
 					let iobj = scenecs[i]
@@ -47,13 +47,14 @@
 
 			}
 			if (app.globalData.haveUserInfoAuth) {
-				// let info = app.globalData.getUserData
-				// await api.saveWXuserInfo({
-				// 	encryptedData:info.encryptedData,
-				// 	iv:info.iv,
-				// 	rawData:info.rawData,
-				// 	signature:info.signature
-				// })
+			  console.log('decryptUserInfo',app.globalData.haveUserInfoAuth)
+				let info = app.globalData.getUserData
+				await api.saveWXuserInfo({
+					encryptedData:info.encryptedData,
+					iv:info.iv,
+					rawData:info.rawData,
+					signature:info.signature
+				})
 			}
 
 			if(!app.globalData.getUserData){

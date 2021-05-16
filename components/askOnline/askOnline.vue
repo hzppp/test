@@ -13,6 +13,7 @@ name: "askOnline"
 <style scoped>
 .btn {
   position: fixed;
+  z-index: 999;
   right: 10rpx;
   bottom: 160rpx;
   width: 100rpx;
