@@ -104,7 +104,7 @@ const config = {
 		// 点赞
 		like: `${DOMAIN.host}/api/audi/xcx/carFriend/like`,
 		// 获取文章内容
-		getArticleContent: `${DOMAIN.host}/api/xcx/article/detail`,
+		getArticleContent: `${DOMAIN.changan}/api/xcx/article/detail`,
 		// 上传图片到upc
 		uploadUPC: `${DOMAIN.UPCHost}/upload_quick.jsp?referer=https://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
 		// 获取签到数据

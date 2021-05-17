@@ -4,10 +4,10 @@
 		<block v-if="articleList.length > 0">
 			<view class="zw"></view>
 			<block v-for="(item,index) in articleList" :key="index">
-				<view class="list-box" @tap="toArticlePage(item.articleId)">
+				<view class="list-box" @tap="toArticlePage(item.id)">
 					<image class="image" :src="item.pictureUrl" mode="scaleToFill" lazy-load="true"></image>
 					<view class="tit">{{item.title}}</view>
-					<view class="date">{{item.publishTime}}</view>
+					<view class="date">{{item.publishTime || ''}}</view>
 				</view>
 			</block>
 			<mp-loading type="circle"></mp-loading>
@@ -56,7 +56,8 @@
 					let data = await api.getArticleList({
 						pageSize: 15,
 						pageNum: this.pageNum
-					})
+					}).then(res => res.data)
+          console.log('dddddddd at',data)
 					let total = Math.ceil(data.total / 15)
 
 					if (total > this.pageNum) { //还有下一页

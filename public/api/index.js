@@ -410,14 +410,13 @@ module.exports = {
         return data
     },
     // 获取文章内容
-    getArticleContent: async (articleId, type) => {
+    getArticleContent: async (id) => {
         let {
             data
         } = await request({
             url: domain.getAPI('getArticleContent'),
             data: {
-                articleId,
-                type
+                id
             }
         })
         return data
