@@ -191,6 +191,25 @@ module.exports = {
 		})
 		return data
 	},
+	getActivityUser:async (params) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getActivityUser'),
+			data: params
+		})
+		return data
+	},
+	/* 直播列表 */
+	getLiveList:async (params) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getLiveList'),
+			data: params
+		})
+		return data
+	},
 	// 获取车系列表
 	getAutoSerialList: async () => {
 		if (app.globalData.showVehicle) {
@@ -316,11 +335,22 @@ module.exports = {
 		return data
 	},
 	// 获取用户领取的优惠券
-	getUserOupons: async () => {
+	getUserOupons: async (param) => {
 		let {
 			data
 		} = await request({
 			url: domain.getAPI('getUserOupons'),
+			data:param
+		})
+		return data
+	},
+	/* 优惠券详情 */
+	userOuponsDet:async (param) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('userOuponsDet'),
+			data:param
 		})
 		return data
 	},

@@ -241,6 +241,15 @@
             "enablePullDownRefresh": false
         }
     }
+	,{
+		"path" : "pages/liveDetail",
+		"style" :                                                                                    
+		{
+		    "navigationBarTitleText": "",
+		    "enablePullDownRefresh": false,
+		    "navigationStyle": "custom"
+		}
+	}
   ],
   "tabBar": {
     "custom": true,
