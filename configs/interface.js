@@ -217,6 +217,8 @@ const config = {
 		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
 		//计算费用
 		calcPrice: `${DOMAIN.pcauto}/s/pcauto/info/v1/serials.xsp`,
+		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
+		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
 	},
 	getAPI(key) {
 		let url;

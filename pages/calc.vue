@@ -2,24 +2,30 @@
 	<!-- 计算器页面 -->
 	<view class='calc uni'>
 	
-
+	<view class="pageTop">
+	    <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
+	    <view class="pageTop-title" :style="'height:' + height + 'px'">
+	        <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'" >
+	            <block v-if="isShowBackBtn">
+	                <view class="pageTop-back-btn" @tap="navigateBack"></view>
+	            </block>
+				<view class="pageTop-text-box">
+					<view class="pageTop-text" :class="{'pageTop-act':!isLoans}" @tap="fullPayment">
+						<view>全款</view>
+					</view>
+					<view class="pageTop-text" :class="{'pageTop-act':isLoans}" @tap="loansPayment">
+						<view>贷款</view>
+					</view>
+				</view>
+	           
+	        </view>
+	    </view>
+	  </view>
 		<!-- <back-home></back-home> -->
 		<!-- <activity-ad-view pageIsLoaded="{{loadFail == false}}" mode="rightBottom"></activity-ad-view> -->
 		<scroll-view class="container" scroll-y="true">
 			<view class="box">
 				<!-- 头部.s -->
-				<!-- <view class="box-hd">
-					<view class="box-title">全款总价</view>
-					<view class="total-price">
-						<text class="total-price-no">{{totalPrice}}</text>
-						<label class="total-price-item total-price-label">元</label>
-					</view>
-				</view>
-				<view class="price-list">
-					<view class="price-list-item">裸车：{{modelPrice}}</view>
-					<view class="price-list-item">必要花费：{{needPrice}}</view>
-					<view class="price-list-item">商业保险：{{surPrice}}</view>
-				</view> -->
 				<view class="box-hd" :class="{'box-Loans':isLoans}">
 					<view class="info-price">
 						<block v-if="isLoans">
@@ -52,7 +58,7 @@
 				<view class="all-price" :class="{'all-price-loans':isLoans}">
 					<view class="hd-price">
 						<view class="title">全款总价（元）</view>
-						<view class="price">{{isLoans?loantotal:totalPrice}}</view>
+						<view class="price">{{isLoans?loantotalStr:totalPrice}}</view>
 						<view v-if="isLoans" class="hint">比全款多{{priceGap}}</view>
 					</view>
 				</view>
@@ -64,7 +70,7 @@
 					<view class="section-item model-item" @tap="modelSelect" :data-modelid="model.id" :data-pl="model.pl" :data-price="model.price"
 					 :data-serialid="model.serialId">
 					 <view class="section-hd">
-					 	<img class="photo" :src="model.photo" alt="">
+					 	<img class="photo" :src="carPhoto" alt="">
 					 </view>
 						
 						<view class="section-bd section-picker">{{model.title}}</view>
@@ -86,13 +92,13 @@
 							<view class="section-loans">
 								<view class="loans-title">
 									<view class="loans-hd">首付金额</view>
-									<view class="loans-bd">{{needPrice}}</view>
+									<view class="loans-bd">{{shoufu}}</view>
 								</view>
 								
 								<view class="option-loans">
 									<view class="title">比例</view>
 									<view class="loans-row" >
-										<text  v-for="(item,idx) in ratio" :data-idx="idx"  @tap='checkRatio' class="option_item" :class="{'act':idx==ratioIdx}" >{{item.title}}</text>
+										<text  v-for="(item,idx) in ratio" :key='idx' :data-idx="idx"  @tap='checkRatio' class="option_item" :class="{'act':idx==ratioIdx}" >{{item.title}}</text>
 									</view>
 								</view>
 								
@@ -100,12 +106,12 @@
 							<view class="section-loans">
 								<view class="loans-title">
 									<view class="loans-hd">月供金额</view>
-									<view class="loans-bd">{{needPrice}}</view>
+									<view class="loans-bd">{{monthPay}}</view>
 								</view>
 								<view class="option-loans">
 									<view class="title">月供</view>
 									<view class="loans-row" >
-										<text v-for="(item,idx) in monthly" :data-idx="idx" @tap='checkMonthly'  class="option_item" :class="{'act':idx==monthlyIdx}">{{item.title}}</text>
+										<text v-for="(item,idx) in monthly" :key='idx' :data-idx="idx" @tap='checkMonthly'  class="option_item" :class="{'act':idx==monthlyIdx}">{{item.title}}</text>
 									</view>
 								</view>
 							</view>
@@ -126,9 +132,9 @@
 							<view class="section-item">
 								<view class="section-hd">
 									{{item.name}}
-									<text v-if="item.editabled" class="tip">(点数字可编辑)</text>
+									<!-- <text v-if="item.editabled" class="tip">(点数字可编辑)</text> -->
 									<block v-if="item.picker">
-										<text class="section-desc">({{item.option[item.index]}})</text>
+										<text class="section-desc">{{item.option[item.index]}}</text>
 									</block>
 								</view>
 
@@ -178,7 +184,7 @@
 										<checkbox class="checkbox-btn" :value="item.label" :id="'check_'+item.label" :checked="item.checked" />
 									</label> -->
 									<view class="section-hd">{{item.name}}
-										<text class="section-desc">({{item.option[item.index]}})</text>
+										<text class="section-desc">{{item.option[item.index]}}</text>
 									</view>
 
 									<picker class="picker-item" :id="item.label" @change="bindPickerChange" :value="item.index" :range="item.option">
@@ -416,13 +422,19 @@
 					monthly:60
 				}],
 				ratioIdx:2,
-				monthlyIdx:0,
-				isLoans:true,//是否贷款
+				monthlyIdx:2,
+				isLoans:false,//是否贷款
 				shoufu:0,//首付金额
 				monthPay:0,//月供
 				totalPriceNum:0,//全款价格
 				loantotal:0,//贷款总额
 				priceGap:0,//贷款差额
+				loantotalStr:0,//贷款总额字符
+				isShowBackBtn:false,
+				height:0,
+				jnHeight:0,
+				jnTop:0,
+				carPhoto:''
 				
 			}
 		},
@@ -463,6 +475,17 @@
 			that.getSerial(obj.id, obj.serialId, 1, function(data) {
 				that.getPrice(data);
 			});
+		},
+		async created(){
+			let {
+				bottom,height,left,right,top,width
+			} = uni.getMenuButtonBoundingClientRect()
+			this.height = height + top + Math.floor(top/3)
+			this.jnHeight = height
+			this.jnTop = top
+			this.getPages()
+			console.log('son==',this.height)
+			this.$emit('getTopNavHeigth',this.height)
 		},
 		onShareAppMessage: function() {
 			var modelId = this.model.id,
@@ -842,26 +865,27 @@
 				uni.showLoading({
 					title: '加载中',
 				})
-				let data = await  api.calcPrice({
+				// calcSerial
+				// calcModel
+				let data = await  api.getCalcModel({
 						serialId: serialId,
-						regionId: cityId,
-						hasDealers: 1
+						version: 1
 					})
-				if(data.code !=1){
-					var sales = data.sales;
+			
+				if(data){
+					var sales = data.sections;
 					that.carData = data
 					that.serial = sales
 					var findFlag = false;
-					
-					for (var i = 0, len = sales.length; i < len; i++) {
-						var salesData = sales[i].data;
-						for (var j = 0, k = salesData.length; j < k; j++) {
-							var saledata = salesData[j];
-							if (saledata.id == modelId && !findFlag) {
+						this.carPhoto = data.baiPicUrl
+					for(let i = 0;i<sales.length;i++){
+						for(let j = 0 ;j<sales[i].data.length;j++){
+						let saledata = sales[i].data[j]
+							if(saledata.id == modelId){
 								var model = {
 									id: saledata.id,
 									title: saledata.title,
-									pl: saledata.pl,
+									pl: saledata.yqPl,
 									price: saledata.price * 10000,
 									serialId: serialId,
 									photo:saledata.photo
@@ -874,62 +898,9 @@
 							}
 						}
 					}
-						console.log(that.model,'that.model-----------')
-					if (!findFlag) { //从停售车型里找
-						console.log('findFlag----------')
-						var findStopsFlag = false;
-						var saleStops = data.saleStops;
-						for (var i = 0, len = saleStops.length; i < len; i++) {
-							var salesStopsData = saleStops[i].data;
-							for (var j = 0, k = salesStopsData.length; j < k; j++) {
-								var saleStopsdata = salesStopsData[j];
-								if (saleStopsdata.id == modelId && !findStopsFlag) {
-									var model = {
-										id: saleStopsdata.id,
-										title: saleStopsdata.title,
-										pl: saleStopsdata.pl,
-										price: saleStopsdata.price * 10000,
-										serialId: serialId,
-										photo:saledata.photo
-									}
-									that.model = model
-									that.modelPrice = model.price
-									callback && callback.call(this, model);
-									findStopsFlag = true;
-									break;
-								}
-							}
-						}
-					}
 					
-					if (!findStopsFlag) { //从即将上市里找
-					console.log('findStopsFlag----------')
-						var findcomeFlag = false;
-						var saleCome = data.saleUpcomming;
-						for (var i = 0, len = saleCome.length; i < len; i++) {
-							var saleComeData = saleCome[i].data;
-							for (var j = 0, k = saleComeData.length; j < k; j++) {
-								var saleComedata = saleComeData[j];
-								if (saleComedata.id == modelId && !findcomeFlag) {
-									var model = {
-										id: saleComedata.id,
-										title: saleComedata.title,
-										pl: saleComedata.pl,
-										price: saleComedata.price * 10000,
-										serialId: serialId,
-										photo:saledata.photo
-									}
-									that.model = model
-									that.modelPrice = model.price
-									callback && callback.call(this, model);
-									findcomeFlag = true;
-									break;
-								}
-							}
-						}
-					}
-					
-					if (!findFlag && !findStopsFlag && !findcomeFlag) {
+						uni.hideLoading()
+					if (!findFlag ) {
 						console.log('none-----------')
 						uni.showModal({
 							title: '没有找到你查询的车型',
@@ -945,43 +916,21 @@
 						})
 					}
 				}
-				this.$request({
-					url: domain.getAPI('calcPrice'),
-					data: {
-						serialId: serialId,
-						regionId: cityId,
-						hasDealers: 1
-					},
-					method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-					// header: {}, // 设置请求的 header
-					success: function(res) {
-						
-						// return sales;
-					},
-					fail: function() {
-						// fail
-					},
-					complete: function() {
-						console.log('complete----------')
-						that.loading = false
-						// uni.hideToast();
-						uni.hideLoading()
-						// complete
-					}
-				})
 			},
 			defaultLoans(mIndex,rIndex){
 				// let mIndex = this.monthlyIdx
 				// let rIndex = this.ratioIdx
-				this.shoufu = this.totalPriceNum * this.ratio[rIndex].count/100
-				let loan = Math.round((this.totalPriceNum - this.shoufu)/10000)*10000;
+				let shoufu = this.totalPriceNum * this.ratio[rIndex].count/100
+				let loan = Math.round((this.totalPriceNum - shoufu)/10000)*10000;
 				let loanMonthRate = this.monthly[mIndex].rate / 100 /12;      //月利率
 				let loanMonths = this.monthly[mIndex].monthly;    //贷款总月数
 				let temp = Math.pow((1+loanMonthRate),loanMonths);
 				let monthPay = Math.round(loan*loanMonthRate*temp/(temp-1));
-				this.monthPay = monthPay
-				this.loantotal = this.shoufu+this.monthPay*loanMonths;
-				this.priceGap = Math.round(this.loantotal - this.totalPriceNum)
+				this.monthPay = this.w2k(monthPay)
+				this.shoufu = this.w2k(shoufu)
+				this.loantotal = shoufu+monthPay*loanMonths;
+				this.loantotalStr = this.w2k(shoufu+monthPay*loanMonths)
+				this.priceGap = this.w2k(Math.round(this.loantotal - this.totalPriceNum))
 			},
 			checkRatio(e){
 				let rIndex = e.currentTarget.dataset.idx
@@ -996,11 +945,116 @@
 				this.defaultLoans(mIndex,rIndex)
 				
 			},
+			getPages(){
+				let pages = getCurrentPages()
+				let len = pages.length
+				if(len > 1){
+					this.isShowBackBtn = true
+				}
+			},
+			navigateBack(){
+				if(!this.isstoppageback){
+					uni.navigateBack({
+						delta: 1
+					})
+				}else{
+					this.$emit('page-back')
+				}
+			},
+		
+			loansPayment(){
+				this.isLoans = true
+			},
+			fullPayment(){
+				this.isLoans = false
+			},
 		}
 	}
 </script>
 
-<style lang="scss">
+<style lang="less">
+	@import (reference) '@/static/less/public.less';
+.pageTop-zw{
+    height: 128rpx;
+	background-color: #3a3a3a;
+}
+.pageTop-content{
+    .pa(0,0);
+    width: 100%;
+}
+.pageTop-title{
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    z-index: 666;
+	background-color: #3a3a3a;
+}
+.pageTop-back-btn{
+    width: 26rpx;
+    height: 26rpx;
+    border-left: 4rpx solid #fff;
+    border-top: 4rpx solid #fff;
+    .pa(30rpx,50%);
+    transform: translate(0%,-50%) rotate(-45deg);
+	&.back-btn-white{color:#fff;}
+    &:after{
+        display: block;
+        content: "";
+        width:180%;
+        height: 180%;
+        .pa(-40%,-40%);
+        z-index: 9999;
+    }
+}
+.pageTop-line{
+    width: 2rpx;
+    height: 32rpx;
+    background: #ccc;
+    .pa(71rpx,50%);
+    transform: translate(0%,-50%);
+}
+.pageTop-home{
+    .setIcon(36rpx,38rpx,388rpx,41rpx);
+    .pa(101rpx,50%);
+    transform: translate(0%,-50%);
+}
+.pageTop-home-left{
+    left: 32rpx;
+}
+.pageTop-text-box{
+     width: 100%;
+	 text-align: center;
+}
+.pageTop-text{
+       display: inline-block;
+	   color: #fff;
+	   height: 42rpx;
+	   line-height: 42rpx;
+	   font-size: 32rpx;
+	   margin: 0 24rpx;
+}
+.pageTop-act{
+      font-weight: bold;
+	  font-size: 40rpx;
+}
+
+.white{
+    .pageTop-title{
+        .pageTop-back-btn{
+            border-color: #fff;
+        }
+        .pageTop-home{
+            .setIcon(36rpx,38rpx,426rpx,41rpx);
+        }
+    }
+}
+.pageTop-absolute{
+	.pageTop-title{
+		position: absolute;
+	}
+}
 	page {
 		height: 100%;
 		font-family: 'helvetica neue', tahoma, 'hiragino sans gb', stheiti, 'wenquanyi micro hei', \5FAE\8F6F\96C5\9ED1, \5B8B\4F53, sans-serif;
@@ -1034,7 +1088,7 @@
 	.box-hd .info-price{
 		display: flex;
 		justify-content:space-between;
-		margin-top: 60rpx;
+		margin-top: 20rpx;
 		margin-bottom: 46rpx;
 		text-align: center;
 	}
@@ -1229,6 +1283,8 @@
 	.section-hd {
 		flex: 1;
 		min-width: 120rpx;
+		font-size: 28rpx;
+		color: #333;
 		
 	}
 	.section-title{
@@ -1273,9 +1329,9 @@
 	}
 
 	.icon-editor {
-		width: 36rpx;
-		height: 35rpx;
-		background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/xwapp/2016/price/images/calc-editabled.png) no-repeat;
+		width: 19rpx;
+		height: 19rpx;
+		background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/calc_edit.png) no-repeat;
 		background-size: cover;
 		position: absolute;
 		right: 0;
@@ -1328,7 +1384,10 @@
 	}
 
 	.section-desc {
-		font-size: 12px;
+		font-size: 24rpx;
+		display: block;
+		color: #999;
+		
 	}
 
 	.slide {
