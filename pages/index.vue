@@ -18,7 +18,7 @@
             <view class="info">试驾快人一步</view>
             <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
           </view>
-          <view class="calculation linkItem rItem">
+          <view class="calculation linkItem rItem" @tap="goCalc">
             <view class="title">购车计算</view>
             <view class="info">价格一目了然</view>
             <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
@@ -99,9 +99,15 @@ export default {
         url: `/pages/articleListPage`
       })
     },
+    goCalc() {
+      console.log('calc')
+      uni.navigateTo({
+        url: `/pages/calc`
+      })
+    },
     goActDetail(id) {
       uni.navigateTo({
-        url: `/pages/act?id=${id}`
+        url: `/pages/activity?id=${id}`
       })
     },
     goArticlePage() {
@@ -128,7 +134,6 @@ export default {
 <style lang="less" scoped>
 @import '@/static/less/index.less';
 .index {
-  background: #f9f9f9;
 }
 .content {
   padding: 0 32rpx 150rpx;
@@ -208,6 +213,7 @@ export default {
       margin: 30rpx 0;
       background: #fff;
       position: relative;
+      box-shadow: 8rpx 15rpx 23rpx #f7f7f7;
     }
     .icon1 {
       position: absolute;
@@ -244,7 +250,6 @@ export default {
       line-height: 92rpx;
       padding-left: 30rpx;
       border-radius: 0 0 20rpx 20rpx;
-      box-shadow: #f7f7f7 4rpx 4rpx 0;
       .icon2 {
         position: relative;
         display: inline-block;
