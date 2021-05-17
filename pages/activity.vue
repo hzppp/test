@@ -15,15 +15,9 @@
 		</view>
 		<view class="serial-list">
 			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index">
-				<view class="top-text">
-					<view class="desc">{{serialGroupItem.name}}</view>
-					<view class="sub-desc">{{serialGroupItem.serialGroupMemo}}</view>
-				</view>
-				<view class="bottom-text">
-					<view class="desc">官方指导价：</view>
-					<view class="price">77,900起</view>
-				</view>
-				<image class="cover" :src="serialGroupItem.serialGroupOutVoList[0].picUrl" mode="aspectFill" lazy-load="true"></image>
+				<view class="name">{{serialGroupItem.name}}</view>
+				<button class="see-car-btn">3D看车 ></button>
+				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
 		<view class="zw"></view>
@@ -33,7 +27,7 @@
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
 				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
-				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!!phone">报名活动</button>
+				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
 			<view class="type-b" v-else-if="content.needApply == 0">
@@ -165,7 +159,6 @@
 
 <style lang="less">
 	@import '@/static/less/public.less';
-
 	.title {
 		line-height: 65rpx;
 		padding: 30rpx 32rpx;
@@ -173,7 +166,6 @@
 		color: #333;
 		font-weight: bold;
 	}
-
 	.date {
 		height: 40rpx;
 		line-height: 40rpx;
@@ -193,11 +185,9 @@
 			border-radius: 4rpx;
 		}
 	}
-
 	.content {
 		font-size: 0;
 	}
-
 	.content-image {
 		width: 750rpx;
 	}
@@ -210,42 +200,34 @@
 			height: 270rpx;
 			background-color: #DFE1E2;
 			border-radius: 20rpx;
-			.top-text {
+			.name {
 				position: absolute;
+				left: 30rpx;
 				top: 30rpx;
-				left: 30rpx;
-				.desc {
-					font-size: 32rpx;
-					color: #333333;
-					font-weight: bold;
-				}
-				.sub-desc {
-					margin-top: 15rpx;
-					font-size: 24rpx;
-					color: #333333;
-				}
+				font-size: 32rpx;
+				font-weight: bold;
+				color: #333333;
 			}
-			.bottom-text {
+			.see-car-btn {
 				position: absolute;
-				bottom: 40rpx;
-				left: 30rpx;
-				.desc {
-					font-size: 20rpx;
-					color: #999999;
-				}
-				.price {
-					margin-top: 10rpx;
-					font-size: 28rpx;
-					color: #333333;
-					font-weight: bold;
-				}
+				bottom: 30rpx;
+				left: 35rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 140rpx;
+				height: 48rpx;
+				font-size: 24rpx;
+				color: #FFFFFF;
+				border-radius: 24rpx;
+				background-color: #333333;
 			}
 			.cover {
 				position: absolute;
 				right: 17rpx;
 				bottom: 31rpx;
-				width: 408rpx;
-				height: 161rpx;
+				max-width: 400rpx;
+				max-height: 200rpx;
 			}
 		}
 	}
@@ -258,13 +240,11 @@
 		vertical-align: top;
 		display: inline-block;
 	}
-
 	.zw {
 		height: 104rpx;
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
 	}
-
 	.operation-list {
 			position: fixed;
 			z-index: 1;
@@ -274,6 +254,7 @@
 			height: 104rpx;
 			font-size: 32rpx;
 			background-color: #ffffff;
+			padding-top: 20rpx;
 			padding-bottom: constant(safe-area-inset-bottom);
 			padding-bottom: env(safe-area-inset-bottom);
 			.type-a {
