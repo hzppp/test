@@ -253,10 +253,16 @@
 			width: 100%;
 			height: 104rpx;
 			font-size: 32rpx;
+			font-weight: bold;
 			background-color: #ffffff;
 			padding-top: 20rpx;
 			padding-bottom: constant(safe-area-inset-bottom);
 			padding-bottom: env(safe-area-inset-bottom);
+			.share-btn, .enroll-btn, .over-btn {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 			.type-a {
 				display: flex;
 				justify-content: space-between;
@@ -269,6 +275,7 @@
 					border: 2rpx solid #fa8845;
 					border-radius: 44rpx;
 					box-sizing: border-box;
+					background-color: #FFFFFF;
 				}
 				.enroll-btn {
 					width: 420rpx;
