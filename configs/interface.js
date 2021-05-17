@@ -48,12 +48,6 @@ const config = {
 
 	api: {
 		login:  `${DOMAIN.changan}/api/xcx/user/login`,
-		// 获取省
-		getProvince: `${DOMAIN.host}/api/audi/base/getProvince`,
-		// 获取中心省
-		getProvinceCentral: `${DOMAIN.host}/api/audi/base/getProvince/central`,
-		// 按省获取区域
-		getRegionByProvince: `${DOMAIN.host}/api/audi/base/getRegionByProvince`,
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
 		//
@@ -84,12 +78,6 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.host}/api/audi/xcx/getUserOupons`,
-		// getPanosInfo2 获取vr看车图片
-		getPanosInfo2: `${DOMAIN.panorama}/intf/getAllApprInfo.jsp`,
-		// vehicleOupons 车型展厅，获取优惠券
-		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
-		// 获取附近经销商
-		getDealers: `${DOMAIN.csbHost}/interface/iphone/get_dealers_by_sgid_rid.jsp`,
 		// /interface/sales/get_sales_list.jsp
 		getSalesList: `${DOMAIN.host}/interface/sales/get_sales_list.jsp`,
 		// 获取车型
@@ -107,83 +95,38 @@ const config = {
 		uploadLicencePic: `${DOMAIN.host}/api/audi/xcx/uploadVehicleLicencePic`,
 		//获得用户个人信息
 		detailedMessage: `${DOMAIN.host}/api/audi/xcx/detailedMessage`,
-		//提交用户个人信息
-		userMessageEntering: `${DOMAIN.host}/api/audi/xcx/userMessageEntering`,
 		// 车驾信息认证
 		Carapprove: `${DOMAIN.host}/api/audi/xcx/approve`,
 		// 上传到 UPC
 		uploadPhoto: `${DOMAIN.UPCHost}/upload_quick.jsp?application=autopocket`,
 		// 获取文章列表
 		getArticleList: `${DOMAIN.changan}/api/xcx/article/list`,
-		// 获取动态列表
-		getDynamicList: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic`,
-		// 获取主题列表
-		getThemeList: `${DOMAIN.host}/api/audi/xcx/carFriend/theme`,
 		// 点赞
 		like: `${DOMAIN.host}/api/audi/xcx/carFriend/like`,
-		// 发布动态
-		putDynamic: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic`,
-		// 获取评论列表
-		// dynamicId:id,page:1,pageSize:10
-		getCommentList: `${DOMAIN.host}/api/audi/xcx/comment`,
-		// 发表评论
-		publishComment: `${DOMAIN.host}/api/audi/xcx/comment`,
-		// 获取动态详情
-		getDynamicDetails: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic/`,
-		//
-		getThemeData: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/`,
 		// 获取文章内容
 		getArticleContent: `${DOMAIN.host}/api/xcx/article/detail`,
-		//
-		getAllTheme: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/all`,
 		// 上传图片到upc
 		uploadUPC: `${DOMAIN.UPCHost}/upload_quick.jsp?referer=https://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
-		// 获取未读消息
-		getUserMessage: `${DOMAIN.host}/api/audi/xcx/userMessage`,
-		// 检查图片是否合法
-		checkImage: `${DOMAIN.host}/api/audi/xcx/base/check/img`,
 		// 获取签到数据
 		getsignIn: `${DOMAIN.host}/api/audi/xcx/signIn`,
 		// 签到
 		submitSignIn: `${DOMAIN.host}/api/audi/xcx/signIn`,
-		// 获取众享币数
-		getCredits: `${DOMAIN.host}/api/audi/xcx/credits`,
 		// 获取任务列表
 		getTaskList: `${DOMAIN.host}/api/audi/xcx/task`,
 		// 获取众享币详情
 		getRecord: `${DOMAIN.host}/api/audi/xcx/credits/record`,
 		// 获取积分商城链接
 		getMallLink: `${DOMAIN.host}/api/audi/duiba/mall`,
-		// 获取积分商城链接
-		getNotify: `${DOMAIN.host}/api/audi/duiba/notify`,
-		// 获取兑换记录链接
-		getPrizeRecord: `${DOMAIN.host}/api/audi/duiba/record`,
 		// 活动分享
 		shareActivity: `${DOMAIN.host}/api/audi/xcx/activity/`,
 		// 文章分享
 		shareArticle: `${DOMAIN.host}/api/audi/xcx/carFriend/article/share`,
-		//获取签到活动数据
-		getSignInActData: `${DOMAIN.host}/api/audi/xcx/signActivity/`,
 		//获取二维码
 		getCode: `${DOMAIN.host}/xcx/qrCode.do`,
 		//
 		getSalesId: `${DOMAIN.host}/api/audi/xcx/activity/getSalesId`,
-		//
-		getH5URL: `${DOMAIN.host}/api/audi/xcx/h5/url`,
-		// 我的关注
-		getMyFocus: `${DOMAIN.host}/api/audi/xcx/user/myFocus`,
-		// 我的粉丝
-		getMyFans: `${DOMAIN.host}/api/audi/xcx/user/myFans`,
-		// +关注
-		addFocus: `${DOMAIN.host}/api/audi/xcx/user/focus`,
-		// 取消关注
-		cancelFocus: `${DOMAIN.host}/api/audi/xcx/user/cancelFocus`,
 		// 获取用户信息-个人主页
 		getUserInfo: `${DOMAIN.host}/api/audi/xcx/user/center`,
-		// 获取个人动态
-		getUserDynamicList: `${DOMAIN.host}/api/audi/xcx/carFriend/user`,
-		// 删除动态
-		deleteDynamic: `${DOMAIN.host}/api/audi/xcx/carFriend/deleteDynamic`,
 		// 获取设定车系
 		getVehicle: `${DOMAIN.host}/api/audi/xcx/vehicle`,
 		// 获取推荐动态

@@ -4,39 +4,6 @@ import request from "@/units/request.js"
 let app = getApp()
 
 module.exports = {
-    getProvince: async (from = '') => {
-        let url = domain.getAPI('getProvince')
-        if (from != 'form') {
-            url = domain.getAPI('getProvinceCentral')
-        }
-        let {
-            data
-        } = await request({
-            url: url,
-            data: {}
-        })
-        return data
-    },
-    getRegionByProvince: async (provinceId) => {
-        console.log('provinceId', provinceId)
-        let name = 'province_' + provinceId
-        if (app.globalData[name]) {
-            return app.globalData[name]
-        } else {
-            let {
-                data
-            } = await request({
-                url: domain.getAPI('getRegionByProvince'),
-                data: {
-                    provinceId: provinceId
-                }
-            })
-            if (data.code == 1) {
-                app.globalData[name] = data
-            }
-            return data
-        }
-    },
     getRegion: async () => {
         let {
             data
@@ -249,50 +216,6 @@ module.exports = {
         })
         return data
     },
-    // getPanosInfo2 获取vr看车图片
-    getPanosInfo2: async (sgId, bId = 2) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getPanosInfo2'),
-            data: {
-                type: 3,
-                bId: bId,
-                sgId: sgId
-            }
-        })
-        return data
-    },
-
-    // vehicleOupons 车型展厅，获取优惠券
-    vehicleOupons: async (regionId, serialGroupId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('vehicleOupons'),
-            data: {
-                regionId: regionId,
-                serialGroupId: serialGroupId
-            }
-        })
-        return data
-    },
-    // 获取附近经销商
-    getDealers: async (rid, pageNum = 1, pageSize = 10) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getDealers'),
-            data: {
-                aq: 1,
-                manuId: 2,
-                rid: rid, //城市id
-                pageNum: pageNum,
-                pageSize: pageSize
-            }
-        })
-        return data
-    },
     // /interface/sales/get_sales_list.jsp
     getSalesList: async (cs) => {
         cs.dealerType = 1
@@ -405,27 +328,6 @@ module.exports = {
         })
         return data
     },
-    //提交用户个人信息
-    userMessageEntering: async (message) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('userMessageEntering'),
-            data: {
-                carNum: message.carNum,
-                mobile: message.mobile,
-                model: message.model,
-                name: message.name,
-                nickName: message.nickName,
-                regionId: message.regionId,
-                vin: message.vin,
-                picUrl: message.picUrl,
-                address: message.address
-            },
-            method: "POST"
-        })
-        return data
-    },
     // 车驾信息认证
     Carapprove: async (message) => {
         let {
@@ -493,26 +395,6 @@ module.exports = {
         })
         return data
     },
-    // 获取动态列表
-    getDynamicList: async (d) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getDynamicList'),
-            data: d
-        })
-        return data
-    },
-    // 获取主题列表
-    getThemeList: async (d) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getThemeList'),
-            data: d
-        })
-        return data
-    },
     // 点赞
     like: async (d) => {
 
@@ -524,64 +406,6 @@ module.exports = {
             method: "POST",
             // header,
             data: d
-        })
-        return data
-    },
-    // 发布动态
-    putDynamic: async (d) => {
-        const header = {
-            "content-type": "application/x-www-form-urlencoded"
-        }
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('putDynamic'),
-            method: "POST",
-            // header,
-            data: d
-        })
-        return data
-    },
-    // 获取评论列表
-    // dynamicId:id,page:1,pageSize:10
-    getCommentList: async (d) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getCommentList'),
-            data: d
-        })
-        return data
-    },
-    // 发表评论
-    publishComment: async (d) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('publishComment'),
-            method: "POST",
-            data: d
-        })
-        return data
-    },
-    // 获取动态详情
-    getDynamicDetails: async (dynamicId, likeSize = 10) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getDynamicDetails') + dynamicId,
-            data: {
-                likeSize
-            }
-        })
-        return data
-    },
-    //
-    getThemeData: async (themeId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getThemeData') + themeId,
         })
         return data
     },
@@ -598,15 +422,6 @@ module.exports = {
         })
         return data
     },
-    getAllTheme: async (d) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getAllTheme'),
-            data: d
-        })
-        return data
-    },
     // 上传图片到upc
     uploadUPC: async (data) => {
         // return await uni.uploadFile({
@@ -619,40 +434,6 @@ module.exports = {
             uni.uploadFile({
                 url: domain.getAPI('uploadUPC'),
                 filePath: data,
-                name: 'file',
-                method: "POST",
-                success: (res) => {
-                    resolve(res)
-                },
-                fail: () => {
-                    reject();
-                }
-            })
-        })
-    },
-    // 获取未读消息
-    getUserMessage: async (page, pageSize) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getUserMessage'),
-            data: {
-                page,
-                pageSize
-            }
-        })
-        return data
-    },
-    // 检查图片是否合法
-    checkImage: (file) => {
-        let session3rd = uni.getStorageSync('session-3rd')
-        return new Promise((resolve, reject) => {
-            uni.uploadFile({
-                url: domain.getAPI('checkImage'),
-                filePath: file,
-                header: {
-                    token: session3rd
-                },
                 name: 'file',
                 method: "POST",
                 success: (res) => {
@@ -680,15 +461,6 @@ module.exports = {
         } = await request({
             url: domain.getAPI('submitSignIn'),
             method: "POST"
-        })
-        return data
-    },
-    // 获取众享币数
-    getCredits: async () => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getCredits')
         })
         return data
     },
@@ -733,24 +505,6 @@ module.exports = {
 
         return data
     },
-    // 获取积分商城链接
-    getNotify: async () => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getNotify')
-        })
-        return data
-    },
-    // 获取兑换记录链接
-    getPrizeRecord: async () => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getPrizeRecord')
-        })
-        return data
-    },
     // 活动分享
     shareActivity: async (id) => {
         let {
@@ -770,15 +524,6 @@ module.exports = {
                 articleId,
                 type
             }
-        })
-        return data
-    },
-    //获取签到活动数据
-    getSignInActData: async (id) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getSignInActData') + id
         })
         return data
     },
@@ -807,67 +552,6 @@ module.exports = {
         })
         return data
     },
-    getH5URL: async (url) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getH5URL'),
-            data: {
-                url
-            }
-        })
-        return data
-    },
-    // 我的关注
-    getMyFocus: async (page, pageSize = 10) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getMyFocus'),
-            data: {
-                page,
-                pageSize
-            }
-        })
-        return data
-    },
-    // 我的粉丝
-    getMyFans: async (page, pageSize = 10) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getMyFans'),
-            data: {
-                page,
-                pageSize
-            }
-        })
-        return data
-    },
-    // +关注
-    addFocus: async (toUserId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('addFocus'),
-            data: {
-                toUserId
-            }
-        })
-        return data
-    },
-    // 取消关注
-    cancelFocus: async (toUserId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('cancelFocus'),
-            data: {
-                toUserId
-            }
-        })
-        return data
-    },
     // 获取用户信息-个人主页
     getUserInfo: async (userId) => {
         let {
@@ -875,33 +559,6 @@ module.exports = {
         } = await request({
             url: domain.getAPI('getUserInfo'),
             data: {
-                userId
-            }
-        })
-        return data
-    },
-    // 获取个人动态
-    getUserDynamicList: async (userId, page, pageSize = 10) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getUserDynamicList'),
-            data: {
-                userId,
-                page,
-                pageSize
-            }
-        })
-        return data
-    },
-    // 删除动态
-    deleteDynamic: async (dynamicId, userId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('deleteDynamic'),
-            data: {
-                dynamicId,
                 userId
             }
         })
