@@ -43,8 +43,6 @@ module.exports = {
             console.log('---------------------')
         }
         return data
-
-<<<<<<< HEAD
     },
     getAreaInfo: async (regionId) => {
         let {
