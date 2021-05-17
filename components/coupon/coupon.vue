@@ -13,7 +13,10 @@
 				<view v-else class="coupon-btn" @tap.stop="getPhoneNumber(index,$event)">一键抢券</view>
 			</view>
 		</block>
-		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">更多福利></view>
+		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">
+			<text>更多福利</text>
+			<image class="icon" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/arrow-bottom.png" mode="aspectFit"></image>
+		</view>
 		<block v-if="isRuleShow">
 			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 ? 'red' : 'blue')">
 				<view class="content">
