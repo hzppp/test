@@ -1,7 +1,7 @@
 <template>
 	<view class="coupon">
 		<block v-for="(item,index) in couponList" :key="index">
-			<view :class="'coupon-box bg-' + (item.type == 1 && 'red' || item.type == 2 && 'blue' || 'yellow')" @tap="ruleShow(index)">
+			<view :class="'coupon-box bg-' + (item.type == 1 ? 'red' : 'blue')" @tap="ruleShow(index)">
 				<view class="coupon-name">{{item.title}}</view>
 				<view class="coupon-desc">{{item.subhead}}</view>
 				<view class="coupon-date">有效期：{{item.startTime}}-{{item.endTime}}</view>
@@ -15,7 +15,7 @@
 		</block>
 		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">更多福利></view>
 		<block v-if="isRuleShow">
-			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 && 'red' || couponList[couponListIndex].type == 2 && 'blue' || 'yellow')">
+			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 ? 'red' : 'blue')">
 				<view class="content">
 					<view class="rule-desc-content">
 						<view class="title">
