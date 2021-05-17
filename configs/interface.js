@@ -48,10 +48,6 @@ const config = {
 
 	api: {
 		login:  `${DOMAIN.changan}/api/xcx/user/login`,
-		// 获取车型基础信息
-		getModelData: `${DOMAIN.csbHost}/price/api/v1/model/atom/99999/params`,
-		// 获取车型外观
-		getModelParamEquip: `${DOMAIN.csbHost}/price/api/v1/pocket/m`,
 		// 获取省
 		getProvince: `${DOMAIN.host}/api/audi/base/getProvince`,
 		// 获取中心省

@@ -85,34 +85,10 @@
       }
     },
     {
-      "path": "pages/dataassistant",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/datadetails",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/dynamicDetails",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/message",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
       }
     },
     {
@@ -153,36 +129,13 @@
 	    	"navigationBarTitleText": "我的活动",
 	    	"enablePullDownRefresh": false
 	    }
-	}
-    ,{
-      "path": "pages/nearby",
-      "style": {
-        "navigationBarTitleText": "4S销售",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/personalHome",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
+	},
     {
       "path": "pages/pkwebview",
       "style": {}
     },
     {
       "path": "pages/putArticle",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/putDynamic",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false,
