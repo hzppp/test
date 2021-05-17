@@ -45,10 +45,10 @@
 				</view> -->
 			</view>
 		</view>
-		<view class="banner_bot">
-<!--			<image src=""></image>-->
-		</view>
-
+		<!-- <view class="banner_bot">
+			<image src=""></image>
+		</view> -->
+		<askOnline></askOnline>
 		<viewTabBar :current="4"></viewTabBar>
 
 	</view>
@@ -58,7 +58,7 @@
 	import login from '@/units/login'
 	import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
-
+	import askOnline from '@/components/askOnline/askOnline'
 	// import chooseImg from '@/units/chooseImg'
 	// import getUserInfo from '@/units/getUserInfo'
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
@@ -68,7 +68,8 @@
 	export default {
 		components: {
 			'page-top': pageTop,
-			'viewTabBar':tabBar
+			'viewTabBar':tabBar,
+			askOnline
 			// 'share-pop': shareSuccess
 		},
 		mixins: [shouquan],

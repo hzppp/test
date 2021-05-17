@@ -35,6 +35,8 @@
 	import pageTop from '@/components/pageTop/pageTop'
 	import domain from '@/configs/interface';
 	import request from "@/units/request.js"
+	import api from '@/public/api/index'
+	
 	let app = getApp()
 	export default {
 		components: {
@@ -43,20 +45,43 @@
 		data() {
 			return {
 				title: "优惠券核销",
-				currentCoupon: {},
+				currentCoupon: {
+					type:1,
+					status:2,
+					title:'测试优惠券1',
+					subhead:'测试优惠券副标题1',
+					startTime:'2021-01-01',
+					endTime:'2021-08-01',
+					instructions:'我是介绍金佛为价格为回归偶尔玩介绍金佛为价格为回归偶尔玩介绍金佛为价格为回归偶尔玩',
+					code:''
+				},
 				delboxShow: false,
+				id:''
 			}
 		},
 		async onLoad(options) {
-			this.currentCoupon = app.globalData.currentCoupon
+			console.log('获取优惠券id===',options)
+			this.id = options.id
+			this.userOuponsDet()
+			// this.currentCoupon = app.globalData.currentCoupon
 		},
 		methods: {
-			popShow() {
-				this.delboxShow = true
+			/* 获取优惠券信息 */
+			async userOuponsDet(){
+				let data = await api.userOuponsDet({id:this.id})
+				if(data.code==1){
+					this.currentCoupon = data.data
+				}else{
+					this.$toast(data.msg) 
+				}
 			},
-			popHide() {
-				this.delboxShow = false
-			},
+			// popShow() {
+			// 	this.delboxShow = true
+			// },
+			// popHide() {
+			// 	this.delboxShow = false
+			// },
+			/* 核销 */
 			hxCoupon(){
 				request({
 					url: domain.getAPI('doCouponVerifiy'),
