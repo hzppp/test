@@ -61,14 +61,6 @@
       }
     },
     {
-      "path": "pages/coinDetails",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/confirm",
       "style": {
         "navigationBarTitleText": "",
@@ -100,22 +92,6 @@
       }
     },
     {
-      "path": "pages/myfollow",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/myMessage",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/mypage",
       "style": {
         "navigationBarTitleText": "我的",
@@ -133,14 +109,6 @@
     {
       "path": "pages/pkwebview",
       "style": {}
-    },
-    {
-      "path": "pages/putArticle",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
     },
     {
       "path": "pages/webview",
