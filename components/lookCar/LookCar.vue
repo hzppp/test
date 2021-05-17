@@ -7,7 +7,7 @@
             <button class="bottom-btn">
                 购车计算
             </button>
-            <button class="bottom-btn" @tap="goCanPei">
+            <button class="bottom-btn" @tap="goSerialList">
                 车型对比
             </button>
         </view>
@@ -15,21 +15,41 @@
 </template>
 
 <script>
+
     export default {
+        props:{
+            serialId: { //车系id
+                type: String,
+                default: ""
+            },
+            ids: {
+                type: String,
+                default: ""
+            }
+        },
 		data() {
 			return {
 				
 			}
 		},
         onload(options) {
-
+            this.feqSerialList()
+        },
+        onShow() {
+            this.feqSerialList()
         },
 		methods: {
 			goCanPei() {
-				uni.navigateTo({
-					url:"/pages/canpei?navigateBack=2&compare=true&ids=101317,103933"
+				uni.redirectTo({
+					url:`/pages/canpei?navigateBack=1&compare=true&ids=${this.ids}`
 				})
-			}
+			},
+            goSerialList() {
+                uni.redirectTo({
+					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
+				})
+            },
+
 		}
     }
 </script>

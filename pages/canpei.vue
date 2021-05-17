@@ -229,19 +229,19 @@
 			this.addData()
 		},
 		onShareAppMessage() {
-			if (this.navigateBack == '1') { //参数配置
-				return {
-					title: this.data.sidName + '参数配置',
-					desc: '点击查看',
-					path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
-				}
-			} else if (this.navigateBack == '2') { //车型对比
-				return {
-					title: '车型参数配置对比',
-					desc: '点击查看',
-					path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
-				}
-			}
+			// if (this.navigateBack == '1') { //参数配置
+			// 	return {
+			// 		title: this.data.sidName + '参数配置',
+			// 		desc: '点击查看',
+			// 		path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
+			// 	}
+			// } else if (this.navigateBack == '2') { //车型对比
+			// 	return {
+			// 		title: '车型参数配置对比',
+			// 		desc: '点击查看',
+			// 		path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
+			// 	}
+			// }
 		},
 		methods: {
 			addGlobalSelectCar(ids) {

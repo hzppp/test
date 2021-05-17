@@ -1139,4 +1139,31 @@ module.exports = {
 		})
 		return data
 	},
+	// 获取车系详情
+	fetchSerialDetail: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialDetail'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车型列表
+	fetchSerialList: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialList'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车型列表
+	fetchSerialScreenList: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialScreenList'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
 }

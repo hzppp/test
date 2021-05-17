@@ -21,12 +21,12 @@
 				</view>
 				<view class="vs-detail">
 					<view class="left-a">
-						<view class="l-tit" v-for="(a,ai) in modelEquipA[index]" :key="ai">
+						<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
 							{{a.name}}
 						</view>
 					</view>
 					<view class="right-b">
-						<view class="r-tit" v-for="(b,bi) in modelEquipB[index]" :key="bi">
+						<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
 							{{b.name}}
 						</view>
 					</view>
@@ -94,6 +94,7 @@
 			}
 		},
 		onLoad(options) {
+			console.log('options :>> ', options);
 			if (options.leftSerialId && options.rightSerialId) {
 				this.SerialIds = options.leftSerialId + ',' + options.rightSerialId
 			}
@@ -149,6 +150,27 @@
                     })
                 })
             },
+			//兼容获取的gbk
+			 resDecode(str, charset, callback) {
+				var script = document.createElement('script');
+				script.id = '_urlDecodeFn_';
+				var src = 'data:text/javascript;charset=' + charset + ',_urlDecodeFn_("' + str + '");'
+				src += 'document.getElementById("_urlDecodeFn_").parentNode.removeChild(document.getElementById("_urlDecodeFn_"));';
+				script.src = src;
+				document.body.appendChild(script);
+				window._urlDecodeFn_ = callback;
+			},
+			 gbkVerbUtf(str){
+				return new Promise ((resolve,reject) => {
+					try {
+						this.resDecode(str,'GBK',(res) => {
+							resolve(res)
+						})
+					} catch (error) {
+						console.error(error)
+					}
+				})
+			},
 			//获取文字对比数据
 			async getVsDownData() {
 				try {
@@ -168,8 +190,6 @@
 					}
 					this.modelEquipA = tempModelEquipA
 					this.modelEquipB = tempModelEquipB
-					console.log('tempModelEquipA :>> ', tempModelEquipA);
-					console.log('tempModelEquipB :>> ', tempModelEquipB);
 				} catch (error) {
 					console.error(error)
 				}
@@ -237,7 +257,7 @@
 						height: 18px;
 						line-height: 18px;
 						color: #56A3F1;
-						margin: 2	px;
+						margin: 2px;
 						padding: 1px 2px;
 						border-radius: 5px;
 					}

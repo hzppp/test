@@ -28,7 +28,7 @@
 					</block> -->
 					<view class="car_btn">
 						<block v-if="leftSerial.jumpType == 1">
-							<view @tap.stop="toXdj(leftSerial.serialId)" class="left-btn">预约试驾</view>
+							<view @tap.stop="yuYue(leftSerial.serialId)" class="left-btn">预约试驾</view>
 						</block>
 						<block v-else>
 							<view class="none left-btn" @tap.stop>预约试驾</view>
@@ -61,7 +61,7 @@
 					</block> -->
 					<view class="car_btn">
 						<block v-if="rightSerial.jumpType == 1">
-							<view @tap.stop="toXdj(rightSerial.serialId)" class="right-btn">预约试驾</view>
+							<view @tap.stop="yuYue(rightSerial.serialId)" class="right-btn">预约试驾</view>
 						</block>
 						<block v-else>
 							<view class="none right-btn" @tap.stop>预约试驾</view>
@@ -117,12 +117,20 @@
 			},
 			// 0left 1right
 			changeCarSearial(index){
-				this.$emit("changeCarSearial",index)
+				if(index === 0) {
+					uni.redirectTo({
+						url:`/pages/ChooseSerial?vs=true&noun=left&serialId=${this.rightSerial.serialId}`
+					})
+				}else {
+					uni.redirectTo({
+						url:`/pages/ChooseSerial?&vs=true&noun=right&serialId=${this.leftSerial.serialId}`
+					})
+				}
 			},
 			// 询底价
-			toXdj(serialId){
-				uni.navigateTo({
-					url:"/pages_car/xdj/xdj?sid="+serialId
+			yuYue(id){
+				uni.redirectTo({
+					url:"/pages/YuyuePage?id="+id
 				})
 			}
 		}

@@ -1,6 +1,6 @@
 <template>
     <view class="yuyue">
-        <image mode="widthFix" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3223779882,3129702493&fm=26&gp=0.jpg" />
+        <image mode="widthFix" :src="serialData.picHeadUrl" />
         <view class="content">
             <view class="title">预约试驾</view>
             <view class="list models">
@@ -10,7 +10,7 @@
             </view>
             <view class="list models">
                 <view class="list-title">城市</view>
-                <view class="select">
+                <!-- <view class="select">
                     <view class="uni-list">
                         <view class="uni-list-cell">
                             <view class="uni-list-cell-db">
@@ -21,7 +21,9 @@
                             </view>
                         </view>
                     </view>
-                </view>
+                </view> -->
+                <view class="select">{{currentCaraSerial}}</view>
+
                 <view class="arrow"></view>
             </view>
             <view class="list models">
@@ -85,11 +87,17 @@ const COUNTDOWN = 60
                 cityIndex: 71, //城市默认下标(广州)
                 dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
+
+                serialId:'', //参数车系id
+
+                serialData: {}// 车系详情
             }
         },
-        onLoad() {
+        onLoad(options) {
+            this.serialId = options.id
             this.reqAllCityList(0)
             this.reqDealersList(1)
+            this.reqSerialDetail(options.id)
         },
         methods: {
             //检测信息是否齐全
@@ -102,23 +110,23 @@ const COUNTDOWN = 60
             },
 
             //获取城市列表
-            async reqAllCityList() {
-                try {
-                    const {code,data:{letterGroup}} = await api.fetchAllCityList()
-                    let tempArr = []
-                    if(code === 1) {
-                        for(let k in letterGroup) {
-                           letterGroup[k].map(v=>{
-                               tempArr.push(v)
-                           })
-                        }
-                    }
-                    this.cityList = tempArr
-                    this.currentCity = tempArr[this.cityIndex]
-                } catch (error) {
-                    console.error(error)
-                }
-            },
+            // async reqAllCityList() {
+            //     try {
+            //         const {code,data:{letterGroup}} = await api.fetchAllCityList()
+            //         let tempArr = []
+            //         if(code === 1) {
+            //             for(let k in letterGroup) {
+            //                letterGroup[k].map(v=>{
+            //                    tempArr.push(v)
+            //                })
+            //             }
+            //         }
+            //         this.cityList = tempArr
+            //         this.currentCity = tempArr[this.cityIndex]
+            //     } catch (error) {
+            //         console.error(error)
+            //     }
+            // },
 
             //获取经销商列表
             async reqDealersList(cityId) {
@@ -131,7 +139,19 @@ const COUNTDOWN = 60
                     console.error(error)
                 }
             },
-
+            //获取车系详情
+            async reqSerialDetail(sgId) {
+                try {
+                    const {code,data} = await api.fetchSerialDetail({sgId})
+                    if(code ===1) {
+                        console.log('data :>> ', data);
+                        this.serialData = data
+                        this.currentCaraSerial = data.name
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            },
             //获取验证码
             getCode() {
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/

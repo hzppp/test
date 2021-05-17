@@ -233,6 +233,22 @@
             "enablePullDownRefresh": false
         }
     }
+    ,{
+        "path" : "pages/ChooseSerial",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车系",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseSerialList",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车系",
+            "enablePullDownRefresh": false
+        }
+    }
   ],
   "tabBar": {
     "color": "#999999",
