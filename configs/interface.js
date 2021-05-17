@@ -57,15 +57,11 @@ const config = {
 		//
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
-<<<<<<< HEAD
 		getactivity: `${DOMAIN.changan}/api/xcx/activity/list`,
-=======
-		getactivity: `${DOMAIN.mock}/api/xcx/activity/list`,
 		//我的活动列表
 		getActivityUser:'${DOMAIN.changan}/api/xcx/activity/list/user',
 		//直播列表
 		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
->>>>>>> hch
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
@@ -85,9 +81,6 @@ const config = {
 		// 手机号解密
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
-<<<<<<< HEAD
-		getUserOupons: `${DOMAIN.host}/api/audi/xcx/getUserOupons`,
-=======
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
 		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail`,
 		// getPanosInfo2 获取vr看车图片
@@ -96,7 +89,6 @@ const config = {
 		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
 		// 获取附近经销商
 		getDealers: `${DOMAIN.csbHost}/interface/iphone/get_dealers_by_sgid_rid.jsp`,
->>>>>>> hch
 		// /interface/sales/get_sales_list.jsp
 		getSalesList: `${DOMAIN.host}/interface/sales/get_sales_list.jsp`,
 		// 获取车型
