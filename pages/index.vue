@@ -244,12 +244,14 @@ export default {
     }
     .banner {
       border-radius: 20rpx 20rpx 0 0;
+      margin-bottom: -8rpx;
     }
     .info {
       height: 92rpx;
       line-height: 92rpx;
       padding-left: 30rpx;
       border-radius: 0 0 20rpx 20rpx;
+      box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
       .icon2 {
         position: relative;
         display: inline-block;
