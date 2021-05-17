@@ -44,6 +44,7 @@ module.exports = {
         }
         return data
 
+<<<<<<< HEAD
     },
     getAreaInfo: async (regionId) => {
         let {
@@ -148,6 +149,224 @@ module.exports = {
         })
         return data
     },
+=======
+	},
+	getAreaInfo: async (regionId) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getAreaByRegion'),
+			data: {
+				regionId: regionId
+			}
+		})
+		return data
+	},
+	getRegionIpArea: async (cityCode) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getRegionIpArea'),
+			data: {
+				m: "getCityById",
+				encode: "utf8",
+				cityCode: cityCode
+			}
+		})
+		return data
+	},
+	// 活动
+	getactivity: async (regionId, size = 3, pageNum = 1) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getactivity'),
+			data: {
+				cityId: regionId,
+				size: size,
+				pageNum: pageNum
+			}
+		})
+		return data
+	},
+	getActivityUser:async (params) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getActivityUser'),
+			data: params
+		})
+		return data
+	},
+	/* 直播列表 */
+	getLiveList:async (params) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getLiveList'),
+			data: params
+		})
+		return data;
+	},
+	// 获取车系列表
+	getAutoSerialList: async () => {
+		if (app.globalData.showVehicle) {
+			return app.globalData.showVehicle
+		}
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getAutoSerialList'),
+			data: {}
+		})
+		if (data.code == 1) {
+			app.globalData.showVehicle = data
+		}
+		return data
+	},
+	// 获取价格
+	getAutoPrice: async (regionId, serialGroupId) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getAutoPrice'),
+			data: {
+				regionId: regionId,
+				serialGroupId: serialGroupId
+			}
+		})
+		return data
+	},
+	// 获取活动内容
+	getActivityContent: async (id) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getActivityContent'),
+			data: {
+				id: id
+			}
+		})
+		return data
+	},
+	getWelfare: async (regionId, pageSize, pageNum) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getWelfare'),
+			data: {
+				pageNum: pageNum,
+				pageSize: pageSize,
+				cityId: regionId
+			}
+		})
+		return data
+	},
+	// 用户留资
+	submitClue: async (cs) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('submitClue'),
+			method: "POST",
+			data: cs
+		})
+		return data
+	},
+
+	// 获取用户信息
+	getPocketUserInfo: async (isupdata = false) => {
+		if (app.globalData.pocketUserInfo && !isupdata) {
+			return app.globalData.pocketUserInfo
+		}
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getPocketUserInfo'),
+		})
+		// data.data.phone = null
+		if (data.code == 1) {
+			app.globalData.pocketUserInfo = data.data
+			// console.log(app.globalData)
+			if (data.data.salesId && data.data.salesId != 0 && !app.globalData.salesId) {
+				// app.globalData.salesId = data.data.salesId
+			}
+		}
+		return data
+	},
+	// 记录活动访问
+	visitActivity: async (activityId) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('visitActivity'),
+			method: "POST",
+			data: {
+				activityId: activityId
+			}
+		})
+		return data
+	},
+	// 保存用户信息
+	saveWXuserInfo: async (data) => {
+		await request({
+			url: domain.getAPI('saveWXuserInfo'),
+			data
+		})
+		// 新增获取用户信息
+		if(!app.globalData.pocketUserInfo){
+			await module.exports.getPocketUserInfo();
+			// await this.getPocketUserInfo()
+		}
+	},
+	// 手机号解密
+	decryptPhone: async (encryptedData, iv) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('decryptPhone'),
+			data: {
+				encryptedData: encryptedData,
+				iv: iv
+			}
+		})
+		return data
+	},
+	// 获取用户领取的优惠券
+	getUserOupons: async (param) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getUserOupons'),
+			data:param
+		})
+		return data
+	},
+	/* 优惠券详情 */
+	userOuponsDet:async (param) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('userOuponsDet'),
+			data:param
+		})
+		return data
+	},
+	// getPanosInfo2 获取vr看车图片
+	getPanosInfo2: async (sgId, bId = 2) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getPanosInfo2'),
+			data: {
+				type: 3,
+				bId: bId,
+				sgId: sgId
+			}
+		})
+		return data
+	},
+>>>>>>> hch
 
     // 获取用户信息
     getPocketUserInfo: async (isupdata = false) => {
