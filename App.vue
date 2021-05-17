@@ -12,7 +12,8 @@
 		  currentLocation:{},//当前位置
 		  userInfo: null,
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
-      wxUserInfo: null
+      wxUserInfo: null,
+		  phone: '', //  授权的手机号码
 		},
 		onLaunch: function() {
 			uni.hideTabBar({

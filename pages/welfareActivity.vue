@@ -1,5 +1,6 @@
 <template>
   <view class="welfareActivity">
+	<ask-online></ask-online>
     <viewTabBar :current="3"></viewTabBar>
     <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <form-pop ref="formpop"></form-pop>
@@ -36,6 +37,7 @@
         </view>
         <view v-else class="activity-list-none"></view>
       </view>
+	  <view class="zw"></view>
     </scroll-view>
   </view>
 </template>
@@ -47,13 +49,15 @@ import login from '@/units/login'
 import api from '@/public/api/index'
 import shouquan from '@/units/shouquan'
 import tabBar from '@/components/tabBar/tabBar'
+import askOnline from '@/components/askOnline/askOnline'
 
 let app = getApp()
 export default {
   components: {
     'coupon-list': coupon,
     'form-pop': formpop,
-    viewTabBar:tabBar
+    viewTabBar:tabBar,
+	askOnline
   },
   mixins: [shouquan],
   data() {

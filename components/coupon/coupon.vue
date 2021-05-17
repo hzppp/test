@@ -87,7 +87,7 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.pocketUserInfo.phone = data.phoneNumber
+					app.globalData.phone = data.phoneNumber
 					this.phone = data.phoneNumber
 				}
 				
@@ -96,8 +96,8 @@
 			},
 			setcouponList(list) {
 				this.phone = ''
-				if (app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.phone) {
-					this.phone = app.globalData.pocketUserInfo.phone
+				if (app.globalData && app.globalData.phone) {
+					this.phone = app.globalData.phone
 				}
 				for (let i in list) {
 					list[i].endTime = list[i].endTime.replace(/-/g, ".")

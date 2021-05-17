@@ -6,11 +6,12 @@
 				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
 			</view>
 			<view class="content">
-				<picker @change="bindMultiPickerColumnChangeser" mode="selector" :range="serialList" :range-key="'name'" class="input-view auto-input">
-					<view>{{serialList[indexSerial].name}}</view>
+				<picker @change="bindMultiPickerColumnChangeser" mode="selector" :range="serialList" :range-key="'name'" 
+				:class="'input-view auto-input ' + (showSerialText == '请选择车系' ? 'placeholder':'')">
+					<view>{{showSerialText}}</view>
 				</picker>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="[provinceList, cityList]"
-				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择' ? 'placeholder':'')" :value="selectIndex">
+				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择省市' ? 'placeholder':'')" :value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
@@ -89,11 +90,11 @@
 				currentObj: {},
 				from: "",
 				serialList: [],
-				indexSerial: "0",
 				provinceList: [],
 				cityList: [],
 				districtList: [],
 				dealerList: [],
+				crtSerialItem: {}, // 当前选择的车系
 				crtProvinceItem: {}, // 当前选择的省份
 				crtCityItem: {}, // 当前选择的城市
 				crtDistrictItem: {}, // 当前选择的地区项
@@ -107,8 +108,15 @@
 			}
 		},
 		computed: {
+			showSerialText () {
+				let text = '请选择车系'
+				if (this.crtSerialItem.id) {
+					text = this.crtSerialItem.name
+				}
+				return text 
+			},
 			showProvinceCityText () {
-				let text = '请选择'
+				let text = '请选择省市'
 				if (this.crtProvinceItem.id && this.crtCityItem.id) {
 					text = this.crtProvinceItem.name + ' ' + this.crtCityItem.name
 				}
@@ -150,7 +158,7 @@
 				let {
 					detail
 				} = e
-				this.indexSerial = detail.value
+				this.crtSerialItem = this.serialList[detail.value]
 			},
 			bindMultiPickerColumnChangeArea(e) {
 				let {
@@ -190,13 +198,12 @@
 
 			},
 			async submit() {
-				let chexi = this.serialList[this.indexSerial]
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
-				console.log('车系', chexi)
+				console.log('车系', this.crtSerialItem)
 				console.log('来源', ly)
 				console.log('来源对象', lydx)
 				if (ly == 'coupon') {
@@ -207,13 +214,13 @@
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
 					source = 2
-					sourceId = chexi.serialGroupId
+					sourceId = this.crtSerialItem.id
 				} else if (ly == 'dealer') {
 					source = 3
 					sourceId = lydx.id || lydx.dealerId
 				}
 				let isphone = this.isPoneAvailable(this.phone)
-				if (!chexi.serialGroupId) {
+				if (!this.crtSerialItem.id) {
 					this.showToast('请选择车系')
 					return false
 				}
@@ -231,13 +238,13 @@
 				}
 				if (!this.crtDealerItem.id) {
 					this.showToast('请选择经销商')
-					return
+					return false
 				}
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
-					serialGroupId: chexi.serialGroupId,
+					serialGroupId: this.crtSerialItem.id,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,
@@ -250,10 +257,9 @@
 						popname = 'coupon-success-pop'
 					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
 						this.showToast('报名成功', 500)
-						setTimeout(() => {
-							this.towebView2()
-						}, 500)
-
+						// setTimeout(() => {
+						// 	this.towebView2()
+						// }, 500)
 					} else {
 						popname = 'form-success-pop'
 					}
@@ -262,9 +268,9 @@
 						popname = 'coupon-warning-pop'
 					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
 						this.showToast('您已留过资，可直接抽奖', 500)
-						setTimeout(() => {
-							this.towebView2()
-						}, 500)
+						// setTimeout(() => {
+						// 	this.towebView2()
+						// }, 500)
 					} else {
 						popname = 'form-warning-pop'
 					}
@@ -285,32 +291,31 @@
 					url
 				})
 			},
-			towebView2() {
-				this.isShowFormPop = false
-				if (this.currentObj.duibaUrl) {
-					let redirect = {
-						'redirect': this.currentObj.duibaUrl
-					}
-					api.getMallLink(redirect).then(res => {
-						let vurl = escape(res.data)
-						let url = `/pages/webview?webURL=${vurl}`
-						uni.navigateTo({
-							url
-						})
-						console.log('MallLink', res)
-					})
-				} else {
-					api.getMallLink().then(res => {
-						let vurl = escape(res.data)
-						let url = `/pages/webview?webURL=${vurl}`
-						uni.navigateTo({
-							url
-						})
-						console.log('MallLink', res)
-					})
-				}
-
-			},
+			// towebView2() {
+			// 	this.isShowFormPop = false
+			// 	if (this.currentObj.duibaUrl) {
+			// 		let redirect = {
+			// 			'redirect': this.currentObj.duibaUrl
+			// 		}
+			// 		api.getMallLink(redirect).then(res => {
+			// 			let vurl = escape(res.data)
+			// 			let url = `/pages/webview?webURL=${vurl}`
+			// 			uni.navigateTo({
+			// 				url
+			// 			})
+			// 			console.log('MallLink', res)
+			// 		})
+			// 	} else {
+			// 		api.getMallLink().then(res => {
+			// 			let vurl = escape(res.data)
+			// 			let url = `/pages/webview?webURL=${vurl}`
+			// 			uni.navigateTo({
+			// 				url
+			// 			})
+			// 			console.log('MallLink', res)
+			// 		})
+			// 	}
+			// },
 			isPoneAvailable(phoneNumber) {
 				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
 				if (!myreg.test(phoneNumber)) {
@@ -323,57 +328,14 @@
 				this.$toast(title, 'none', duration);
 			},
 			async getpreClue() {
-				let source = 3
-				let sourceId = 10086
+				// 手机号码
+				this.phone = app.globalData.phone
+				
+				// 车系
+				this.reqSerialList()
+				
+				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
-				console.log('currentLocation==========',currentLocation)
-				if (this.from == 'coupon') {
-					source = 0
-					sourceId = this.currentObj.id
-				} else if (this.from == 'activity') {
-					source = 1
-					sourceId = this.currentObj.id
-					if (this.currentObj.duibaUrl) {
-						this.isActLink = true
-					}
-				} else if (this.from == 'serial') {
-					source = 2
-					sourceId = this.currentObj.serialGroupId
-				} else {
-					sourceId = this.currentObj.id || this.currentObj.dealerId
-				}
-				let query = {
-					source,
-					sourceId,
-					regionId: currentLocation.cityData.cityId
-				}
-				if (!currentLocation.wxPosition.wsq) {
-					query.latitude = currentLocation.wxPosition.latitude
-					query.longitude = currentLocation.wxPosition.longitude
-				}
-				let {
-					data
-				} = await api.getpreClue(query)
-				if (data == null || !data) {
-					data = {}
-				}
-				this.phone = data.mobile
-				console.log('phone', this.phone)
-				this.isphone = this.phone
-				this.name = data.userName
-				//   经销商选择
-				console.log('preClue-data', data) 
-				if (!data.serialGroupList || data.serialGroupList.length == 0) {
-					this.getJson()
-					return false
-				}
-				//   车系选择
-				for (let i in data.serialGroupList) {
-					let obj = data.serialGroupList[i]
-					obj.name = obj.serialGroupName
-				}
-				this.serialList = data.serialGroupList
-				// 省市
 				if (currentLocation) {
 					await this.reqProvinceList()
 					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
@@ -390,31 +352,19 @@
 				}
 				this.isShowFormPop = true
 			},
-			toFirst(list, index) {
-				return list.unshift(list.splice(index, 1)[0])
-			},
-			async getJson() { //默认数据
-				//   获取车系
-				api.getAutoSerialList().then(res => {
-					console.log('this.currentObj', this.currentObj)
-					let {
-						data
-					} = res
-					if (this.from == 'serial') { //默认选中车系
-						let index
-						for (let i in data) {
-							if (this.currentObj.serialGroupId == data[i].serialGroupId) {
-								index = i
-							}
-						}
-						let vdata = [...data]
-						this.toFirst(vdata, index)
-						this.serialList = vdata
-					} else {
-						this.serialList = data
+			// 请求所有车系
+			async reqSerialList () {
+				this.serialList = []
+				try {
+					const res = await api.fetchSerialList()
+					if (res.code == 1) {
+						this.serialList = res.data
+						this.crtSerialItem = this.serialList[0]
 					}
-				})
-				this.isShowFormPop = true
+				} catch(err) {
+					this.showToast('获取车系信息失败')
+					console.error(err)
+				}
 			},
 			// 请求所有的省份
 			async reqProvinceList () {

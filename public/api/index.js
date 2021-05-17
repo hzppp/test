@@ -1130,6 +1130,15 @@ module.exports = {
         })
         return data
     },
+	// 获取车系
+	fetchSerialList: async (para) => {
+		let {data} = await request({
+		    url: domain.getAPI('fetchSerialList'),
+		    method: "GET",
+		    data: para
+		})
+		return data
+	},
     // 获取首页数据
     getHomepageData: async (para) => {
         let {data} = await request({
