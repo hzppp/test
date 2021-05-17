@@ -286,7 +286,7 @@
 				console.log(data)
 			},
 			toMyPage() {
-				let url = '/pages/my'
+				let url = '/pages/myCoupon'
 				uni.navigateTo({
 					url
 				})
