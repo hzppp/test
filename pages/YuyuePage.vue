@@ -78,13 +78,13 @@ const COUNTDOWN = 60
                 isFirst: true, //是否是第一次发送
 
                 title: 'picker',
-                cityList: [], //城市列表
+                // cityList: [], //城市列表
                 dealersList: [], //经销商列表
 
                 currentCaraSerial: 'qq', //当前的车系名字
-                currentCity:{}, //当前选择的城市
+                // currentCity:{}, //当前选择的城市
                 test: '默认全局城市广州test',
-                cityIndex: 71, //城市默认下标(广州)
+                // cityIndex: 71, //城市默认下标(广州)
                 dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
 
@@ -95,7 +95,7 @@ const COUNTDOWN = 60
         },
         onLoad(options) {
             this.serialId = options.id
-            this.reqAllCityList(0)
+            // this.reqAllCityList(0)
             this.reqDealersList(1)
             this.reqSerialDetail(options.id)
         },
