@@ -154,17 +154,53 @@
     margin: 0 auto;
 }
 .rule-desc{
+	&.red {
+		.title {
+			color: #fa8845;
+		}
+		.rule-form-btn {
+			color: #fa8845;
+		}
+		.content {
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepopbottombgred.png) 0 bottom no-repeat;
+			background-size: 590rpx 220rpx,590rpx 370rpx;
+		}
+	}
+	&.blue {
+		.title {	
+			color: #56a3f1;
+		}
+		.rule-form-btn {
+			color: #56a3f1;
+		}
+		.content {
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepopbottombgblue.png) 0 bottom no-repeat;
+			background-size: 590rpx 220rpx,590rpx 370rpx;
+		}
+	}
+	&.yellow {
+		.title {
+			color: #fa8845;
+		}
+		.rule-form-btn {
+			color: #fa8845;
+		}
+		.content {
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepopbottombgred.png) 0 bottom no-repeat;
+			background-size: 590rpx 220rpx,590rpx 370rpx;
+		}
+	}
     .mask;
     .title{
         .seth(58rpx,36rpx,#333);
         .fb;
-        .pa(35rpx,40rpx);
+        .pa(55rpx,40rpx);
         .ellipsis;
         width: 480rpx;
     }
     .sub-title,.date{
         .seth(42rpx,24rpx,#666);
-        .pa(35rpx,101rpx);
+        .pa(55rpx,101rpx);
         .ellipsis;
         width: 480rpx;
     }
@@ -172,16 +208,23 @@
         top: 143rpx
     }
     .content{
-        padding: 299rpx 0rpx 48rpx;
-        width: 560rpx;
+        padding: 220rpx 0rpx 370rpx;
+        width: 590rpx;
         .pa(50%,50%);
-        transform: translate(-50%,-50%);
-        background: url(http://www1.pcauto.com.cn/gz/20190715/dazhong/rulepoptopbg.png) 0 0 no-repeat,url(http://www1.pcauto.com.cn/gz/20190715/dazhong/rulepopbottombg.png) 0 bottom no-repeat;
-        background-size: 560rpx 301rpx,560rpx 50rpx;
+        transform: translate(-50%,-80%);
     }
     .rule-desc-content{
+		margin: -2rpx auto -80rpx;
+		width: 554rpx;
         background: #fff;
     }
+	.explain {
+		display: block;
+		padding: 0 40rpx;
+		line-height: 40rpx;
+		font-size: 24rpx;
+		color: #666;
+	}
     .p{
         display: block;
         padding: 0 40rpx;
@@ -190,13 +233,18 @@
         color: #999;
     }
     .rule-form-btn{
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 68rpx;
+		margin: 0 auto;
         display: block;
-        width: 360rpx;
+        width: 476rpx;
         .tc;
         .fb;
-        background: #fa8845;
-        .seth(88rpx,32rpx,#fff);
+        background: #fff;
+		font-size: 32rpx;
+		height: 88rpx;
         border-radius: 88rpx;
-        margin: 45rpx auto 0;
     }
 }
