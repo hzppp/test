@@ -44,111 +44,6 @@ module.exports = {
         }
         return data
     },
-    getAreaInfo: async (regionId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getAreaByRegion'),
-            data: {
-                regionId: regionId
-            }
-        })
-        return data
-    },
-    getRegionIpArea: async (cityCode) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getRegionIpArea'),
-            data: {
-                m: "getCityById",
-                encode: "utf8",
-                cityCode: cityCode
-            }
-        })
-        return data
-    },
-    // 活动
-    getactivity: async (regionId, size = 3, pageNum = 1) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getactivity'),
-            data: {
-                cityId: regionId,
-                size: size,
-                pageNum: pageNum
-            }
-        })
-        return data
-    },
-    // 获取车系列表
-    getAutoSerialList: async () => {
-        if (app.globalData.showVehicle) {
-            return app.globalData.showVehicle
-        }
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getAutoSerialList'),
-            data: {}
-        })
-        if (data.code == 1) {
-            app.globalData.showVehicle = data
-        }
-        return data
-    },
-    // 获取价格
-    getAutoPrice: async (regionId, serialGroupId) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getAutoPrice'),
-            data: {
-                regionId: regionId,
-                serialGroupId: serialGroupId
-            }
-        })
-        return data
-    },
-    // 获取活动内容
-    getActivityContent: async (id) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getActivityContent'),
-            data: {
-                id: id
-            }
-        })
-        return data
-    },
-    getWelfare: async (regionId, pageSize, pageNum) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getWelfare'),
-            data: {
-                pageNum: pageNum,
-                pageSize: pageSize,
-                cityId: regionId
-            }
-        })
-        return data
-    },
-    // 用户留资
-    submitClue: async (cs) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('submitClue'),
-            method: "POST",
-            data: cs
-        })
-        return data
-    },
-=======
-	},
 	getAreaInfo: async (regionId) => {
 		let {
 			data
@@ -364,8 +259,6 @@ module.exports = {
 		})
 		return data
 	},
->>>>>>> hch
-
     // 获取用户信息
     getPocketUserInfo: async (isupdata = false) => {
         if (app.globalData.pocketUserInfo && !isupdata) {
