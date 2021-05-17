@@ -6,7 +6,7 @@
       <image class="banner" :src="testUrl || pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont">
         <view class="linkContL">
-          <view class="article linkItem">
+          <view class="article linkItem" @tap="goArtList">
             <view class="title">发现</view>
             <view class="info">探索更多精彩</view>
             <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
@@ -25,7 +25,7 @@
           </view>
         </view>
       </view>
-      <view class="hotAct">
+      <view class="hotAct" v-if="pageData.list.length">
         <view class="hotTab">
           热门
         </view>
@@ -94,6 +94,11 @@ export default {
     }
   },
   methods: {
+    goArtList() {
+      uni.navigateTo({
+        url: `/pages/articleListPage`
+      })
+    },
     goActDetail(id) {
       uni.navigateTo({
         url: `/pages/act?id=${id}`

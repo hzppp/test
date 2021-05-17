@@ -83,9 +83,9 @@ const config = {
 		// 记录活动访问
 		visitActivity: `${DOMAIN.host}/api/audi/xcx/visitActivity`,
 		// 保存用户信息
-		saveWXuserInfo: `${DOMAIN.host}/api/xcx/user/decryptInfo`,
+		saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
 		// 手机号解密
-		decryptPhone: `${DOMAIN.host}/api/xcx/user/decryptPhone`,
+		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.host}/api/audi/xcx/getUserOupons`,
 		// getPanosInfo2 获取vr看车图片
