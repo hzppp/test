@@ -28,8 +28,8 @@
           <block v-for="(item,index) in activityList" :key="index">
             <view class="pic-text" @tap="toActivityPage(item.id)">
               <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
-              <view :class="'label '+ item.typeClass">
-                {{item.typeText}}
+              <view class="label">
+                <view class="label-name">{{item.typeText}}</view>
               </view>
               <view class="text">{{item.name}}</view>
             </view>
@@ -203,19 +203,16 @@ export default {
           let obj = rows[i]
           let type = obj.type
           let typeText
-          let typeClass
           if (type == 1) {
             typeText = '购车福利'
-            typeClass = 'red-bg'
           } else if (type == 2) {
             typeText = '车主福利'
-            typeClass = ''
-          } else {
+          } else if (type == 3) {
             typeText = '线下活动'
-            typeClass = 'yellow-bg'
-          }
+          } else if (type == 4) {
+			typeText = '试驾活动'
+		  }
           obj.typeText = typeText
-          obj.typeClass = typeClass
         }
         this.activityList = [...this.activityList, ...rows]
 
