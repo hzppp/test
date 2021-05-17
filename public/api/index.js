@@ -208,7 +208,7 @@ module.exports = {
 			url: domain.getAPI('getLiveList'),
 			data: params
 		})
-		return data
+		return data;
 	},
 	// 获取车系列表
 	getAutoSerialList: async () => {
