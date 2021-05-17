@@ -120,38 +120,19 @@
     	color: #56a3f1;
     }
 }
-.bg-yellow{
-    color: #d5a87d;
-    background-image: linear-gradient(to right, #fff3e8 71%,  #d5a87d 29%);
-    .coupon-line {
-    	.line {
-    		border-color: #d5a87d;
-    	}
-    }
-    .coupon-btn {
-    	color: #d5a87d;
-    }
-}
-.bg-gray{
-    // .jb(#aaa,#ccc);
-	color: #999999;
-	background-image: linear-gradient(to right, #f2f2f2 71%,  #cdcdcd 29%);
-	.coupon-line{
-		.line{
-			border-color: #cdcdcd;
-		}
-	}
-    .coupon-btn{
-        color: #999999;
-    }
-}
 .load-more-btn{
     width: 284rpx;
-    .seth(60rpx,24rpx,#999);
+    .seth(60rpx,24rpx,#999999);
+	background-color: #F5F5F5;
     text-align: center;
-    border: 1px solid #ccc;
     border-radius: 30rpx;
     margin: 0 auto;
+	.icon {
+		margin-left: 8rpx;
+		margin-bottom: 2rpx;
+		width: 19rpx;
+		height: 11rpx;
+	}
 }
 .rule-desc{
 	&.red {
@@ -175,18 +156,6 @@
 		}
 		.content {
 			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepopbottombgblue.png) 0 bottom no-repeat;
-			background-size: 590rpx 220rpx,590rpx 370rpx;
-		}
-	}
-	&.yellow {
-		.title {
-			color: #fa8845;
-		}
-		.rule-form-btn {
-			color: #fa8845;
-		}
-		.content {
-			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepoptopbg.png) 0 0 no-repeat,url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/rulepopbottombgred.png) 0 bottom no-repeat;
 			background-size: 590rpx 220rpx,590rpx 370rpx;
 		}
 	}
@@ -238,7 +207,9 @@
 		right: 0;
 		bottom: 68rpx;
 		margin: 0 auto;
-        display: block;
+        display: flex;
+		justify-content: center;
+		align-items: center;
         width: 476rpx;
         .tc;
         .fb;

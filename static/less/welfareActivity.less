@@ -70,23 +70,27 @@
 		margin-bottom: 30rpx;
 		border-radius: 20rpx;
 		box-shadow: 5px 5px 17px rgba(#000000, 0.3);
-		overflow: hidden;
 		image{
 			width: 687rpx;
+			border-top-left-radius: 20rpx;
+			border-top-right-radius: 20rpx;
 		}
 		.label{
 			position: absolute;
-			left: 0;
-			top: 0;
+			left:-4rpx;
+			top: -2rpx;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			width: 100rpx;
-			height: 32rpx;
-			font-size: 20rpx;
-			color: #ffffff;
-			background-color: #ff852c;
-			border-radius: 6rpx;
+			width: 104rpx;
+			height: 36rpx;
+			background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/label-bg.png") no-repeat;
+			background-size: contain;
+			.label-name {
+				margin-bottom: 5rpx;
+				font-size: 20rpx;
+				color: #ffffff;
+			}
 		}
 		.text{
 			.db(middle);
@@ -98,6 +102,10 @@
 			max-width: 100%;
 		}
 	}
+}
+.zw {
+	width: 100%;
+	height: 100rpx;
 }
 .fix-sale{
     .setIcon(90rpx,125rpx,0,41rpx);

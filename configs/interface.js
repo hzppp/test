@@ -57,15 +57,15 @@ const config = {
 		//
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
-		getactivity: `${DOMAIN.mock}/api/xcx/activity/list`,
+		getactivity: `${DOMAIN.changan}/api/xcx/activity/list`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
-		getActivityContent: `${DOMAIN.mock}/api/xcx/activity/detail`,
+		getActivityContent: `${DOMAIN.changan}/api/xcx/activity/detail`,
 		// 获取优惠券列表
-		getWelfare: `${DOMAIN.mock}/api/xcx/coupon/list`,
+		getWelfare: `${DOMAIN.changan}/api/xcx/coupon/list`,
 		// 用户留资
 		submitClue: `${DOMAIN.changan}/api/xcx/clue/user`,
 		// 获取用户信息
@@ -156,13 +156,15 @@ const config = {
         //获取经销商列表
         fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
-		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
+		fetchProvinceList: `${DOMAIN.mock}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
-		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
+		fetchCityListByProvinceId: `${DOMAIN.mock}/api/xcx/base/getCities`,
 		// 根据城市id获取地区
-		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
+		fetchDistrictListByCityId: `${DOMAIN.mock}/api/xcx/base/getDistricts`,
 		// 根据城市id获取经销商
 		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		// 获取车系
+		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
 		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`
 	},
