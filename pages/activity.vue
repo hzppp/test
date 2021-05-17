@@ -75,7 +75,6 @@
 				console.log('----------------', this.Interval)
 			}
 			await login.login()
-			let pocketUserInfo = await api.getPocketUserInfo()
 			this.activityId = options.id
 			let {
 				data
@@ -84,11 +83,8 @@
 			app.Interval = setInterval(() => {
 				this.downDate(data.endTime)
 			}, 1000)
-			
 			this.phone = app.globalData.phone
-			console.log(this.phone)
 			this.content = data
-			api.visitActivity(data.id)
 		},
 		onShareAppMessage() {
 			let title = this.content.name
@@ -137,6 +133,7 @@
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()
+				endtime = new Date(endtime).getTime()
 				let j = endtime - time
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
