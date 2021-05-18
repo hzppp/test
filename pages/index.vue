@@ -3,7 +3,7 @@
     <viewTabBar :current="0"></viewTabBar>
     <askOnline></askOnline>
     <view class="content">
-      <image class="banner" :src="testUrl || pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
@@ -35,11 +35,11 @@
             <!--status 当为直播类型时 1未开始  2正在进行  3已结束-->
             <view class="icon1 status_4"></view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
-            <image class="img banner" :src="testUrl || item.picUrl"  lazy-load="true"></image>
-            <view class="info">
+            <image class="img banner" :src="item.picUrl"  lazy-load="true"></image>
+            <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
               <view class="icon2">{{'车展福利'|| item.type}}</view>
-              <view class="title">{{'全新CS15 线下体验活动' || item.title}}</view>
+              <view class="title ovh">{{item.title}}</view>
             </view>
           </view>
         </view>
@@ -134,7 +134,15 @@ export default {
 <style lang="less" scoped>
 @import '@/static/less/index.less';
 .index {
+  padding-top: 16rpx;
 }
+.ovh {
+  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
+}
+.shadow {
+  box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
+}
+
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
@@ -148,6 +156,7 @@ export default {
     align-items: center;
     margin-top: 40rpx;
     height: 260rpx;
+    border-radius: 20rpx;
     .linkItem {
       box-sizing: border-box;
       padding: 22rpx 0 0 26rpx;
@@ -213,7 +222,6 @@ export default {
       margin: 30rpx 0;
       background: #fff;
       position: relative;
-      box-shadow: 8rpx 15rpx 23rpx #f7f7f7;
     }
     .icon1 {
       position: absolute;
@@ -251,7 +259,6 @@ export default {
       line-height: 92rpx;
       padding-left: 30rpx;
       border-radius: 0 0 20rpx 20rpx;
-      box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
       .icon2 {
         position: relative;
         display: inline-block;
@@ -262,7 +269,7 @@ export default {
         background: #FA8845;
         color: #fff;
         margin-right: 12rpx;
-        top: -4rpx;
+        top: -36rpx;
       }
       .title {
         display: inline-block;
