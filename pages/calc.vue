@@ -975,7 +975,7 @@
 			},
 			goDrive(){
 				uni.navigateTo({
-					url: "/pages/pages/YuyuePage?serialId="+this.serialId
+					url: "/pages/YuyuePage?serialId="+this.serialId
 				})
 			}
 		}
