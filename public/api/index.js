@@ -837,15 +837,60 @@ module.exports = {
             method: "GET",
             data:para
         })
-        return data
+		return data
     },
-    	// 计算器获取车型
-	getCalcModel: async(para) => {
+	// 根据城市id请求经销商
+	fetchDealerListByCityId: async(para) => {
 		let {data} = await request({
-			url:domain.getAPI('calcModel'),
+			url:domain.getAPI('fetchDealerListByCityId'),
 			method: "GET",
 			data: para
 		})
 		return data
 	},
+	// 获取车型对比数据
+	fetchCarSerialContrast: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchCarSerialContrast'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车系详情
+	fetchSerialDetail: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialDetail'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车型列表
+	fetchSerialList: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialList'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	// 获取车型列表
+	fetchSerialScreenList: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchSerialScreenList'),
+			method: "GET",
+			data: para
+		})
+		return data
+    },
+       	// 计算器获取车型
+	getCalcModel: async(para) => {
+		let {data} = await request({
+            url:domain.getAPI('calcModel'),
+            method: "GET",
+			data: para
+		})
+		return data
+    },
 }

@@ -115,7 +115,7 @@
       "style": {}
     },
     {
-        "path" : "pages/lookCar",
+        "path" : "pages/LookCar",
         "style" :
         {
             "navigationBarTitleText": "",
@@ -123,7 +123,7 @@
         }
     }
     ,{
-        "path" : "pages/chooseCity",
+        "path" : "pages/ChooseCity",
         "style" :
         {
             "navigationBarTitleText": "选择城市",
@@ -159,6 +159,38 @@
         "style" :
         {
             "navigationBarTitleText": "获取优惠",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseSerial",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车系",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseSerialList",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车系",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseModels",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车型",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseDealer",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择经销商",
             "enablePullDownRefresh": false
         }
     }
