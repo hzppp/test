@@ -211,7 +211,16 @@
 		"navigationStyle": "custom"
 	  }
 	}
-  ],
+      ,{
+            "path" : "pages/vrInFrame/vrInFrame",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
   "tabBar": {
     "custom": true,
     "color": "#999999",
