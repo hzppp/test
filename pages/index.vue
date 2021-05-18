@@ -13,7 +13,7 @@
           </view>
         </view>
         <view class="linkContR">
-          <view class="testDrive linkItem rItem">
+          <view class="testDrive linkItem rItem"  @tap="goTestDrive">
             <view class="title">预约试驾</view>
             <view class="info">试驾快人一步</view>
             <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
@@ -33,6 +33,7 @@
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1未开始  2正在进行  3已结束-->
+<!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
             <view class="icon1 status_4"></view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
             <image class="img banner" :src="item.picUrl"  lazy-load="true"></image>
@@ -100,9 +101,13 @@ export default {
       })
     },
     goCalc() {
-      console.log('calc')
       uni.navigateTo({
         url: `/pages/calc`
+      })
+    },
+    goTestDrive() {
+      uni.navigateTo({
+        url: `/pages/ChooseSerial`
       })
     },
     goActDetail(id) {
@@ -226,9 +231,10 @@ export default {
     .icon1 {
       position: absolute;
       width: 104rpx;
-      height: 36rpx;
+      height: 40rpx;
       left:-4rpx;
       top: -2rpx;
+
       &.status_1 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
         background-size: contain;
@@ -238,8 +244,31 @@ export default {
         background-size: contain;
       }
       &.status_3 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
+        font-size: 20rpx;
+        line-height: 36rpx;
+        color: #fff;
+        width: auto;
+        background: #55a4f1;
+        padding: 0 40rpx;
+        box-sizing: content-box;
+        &::before {
+          content: '';
+          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_l.png") no-repeat;
+          background-size: contain;
+          position: absolute;
+          left:0;
+          width: 60rpx;
+          height: 40rpx;
+        }
+        &::after {
+          content: '';
+          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_r.png") no-repeat;
+          background-size: contain;
+          position: absolute;
+          right:0;
+          width: 60rpx;
+          height: 40rpx;
+        }
       }
       &.status_4 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art.png") no-repeat;
