@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       pageData:{bannerActivity:{},list:[]},
-      testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a'
+      testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
     }
   },
   filters: {
@@ -90,7 +90,7 @@ export default {
           break;
         }
       }
-    }
+    },
   },
   onShow() {
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
@@ -101,7 +101,13 @@ export default {
     }
   },
   async onLoad(options) {
-    this.pageData = await api.getHomepageData().then(res => {
+    const resData = (await this.getCityId()) || [500000,500000]
+    const provinceId = resData[0]
+    const cityId = resData[1]
+    this.pageData = await api.getHomepageData({
+      cityId: cityId,
+      cityCode: app.globalData.currentLocation.realPositionCS.cityCode
+    }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
   },
@@ -121,6 +127,54 @@ export default {
     }
   },
   methods: {
+    async getCityId() {
+      let currentLocation = app.globalData.currentLocation
+      if (currentLocation) {
+        const provinceList = await this.reqProvinceList()
+        console.log('sdsdsd',provinceList)
+        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+        if (crtLocationProvinceItem) {
+          const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+          if (crtLocationCityItem) {
+            this.crtProvinceItem = crtLocationProvinceItem
+            this.crtCityItem = crtLocationCityItem
+            console.log('this.crtProvinceItem',this.crtProvinceItem,this.crtCityItem)
+            return [crtLocationProvinceItem.id,crtLocationCityItem.id]
+          }
+        }
+      }
+    },
+    // 请求所有的省份
+    async reqProvinceList () {
+      let res = [];
+      try {
+        res = await api.fetchProvinceList().then(res => {
+          return res.code == 1?res.data : []
+        })
+        console.log('rrr',res)
+        return res
+      } catch(err) {
+        this.showToast('获取省份信息失败')
+        console.error(err)
+        return res
+      }
+    },
+    // 根据省份id请求城市
+    async reqCityListByProvinceId (provinceId) {
+      let res = []
+      try {
+        res = await api.fetchCityListByProvinceId({provinceId}).then(res => {
+          return res.code == 1?res.data : []
+        })
+        console.log('ccc',res)
+        return res
+      } catch (err) {
+        this.showToast('获取城市信息失败')
+        console.error(err)
+        return res
+      }
+    },
     handleLinkHot(type,id,status) {
       //type:1资讯，2活动，3直播
       //status:1直播中，2预告，3回放
