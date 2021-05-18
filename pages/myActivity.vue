@@ -119,5 +119,9 @@
 	.activity-list .pic-text {
 		margin-top: 15rpx;
 		box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.10);
+		.label{
+			font-size: 20rpx;
+			    color: #fff;
+		}
 	}
 </style>
