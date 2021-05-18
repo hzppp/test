@@ -43,8 +43,8 @@
             <image class="img banner" :src="item.picUrl" lazy-load></image>
             <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
-              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>
-              <view class="title ovh">{{item.contentType}}{{item.title}}</view>
+<!--              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>-->
+              <view class="title ovh">{{item.title}}</view>
             </view>
           </view>
         </view>
