@@ -30,7 +30,6 @@ import api from '@/public/api/index'
             }
         },
         onLoad(options) {
-            console.log('options :>> ', options);
             this.pages = options.pages
             this.noun = options.noun
             this.vs = options.vs
