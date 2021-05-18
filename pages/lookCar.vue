@@ -47,6 +47,7 @@ export default {
         }
     },
     onLoad(options) {
+        console.log('options :>> ', options);
         this.reqSerialDetail(options.id)
     },
 	methods: {
@@ -56,7 +57,7 @@ export default {
                 if(code ===1 ) {
                     this.serialData = data
                     this.serialId = data.pcSerialGroupId
-                    this.feqSerialList(data.pcSerialGroupId)
+                    this.reqModelsList(data.pcSerialGroupId)
                     uni.setNavigationBarTitle({
                         title:data.name
                     })
@@ -65,9 +66,9 @@ export default {
                 console.error(error)
             }
         },
-        async feqSerialList(sgId) {
+        async reqModelsList(sgId) {
             try {
-                const {code,data} = await api.fetchSerialList({sgId})
+                const {code,data} = await api.fetchModelsList({sgId})
                 let ids = []
                 if(code === 1 ) {
                     data.map((v,i) => {

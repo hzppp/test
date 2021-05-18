@@ -203,6 +203,14 @@
 		    "navigationStyle": "custom"
 		}
 	}
+	,{
+		"path" : "pages/AddYuYue",
+		"style" :                                                                                    
+		{
+		    "navigationBarTitleText": "添加试驾车型",
+		    "enablePullDownRefresh": false
+		}
+	}
   ],
   "tabBar": {
     "custom": true,

@@ -8,7 +8,7 @@
 		</view>
 		<!-- 当前城市 -->
 		<view class="current-city">
-			当前定位的城市：<text>{{currentCity}}</text>
+			当前定位的城市：<text>{{currentCity.name}}</text>
 		</view>
 		<!-- 城市索引 -->
 		<scroll-view class="scroll-view" :scroll-into-view="targetId" :scroll-y="true">
@@ -38,6 +38,7 @@ let app = getApp()
 		},
 		onLoad() {
 			this.getAllCityList()
+            this.currentCity = this.$store.state.currentCity
 		},
 		methods: {
 			async getAllCityList() {
@@ -62,11 +63,13 @@ let app = getApp()
 			},
 			changeCity(item) {
 				this.currentCity = item.name
-				console.log('item :>> ', item);
-				// console.log('app. :>> ', app.globalData);
-				uni.navigateTo({
-					url: `/pages/YuyuePage?name=${item.name}&id=${item.id}`
-				})
+                this.$store.commit("changCity",item)
+                let pages = getCurrentPages();  //获取所有页面栈实例列表
+                let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+                prevPage.$vm.currentCity = item;   //修改上一页data里面的searchVal参数值为1211
+                uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+                    delta: 1
+                });
 			}
 		},
 	}

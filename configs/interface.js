@@ -180,13 +180,17 @@ const config = {
 		//获取车系详情
 		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
 		//获取车型列表
-		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
+		fetchModelsList:`${DOMAIN.changan}/api/xcx/model/list`,
 		//获取车系筛选列表 
 		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取车系
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
-		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`
+		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
+        //获取验证码
+        fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+        //预约试驾
+        postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 	},
 	getAPI(key) {
 		let url;
