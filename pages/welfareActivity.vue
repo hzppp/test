@@ -1,5 +1,6 @@
 <template>
   <view class="welfareActivity">
+	<ask-online></ask-online>
     <viewTabBar :current="3"></viewTabBar>
     <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <form-pop ref="formpop"></form-pop>
@@ -27,8 +28,8 @@
           <block v-for="(item,index) in activityList" :key="index">
             <view class="pic-text" @tap="toActivityPage(item.id)">
               <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
-              <view :class="'label '+ item.typeClass">
-                {{item.typeText}}
+              <view class="label">
+                <view class="label-name">{{item.typeText}}</view>
               </view>
               <view class="text">{{item.name}}</view>
             </view>
@@ -36,8 +37,7 @@
         </view>
         <view v-else class="activity-list-none"></view>
       </view>
-      <!--			<navigator v-if="fixSale.salesId" class="fix-sale" target='miniProgram' app-id='wx6986c1a258647aae' :path="'pages/chat?salesId=' + fixSale.salesId"-->
-      <!--			 hover-class="none" redirect version="trial"></navigator>-->
+	  <view class="zw"></view>
     </scroll-view>
   </view>
 </template>
@@ -49,13 +49,15 @@ import login from '@/units/login'
 import api from '@/public/api/index'
 import shouquan from '@/units/shouquan'
 import tabBar from '@/components/tabBar/tabBar'
+import askOnline from '@/components/askOnline/askOnline'
 
 let app = getApp()
 export default {
   components: {
     'coupon-list': coupon,
     'form-pop': formpop,
-    viewTabBar:tabBar
+    viewTabBar:tabBar,
+	askOnline
   },
   mixins: [shouquan],
   data() {
@@ -72,7 +74,6 @@ export default {
       activityListPageNumber: 1,
       activityList: [],
       welfareList: [],
-      fixSale: {}
     }
   },
   computed: {
@@ -110,8 +111,6 @@ export default {
       this.getactivity()
       // 福利列表
       this.getWelfare()
-      // this.getSalesList()
-      this.getChatSales()
     }
   },
   async onLoad() {
@@ -187,44 +186,6 @@ export default {
       this.activityList = []
       this.welfareList = []
     },
-    async getChatSales() {
-      let {
-        data
-      } = await api.getSalesId()
-      // data = 108349;
-      if (data > 0) {
-        this.fixSale = {
-          'salesId': data
-        }
-      } else {
-        this.getSalesList()
-      }
-      console.log(data)
-
-    },
-    async getSalesList() {
-      let currentLocation = app.globalData.currentLocation
-      let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
-      let salesId = ''
-      if (app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.salesId) {
-        salesId = app.globalData.pocketUserInfo.salesId
-      }
-      let {
-        data
-      } = await api.getSalesList({
-        manufacturerId: 1,
-        orderByRanking: 1,
-        pageNum: 1,
-        pageSize: 10,
-        regionId: cityId,
-        salesId: salesId
-      })
-      if (data.list[0]) {
-        this.fixSale = data.list[0]
-      }
-
-      console.log('getSalesList', this.fixSale)
-    },
     // 获取精选活动
     async getactivity() {
       if (this.isLoadGetActivity) {
@@ -242,19 +203,16 @@ export default {
           let obj = rows[i]
           let type = obj.type
           let typeText
-          let typeClass
           if (type == 1) {
             typeText = '购车福利'
-            typeClass = 'red-bg'
           } else if (type == 2) {
             typeText = '车主福利'
-            typeClass = ''
-          } else {
+          } else if (type == 3) {
             typeText = '线下活动'
-            typeClass = 'yellow-bg'
-          }
+          } else if (type == 4) {
+			typeText = '试驾活动'
+		  }
           obj.typeText = typeText
-          obj.typeClass = typeClass
         }
         this.activityList = [...this.activityList, ...rows]
 

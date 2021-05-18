@@ -1,5 +1,5 @@
 import api from '@/public/api/index'
-
+import login from '@/units/login'
 const app = getApp()
 export default {
     data() {
@@ -26,13 +26,15 @@ export default {
             console.log('getWxUserInfoAuth', e)
             wx.getUserProfile({
                 desc: '完善信息',
-                success: (res) => {
+                success: async (res) => {
                     console.log('成功授权', res)
                     uni.setStorageSync('haveUserInfoAuth',true)
                     app.globalData.haveUserInfoAuth = true
                     this.haveUserInfoAuth = true
                     uni.setStorageSync('wxUserInfo',res.userInfo)
+                    uni.setStorageSync('getUserData',res)
                     app.globalData.wxUserInfo = res.userInfo
+                    await login.login()
                     //成功授权
                 },
                 fail: (res) => {
@@ -42,6 +44,7 @@ export default {
                     app.globalData.haveUserInfoAuth = false
                     this.haveUserInfoAuth = false
                     uni.setStorageSync('wxUserInfo',null)
+                    uni.setStorageSync('getUserData',null)
                     app.globalData.wxUserInfo = null
                 }
             })
