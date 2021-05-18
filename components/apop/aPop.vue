@@ -16,9 +16,13 @@
                 isShow: false, //控制显隐
             }
         },
+        onLoad() {
+            console.log('app.globalData.currentLocation.cityData :>> ', app.globalData.currentLocation.cityData);
+        },
         methods: {
             closeShow() {
                 this.isShow = false
+				uni.navigateBack()
             }
         },
     }

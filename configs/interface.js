@@ -181,6 +181,8 @@ const config = {
 		//获取车系详情
 		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
 		//获取车型列表
+		fetchModelsList:`${DOMAIN.changan}/api/xcx/model/list`,
+		//获取车系筛选列表 
 		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
 		//获取车系筛选列表
 		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
@@ -188,10 +190,16 @@ const config = {
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
 		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
+        //获取验证码
+        fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+        //预约试驾
+        postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
 		//计算器获取车型
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
+		// 获取验证码
+		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 	},
 	getAPI(key) {
 		let url;

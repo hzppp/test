@@ -12,7 +12,7 @@
 				{{liveObj.title}}
 			</view>
 			<view class="userinfo">
-				<image class="avator" :src="liveObj.picUrl"></image>
+				<image class="avator" :src="liveObj.headPic"></image>
 				<view class="name">
 					{{liveObj.nickName}}
 				</view>
