@@ -18,8 +18,8 @@
 				<view class="p1">{{currentCoupon.title}}</view>
 				<view class="txt">{{currentCoupon.subhead}}</view>
 				<view class="txt">有效期：{{currentCoupon.startTime}}-{{currentCoupon.endTime}}</view>
-				<view class="btn" @tap="popShow">确认使用</view>
-				<!-- <view class="btn disabled" v-else>{{currentCoupon.status == 1 && "已使用" || "已过期"}}</view> -->
+				<view class="btn" v-if="currentCoupon.status==2" @tap="popShow">确认使用</view>
+				<view class="btn disabled" v-else>{{currentCoupon.status == 1 && "已使用" || "已过期"}}</view>
 				<text class="txt">请确认使用规则后点击确认兑换权益 \n 确认后无法撤销</text>
 			</view>
 			<!-- <image class="code" mode="aspectFill" :src="currentCoupon.qrCode" lazy-load="true"></image> -->
@@ -88,7 +88,7 @@
 			/* 核销 */
 			async hxCoupon(){
 				let param = {
-					verificationInfo:{ code:this.currentCoupon.code }
+					code:this.currentCoupon.code
 				}
 				request({
 					url: domain.getAPI('doCouponVerifiy'),
