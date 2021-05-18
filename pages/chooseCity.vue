@@ -34,4 +34,3 @@ import api from '@/public/api/index'
 	
 }
 </style>
-
