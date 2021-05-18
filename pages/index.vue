@@ -3,25 +3,25 @@
     <viewTabBar :current="0"></viewTabBar>
     <askOnline></askOnline>
     <view class="content">
-      <image class="banner" :src="testUrl || pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
             <view class="title">发现</view>
             <view class="info">探索更多精彩</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
           </view>
         </view>
         <view class="linkContR">
-          <view class="testDrive linkItem rItem">
+          <view class="testDrive linkItem rItem"  @tap="goTestDrive">
             <view class="title">预约试驾</view>
             <view class="info">试驾快人一步</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
           </view>
           <view class="calculation linkItem rItem" @tap="goCalc">
             <view class="title">购车计算</view>
             <view class="info">价格一目了然</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
           </view>
         </view>
       </view>
@@ -29,17 +29,19 @@
         <view class="hotTab">
           热门
         </view>
-        <view v-for="(item,index) in pageData.list" :key="index" class="actItem">
+        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1未开始  2正在进行  3已结束-->
-            <view class="icon1 status_4"></view>
+<!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
+            <view :class="'icon1 '+ `status_${item.contentType}`" v-if="item.contentType !=3"></view>
+            <view :class="'icon1 '+ `play_${item.status}`" v-else></view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
-            <image class="img banner" :src="testUrl || item.picUrl"  lazy-load="true"></image>
-            <view class="info">
+            <image class="img banner" :src="item.picUrl" lazy-load></image>
+            <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
-              <view class="icon2">{{'车展福利'|| item.type}}</view>
-              <view class="title">{{'全新CS15 线下体验活动' || item.title}}</view>
+              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>
+              <view class="title ovh">{{item.title}}</view>
             </view>
           </view>
         </view>
@@ -65,6 +67,28 @@ export default {
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a'
     }
   },
+  filters: {
+    actType(type) {
+      switch (type) {
+        case 1: {
+          return '购车福利'
+          break;
+        }
+        case 2: {
+          return '车主福利'
+          break;
+        }
+        case 3: {
+          return '线下活动'
+          break;
+        }
+        case 4: {
+          return '试驾活动'
+          break;
+        }
+      }
+    }
+  },
   onShow() {
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
   },
@@ -81,7 +105,7 @@ export default {
   onUnload() {
   },
   onShareAppMessage() {
-    let title = '奥迪东海汇：轻松开启精彩车生活'
+    let title = '长安云车展'
     let path = `pages/authorization?to=index`
     if (app.globalData.salesId) {
       path += `&salesId=${app.globalData.salesId}`
@@ -94,15 +118,70 @@ export default {
     }
   },
   methods: {
+    handleLinkHot(type,id,status) {
+      //type:1资讯，2活动，3直播
+      //status:1直播中，2预告，3回放
+      console.log('type,id,status',type,id,status,typeof(type))
+      switch (type) {
+        case 1: {
+          uni.navigateTo({
+            url: `/pages/article?articleId=${id}`
+          })
+          break;
+        }
+        case 2: {
+          uni.navigateTo({
+            url: `/pages/activity?id=${id}`
+          })
+          break;
+        }
+        case 3: {
+          switch (status) {
+            case 1: {
+              this.goMP(id,'verticalLive')
+              break;
+            }
+            case 2: {
+              uni.navigateTo({
+                url: `/pages/liveDetail?liveId=${id}`
+              })
+              break;
+            }
+            case 3: {
+              this.goMP(id,'verticalPlayback')
+              break;
+            }
+          }
+          break;
+        }
+      }
+    },
+    goMP(id,type) { //跳转pcauto+
+      uni.navigateToMiniProgram({
+        appId: 'wxa860d5a996074dbb',
+        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}`,
+        success: res => {
+          // 打开成功
+          console.log("打开成功", res);
+        },
+        fail: err => {
+          console.log(err);
+        }
+      });
+    },
     goArtList() {
       uni.navigateTo({
         url: `/pages/articleListPage`
       })
     },
     goCalc() {
-      console.log('calc')
       uni.navigateTo({
-        url: `/pages/calc`
+        url: `/pages/ChooseSerial?type=calc`
+      })
+    },
+    goTestDrive() {
+      uni.navigateTo({
+        url: `/pages/ChooseSerial`
       })
     },
     goActDetail(id) {
@@ -134,7 +213,15 @@ export default {
 <style lang="less" scoped>
 @import '@/static/less/index.less';
 .index {
+  padding-top: 16rpx;
 }
+.ovh {
+  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
+}
+.shadow {
+  box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
+}
+
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
@@ -148,6 +235,7 @@ export default {
     align-items: center;
     margin-top: 40rpx;
     height: 260rpx;
+    border-radius: 20rpx;
     .linkItem {
       box-sizing: border-box;
       padding: 22rpx 0 0 26rpx;
@@ -213,32 +301,55 @@ export default {
       margin: 30rpx 0;
       background: #fff;
       position: relative;
-      box-shadow: 8rpx 15rpx 23rpx #f7f7f7;
     }
     .icon1 {
       position: absolute;
       width: 104rpx;
-      height: 36rpx;
+      height: 40rpx;
       left:-4rpx;
       top: -2rpx;
+
       &.status_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.status_2 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.status_3 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.status_4 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art.png") no-repeat;
         background-size: contain;
       }
-      &.status_5 {
+      &.status_2 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act.png") no-repeat;
+        background-size: contain;
+      }
+      &.play_1 {
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
+        background-size: contain;
+      }
+      &.play_2 {
+        font-size: 20rpx;
+        line-height: 36rpx;
+        color: #fff;
+        width: auto;
+        background: #55a4f1;
+        padding: 0 40rpx;
+        box-sizing: content-box;
+        &::before {
+          content: '';
+          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_l.png") no-repeat;
+          background-size: contain;
+          position: absolute;
+          left:0;
+          width: 60rpx;
+          height: 40rpx;
+        }
+        &::after {
+          content: '';
+          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_r.png") no-repeat;
+          background-size: contain;
+          position: absolute;
+          right:0;
+          width: 60rpx;
+          height: 40rpx;
+        }
+      }
+      &.play_3 {
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay.png") no-repeat;
         background-size: contain;
       }
     }
@@ -251,7 +362,6 @@ export default {
       line-height: 92rpx;
       padding-left: 30rpx;
       border-radius: 0 0 20rpx 20rpx;
-      box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
       .icon2 {
         position: relative;
         display: inline-block;
@@ -262,7 +372,8 @@ export default {
         background: #FA8845;
         color: #fff;
         margin-right: 12rpx;
-        top: -4rpx;
+        top: -36rpx;
+        border-radius: 8rpx;
       }
       .title {
         display: inline-block;

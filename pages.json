@@ -164,7 +164,7 @@
     }
     ,{
         "path" : "pages/ChooseSerial",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
@@ -172,15 +172,15 @@
     }
     ,{
         "path" : "pages/ChooseSerialList",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
         }
     }
     ,{
-        "path" : "pages/chooseModels",
-        "style" :                                                                                    
+        "path" : "pages/ChooseModels",
+        "style" :
         {
             "navigationBarTitleText": "选择车型",
             "enablePullDownRefresh": false
@@ -188,7 +188,7 @@
     }
     ,{
         "path" : "pages/ChooseDealer",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择经销商",
             "enablePullDownRefresh": false
@@ -196,7 +196,7 @@
     }
 	,{
 		"path" : "pages/liveDetail",
-		"style" :                                                                                    
+		"style" :
 		{
 		    "navigationBarTitleText": "",
 		    "enablePullDownRefresh": false,
@@ -252,8 +252,7 @@
     ]
   },
   "navigateToMiniProgramAppIdList": [
-    "wx6986c1a258647aae",
-    "wx1c5c0ec0757002c2"
+    "wxa860d5a996074dbb"
   ],
   "permission": {
     "scope.userLocation": {

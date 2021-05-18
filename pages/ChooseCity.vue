@@ -1,6 +1,6 @@
 <template>
 	<view class="choose-city">
-		city
+		city1
 	</view>
 </template>
 
@@ -9,7 +9,7 @@ import api from '@/public/api/index'
 	export default {
 		data() {
 			return {
-				
+
 			}
 		},
 		onLoad() {
@@ -23,7 +23,7 @@ import api from '@/public/api/index'
 				}catch(e){
 					console.error(e)
 				}
-				
+
 			}
 		},
 	}
@@ -31,6 +31,6 @@ import api from '@/public/api/index'
 
 <style>
 .choose-city {
-	
+
 }
 </style>
