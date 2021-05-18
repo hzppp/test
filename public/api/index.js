@@ -935,4 +935,16 @@ module.exports = {
 		})
 		return data
     },
+	//获取验证码
+	fetchCode: async(para) => {
+			let {data} = await request({
+					url:domain.getAPI('fetchCode'),
+					method: "POST",
+					data: para,
+		header: {
+			"Content-Type":"application/x-www-form-urlencoded"
+		}
+			})
+			return data
+	},
 }
