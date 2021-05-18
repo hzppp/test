@@ -26,10 +26,12 @@ import api from '@/public/api/index'
                 noun:'', //改变左边或者右边的车系判断
                 leftSerialId:"", //左边车系id
                 rightSerialId:"", //右边车系id
+                pages:""
             }
         },
         onLoad(options) {
             console.log('options :>> ', options);
+            this.pages = options.pages
             this.noun = options.noun
             this.vs = options.vs
             this.serialId = options.serialId
@@ -48,6 +50,12 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(id) {
+                if(this.pages === "YuyuePage") {
+                  this.$store.commit('changModel',id)
+                  return  uni.navigateTo({
+                        url:`/pages/YuyuePage?`
+                    })
+                }
                 if(this.noun) {
                     if(this.noun === "left") {
                         uni.redirectTo({
@@ -83,28 +91,28 @@ import api from '@/public/api/index'
 
 <style lang="scss" scoped>
 .choose-serial {
-    padding: 20px;
+    padding: 40rpx;
 	.serial-item {
 		display: flex;
         align-items: center;    
-        margin-top: 28px;
+        margin-top: 56rpx;
 		image {
-			width: 170px;
+			width: 340rpx;
 		}
 		.dec {
             flex: 1;
             text-align: center;
             .title {
-                font-size: 16px;
+                font-size: 32rpx;
                 color: #333333;
             }
             .price {
-                font-size: 14px;
+                font-size: 28rpx;
                 text {
-                    font-size: 16px;
+                    font-size: 32rpx;
                     font-weight: bold;
                     color: #333333;
-                    padding: 0 2px;
+                    padding: 0 4rpx;
                 }
             }
         }

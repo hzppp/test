@@ -225,9 +225,9 @@
 				width: 100%;
 				text-align: center;
 				font-weight: bold;
-				font-size: 14px;
+				font-size: 28rpx;
 				color: #333333;
-				margin: 20px 0 10px;
+				margin: 40rpx 0 20rpx;
 			}
 			.vs-detail {
 				display: flex;
@@ -240,11 +240,11 @@
 						background-color: #FFF2EC;
 						flex-wrap: nowrap;
 						color: #FA8845;
-						height: 18px;
-						line-height: 18px;
-						margin: 2px;
-						padding: 1px 2px;
-						border-radius: 5px;
+						height: 36rpx;
+						line-height: 36rpx;
+						margin: 4rx;
+						padding: 2rpx 4rpx;
+						border-radius: 10rpx;
 					}
 				}
 				.right-b {
@@ -254,12 +254,12 @@
 					.r-tit {
 						background-color: #E6F3FF;
 						flex-wrap: nowrap;
-						height: 18px;
-						line-height: 18px;
+						height: 36rpx;
+						line-height: 36rpx;
 						color: #56A3F1;
-						margin: 2px;
-						padding: 1px 2px;
-						border-radius: 5px;
+						margin: 4rpx;
+						padding: 2rpx 4rpx;
+						border-radius: 10rpx;
 					}
 				}
 			}

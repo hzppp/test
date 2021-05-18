@@ -62,7 +62,11 @@ let app = getApp()
 			},
 			changeCity(item) {
 				this.currentCity = item.name
-				console.log('app. :>> ', app.globalData);
+				console.log('item :>> ', item);
+				// console.log('app. :>> ', app.globalData);
+				uni.navigateTo({
+					url: `/pages/YuyuePage?name=${item.name}&id=${item.id}`
+				})
 			}
 		},
 	}

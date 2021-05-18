@@ -249,6 +249,14 @@
             "enablePullDownRefresh": false
         }
     }
+    ,{
+        "path" : "pages/chooseModels",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择车型",
+            "enablePullDownRefresh": false
+        }
+    }
   ],
   "tabBar": {
     "color": "#999999",

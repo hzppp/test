@@ -1115,7 +1115,7 @@ module.exports = {
     //获取经销商列表
 	fetchDealersList:async(para)=>{
 		let {data} = await request({
-			url:domain.getAPI('fetchDealerListByCityId'),
+			url:domain.getAPI('fetchdealersList'),
 			method: "GET",
 			data:para
         })

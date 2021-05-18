@@ -7,11 +7,15 @@ const store = new Vuex.Store({
 	state: {
 		selectCars: {}, // 「车型对比」中已选择的车型
         pageData: {}, //页面返回提前更改的数据=>参考车系列表点击返回更改对比车系列表页
+		currentModelId:'' //预约当前选择的车型的id
 	},
 	getters: {
 
 	},
 	mutations: {
+		changModel(state,modelId) {
+			state.currentModelId = modelId
+		}
 	},
 	actions: {
 

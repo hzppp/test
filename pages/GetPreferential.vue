@@ -198,38 +198,38 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 .get-preferential {
     .top-tit {
         width: 100%;
-        height: 32px;
+        height: 64rpx;
         background-color: #f5f5f5;
-        font-size: 12px;
+        font-size: 24rpx;
         color: #999999;
-        padding: 0 13px;
-        line-height: 32px;
+        padding: 0 26rpx;
+        line-height: 64rpx;
     }
     .head-info {
-        padding: 20px 20px;
+        padding: 40rpx 40rpx;
         display: flex;
         align-items: center;
         image {
-            height: 68px;
+            height: 136rpx;
             vertical-align: middle;
         }
         .text-dec {
-            margin-left: 10px;
-            height: 68px;
+            margin-left: 20rpx;
+            height: 136rpx;
             flex: 1;
             display: flex;
             flex-direction: column;
             color: #333333;
             justify-content: space-between;
             .title {
-                font-size: 16px;
+                font-size: 32rpx;
                 font-weight: 600;
             }
             .serial {
-                font-size: 12px;
+                font-size: 24rpx;
             }
             .price {
-                font-size: 12px;
+                font-size: 24rpx;
                 color: #999999;
             }
         }
@@ -246,13 +246,13 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             justify-content: space-between;
             align-items: center;
             height: 110rpx;
-            border-bottom: 1px solid #EBEBEB;
+            border-bottom: 2rpx solid #EBEBEB;
             .list-title {
-                width: 50px;
+                width: 100rpx;
             }
             .select {
                 flex: 1;
-                margin-left: 10px;
+                margin-left: 20rpx;
             }
             .get-code {
                 color: #fa8943;
@@ -285,11 +285,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         }
     }
     .arrow {
-        width: 6px;
-        height: 6px;
+        width: 12rpx;
+        height: 12rpx;
         transform: rotate(45deg);
-        border-top: 1px solid #999999;
-        border-right: 1px solid #999999;
+        border-top: 2rpx solid #999999;
+        border-right: 2rpx solid #999999;
     }
 }
 </style>

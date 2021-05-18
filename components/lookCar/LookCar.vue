@@ -56,27 +56,27 @@
 
 <style lang="scss" scoped>
 .c-btn-wrap {
-    padding: 30px 16px;
+    padding: 60rpx 32rpx;
     .go-canpei {
-        width: 343px;
-        height: 44px;
-        line-height: 44px;
+        width: 686rpx;
+        height: 88rpx;
+        line-height: 88rpx;
         color: #ffffff;
-        border-radius: 44px;
+        border-radius: 88rpx;
         background-color: #fa8943;
-        margin-bottom: 12px;
+        margin-bottom: 24rpx;
     }
     .bottom-btn-wrap {
         display: flex;
         justify-content: space-between;
         .bottom-btn {
-            width: 165px;
-            height: 44px;
-            line-height: 44px;
-            border-radius: 44px;
+            width: 330rpx;
+            height: 88rpx;
+            line-height: 88rpx;
+            border-radius: 88rpx;
             background-color: #f5f5f5;
             color: #333333;
-            font-size: 16px;
+            font-size: 32rpx;
         }
     }
 }

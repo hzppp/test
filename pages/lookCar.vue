@@ -88,7 +88,7 @@ export default {
 <style lang="scss">
 .cars-page {
 	min-height: 100vh;
-    padding-bottom: 64px;
+    padding-bottom: 128rpx;
     .image-wrap {
         position: relative;
         width: 100%;
@@ -99,8 +99,8 @@ export default {
         }
         .video-icon {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 120rpx;
+            height: 120rpx;
             top: 50%;
             left: 50%;
             transform: translate(-50%,-50%);
@@ -111,7 +111,7 @@ export default {
     .btn-wrap {
         position: fixed;
         width: 100%;
-        height: 64px;
+        height: 128rpx;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
@@ -121,10 +121,10 @@ export default {
         align-items: center;
         justify-content: center;
         .yuyue-btn {
-            width: 343px;
-            height: 44px;
-            border-radius: 44px;
-            line-height: 44px;
+            width: 686rpx;
+            height: 88rpx;
+            border-radius: 88rpx;
+            line-height: 88rpx;
             color: #ffffff;
             background-color: #FA8845;
         }

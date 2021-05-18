@@ -160,7 +160,7 @@
 					height: 48rpx;
 					color: rgb(51, 51, 51);
 					background-color: rgb(247, 247, 247);
-					border-radius: 100px;
+					border-radius: 200rpx;
 					font-size: 24rpx;
 					@include flex_center_center
 				}
@@ -217,7 +217,7 @@
 					@include flex_center_bottom;
 					view{
 						background: #f90;
-						border-radius: 100px;
+						border-radius: 200rpx;
 						@include flex_center_center;
 						color: #fff;
 						font-size: 28rpx;
@@ -228,25 +228,25 @@
 						background: #cfd2d5;
 					}
                     .left-btn {
-                        width: 100px;
-                        height: 32px;
-                        border-radius: 32px;
-                        line-height: 32px;
+                        width: 200rpx;
+                        height: 64rpx;
+                        border-radius: 64rpx;
+                        line-height: 64rpx;
                         color: #ffffff;
                         background-color: #fa8943;
                     }
                     .right-btn {
-                        width: 100px;
-                        height: 32px;
-                        border-radius: 32px;
-                        line-height: 32px;
+                        width: 200rpx;
+                        height: 64rpx;
+                        border-radius: 64rpx;
+                        line-height: 64rpx;
                         color: #ffffff;
                         background-color: #55a4f1;
                     }
 				}
 			}
 			.line{
-                margin-top: 60px;
+                margin-top: 120rpx;
                 color: #999999;
                 font-size: 24rpx;
 			}
@@ -264,7 +264,7 @@
 					height: 48rpx;
 					font-size: 24rpx;
 					@include flex_center_center;
-					border-radius: 100px;
+					border-radius: 200rpx;
 					color: rgb(51, 51, 51);
 				};
 				.car_message{
