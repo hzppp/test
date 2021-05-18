@@ -101,6 +101,17 @@ module.exports = {
 		})
 		return data;
 	},
+	/* 直播详情 */
+	getLiveDetail:async(params)=>{
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getLiveDetail'),
+			data: params
+		})
+		console.log('直播详情===',data)
+		return data;
+	},
 	// 获取车系列表
 	getAutoSerialList: async () => {
 		if (app.globalData.showVehicle) {
@@ -241,6 +252,16 @@ module.exports = {
 			data
 		} = await request({
 			url: domain.getAPI('userOuponsDet'),
+			data:param
+		})
+		return data
+	},
+	/* 优惠券核销 */
+	doCouponVerifiy:async (param) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('doCouponVerifiy'),
 			data:param
 		})
 		return data
@@ -905,4 +926,13 @@ module.exports = {
 		})
 		return data
 	},
+       	// 计算器获取车型
+	getCalcModel: async(para) => {
+		let {data} = await request({
+            url:domain.getAPI('calcModel'),
+            method: "GET",
+			data: para
+		})
+		return data
+    },
 }

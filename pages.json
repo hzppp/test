@@ -202,6 +202,14 @@
 		    "enablePullDownRefresh": false,
 		    "navigationStyle": "custom"
 		}
+  },
+  {
+	  "path": "pages/calc",
+	  "style": {
+	    "navigationBarTitleText": "计算器",
+	    "enablePullDownRefresh": false,
+		"navigationStyle": "custom"
+	  }
 	}
 	,{
 		"path" : "pages/AddYuYue",
@@ -211,6 +219,15 @@
 		    "enablePullDownRefresh": false
 		}
 	}
+    ,{
+          "path" : "pages/vrInFrame/vrInFrame",
+          "style" :                                                                                    
+          {
+              "navigationBarTitleText": "",
+              "enablePullDownRefresh": false
+          }
+          
+      }
   ],
   "tabBar": {
     "custom": true,

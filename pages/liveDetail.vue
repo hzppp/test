@@ -1,25 +1,24 @@
 <template>
 	<view class="live-detail">
-		<page-top ref="pagetop" :background="'#fff'" :titleys="''" :btnys="''" :title.sync="title"></page-top>
-		<!-- <page-top ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></page-top> -->
+		<view class="pageTop-back-btn" @tap="navigateBack"></view>
 		<view class="banner">
-			<image :src="liveObj.picUrl"></image>
+			<image :src="liveObj.cover"></image>
 		</view>
 		<view class="main-container">
 			<view class="prev">
-				将于2021-5-17 16:30开始
+				将于{{liveObj.startTime}}开始
 			</view>
 			<view class="title">
 				{{liveObj.title}}
 			</view>
 			<view class="userinfo">
-				<image class="avator" :src="liveObj.picUrl"></image>
+				<image class="avator" :src="liveObj.headPic"></image>
 				<view class="name">
-					名字
+					{{liveObj.nickName}}
 				</view>
 			</view>
 			<view class="intro">
-				UNI-T新车首发，带你线上看车、体验未来科技量 产者的魅力，5月17日16点30分准时开播，点击订 阅关注准时收看~
+				{{liveObj.summary}}
 			</view>
 		</view>
 		<view class="fixed-bot">
@@ -31,31 +30,30 @@
 </template>
 
 <script>
-	// import tabBar from '@/components/tabBar/tabBar'
-	// import shouquan from '@/units/shouquan'
-	import pageTop from '@/components/pageTop/pageTop'
+	import api from '@/public/api/index'
 	let app = getApp()
 	export default {
 		components: {
-			// viewTabBar: tabBar,
-			'page-top': pageTop
 		},
 		mixins: [],
 		data(){
 			return{
 				id:0,
 				title:'12312',
-				liveObj:{
-					id:1,
-					picUrl:'https://profile.csdnimg.cn/3/E/3/3_caseywei',
-					startTime:'2021-12-12 03:20',
-					status:1,
-					title:'欢迎来到我的欢迎来到我的直播间欢迎来到我的直播间直播间',
-				},
+				liveObj:null,
 			}
 		},
 		methods:{
-			
+			navigateBack(){
+				uni.navigateBack({
+					delta: 1
+				})
+			},
+			async getLiveDetail(){
+				let {data} = await api.getLiveDetail({id:this.id})
+				console.log('预告1323===',data)
+				this.liveObj = data
+			},
 		},
 		onShareAppMessage(res) {
 		    if (res.from === 'button') {// 来自页面内分享按钮
@@ -67,6 +65,8 @@
 		    }
 		},
 		onLoad(options) {
+			this.id = options.liveId
+			this.getLiveDetail()
 			// console.log('app.globalData.currentLocation:', app.globalData.currentLocation)
 		},
 		onShow() {
@@ -79,6 +79,27 @@
 	@import '@/static/less/public.less';
 	.live-detail{
 		padding-bottom:128rpx;
+		.pageTop-back-btn{
+			    width: 26rpx;
+			    height: 26rpx;
+			    border-left: 4rpx solid #fff;
+			    border-top: 4rpx solid #fff;
+			    position: absolute;
+			    left: 30rpx;
+			    top: 80rpx;
+			    -webkit-transform: translate(0%, -50%) rotate(-45deg);
+			    transform: translate(0%, -50%) rotate(-45deg);
+				&::after{
+					display: block;
+					    content: "";
+					    width: 180%;
+					    height: 180%;
+					    position: absolute;
+					    left: -40%;
+					    top: -40%;
+					    z-index: 9999;
+				}
+		}
 		.banner,.banner image{
 			width:750rpx;
 			height: 422rpx;

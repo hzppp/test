@@ -82,35 +82,28 @@
 				pageNum:1,
 				pageSize:15,
 				hasNext:true,
-				couponList: [
-					// {
-					// 	id:1,
-					// 	type:1,
-					// 	status:2,
-					// 	title:'测试优惠券1',
-					// 	subhead:'测试优惠券副标题1',
-					// 	startTime:'2021-01-01',
-					// 	endTime:'2021-08-01',
-					// 	instructions:'我是介绍金佛为价格为回归偶尔玩介绍金佛为价格为回归偶尔玩介绍金佛为价格为回归偶尔玩'
-					// },
-					
-				],
+				couponList: [],
+				currentCoupon:null,
 				title: "我的优惠券",
 				clickIndex:0,
+				
 			}
 		},
-		async onShow() {
-			// await login.login()
-			// await api.getPocketUserInfo()
-			
-			
-			// api.getUser()
+		onHide(){
+			this.hasNext=true
+			this.couponList = []
 		},
-		 onLoad(options) {
+		onShow() {
+			console.log('我的优惠券')
 			this.getList()
+			
+		},
+		onLoad(options) {
+			
 		},
 		methods: {
 			async getList(){
+				
 				if(!this.hasNext){return;}
 				let userOupons = await api.getUserOupons({pageNum:this.pageNum,pageSize:this.pageSize})
 				if(userOupons.hasNext){

@@ -4,18 +4,18 @@
 		<scroll-view scroll-y lower-threshold="200"  @scrolltolower="getList" class="live-list">
 			<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
 				<view class="top">
-					<image class="avator" :src="item.picUrl"></image>
+					<image class="avator" :src="item.headPic"></image>
 					<view class="name">
-						名字
+						{{item.nickName}}
 					</view>
 				</view>
 				<view class="banner">
-					<image class="bg" :src="item.picUrl"></image>
+					<image class="bg" :src="item.cover"></image>
 					<view class="play"></view>
-					<view class="status blue" v-if="item.status==1">
-						{{item.startTime}}开始播放
+					<view class="status blue" v-if="item.status==0 || item.status==2">
+						<view class="icon"></view> {{item.startTime}}开始播放
 					</view>
-					<view class="status yellow" v-if="item.status==2">
+					<view class="status yellow" v-if="item.status==1">
 						
 					</view>
 					<view class="status green" v-if="item.status==3">
@@ -44,9 +44,7 @@
 		data() {
 			return {
 				title: "直播",
-				liveList: [
-					
-				],
+				liveList: [],
 				hasNext:true,
 				pageNum: 1,
 				pageSize:10,
@@ -55,30 +53,7 @@
 		},
 		// mixins: [],
 		onLoad() {
-			// this.getList()
-			this.liveList = [
-				{
-					id:1,
-					picUrl:'https://profile.csdnimg.cn/3/E/3/3_caseywei',
-					startTime:'2021-12-12 03:20',
-					status:1,
-					title:'欢迎来到我的欢迎来到我的直播间欢迎来到我的直播间直播间',
-				},
-				{
-					id:2,
-					picUrl:'https://profile.csdnimg.cn/3/E/3/3_caseywei',
-					status:2,
-					startTime:'2021-12-12 03:20',
-					title:'欢迎来到我的欢迎来到我的直播间欢迎来到我的直播间直播间',
-				},
-				{
-					id:3,
-					picUrl:'https://profile.csdnimg.cn/3/E/3/3_caseywei',
-					status:3,
-					startTime:'2021-12-12 03:20',
-					title:'欢迎来到我的欢迎来到我的直播间欢迎来到我的直播间直播间',
-				},
-			]
+			this.getList()
 		},
 		onShow() {
 			// console.log('app.globalData.wxUserInfo  show:', app.globalData.wxUserInfo)
@@ -89,23 +64,43 @@
 				if (!this.hasNext) {
 					return false;
 				}
-				let resData = await api.getLiveList({
+				let {data} = await api.getLiveList({
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				})
-				if (resData.hasNext) {
+				if (data.hasNext) {
 					this.pageNum++
 				} else {
 					this.hasNext = false
 				}
-				this.liveList = [...this.liveList,resData.rows]
-				
+				data.rows.forEach((item,index)=>{
+					item.startTime = item.startTime.substring(0,13)
+				})
+				this.liveList = [...this.liveList,...data.rows]
 			},
 			toLiveDet(item){
-				/* 直播预告 */
-				if(item.status==1){
+				if(item.status==2 || item.status==0){ /* 直播预告 */
 					uni.navigateTo({
 						url:'/pages/liveDetail?liveId='+item.id
+					})
+				}else if(item.status==1){ /* 直播中 */
+					uni.navigateToMiniProgram({
+						 appId: 'wxa860d5a996074dbb',
+						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive',
+						  extraData: {},
+						  success(res) {
+						    // 打开成功
+						  }
+					})
+				}else if(item.status==3){
+					//回放
+					uni.navigateToMiniProgram({
+						 appId: 'wxa860d5a996074dbb',
+						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback',
+						  extraData: {},
+						  success(res) {
+						    // 打开成功
+						  }
 					})
 				}
 			}
@@ -122,13 +117,16 @@
 		height: 100%;
 		left: 0;
 		top: 0;
-		padding: 0 32rpx 100rpx;
+		padding: 0 0 100rpx;
 		box-sizing: border-box;
 	}
 
 	.live-item {
+		margin:0 32rpx;
 		border-bottom: 1px solid #ebebeb;
-
+		&:last-child{
+			border-bottom:none;
+		}
 		.top {
 			padding: 40rpx 0 24rpx;
 			.dflex(center, flex-start);
@@ -162,7 +160,7 @@
 				padding-left: 35rpx;
 				font-size: 24rpx;
 				color: #ffffff;
-				.pa(-4rpx, -1rpx);
+				.pa(-5rpx, -2rpx);
 				z-index: 3;
 				// .icon {
 				// 	width: 24rpx;
@@ -187,8 +185,14 @@
 					border-top-right-radius: 8rpx;
 					border-bottom-right-radius: 8rpx;
 					// .setbg(152rpx,  36rpx, 'live_tag3.png')
+					// .dflex(center,center);
+					
 					.icon {
-						.setbg(24rpx, 24rpx, 'livetimes.png')
+						display: inline-block;
+						margin-right:10rpx;
+						.setbg(24rpx, 24rpx, 'livetimes.png');
+						position: relative;
+						top:2rpx;
 					}
 				}
 
