@@ -83,7 +83,7 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
-		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail`,
+		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
 		// getPanosInfo2 获取vr看车图片
 		getPanosInfo2: `${DOMAIN.panorama}/intf/getAllApprInfo.jsp`,
 		// vehicleOupons 车型展厅，获取优惠券
