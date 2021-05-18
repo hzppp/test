@@ -89,17 +89,8 @@
         color: #fa8845;
     }
     .hasChecked {
-        position: relative;
-        background-color: #fa8845;
-        border: none;
-        &::before {
-            position: absolute;
-            content: "√";
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);            
-            color: #ffffff;
-        }
+        background-image: url("../static/images/is_checked_icon.png");
+        background-size: cover;
     }
 	.top-title {
 		height: 56rpx;
