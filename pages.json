@@ -250,10 +250,18 @@
         }
     }
     ,{
-        "path" : "pages/chooseModels",
+        "path" : "pages/ChooseModels",
         "style" :                                                                                    
         {
             "navigationBarTitleText": "选择车型",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/ChooseDealer",
+        "style" :                                                                                    
+        {
+            "navigationBarTitleText": "选择经销商",
             "enablePullDownRefresh": false
         }
     }

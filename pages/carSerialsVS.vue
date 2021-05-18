@@ -221,6 +221,7 @@
 	}
 	.data-vs {
 		.vs-content {
+			padding: 0  20rpx;
 			.vs-title {
 				width: 100%;
 				text-align: center;
@@ -242,7 +243,7 @@
 						color: #FA8845;
 						height: 36rpx;
 						line-height: 36rpx;
-						margin: 4rx;
+						margin: 8rpx 4rpx;
 						padding: 2rpx 4rpx;
 						border-radius: 10rpx;
 					}
