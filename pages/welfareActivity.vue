@@ -94,11 +94,11 @@ export default {
   },
   async onShow() {
     this.resetjson()
-    api.getUser()
+    // api.getUser()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
+      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
       if (crtLocationProvinceItem) {
         await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
         const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))

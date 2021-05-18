@@ -62,7 +62,8 @@ const config = {
 		//我的活动列表
 		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
-		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
+		getLiveList:`${DOMAIN.changan}/api/xcx/livestream/list`,
+		getLiveDetail:`${DOMAIN.changan}/api/xcx/livestream/detail`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
@@ -168,13 +169,13 @@ const config = {
         //获取经销商列表
         fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
-		fetchProvinceList: `${DOMAIN.mock}/api/xcx/base/provinces`,
+		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
-		fetchCityListByProvinceId: `${DOMAIN.mock}/api/xcx/base/getCities`,
+		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
 		// 根据城市id获取地区
-		fetchDistrictListByCityId: `${DOMAIN.mock}/api/xcx/base/getDistricts`,
+		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
 		// 根据城市id获取经销商
-		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取车型对比对比数据
 		fetchCarSerialContrast: `${DOMAIN.changan}/api/xcx/model/pk`,
 		//获取车系详情

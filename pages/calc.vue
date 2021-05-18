@@ -67,7 +67,7 @@
 
 				<view class="section section-dark section_first">
 					<!-- 选择车型.s -->
-					<view class="section-item model-item" @tap="modelSelect" :data-modelid="model.id" :data-pl="model.pl" :data-price="model.price"
+					<view class="section-item model-item" @tap="goModel()" :data-modelid="model.id" :data-pl="model.pl" :data-price="model.price"
 					 :data-serialid="model.serialId">
 					 <view class="section-hd">
 					 	<img class="photo" :src="carPhoto" alt="">
@@ -225,7 +225,7 @@
 				</view>
 				<view class="foot">
 					
-					<view class="btn">
+					<view class="btn" @click="goDrive">
 						预约试驾
 					</view>
 				</view>
@@ -471,7 +471,7 @@
 			// 	});
 			// 	this.cityId = cityId
 			// });
-		
+		this.serialId = obj.serialId
 			that.getSerial(obj.id, obj.serialId, 1, function(data) {
 				that.getPrice(data);
 			});
@@ -521,6 +521,11 @@
 				// animation.translateX(-winWidth).step();
 				animation.right(0).step();
 				this.animationData = animation.export()
+			},
+			goModel(){
+				uni.navigateTo({
+					url: "/pages/ChooseSerial?type=calc"
+				})
 			},
 			//关闭侧滑
 			closeSlide: function() {
@@ -968,6 +973,11 @@
 			fullPayment(){
 				this.isLoans = false
 			},
+			goDrive(){
+				uni.navigateTo({
+					url: "/pages/YuyuePage?serialId="+this.serialId
+				})
+			}
 		}
 	}
 </script>
