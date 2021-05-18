@@ -59,7 +59,7 @@ const config = {
 		// 活动
 		getactivity: `${DOMAIN.changan}/api/xcx/activity/list`,
 		//我的活动列表
-		getActivityUser:'${DOMAIN.changan}/api/xcx/activity/list/user',
+		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
 		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
 		// 获取车系列表

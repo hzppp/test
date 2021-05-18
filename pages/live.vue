@@ -13,7 +13,7 @@
 					<image class="bg" :src="item.picUrl"></image>
 					<view class="play"></view>
 					<view class="status blue" v-if="item.status==1">
-						{{item.startTime}}开始播放
+						<view class="icon"></view> {{item.startTime}}开始播放
 					</view>
 					<view class="status yellow" v-if="item.status==2">
 						
@@ -35,7 +35,9 @@
 	import tabBar from '@/components/tabBar/tabBar'
 	// import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
-
+/* pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom
+id 直播间id
+type verticalLive为直播中 verticalPlayback为回放 */
 	let app = getApp()
 	export default {
 		components: {
@@ -122,11 +124,12 @@
 		height: 100%;
 		left: 0;
 		top: 0;
-		padding: 0 32rpx 100rpx;
+		padding: 0 0 100rpx;
 		box-sizing: border-box;
 	}
 
 	.live-item {
+		margin:0 32rpx;
 		border-bottom: 1px solid #ebebeb;
 
 		.top {
@@ -162,7 +165,7 @@
 				padding-left: 35rpx;
 				font-size: 24rpx;
 				color: #ffffff;
-				.pa(-4rpx, -1rpx);
+				.pa(-5rpx, -2rpx);
 				z-index: 3;
 				// .icon {
 				// 	width: 24rpx;
@@ -187,8 +190,14 @@
 					border-top-right-radius: 8rpx;
 					border-bottom-right-radius: 8rpx;
 					// .setbg(152rpx,  36rpx, 'live_tag3.png')
+					// .dflex(center,center);
+					
 					.icon {
-						.setbg(24rpx, 24rpx, 'livetimes.png')
+						display: inline-block;
+						margin-right:10rpx;
+						.setbg(24rpx, 24rpx, 'livetimes.png');
+						position: relative;
+						top:2rpx;
 					}
 				}
 

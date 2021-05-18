@@ -1,7 +1,8 @@
 <template>
 	<view class="live-detail">
-		<page-top ref="pagetop" :background="'#fff'" :titleys="''" :btnys="''" :title.sync="title"></page-top>
+		<!-- <page-top ref="pagetop" :background="'transparent'" :titleys="''" :btnys="''" :title.sync="title"></page-top> -->
 		<!-- <page-top ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></page-top> -->
+		<view class="pageTop-back-btn" @tap="navigateBack"></view>
 		<view class="banner">
 			<image :src="liveObj.picUrl"></image>
 		</view>
@@ -55,7 +56,11 @@
 			}
 		},
 		methods:{
-			
+			navigateBack(){
+				uni.navigateBack({
+					delta: 1
+				})
+			},
 		},
 		onShareAppMessage(res) {
 		    if (res.from === 'button') {// 来自页面内分享按钮
@@ -79,6 +84,27 @@
 	@import '@/static/less/public.less';
 	.live-detail{
 		padding-bottom:128rpx;
+		.pageTop-back-btn{
+			    width: 26rpx;
+			    height: 26rpx;
+			    border-left: 4rpx solid #fff;
+			    border-top: 4rpx solid #fff;
+			    position: absolute;
+			    left: 30rpx;
+			    top: 80rpx;
+			    -webkit-transform: translate(0%, -50%) rotate(-45deg);
+			    transform: translate(0%, -50%) rotate(-45deg);
+				&::after{
+					display: block;
+					    content: "";
+					    width: 180%;
+					    height: 180%;
+					    position: absolute;
+					    left: -40%;
+					    top: -40%;
+					    z-index: 9999;
+				}
+		}
 		.banner,.banner image{
 			width:750rpx;
 			height: 422rpx;

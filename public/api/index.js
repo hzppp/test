@@ -245,6 +245,16 @@ module.exports = {
 		})
 		return data
 	},
+	/* 优惠券核销 */
+	doCouponVerifiy:async (param) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('doCouponVerifiy'),
+			data:param
+		})
+		return data
+	},
 	// getPanosInfo2 获取vr看车图片
 	getPanosInfo2: async (sgId, bId = 2) => {
 		let {
