@@ -32,16 +32,19 @@
         <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
-            <!--status 当为直播类型时 1未开始  2正在进行  3已结束-->
+            <!--status 当为直播类型时 1直播中  2预告  3回放-->
 <!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
             <view :class="'icon1 '+ `status_${item.contentType}`" v-if="item.contentType !=3"></view>
-            <view :class="'icon1 '+ `play_${item.status}`" v-else></view>
+            <view v-else>
+              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status == 2 && item.startTime">{{item.startTime}}开播</view>
+              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status !== 2"></view>
+            </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
             <image class="img banner" :src="item.picUrl" lazy-load></image>
             <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
               <view class="icon2" v-if="item.type">{{item.type | actType}}</view>
-              <view class="title ovh">{{item.title}}</view>
+              <view class="title ovh">{{item.contentType}}{{item.title}}</view>
             </view>
           </view>
         </view>
@@ -322,31 +325,16 @@ export default {
         background-size: contain;
       }
       &.play_2 {
+        width: 270rpx;
         font-size: 20rpx;
-        line-height: 36rpx;
         color: #fff;
         width: auto;
         background: #55a4f1;
-        padding: 0 40rpx;
-        box-sizing: content-box;
-        &::before {
-          content: '';
-          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_l.png") no-repeat;
-          background-size: contain;
-          position: absolute;
-          left:0;
-          width: 60rpx;
-          height: 40rpx;
-        }
-        &::after {
-          content: '';
-          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_r.png") no-repeat;
-          background-size: contain;
-          position: absolute;
-          right:0;
-          width: 60rpx;
-          height: 40rpx;
-        }
+        padding-left: 48rpx;
+        box-sizing: border-box;
+        line-height: 36rpx;
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay.png") no-repeat;
+        background-size: contain;
       }
       &.play_3 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay.png") no-repeat;
