@@ -101,6 +101,17 @@ module.exports = {
 		})
 		return data;
 	},
+	/* 直播详情 */
+	getLiveDetail:async(params)=>{
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getLiveDetail'),
+			data: params
+		})
+		console.log('直播详情===',data)
+		return data;
+	},
 	// 获取车系列表
 	getAutoSerialList: async () => {
 		if (app.globalData.showVehicle) {

@@ -62,7 +62,8 @@ const config = {
 		//我的活动列表
 		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
-		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
+		getLiveList:`${DOMAIN.changan}/api/xcx/livestream/list`,
+		getLiveDetail:`${DOMAIN.changan}/api/xcx/livestream/detail`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格

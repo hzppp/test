@@ -86,16 +86,24 @@
 				currentCoupon:null,
 				title: "我的优惠券",
 				clickIndex:0,
+				
 			}
 		},
-		async onShow() {
-			this.getList()
+		onHide(){
+			this.hasNext=true
+			this.couponList = []
 		},
-		 onLoad(options) {
+		onShow() {
+			console.log('我的优惠券')
+			this.getList()
+			
+		},
+		onLoad(options) {
 			
 		},
 		methods: {
 			async getList(){
+				
 				if(!this.hasNext){return;}
 				let userOupons = await api.getUserOupons({pageNum:this.pageNum,pageSize:this.pageSize})
 				if(userOupons.hasNext){
