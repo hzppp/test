@@ -94,7 +94,7 @@ export default {
   },
   async onShow() {
     this.resetjson()
-    api.getUser()
+    // api.getUser()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
