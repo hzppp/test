@@ -229,19 +229,19 @@
 			this.addData()
 		},
 		onShareAppMessage() {
-			if (this.navigateBack == '1') { //参数配置
-				return {
-					title: this.data.sidName + '参数配置',
-					desc: '点击查看',
-					path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
-				}
-			} else if (this.navigateBack == '2') { //车型对比
-				return {
-					title: '车型参数配置对比',
-					desc: '点击查看',
-					path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
-				}
-			}
+			// if (this.navigateBack == '1') { //参数配置
+			// 	return {
+			// 		title: this.data.sidName + '参数配置',
+			// 		desc: '点击查看',
+			// 		path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
+			// 	}
+			// } else if (this.navigateBack == '2') { //车型对比
+			// 	return {
+			// 		title: '车型参数配置对比',
+			// 		desc: '点击查看',
+			// 		path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
+			// 	}
+			// }
 		},
 		methods: {
 			addGlobalSelectCar(ids) {
@@ -429,7 +429,7 @@
 			line-height: 36rpx;
 			background: #fff;
 			border-radius: 88rpx;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.4);
 			font-size: 20rpx;
 			z-index: 1999;
 			color: #333;
@@ -452,7 +452,7 @@
 
 		.nav_btn_act {
 			color: #3377d7;
-			box-shadow: 0 0 10px rgba(0, 122, 223, 0.4);
+			box-shadow: 0 0 20rpx rgba(0, 122, 223, 0.4);
 
 			.icon {
 				.iconfont {
@@ -474,7 +474,7 @@
 				width: 560rpx;
 				height: calc(100% - 240rpx);
 				background: #fff;
-				box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+				box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.3);
 				padding-bottom: 20rpx;
 
 				.tc_win_box {
@@ -489,8 +489,8 @@
 					.nav_list {
 						width: 243rpx;
 						height: 60rpx;
-						border: 1px solid #d6d5d6;
-						border-radius: 5px;
+						border: 2rpx solid #d6d5d6;
+						border-radius: 10rpx;
 						margin: 20rpx 0 0 24rpx;
 						@include flex_center_center
 					}
@@ -512,7 +512,7 @@
 				display: table;
 				height: 100%;
 				width: 100%;
-				font-size: 16px;
+				font-size: 32rpx;
 				color: #888;
 				background: #f0f0f5;
 				bottom: 0;
@@ -535,7 +535,7 @@
 		.canpei_top {
 			height: 200rpx;
 			width: #fff;
-			border-bottom: 1px solid #D9D9D9;
+			border-bottom: 2rpx solid #D9D9D9;
 			@include flex_left_center;
 
 			.canpei_top_left {
@@ -548,12 +548,12 @@
 				.icon {
 					background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/weixin/baojia/canpeibg.png) no-repeat;
 					background-size: cover;
-					width: 28px;
-					height: 22px;
+					width: 56rpx;
+					height: 44rpx;
 				}
 
 				.icon_none {
-					background-position: -30px 0;
+					background-position: -60rpx 0;
 				}
 
 				.canpei_top_left_title {
@@ -582,8 +582,8 @@
 						margin: 0 5rpx;
 						margin-top: 10rpx;
 						display: inline-block;
-						border: 1px solid #ddd;
-						border-radius: 5px;
+						border: 2rpx solid #ddd;
+						border-radius: 10rpx;
 						padding: 5rpx 15rpx;
 						position: relative;
 						font-size: 24rpx !important;
@@ -606,7 +606,7 @@
                                 right: 0;
 								height: 30rpx;
 								width: 30rpx;
-                                border-top-left-radius: 5px;
+                                border-top-left-radius: 10rpx;
 								background: #808080;
 								@include flex_center_center;
 
@@ -684,7 +684,7 @@
 				.canpei_list_left {
 					color: #888;
 					width: 250rpx;
-					border-right: 1px solid #EEEEEE;
+					border-right: 2rpx solid #EEEEEE;
 					background: #fff;
 					padding-top: 80rpx;
 					position: relative;
@@ -720,11 +720,11 @@
 					}
 
 					.left_item {
-						height: 50px;
+						height: 100rpx;
 						// width: 100%;
 						@include flex_center_center;
-						border-bottom: 1px solid #EEEEEE;
-                        border-right: 1px solid #EEEEEE;
+						border-bottom: 2rpx solid #EEEEEE;
+                        border-right: 2rpx solid #EEEEEE;
 						padding: 0 10rpx;
 						text-align: center;
 						&:last-child {
@@ -760,8 +760,8 @@
 						@include flex_left_center;
 
 						.right_list {
-							width: calc(250rpx + 1px);
-							border-right: 1px solid #eee;
+							width: calc(250rpx + 2rpx);
+							border-right: 2rpx solid #eee;
 
 							&:last-child {
 								width: 270rpx;
@@ -771,8 +771,8 @@
 							.right_list_item {
                                 display: flex;
 								width: 100%;
-								height: 50px;
-								border-bottom: 1px solid #eee;
+								height: 100rpx;
+								border-bottom: 2rpx solid #eee;
 								@include flex_center_center(wrap);
 								padding: 0 10rpx;
 								text-align: center;
@@ -788,22 +788,22 @@
 									background-size: cover;
 									display: inline-block;
 									vertical-align: middle;
-									width: 22px;
-									height: 22px;
-									background-position: -58px;
+									width: 44rppx;
+									height: 44rppx;
+									background-position: -116rpx;
 									text-indent: -999rem;
 								}
 
 								.zdj {
                                     // padding: 1px 15px;
-                                    font-size: 12px;
+                                    font-size: 24rpx;
 									// height: 18px;
-                                    width: 86px;
-                                    height: 24px;
+                                    width: 172rpx;
+                                    height: 42rpx;
 									overflow: hidden;
 									color: #fa8943;
-									margin: 3px 10px 0;
-									border-radius: 30px;
+									margin: 6rpx 20rpx 0;
+									border-radius: 60rpx;
 									background: #fa8943;
                                     color: #ffffff;
 									@include flex_center_center(wrap)
@@ -820,7 +820,7 @@
 
 		}
         .h76px {
-            height: 76px !important;
+            height: 152rpx !important;
         }
 	}
 </style>

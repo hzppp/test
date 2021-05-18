@@ -28,7 +28,7 @@
 					</block> -->
 					<view class="car_btn">
 						<block v-if="leftSerial.jumpType == 1">
-							<view @tap.stop="toXdj(leftSerial.serialId)" class="left-btn">预约试驾</view>
+							<view @tap.stop="yuYue(leftSerial.serialId)" class="left-btn">预约试驾</view>
 						</block>
 						<block v-else>
 							<view class="none left-btn" @tap.stop>预约试驾</view>
@@ -61,7 +61,7 @@
 					</block> -->
 					<view class="car_btn">
 						<block v-if="rightSerial.jumpType == 1">
-							<view @tap.stop="toXdj(rightSerial.serialId)" class="right-btn">预约试驾</view>
+							<view @tap.stop="yuYue(rightSerial.serialId)" class="right-btn">预约试驾</view>
 						</block>
 						<block v-else>
 							<view class="none right-btn" @tap.stop>预约试驾</view>
@@ -117,12 +117,20 @@
 			},
 			// 0left 1right
 			changeCarSearial(index){
-				this.$emit("changeCarSearial",index)
+				if(index === 0) {
+					uni.redirectTo({
+						url:`/pages/ChooseSerial?vs=true&noun=left&serialId=${this.rightSerial.serialId}`
+					})
+				}else {
+					uni.redirectTo({
+						url:`/pages/ChooseSerial?&vs=true&noun=right&serialId=${this.leftSerial.serialId}`
+					})
+				}
 			},
 			// 询底价
-			toXdj(serialId){
-				uni.navigateTo({
-					url:"/pages_car/xdj/xdj?sid="+serialId
+			yuYue(id){
+				uni.redirectTo({
+					url:"/pages/YuyuePage?id="+id
 				})
 			}
 		}
@@ -152,7 +160,7 @@
 					height: 48rpx;
 					color: rgb(51, 51, 51);
 					background-color: rgb(247, 247, 247);
-					border-radius: 100px;
+					border-radius: 200rpx;
 					font-size: 24rpx;
 					@include flex_center_center
 				}
@@ -209,7 +217,7 @@
 					@include flex_center_bottom;
 					view{
 						background: #f90;
-						border-radius: 100px;
+						border-radius: 200rpx;
 						@include flex_center_center;
 						color: #fff;
 						font-size: 28rpx;
@@ -220,25 +228,25 @@
 						background: #cfd2d5;
 					}
                     .left-btn {
-                        width: 100px;
-                        height: 32px;
-                        border-radius: 32px;
-                        line-height: 32px;
+                        width: 200rpx;
+                        height: 64rpx;
+                        border-radius: 64rpx;
+                        line-height: 64rpx;
                         color: #ffffff;
                         background-color: #fa8943;
                     }
                     .right-btn {
-                        width: 100px;
-                        height: 32px;
-                        border-radius: 32px;
-                        line-height: 32px;
+                        width: 200rpx;
+                        height: 64rpx;
+                        border-radius: 64rpx;
+                        line-height: 64rpx;
                         color: #ffffff;
                         background-color: #55a4f1;
                     }
 				}
 			}
 			.line{
-                margin-top: 60px;
+                margin-top: 120rpx;
                 color: #999999;
                 font-size: 24rpx;
 			}
@@ -256,7 +264,7 @@
 					height: 48rpx;
 					font-size: 24rpx;
 					@include flex_center_center;
-					border-radius: 100px;
+					border-radius: 200rpx;
 					color: rgb(51, 51, 51);
 				};
 				.car_message{

@@ -34,6 +34,7 @@ var DOMAIN_T = {
 }
 
 
+
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
 
@@ -174,6 +175,14 @@ const config = {
 		fetchDistrictListByCityId: `${DOMAIN.mock}/api/xcx/base/getDistricts`,
 		// 根据城市id获取经销商
 		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		// 获取车型对比对比数据
+		fetchCarSerialContrast: `${DOMAIN.csbHost}/price/api/v1/model/pk`,
+		//获取车系详情
+		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
+		//获取车型列表
+		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
+		//获取车系筛选列表 
+		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取车系
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据

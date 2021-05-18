@@ -1,23 +1,25 @@
 <template>
 	<view class="cars-page">
 		
-        <view class="image-wrap">
-            <image  mode='widthFix' lazy-load src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170910%2Ff73ce2baf6e4487e9b9d6a149c6ec143.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623485249&t=aae4b5e4df31261a7f1a513770ebb959'>
+        <view class="image-wrap" v-if="serialData.videoCoverUrl">
+            <image  mode='widthFix' lazy-load :src='serialData.videoCoverUrl'>
             </image>
             <i class="video-icon"></i>
         </view>
+        <!-- 按钮 -->
+        <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoCoverUrl"></btnWrap>
 		
 		
         <view class="image-wrap">
-            <image mode='widthFix' lazy-load src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170910%2Ff73ce2baf6e4487e9b9d6a149c6ec143.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623485249&t=aae4b5e4df31261a7f1a513770ebb959'>
+            <image mode='widthFix' lazy-load :src='serialData.picHeadUrl'>
             </image>
         </view>
         
         <!-- 按钮 -->
-        <btnWrap></btnWrap>
+        <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
 
         <view class="image-wrap">
-            <image mode='widthFix' lazy-load src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170910%2Ff73ce2baf6e4487e9b9d6a149c6ec143.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623485249&t=aae4b5e4df31261a7f1a513770ebb959'>
+            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl'>
             </image>
         </view>
 		
@@ -33,9 +35,52 @@
 <script>
 
 import btnWrap from '@/components/lookCar/LookCar';
+import api from '@/public/api/index'
+
 export default {
     components: {btnWrap},
+    data() {
+        return {
+            serialData: {}, //车系详情
+            ids:'', //车系对应的前两个车型的id集合字符串，
+            serialId: "" //车系id
+        }
+    },
+    onLoad(options) {
+        this.reqSerialDetail(options.id)
+    },
 	methods: {
+        async reqSerialDetail(sgId) {
+            try {
+                const {code,data} = await api.fetchSerialDetail({sgId})
+                if(code ===1 ) {
+                    this.serialData = data
+                    this.serialId = data.pcSerialGroupId
+                    this.feqSerialList(data.pcSerialGroupId)
+                    uni.setNavigationBarTitle({
+                        title:data.name
+                    })
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async feqSerialList(sgId) {
+            try {
+                const {code,data} = await api.fetchSerialList({sgId})
+                let ids = []
+                if(code === 1 ) {
+                    data.map((v,i) => {
+                        if( i < 2) {
+                            ids.push(v.pcModelId)
+                        }
+                    })
+                }
+                this.ids = ids.join(",")
+            } catch (error) {
+                console.error(error)
+            }
+        },
 	}
 }
 </script>
@@ -43,7 +88,7 @@ export default {
 <style lang="scss">
 .cars-page {
 	min-height: 100vh;
-    padding-bottom: 64px;
+    padding-bottom: 128rpx;
     .image-wrap {
         position: relative;
         width: 100%;
@@ -54,8 +99,8 @@ export default {
         }
         .video-icon {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 120rpx;
+            height: 120rpx;
             top: 50%;
             left: 50%;
             transform: translate(-50%,-50%);
@@ -66,7 +111,7 @@ export default {
     .btn-wrap {
         position: fixed;
         width: 100%;
-        height: 64px;
+        height: 128rpx;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
@@ -76,10 +121,10 @@ export default {
         align-items: center;
         justify-content: center;
         .yuyue-btn {
-            width: 343px;
-            height: 44px;
-            border-radius: 44px;
-            line-height: 44px;
+            width: 686rpx;
+            height: 88rpx;
+            border-radius: 88rpx;
+            line-height: 88rpx;
             color: #ffffff;
             background-color: #FA8845;
         }

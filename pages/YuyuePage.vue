@@ -1,16 +1,16 @@
 <template>
     <view class="yuyue">
-        <image mode="widthFix" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3223779882,3129702493&fm=26&gp=0.jpg" />
+        <image mode="widthFix" :src="serialData.picHeadUrl" />
         <view class="content">
             <view class="title">预约试驾</view>
             <view class="list models">
                 <view class="list-title">车型</view>
-                <view class="select">{{currentCaraSerial}}</view>
+                <view class="select" @tap="goChooseSerial">{{currentCaraSerial}}</view>
                 <view class="arrow"></view>
             </view>
             <view class="list models">
                 <view class="list-title">城市</view>
-                <view class="select">
+                <!-- <view class="select">
                     <view class="uni-list">
                         <view class="uni-list-cell">
                             <view class="uni-list-cell-db">
@@ -21,12 +21,14 @@
                             </view>
                         </view>
                     </view>
-                </view>
+                </view> -->
+                <view class="select" @tap="goChooseCity">{{currentCity.name}}</view>
+
                 <view class="arrow"></view>
             </view>
             <view class="list models">
                 <view class="list-title">经销商</view>
-                <view class="select">
+                <view class="select" @tap="changDealers">
                     <view class="uni-list">
                         <view class="uni-list-cell">
                             <view class="uni-list-cell-db">
@@ -51,7 +53,7 @@
             </view>
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
-                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即预约</button>
+                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}" :disabled=!isAllSelect>立即预约</button>
                 <view class="tit">点击按钮即视为同意《个人信息保护声明》</view>
             </view>
         </view>
@@ -76,18 +78,29 @@ const COUNTDOWN = 60
                 isFirst: true, //是否是第一次发送
 
                 title: 'picker',
-                cityList: [], //城市列表
+                // cityList: [], //城市列表
                 dealersList: [], //经销商列表
 
-                currentCaraSerial: 'qq', //当前的车系名字
+                currentCaraSerial: '', //当前的车系名字
                 currentCity:{}, //当前选择的城市
                 test: '默认全局城市广州test',
-                cityIndex: 71, //城市默认下标(广州)
+                // cityIndex: 71, //城市默认下标(广州)
+                dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
+
+                serialId:'', //参数车系id
+
+                serialData: {}// 车系详情
             }
         },
-        onLoad() {
-            this.reqAllCityList(0)
+        onLoad(options) {
+            this.currentCity = options
+            this.reqDealersList(options.id)
+            this.reqSerialDetail(this.$store.state.currentModelId)
+
+            this.serialId = options.id
+            // this.reqAllCityList(0)
+            // this.reqSerialDetail(options.id)
         },
         methods: {
             //检测信息是否齐全
@@ -100,23 +113,23 @@ const COUNTDOWN = 60
             },
 
             //获取城市列表
-            async reqAllCityList() {
-                try {
-                    const {code,data:{letterGroup}} = await api.fetchAllCityList()
-                    let tempArr = []
-                    if(code === 1) {
-                        for(let k in letterGroup) {
-                           letterGroup[k].map(v=>{
-                               tempArr.push(v)
-                           })
-                        }
-                    }
-                    this.cityList = tempArr
-                    this.currentCity = tempArr[this.cityIndex]
-                } catch (error) {
-                    console.error(error)
-                }
-            },
+            // async reqAllCityList() {
+            //     try {
+            //         const {code,data:{letterGroup}} = await api.fetchAllCityList()
+            //         let tempArr = []
+            //         if(code === 1) {
+            //             for(let k in letterGroup) {
+            //                letterGroup[k].map(v=>{
+            //                    tempArr.push(v)
+            //                })
+            //             }
+            //         }
+            //         this.cityList = tempArr
+            //         this.currentCity = tempArr[this.cityIndex]
+            //     } catch (error) {
+            //         console.error(error)
+            //     }
+            // },
 
             //获取经销商列表
             async reqDealersList(cityId) {
@@ -124,12 +137,24 @@ const COUNTDOWN = 60
                     const {code,data} = await api.fetchDealersList({cityId})
                     if(code === 1) {
                         this.dealersList = data
+                        console.log('data :>> ', data);
                     }
                 } catch (error) {
                     console.error(error)
                 }
             },
-
+            //获取车系详情
+            async reqSerialDetail(sgId) {
+                try {
+                    const {code,data} = await api.fetchSerialDetail({sgId})
+                    if(code ===1) {
+                        this.serialData = data
+                        this.currentCaraSerial = data.name
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            },
             //获取验证码
             getCode() {
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
@@ -160,7 +185,27 @@ const COUNTDOWN = 60
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
-
+            },
+            //经销商点击，判断提示
+            changDealers(){
+                if(!this.currentCity.id) {
+                    return uni.showToast({
+                        title:"请选择城市",
+                        icon:"none"
+                    })
+                }
+            },
+            //选择城市
+            goChooseCity(){
+                uni.navigateTo({
+					url: "/pages/ChooseCity"
+				})
+            },
+            //选择车系
+            goChooseSerial() {
+                uni.navigateTo({
+					url: "/pages/ChooseSerial?pages=YuyuePage"
+				})
             },
             cityPickerChange: function(e) {
                 this.reqDealersList(this.cityList[e.target.value].id)
@@ -194,13 +239,16 @@ const COUNTDOWN = 60
             justify-content: space-between;
             align-items: center;
             height: 110rpx;
-            border-bottom: 1px solid #EBEBEB;
+            border-bottom: 2rpx solid #EBEBEB;
             .list-title {
-                width: 50px;
+                width: 100rpx;
             }
             .select {
                 flex: 1;
-                margin-left: 10px;
+                margin-left: 20rpx;
+                height: 100%;
+                display: flex;
+                align-items: center;
             }
             .get-code {
                 color: #fa8943;
@@ -211,11 +259,11 @@ const COUNTDOWN = 60
                 font-size: 28rpx;
             }
             .arrow {
-                width: 6px;
-                height: 6px;
+                width: 12rpx;
+                height: 12rpx;
                 transform: rotate(45deg);
-                border-top: 1px solid #999999;
-                border-right: 1px solid #999999;
+                border-top: 2rpx solid #999999;
+                border-right: 2rpx solid #999999;
             }
         }
         .btn-area {
