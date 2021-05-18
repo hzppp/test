@@ -4,10 +4,10 @@
 		<block v-if="articleList.length > 0">
 			<view class="zw"></view>
 			<block v-for="(item,index) in articleList" :key="index">
-				<view class="list-box" @tap="toArticlePage(item.articleId,item.type)">
+				<view class="list-box" @tap="toArticlePage(item.id)">
 					<image class="image" :src="item.pictureUrl" mode="scaleToFill" lazy-load="true"></image>
 					<view class="tit">{{item.title}}</view>
-					<view class="date">{{item.publishTime}}</view>
+					<view class="date">{{item.publishTime || ''}}</view>
 				</view>
 			</block>
 			<mp-loading type="circle"></mp-loading>
@@ -16,7 +16,7 @@
 		<block v-else>
 			<view style="height:145rpx;"></view>
 			<view class="none-icon"></view>
-			<view class="none-text">暂时还没有文章，敬请期待吧~</view>
+			<view class="none-text">敬请期待</view>
 		</block>
 	</view>
 </template>
@@ -36,8 +36,8 @@
 			}
 		},
 		methods: {
-			toArticlePage(id, type) {
-				let url = `/pages/article?articleId=${id}&type=${type}`
+			toArticlePage(id) {
+				let url = `/pages/article?articleId=${id}`
 				uni.navigateTo({
 					url
 				})
@@ -56,7 +56,8 @@
 					let data = await api.getArticleList({
 						pageSize: 15,
 						pageNum: this.pageNum
-					})
+					}).then(res => res.data)
+          console.log('dddddddd at',data)
 					let total = Math.ceil(data.total / 15)
 
 					if (total > this.pageNum) { //还有下一页
@@ -86,7 +87,6 @@
 
 <style lang="less">
 	@import '@/static/less/public.less';
-
 	.articleList {
 		position: relative;
 		background: #f0f2f7;
@@ -145,8 +145,8 @@
 	}
 
 	.none-icon {
-		.setbg(406rpx, 292rpx, 'articleList-none-data-icon.png');
-		margin: 0 auto;
+		.setbg(610rpx, 312rpx, 'articleList-none-data-icon2.png');
+		margin: 215rpx auto 0;
 	}
 
 	.none-text {

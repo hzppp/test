@@ -31,20 +31,6 @@
       }
     },
     {
-      "path": "pages/lookCar",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/chooseCity",
-      "style": {
-        "navigationBarTitleText": "选择城市",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/welfareActivity",
       "style": {
         "navigationBarTitleText": "活动",
@@ -60,15 +46,14 @@
       }
     },
     {
-      "path": "pages/article",
+      "path": "pages/articleListPage",
       "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "文章列表",
+        "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/coinDetails",
+      "path": "pages/article",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false,
@@ -92,14 +77,6 @@
       }
     },
     {
-      "path": "pages/dataassistant",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/datadetails",
       "style": {
         "navigationBarTitleText": "",
@@ -107,41 +84,9 @@
       }
     },
     {
-      "path": "pages/dynamicDetails",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/message",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/my",
+      "path": "pages/myCoupon",
       "style": {
         "navigationBarTitleText": "我的优惠券",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/myfollow",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/myMessage",
-      "style": {
-        "navigationBarTitleText": "",
         "enablePullDownRefresh": false,
         "navigationStyle": "custom"
       }
@@ -150,65 +95,85 @@
       "path": "pages/mypage",
       "style": {
         "navigationBarTitleText": "我的",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/nearby",
-      "style": {
-        "navigationBarTitleText": "4S销售",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/personalHome",
-      "style": {
-        "navigationBarTitleText": "",
         "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
+		 "navigationStyle": "custom"
       }
-    },
+    }
+	,{
+	    "path" : "pages/myActivity",
+	    "style" : {
+	    	"navigationBarTitleText": "我的活动",
+	    	"enablePullDownRefresh": false
+	    }
+	},
     {
       "path": "pages/pkwebview",
       "style": {}
-    },
-    {
-      "path": "pages/putArticle",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/putDynamic",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
     },
     {
       "path": "pages/webview",
       "style": {}
     },
     {
-      "path": "pages/canpei",
-      "style": {
-        "navigationBarTitleText": "车型对比",
-        "enablePullDownRefresh": false
-      }
-    },
-	{
-	  "path": "pages/calc",
-	  "style": {
-	    "navigationBarTitleText": "计算器",
-	    "enablePullDownRefresh": false,
-		"navigationStyle": "custom"
-	  }
+        "path" : "pages/lookCar",
+        "style" :
+        {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/chooseCity",
+        "style" :
+        {
+            "navigationBarTitleText": "选择城市",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/canpei",
+        "style" :
+        {
+            "navigationBarTitleText": "车型对比",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/carSerialsVS",
+        "style" :
+        {
+            "navigationBarTitleText": "车系对比",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/YuyuePage",
+        "style" :
+        {
+            "navigationBarTitleText": "预约试驾",
+            "enablePullDownRefresh": false
+        }
+    }
+    ,{
+        "path" : "pages/GetPreferential",
+        "style" :
+        {
+            "navigationBarTitleText": "获取优惠",
+            "enablePullDownRefresh": false
+        }
+    }
+	,{
+		"path" : "pages/liveDetail",
+		"style" :                                                                                    
+		{
+		    "navigationBarTitleText": "",
+		    "enablePullDownRefresh": false,
+		    "navigationStyle": "custom"
+		}
 	}
   ],
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#ce1330",
     "backgroundColor": "#fff",

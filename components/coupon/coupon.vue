@@ -1,7 +1,7 @@
 <template>
 	<view class="coupon">
 		<block v-for="(item,index) in couponList" :key="index">
-			<view :class="'coupon-box bg-' + (item.type == 1 && 'red' || item.type == 2 && 'blue' || 'yellow')" @tap="ruleShow(index)">
+			<view :class="'coupon-box bg-' + (item.type == 1 ? 'red' : 'blue')" @tap="ruleShow(index)">
 				<view class="coupon-name">{{item.title}}</view>
 				<view class="coupon-desc">{{item.subhead}}</view>
 				<view class="coupon-date">有效期：{{item.startTime}}-{{item.endTime}}</view>
@@ -13,9 +13,12 @@
 				<view v-else class="coupon-btn" @tap.stop="getPhoneNumber(index,$event)">一键抢券</view>
 			</view>
 		</block>
-		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">更多福利></view>
+		<view class="load-more-btn" @tap="morebtn" v-if="from == 'welfareActivity' && isMoreBtnShow">
+			<text>更多福利</text>
+			<image class="icon" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/arrow-bottom.png" mode="aspectFit"></image>
+		</view>
 		<block v-if="isRuleShow">
-			<view class="rule-desc">
+			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 ? 'red' : 'blue')">
 				<view class="content">
 					<view class="rule-desc-content">
 						<view class="title">
@@ -27,6 +30,7 @@
 						<view class="date">
 							有效期：{{couponList[couponListIndex].startTime}}-{{couponList[couponListIndex].endTime}}
 						</view>
+						<text class="explain">使用说明</text>
 						<text class="p">{{couponList[couponListIndex].instructions}}</text>
 						<button class="rule-form-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber(couponListIndex,$event)"
 						 @tap.stop="stop" v-if="!phone">一键抢券</button>
@@ -86,7 +90,7 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.pocketUserInfo.phone = data.phoneNumber
+					app.globalData.phone = data.phoneNumber
 					this.phone = data.phoneNumber
 				}
 				
@@ -95,8 +99,8 @@
 			},
 			setcouponList(list) {
 				this.phone = ''
-				if (app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.phone) {
-					this.phone = app.globalData.pocketUserInfo.phone
+				if (app.globalData && app.globalData.phone) {
+					this.phone = app.globalData.phone
 				}
 				for (let i in list) {
 					list[i].endTime = list[i].endTime.replace(/-/g, ".")

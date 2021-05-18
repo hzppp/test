@@ -16,7 +16,7 @@ var DOMAIN_R = {
 	//panorama:"http://t-panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
 	changan:"http://ms-changan-auto.changan-cloud-auto",
-	pcauto: 'https://magear.pcauto.com.cn', //测试域名
+    pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
 //测试环境域名
@@ -28,8 +28,9 @@ var DOMAIN_T = {
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
-	pcauto: 'https://magear.pcauto.com.cn', //测试域名
+    pcauto: 'https://magear.pcauto.com.cn', //测试域名
+	changan:"https://devqd-changan.pcauto.com.cn",
+	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
 
@@ -40,53 +41,48 @@ const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 const config = {
 
 	appName: '奥迪部落',
-	
+
 	DOMAIN: DOMAIN,
-	
+
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
-	
+
 	api: {
-		login:  `${DOMAIN.host}/api/audi/xcx/user/login`,
-		// 获取车型基础信息
-		getModelData: `${DOMAIN.csbHost}/price/api/v1/model/atom/99999/params`,
-		// 获取车型外观
-		getModelParamEquip: `${DOMAIN.csbHost}/price/api/v1/pocket/m`,
-		// 获取省
-		getProvince: `${DOMAIN.host}/api/audi/base/getProvince`,
-		// 获取中心省
-		getProvinceCentral: `${DOMAIN.host}/api/audi/base/getProvince/central`,
-		// 按省获取区域
-		getRegionByProvince: `${DOMAIN.host}/api/audi/base/getRegionByProvince`,
+		login:  `${DOMAIN.changan}/api/xcx/user/login`,
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
-		// 
+		//
 		getIpAreaCoord: `${DOMAIN.whoisHost}/ipAreaCoordJson.jsp`,
-		// 
+		//
 		getAreaByRegion: `${DOMAIN.host}/api/audi/base/getAreaByRegion`,
-		// 
+		//
 		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
-		getactivity: `${DOMAIN.host}/api/audi/xcx/activity`,
+		getactivity: `${DOMAIN.changan}/api/xcx/activity/list`,
+		//我的活动列表
+		getActivityUser:'${DOMAIN.changan}/api/xcx/activity/list/user',
+		//直播列表
+		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
-		getActivityContent: `${DOMAIN.host}/api/audi/xcx/activity/`,
-		// 
-		getWelfare: `${DOMAIN.host}/api/audi/xcx/index/welfare`,
+		getActivityContent: `${DOMAIN.changan}/api/xcx/activity/detail`,
+		// 获取优惠券列表
+		getWelfare: `${DOMAIN.changan}/api/xcx/coupon/list`,
 		// 用户留资
-		submitClue: `${DOMAIN.host}/api/audi/xcx/clue`,
+		submitClue: `${DOMAIN.changan}/api/xcx/clue/user`,
 		// 获取用户信息
-		getPocketUserInfo: `${DOMAIN.host}/api/audi/xcx/user/info`,
+		getPocketUserInfo: `${DOMAIN.host}/api/xcx/user/info`,
 		// 记录活动访问
 		visitActivity: `${DOMAIN.host}/api/audi/xcx/visitActivity`,
 		// 保存用户信息
-		saveWXuserInfo: `${DOMAIN.host}/api/audi/xcx/user/decryptInfo`,
+		saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
 		// 手机号解密
-		decryptPhone: `${DOMAIN.host}/api/audi/xcx/user/decryptPhone`,
+		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
-		getUserOupons: `${DOMAIN.host}/api/audi/xcx/getUserOupons`,
+		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
+		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail`,
 		// getPanosInfo2 获取vr看车图片
 		getPanosInfo2: `${DOMAIN.panorama}/intf/getAllApprInfo.jsp`,
 		// vehicleOupons 车型展厅，获取优惠券
@@ -97,7 +93,7 @@ const config = {
 		getSalesList: `${DOMAIN.host}/interface/sales/get_sales_list.jsp`,
 		// 获取车型
 		getModelListBySerialId: `${DOMAIN.magearHost}/s/pcauto/price/v1/getModelListBySerialId.xsp`,
-		// 
+		//
 		getpreClue: `${DOMAIN.host}/api/audi/xcx/preClue`,
 		// 提交formid
 		saveFormId: `${DOMAIN.host}/api/audi/xcx/base/formId`,
@@ -110,83 +106,38 @@ const config = {
 		uploadLicencePic: `${DOMAIN.host}/api/audi/xcx/uploadVehicleLicencePic`,
 		//获得用户个人信息
 		detailedMessage: `${DOMAIN.host}/api/audi/xcx/detailedMessage`,
-		//提交用户个人信息
-		userMessageEntering: `${DOMAIN.host}/api/audi/xcx/userMessageEntering`,
 		// 车驾信息认证
 		Carapprove: `${DOMAIN.host}/api/audi/xcx/approve`,
 		// 上传到 UPC
 		uploadPhoto: `${DOMAIN.UPCHost}/upload_quick.jsp?application=autopocket`,
 		// 获取文章列表
-		getArticleList: `${DOMAIN.host}/api/audi/xcx/carFriend/article`,
-		// 获取动态列表
-		getDynamicList: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic`,
-		// 获取主题列表
-		getThemeList: `${DOMAIN.host}/api/audi/xcx/carFriend/theme`,
+		getArticleList: `${DOMAIN.changan}/api/xcx/article/list`,
 		// 点赞
 		like: `${DOMAIN.host}/api/audi/xcx/carFriend/like`,
-		// 发布动态
-		putDynamic: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic`,
-		// 获取评论列表
-		// dynamicId:id,page:1,pageSize:10
-		getCommentList: `${DOMAIN.host}/api/audi/xcx/comment`,
-		// 发表评论
-		publishComment: `${DOMAIN.host}/api/audi/xcx/comment`,
-		// 获取动态详情
-		getDynamicDetails: `${DOMAIN.host}/api/audi/xcx/carFriend/dynamic/`,
-		//
-		getThemeData: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/`,
 		// 获取文章内容
-		getArticleContent: `${DOMAIN.host}/api/audi/xcx/carFriend/articleContent`,
-		// 
-		getAllTheme: `${DOMAIN.host}/api/audi/xcx/carFriend/theme/all`,
+		getArticleContent: `${DOMAIN.changan}/api/xcx/article/detail`,
 		// 上传图片到upc
 		uploadUPC: `${DOMAIN.UPCHost}/upload_quick.jsp?referer=https://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
-		// 获取未读消息
-		getUserMessage: `${DOMAIN.host}/api/audi/xcx/userMessage`,
-		// 检查图片是否合法
-		checkImage: `${DOMAIN.host}/api/audi/xcx/base/check/img`,
 		// 获取签到数据
 		getsignIn: `${DOMAIN.host}/api/audi/xcx/signIn`,
 		// 签到
 		submitSignIn: `${DOMAIN.host}/api/audi/xcx/signIn`,
-		// 获取众享币数
-		getCredits: `${DOMAIN.host}/api/audi/xcx/credits`,
 		// 获取任务列表
 		getTaskList: `${DOMAIN.host}/api/audi/xcx/task`,
 		// 获取众享币详情
 		getRecord: `${DOMAIN.host}/api/audi/xcx/credits/record`,
 		// 获取积分商城链接
 		getMallLink: `${DOMAIN.host}/api/audi/duiba/mall`,
-		// 获取积分商城链接
-		getNotify: `${DOMAIN.host}/api/audi/duiba/notify`,
-		// 获取兑换记录链接
-		getPrizeRecord: `${DOMAIN.host}/api/audi/duiba/record`,
 		// 活动分享
 		shareActivity: `${DOMAIN.host}/api/audi/xcx/activity/`,
 		// 文章分享
 		shareArticle: `${DOMAIN.host}/api/audi/xcx/carFriend/article/share`,
-		//获取签到活动数据
-		getSignInActData: `${DOMAIN.host}/api/audi/xcx/signActivity/`,
 		//获取二维码
 		getCode: `${DOMAIN.host}/xcx/qrCode.do`,
-		// 
+		//
 		getSalesId: `${DOMAIN.host}/api/audi/xcx/activity/getSalesId`,
-		// 
-		getH5URL: `${DOMAIN.host}/api/audi/xcx/h5/url`,
-		// 我的关注
-		getMyFocus: `${DOMAIN.host}/api/audi/xcx/user/myFocus`,
-		// 我的粉丝
-		getMyFans: `${DOMAIN.host}/api/audi/xcx/user/myFans`,
-		// +关注
-		addFocus: `${DOMAIN.host}/api/audi/xcx/user/focus`,
-		// 取消关注
-		cancelFocus: `${DOMAIN.host}/api/audi/xcx/user/cancelFocus`,
 		// 获取用户信息-个人主页
 		getUserInfo: `${DOMAIN.host}/api/audi/xcx/user/center`,
-		// 获取个人动态
-		getUserDynamicList: `${DOMAIN.host}/api/audi/xcx/carFriend/user`,
-		// 删除动态
-		deleteDynamic: `${DOMAIN.host}/api/audi/xcx/carFriend/deleteDynamic`,
 		// 获取设定车系
 		getVehicle: `${DOMAIN.host}/api/audi/xcx/vehicle`,
 		// 获取推荐动态
@@ -197,10 +148,10 @@ const config = {
 		getDynamicArticle: `${DOMAIN.host}/api/audi/xcx/carFriend/article/`,
 		// 动态被访问
 		visitDynamic: `${DOMAIN.host}/api/audi/xcx/visitDynamic`,
-		// 
+		//
 		getVehicleExhibitionSalesInfo: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/salesAndDealer`,
 		// 核销接口
-		doCouponVerifiy: `${DOMAIN.host}/api/audi/xcx/doCouponVerifiy`,
+		doCouponVerifiy: `${DOMAIN.changan}/api/xcx/coupon/verify`,
 		//商城首页
 		mallIndex:`${DOMAIN.host}/api/audi/xcx/gift/index`,
 		//兑换记录
@@ -211,13 +162,25 @@ const config = {
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
-		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
-		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
-		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
-		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
-		//计算费用
-		calcPrice: `${DOMAIN.pcauto}/s/pcauto/info/v1/serials.xsp`,
+        //获取车系对比
+        fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
+        //获取经销商列表
+        fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
+		// 获取省份
+		fetchProvinceList: `${DOMAIN.mock}/api/xcx/base/provinces`,
+		// 根据省份id获取城市
+		fetchCityListByProvinceId: `${DOMAIN.mock}/api/xcx/base/getCities`,
+		// 根据城市id获取地区
+		fetchDistrictListByCityId: `${DOMAIN.mock}/api/xcx/base/getDistricts`,
+		// 根据城市id获取经销商
+		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		// 获取车系
+		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
+		// 获取首页banner&活动数据
+		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
+		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
+		//计算器获取车型
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
 	},
 	getAPI(key) {
