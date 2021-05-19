@@ -78,11 +78,12 @@ const COUNTDOWN = 60
 
                 currentDealer: {}, //当前经销商
 
-                currentModelId: "", //当前车型id
+                // currentModelId: "", //当前车型id
 
             }
         },
         onLoad(options) {
+            this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
         },
         methods: {
@@ -154,7 +155,6 @@ const COUNTDOWN = 60
                         clearInterval(this.timer)
                     }
                 },1000)
-
                 try {
                     const res = await api.fetchCode({mobile:this.phoneNum})
                     console.log('res :>> ', res);
@@ -176,12 +176,13 @@ const COUNTDOWN = 60
                 })
                 try {
                     const res = await api.postYuYueDrive({
-                        cityId:1,
-                        mobile:14716166366,
-                        provinceId:1,
-                        serialGroupId:2,
+                        cityId:this.currentCity.id,
+                        mobile:this.phoneNum,
+                        provinceId:this.currentCity.provinceId,
+                        serialGroupId:this.serialId,
                         source:2,
-                        sourceId:1
+                        sourceId:1,
+                        dealerId:this.currentDealer.id || ""
                     })
                     if(res.code === 1) {
                          this.$refs.pop.isShow = true
@@ -190,13 +191,12 @@ const COUNTDOWN = 60
                 } catch (error) {
                     console.error(error)
                 }
-                console.log('this.currentModelId :>> ', this.currentModelId);
                 console.log('this.currentCity :>> ', this.currentCity);
                 console.log('this.currentDealer :>> ', this.currentDealer);
                 console.log('this.phoneNum :>> ', this.phoneNum);
                 console.log('this.codeNum :>> ', this.codeNum);
-
-
+                console.log('this.serialId :>> ', this.serialId);
+                console.log('this.currentCity.provinceId :>> ', this.currentCity.provinceId);
             },
             //经销商点击，判断提示
             changDealers(){
