@@ -1,7 +1,8 @@
 <template>
 	<view class="choose-models">
 		<view class="top-title">2019</view>
-		<view>
+        <!-- 多选 -->
+		<view v-if="!single">
 			<checkbox-group @change="checkboxChange">
                 <label class="item-list" v-for="(item,index) in modelsList" :key="index" :class="[currentValue.includes(item.pcModelId)? 'ischecked':'dischecked']">
                     <view class="check-wrap" :class="[currentValue.includes(item.pcModelId)? 'hasChecked':'']">
@@ -10,9 +11,13 @@
                     <view class="model-name">{{item.modelMemo}}</view>
                 </label>
             </checkbox-group>
+            <view class="btn" @tap="add">确定添加</view>
 		</view>
-		<view class="btn" @tap="add">
-			确定添加
+        <!-- 单选 -->
+		<view v-else>
+            <view  class="item-list" v-for="(item,index) in modelsList" :key="index" @tap="goSingle(item)">
+                <view class="model-name">{{item.modelMemo}}</view>
+            </view>
 		</view>
 	</view>
 </template>
@@ -27,12 +32,16 @@
 				currentValue:[], //选择的值
                 pages:"",
                 serialId:"",
-                mids:""
+                mids:"",
+                single:false, // 是否是单选
+                type:""
 			}
 		},
 		methods: {
             onLoad(options) {
                 console.log('options :>> ', options);
+                this.single = options.single || false
+                this.type = options.type || ""
                 if(options.pages === "canpei") {
                     this.pages = options.pages
                     this.serialId = options.serialId
@@ -55,10 +64,17 @@
                 let tempMids = ""
                 tempMids = this.mids + ","+ this.currentValue.join(",")
                 console.log('tempMids :>> ', tempMids);
-
                 if(this.pages === "canpei") {
                     uni.navigateTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
+                    })
+                }
+            },
+            //goSingle 单选跳转
+            goSingle(item) {
+                if(this.type === "calc") {
+                    uni.navigateTo({
+                        url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })
                 }
             },
@@ -115,11 +131,11 @@
 			border-radius: 50%;
             opacity: 0;
 		}
-		.model-name {
-			font-size: 28rpx;
-			// color: #333333;
-			margin-left: 32rpx;
-		}
+        .model-name {
+            font-size: 28rpx;
+            // color: #333333;
+            margin-left: 32rpx;
+        }
 	}
 	.btn {
 		position: fixed;

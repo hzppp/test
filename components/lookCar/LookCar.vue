@@ -4,7 +4,7 @@
             查看参数配置
         </button>
         <view class="bottom-btn-wrap">
-            <button class="bottom-btn">
+            <button class="bottom-btn" @tap="goCalc">
                 购车计算
             </button>
             <button class="bottom-btn" @tap="goSerialList">
@@ -49,7 +49,11 @@
 					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
 				})
             },
-
+            goCalc() {
+                uni.navigateTo({
+                    url:`/pages/ChooseModels?serialId=${this.serialId}&type=calc&single=true`
+                })
+            },
 		}
     }
 </script>
