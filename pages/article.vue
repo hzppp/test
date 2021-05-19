@@ -122,14 +122,6 @@
 			let title = this.title
 			let path = `pages/authorization?to=article&articleId=${this.articleId}&type=${this.articleType}`
 			console.log(path)
-			api.shareArticle(this.articleId,this.articleType).then(res=>{
-				console.log(res)
-				if(res.data > 0){
-					// setTimeout(()=>{
-					//     this.$invoke('share-pop','shareSuccessShow',res.data,'转发成功')
-					// },800)
-				}
-			})
 			return {
 				title: title,
 				path: path,
