@@ -254,6 +254,7 @@ export default {
     },
     // 请求所有的省份
     async reqProvinceList () {
+		this.provinceList = []
       try {
         const res = await api.fetchProvinceList()
         if (res.code == 1) {

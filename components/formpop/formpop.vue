@@ -396,6 +396,7 @@
 			},
 			// 请求所有的省份
 			async reqProvinceList () {
+				this.provinceList = []
 				try {
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
@@ -422,11 +423,11 @@
 			// 根据城市id请求地区
 			async reqDistrictListByCityId (cityId) {
 				this.districtList = []
+				this.crtDistrictItem = {}
 				try {
 					const res = await api.fetchDistrictListByCityId({cityId})
 					if (res.code == 1) {
 						this.districtList = res.data
-						this.crtDistrictItem = {}
 					}
 				} catch (err) {
 					this.showToast('获取地区信息失败')
@@ -436,6 +437,7 @@
 			// 根据城市id请求经销商
 			async reqDealerListByCityId (cityId) {
 				this.dealerList = []
+				this.crtDealerItem = {}
 				try {
 					const res = await api.fetchDealerListByCityId({cityId})
 					if (res.code == 1) {
