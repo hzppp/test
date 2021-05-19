@@ -628,19 +628,6 @@ module.exports = {
         })
         return data
     },
-    // 文章分享
-    shareArticle: async (articleId, type) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('shareArticle'),
-            data: {
-                articleId,
-                type
-            }
-        })
-        return data
-    },
     getCode: async (dynamicId) => { //获取二维码
         let cs = `?sceneId=gh_dd83231d4d16&scene=to=dynamicDetails-dynamicId=${dynamicId}`
         // let data = await uni.downloadFile({

@@ -132,8 +132,6 @@ const config = {
 		getMallLink: `${DOMAIN.host}/api/audi/duiba/mall`,
 		// 活动分享
 		shareActivity: `${DOMAIN.host}/api/audi/xcx/activity/`,
-		// 文章分享
-		shareArticle: `${DOMAIN.host}/api/audi/xcx/carFriend/article/share`,
 		//获取二维码
 		getCode: `${DOMAIN.host}/xcx/qrCode.do`,
 		//
