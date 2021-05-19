@@ -21,7 +21,7 @@ var DOMAIN_R = {
 
 //测试环境域名
 var DOMAIN_T = {
-	csbHost:"https://price.pcauto.com.cn",//基础信息
+	csbHost:"https://testprice.pcauto.com.cn",//基础信息
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	magearHost:"https://magear.pcauto.com.cn",
 	host:"https://testpocket2.pcauto.com.cn",
@@ -29,7 +29,7 @@ var DOMAIN_T = {
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
     pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://devqd-changan.pcauto.com.cn",
+	changan:"https://tccar.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
@@ -41,7 +41,7 @@ const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
 const config = {
 
-	appName: '奥迪部落',
+	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
 
@@ -182,7 +182,7 @@ const config = {
 		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
 		//获取车型列表
 		fetchModelsList:`${DOMAIN.changan}/api/xcx/model/list`,
-		//获取车系筛选列表 
+		//获取车系筛选列表
 		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
 		//获取车系筛选列表
 		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
