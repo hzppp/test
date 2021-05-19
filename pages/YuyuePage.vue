@@ -1,5 +1,6 @@
 <template>
     <view class="yuyue">
+        <pop ref="pop"></pop>
         <image mode="widthFix" :src="serialData.picHeadUrl" />
         <view class="content">
             <view class="title">预约试驾</view>
@@ -10,34 +11,13 @@
             </view>
             <view class="list models">
                 <view class="list-title">城市</view>
-                <!-- <view class="select">
-                    <view class="uni-list">
-                        <view class="uni-list-cell">
-                            <view class="uni-list-cell-db">
-                                <picker @change="cityPickerChange" :value="cityList[cityIndex]" :range="cityList" range-key="name">
-                                    <view v-if="test">{{test}}</view>
-                                    <view class="uni-input" v-else>{{cityList[cityIndex].name}}</view>
-                                </picker>
-                            </view>
-                        </view>
-                    </view>
-                </view> -->
                 <view class="select" @tap="goChooseCity">{{currentCity.name}}</view>
-
                 <view class="arrow"></view>
             </view>
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
-                    <view class="uni-list">
-                        <view class="uni-list-cell">
-                            <view class="uni-list-cell-db">
-                                <picker @change="dealersPickerChange" :value="cityList[dealersIndex]" :range="dealersList" range-key="name">
-                                    <view class="uni-input">{{dealersList[dealersIndex].name}}</view>
-                                </picker>
-                            </view>
-                        </view>
-                    </view>
+                    {{currentDealer.name?currentDealer.name:""}}
                 </view>
                 <view class="arrow"></view>
             </view>
@@ -62,12 +42,15 @@
 
 <script>
 import api from '@/public/api/index'
+import pop from '@/components/apop/aPop'
+
 /* *
 * 倒计时默认时间
 */
 const COUNTDOWN = 60
 
     export default {
+        components:{pop},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -82,7 +65,6 @@ const COUNTDOWN = 60
                 dealersList: [], //经销商列表
 
                 currentCaraSerial: '', //当前的车系名字
-                currentCity:{}, //当前选择的城市
                 test: '默认全局城市广州test',
                 // cityIndex: 71, //城市默认下标(广州)
                 dealersIndex:0, //经销商下标
@@ -90,17 +72,19 @@ const COUNTDOWN = 60
 
                 serialId:'', //参数车系id
 
-                serialData: {}// 车系详情
+                serialData: {},// 车系详情
+                
+                currentCity:{}, //当前选择的城市
+
+                currentDealer: {}, //当前经销商
+
+                // currentModelId: "", //当前车型id
+
             }
         },
         onLoad(options) {
-            this.currentCity = options
-            this.reqDealersList(options.id)
-            this.reqSerialDetail(this.$store.state.currentModelId)
-
-            this.serialId = options.id
-            // this.reqAllCityList(0)
-            // this.reqSerialDetail(options.id)
+            this.serialId = options.serialId || ""
+            this.reqSerialDetail(options.serialId)
         },
         methods: {
             //检测信息是否齐全
@@ -111,33 +95,12 @@ const COUNTDOWN = 60
                     this.isAllSelect = false
                 }
             },
-
-            //获取城市列表
-            // async reqAllCityList() {
-            //     try {
-            //         const {code,data:{letterGroup}} = await api.fetchAllCityList()
-            //         let tempArr = []
-            //         if(code === 1) {
-            //             for(let k in letterGroup) {
-            //                letterGroup[k].map(v=>{
-            //                    tempArr.push(v)
-            //                })
-            //             }
-            //         }
-            //         this.cityList = tempArr
-            //         this.currentCity = tempArr[this.cityIndex]
-            //     } catch (error) {
-            //         console.error(error)
-            //     }
-            // },
-
             //获取经销商列表
             async reqDealersList(cityId) {
                 try {
                     const {code,data} = await api.fetchDealersList({cityId})
                     if(code === 1) {
                         this.dealersList = data
-                        console.log('data :>> ', data);
                     }
                 } catch (error) {
                     console.error(error)
@@ -156,7 +119,7 @@ const COUNTDOWN = 60
                 }
             },
             //获取验证码
-            getCode() {
+            async getCode() {
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
@@ -172,10 +135,16 @@ const COUNTDOWN = 60
                         clearInterval(this.timer)
                     }
                 },1000)
+                try {
+                    const res = await api.fetchCode({mobile:this.phoneNum})
+                    console.log('res :>> ', res);
+                } catch (error) {
+                    console.error(error)
+                }
             },
 
             //立即预约
-            yuYue() {
+            async yuYue() {
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
@@ -185,6 +154,30 @@ const COUNTDOWN = 60
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
+                try {
+                    const res = await api.submitClue({
+                        cityId:this.currentCity.id,
+                        mobile:this.phoneNum,
+                        provinceId:this.currentCity.provinceId,
+                        serialGroupId:this.serialId,
+                        source:2,
+                        sourceId:1,
+                        smsCode:this.codeNum,
+                        dealerId:this.currentDealer.id || "",
+                        sourceId:this.serialId
+                    })
+                    if(res.code === 1) {
+                         this.$refs.pop.isShow = true
+                    }else {
+                        return uni.showToast({
+                            title:res.msg,
+                            icon:"none"
+                        })
+                    }
+                    console.log('res :>> ', res);
+                } catch (error) {
+                    console.error(error)
+                }
             },
             //经销商点击，判断提示
             changDealers(){
@@ -194,6 +187,10 @@ const COUNTDOWN = 60
                         icon:"none"
                     })
                 }
+                // /this.currentCity.id
+                uni.navigateTo({
+					url: "/pages/ChooseDealer?cityId="+ this.currentCity.id
+				})
             },
             //选择城市
             goChooseCity(){

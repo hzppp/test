@@ -7,7 +7,7 @@
                 {{item.name}}
             </view>
             <view class="price">
-                ¥<text>{{item.minPrice*10000 | formatThousand}}</text>起
+                ¥<text>{{item.minPrice | formatThousand}}</text>起
             </view>
 		</view>
     </view>
@@ -26,15 +26,17 @@ import api from '@/public/api/index'
                 noun:'', //改变左边或者右边的车系判断
                 leftSerialId:"", //左边车系id
                 rightSerialId:"", //右边车系id
-                pages:""
+                pages:"",
+                type:""
             }
         },
         onLoad(options) {
             console.log('options :>> ', options);
-            this.pages = options.pages
-            this.noun = options.noun
-            this.vs = options.vs
-            this.serialId = options.serialId
+            this.pages = options.pages || ""
+            this.noun = options.noun || ""
+            this.vs = options.vs || ""
+            this.serialId = options.serialId || ""
+            this.type = options.type || ""
             this.reqSerialScreenList()
         },
         methods: {
@@ -50,10 +52,15 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(id) {
+                if(this.type === "calc") {
+                    return  uni.redirectTo({
+                        url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
+                    })
+                }
                 if(this.pages === "YuyuePage") {
-                  this.$store.commit('changModel',id)
-                  return  uni.navigateTo({
-                        url:`/pages/YuyuePage?`
+                    this.$store.commit('changModel',id)
+                    return  uni.navigateTo({
+                        url:`/pages/YuyuePage?serialId=${id}`
                     })
                 }
                 if(this.noun) {
@@ -81,9 +88,10 @@ import api from '@/public/api/index'
         },
         filters: {
             //千份位逗号
-            formatThousand (num) {  
-                var reg=/\d{1,3}(?=(\d{3})+$)/g;   
-                return (num + '').replace(reg, '$&,');  
+            formatThousand (num) {
+                num = num*1000*10
+                var reg=/\d{1,3}(?=(\d{3})+$)/g;
+                return (num + '').replace(reg, '$&,');
             }
         },
     }
@@ -94,7 +102,7 @@ import api from '@/public/api/index'
     padding: 40rpx;
 	.serial-item {
 		display: flex;
-        align-items: center;    
+        align-items: center;
         margin-top: 56rpx;
 		image {
 			width: 340rpx;

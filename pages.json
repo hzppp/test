@@ -164,7 +164,7 @@
     }
     ,{
         "path" : "pages/ChooseSerial",
-        "style" :
+        "style" :                                                                                    
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
@@ -172,7 +172,7 @@
     }
     ,{
         "path" : "pages/ChooseSerialList",
-        "style" :
+        "style" :                                                                                    
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
@@ -180,7 +180,7 @@
     }
     ,{
         "path" : "pages/ChooseModels",
-        "style" :
+        "style" :                                                                                    
         {
             "navigationBarTitleText": "选择车型",
             "enablePullDownRefresh": false
@@ -188,7 +188,7 @@
     }
     ,{
         "path" : "pages/ChooseDealer",
-        "style" :
+        "style" :                                                                                    
         {
             "navigationBarTitleText": "选择经销商",
             "enablePullDownRefresh": false
@@ -196,7 +196,7 @@
     }
 	,{
 		"path" : "pages/liveDetail",
-		"style" :
+		"style" :                                                                                    
 		{
 		    "navigationBarTitleText": "",
 		    "enablePullDownRefresh": false,
@@ -211,6 +211,23 @@
 		"navigationStyle": "custom"
 	  }
 	}
+	,{
+		"path" : "pages/AddYuYue",
+		"style" :                                                                                    
+		{
+		    "navigationBarTitleText": "添加试驾车型",
+		    "enablePullDownRefresh": false
+		}
+	}
+    ,{
+          "path" : "pages/vrInFrame/vrInFrame",
+          "style" :                                                                                    
+          {
+              "navigationBarTitleText": "",
+              "enablePullDownRefresh": false
+          }
+          
+      }
   ],
   "tabBar": {
     "custom": true,
@@ -231,12 +248,12 @@
         "iconPath": "static/images/2.png",
         "selectedIconPath": "static/images/1.png"
       },
-      {
-        "pagePath": "pages/exhibition",
-        "text": "云展馆",
-        "iconPath": "static/images/2.png",
-        "selectedIconPath": "static/images/1.png"
-      },
+      // {
+      //   "pagePath": "pages/exhibition",
+      //   "text": "云展馆",
+      //   "iconPath": "static/images/2.png",
+      //   "selectedIconPath": "static/images/1.png"
+      // },
       {
         "pagePath": "pages/welfareActivity",
         "text": "活动",

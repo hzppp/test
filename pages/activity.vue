@@ -1,6 +1,6 @@
 <template>
 	<view class="activity">
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
     <share-pop ref="shareSuccess"></share-pop>
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>

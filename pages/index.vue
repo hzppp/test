@@ -9,19 +9,19 @@
           <view class="article linkItem" @tap="goArtList">
             <view class="title">发现</view>
             <view class="info">探索更多精彩</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
           </view>
         </view>
         <view class="linkContR">
           <view class="testDrive linkItem rItem"  @tap="goTestDrive">
             <view class="title">预约试驾</view>
             <view class="info">试驾快人一步</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
           </view>
           <view class="calculation linkItem rItem" @tap="goCalc">
             <view class="title">购车计算</view>
             <view class="info">价格一目了然</view>
-            <image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
           </view>
         </view>
       </view>
@@ -29,17 +29,21 @@
         <view class="hotTab">
           热门
         </view>
-        <view v-for="(item,index) in pageData.list" :key="index" class="actItem">
+        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
-            <!--status 当为直播类型时 1未开始  2正在进行  3已结束-->
+            <!--status 当为直播类型时 1直播中  2预告  3回放-->
 <!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
-            <view class="icon1 status_4"></view>
+            <view :class="'icon1 '+ `status_${item.contentType}`" v-if="item.contentType !=3"></view>
+            <view v-else>
+              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status == 2 && item.startTime">{{item.startTime}}开播</view>
+              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status !== 2"></view>
+            </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
-            <image class="img banner" :src="item.picUrl"  lazy-load="true"></image>
+            <image class="img banner" :src="item.picUrl" lazy-load></image>
             <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
-              <view class="icon2">{{'车展福利'|| item.type}}</view>
+<!--              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>-->
               <view class="title ovh">{{item.title}}</view>
             </view>
           </view>
@@ -63,8 +67,30 @@ export default {
   data() {
     return {
       pageData:{bannerActivity:{},list:[]},
-      testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a'
+      testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
     }
+  },
+  filters: {
+    actType(type) {
+      switch (type) {
+        case 1: {
+          return '购车福利'
+          break;
+        }
+        case 2: {
+          return '车主福利'
+          break;
+        }
+        case 3: {
+          return '线下活动'
+          break;
+        }
+        case 4: {
+          return '试驾活动'
+          break;
+        }
+      }
+    },
   },
   onShow() {
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
@@ -75,14 +101,20 @@ export default {
     }
   },
   async onLoad(options) {
-    this.pageData = await api.getHomepageData().then(res => {
+    const resData = (await this.getCityId()) || [500000,500000]
+    const provinceId = resData[0]
+    const cityId = resData[1]
+    this.pageData = await api.getHomepageData({
+      cityId: cityId,
+      cityCode: app.globalData.currentLocation.realPositionCS.cityCode
+    }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
   },
   onUnload() {
   },
   onShareAppMessage() {
-    let title = '奥迪东海汇：轻松开启精彩车生活'
+    let title = '长安云车展'
     let path = `pages/authorization?to=index`
     if (app.globalData.salesId) {
       path += `&salesId=${app.globalData.salesId}`
@@ -95,6 +127,105 @@ export default {
     }
   },
   methods: {
+    async getCityId() {
+      let currentLocation = app.globalData.currentLocation
+      if (currentLocation) {
+        const provinceList = await this.reqProvinceList()
+        console.log('sdsdsd',provinceList)
+        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+        if (crtLocationProvinceItem) {
+          const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+          if (crtLocationCityItem) {
+            this.crtProvinceItem = crtLocationProvinceItem
+            this.crtCityItem = crtLocationCityItem
+            console.log('this.crtProvinceItem',this.crtProvinceItem,this.crtCityItem)
+            return [crtLocationProvinceItem.id,crtLocationCityItem.id]
+          }
+        }
+      }
+    },
+    // 请求所有的省份
+    async reqProvinceList () {
+      let res = [];
+      try {
+        res = await api.fetchProvinceList().then(res => {
+          return res.code == 1?res.data : []
+        })
+        console.log('rrr',res)
+        return res
+      } catch(err) {
+        this.showToast('获取省份信息失败')
+        console.error(err)
+        return res
+      }
+    },
+    // 根据省份id请求城市
+    async reqCityListByProvinceId (provinceId) {
+      let res = []
+      try {
+        res = await api.fetchCityListByProvinceId({provinceId}).then(res => {
+          return res.code == 1?res.data : []
+        })
+        console.log('ccc',res)
+        return res
+      } catch (err) {
+        this.showToast('获取城市信息失败')
+        console.error(err)
+        return res
+      }
+    },
+    handleLinkHot(type,id,status) {
+      //type:1资讯，2活动，3直播
+      //status:1直播中，2预告，3回放
+      console.log('type,id,status',type,id,status,typeof(type))
+      switch (type) {
+        case 1: {
+          uni.navigateTo({
+            url: `/pages/article?articleId=${id}`
+          })
+          break;
+        }
+        case 2: {
+          uni.navigateTo({
+            url: `/pages/activity?id=${id}`
+          })
+          break;
+        }
+        case 3: {
+          switch (status) {
+            case 1: {
+              this.goMP(id,'verticalLive')
+              break;
+            }
+            case 2: {
+              uni.navigateTo({
+                url: `/pages/liveDetail?liveId=${id}`
+              })
+              break;
+            }
+            case 3: {
+              this.goMP(id,'verticalPlayback')
+              break;
+            }
+          }
+          break;
+        }
+      }
+    },
+    goMP(id,type) { //跳转pcauto+
+      uni.navigateToMiniProgram({
+        appId: 'wxa860d5a996074dbb',
+        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}`,
+        success: res => {
+          // 打开成功
+          console.log("打开成功", res);
+        },
+        fail: err => {
+          console.log(err);
+        }
+      });
+    },
     goArtList() {
       uni.navigateTo({
         url: `/pages/articleListPage`
@@ -102,7 +233,7 @@ export default {
     },
     goCalc() {
       uni.navigateTo({
-        url: `/pages/calc`
+        url: `/pages/ChooseSerial?type=calc`
       })
     },
     goTestDrive() {
@@ -236,46 +367,31 @@ export default {
       top: -2rpx;
 
       &.status_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.status_2 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.status_3 {
-        font-size: 20rpx;
-        line-height: 36rpx;
-        color: #fff;
-        width: auto;
-        background: #55a4f1;
-        padding: 0 40rpx;
-        box-sizing: content-box;
-        &::before {
-          content: '';
-          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_l.png") no-repeat;
-          background-size: contain;
-          position: absolute;
-          left:0;
-          width: 60rpx;
-          height: 40rpx;
-        }
-        &::after {
-          content: '';
-          background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_r.png") no-repeat;
-          background-size: contain;
-          position: absolute;
-          right:0;
-          width: 60rpx;
-          height: 40rpx;
-        }
-      }
-      &.status_4 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art.png") no-repeat;
         background-size: contain;
       }
-      &.status_5 {
+      &.status_2 {
         background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act.png") no-repeat;
+        background-size: contain;
+      }
+      &.play_1 {
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
+        background-size: contain;
+      }
+      &.play_2 {
+        width: 270rpx;
+        font-size: 20rpx;
+        color: #fff;
+        width: auto;
+        background: #55a4f1;
+        padding-left: 48rpx;
+        box-sizing: border-box;
+        line-height: 36rpx;
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay.png") no-repeat;
+        background-size: contain;
+      }
+      &.play_3 {
+        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay.png") no-repeat;
         background-size: contain;
       }
     }
@@ -299,6 +415,7 @@ export default {
         color: #fff;
         margin-right: 12rpx;
         top: -36rpx;
+        border-radius: 8rpx;
       }
       .title {
         display: inline-block;

@@ -21,7 +21,7 @@ var DOMAIN_R = {
 
 //测试环境域名
 var DOMAIN_T = {
-	csbHost:"https://price.pcauto.com.cn",//基础信息
+	csbHost:"https://testprice.pcauto.com.cn",//基础信息
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	magearHost:"https://magear.pcauto.com.cn",
 	host:"https://testpocket2.pcauto.com.cn",
@@ -29,7 +29,7 @@ var DOMAIN_T = {
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
     pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://devqd-changan.pcauto.com.cn",
+	changan:"https://tccar.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
@@ -41,7 +41,7 @@ const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
 const config = {
 
-	appName: '奥迪部落',
+	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
 
@@ -62,7 +62,8 @@ const config = {
 		//我的活动列表
 		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
-		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
+		getLiveList:`${DOMAIN.changan}/api/xcx/livestream/list`,
+		getLiveDetail:`${DOMAIN.changan}/api/xcx/livestream/detail`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
@@ -83,7 +84,7 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
-		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail`,
+		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
 		// getPanosInfo2 获取vr看车图片
 		getPanosInfo2: `${DOMAIN.panorama}/intf/getAllApprInfo.jsp`,
 		// vehicleOupons 车型展厅，获取优惠券
@@ -176,17 +177,23 @@ const config = {
 		// 根据城市id获取经销商
 		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取车型对比对比数据
-		fetchCarSerialContrast: `${DOMAIN.csbHost}/price/api/v1/model/pk`,
+		fetchCarSerialContrast: `${DOMAIN.changan}/api/xcx/model/pk`,
 		//获取车系详情
 		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
 		//获取车型列表
+		fetchModelsList:`${DOMAIN.changan}/api/xcx/model/list`,
+		//获取车系筛选列表
 		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
-		//获取车系筛选列表 
+		//获取车系筛选列表
 		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取车系
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
 		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
+        //获取验证码
+        fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+        //预约试驾
+        postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
 		//计算器获取车型

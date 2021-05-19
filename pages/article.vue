@@ -1,6 +1,6 @@
 <template>
 	<view class="article">
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
+<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
     <loading ref="loading"></loading>
 		<share-pop ref="sharepop"></share-pop>
 		<getFormidbox>
@@ -72,7 +72,7 @@
 			this.articleType = 2
 			this.articleId = options.articleId
 			let data = await api.getArticleContent(options.articleId)
-			if(data.code !=1){
+			if(data.code !=1 || !data.data){
 				// this.$invoke('loading','changeLoading')
 				this.$refs.loading.changeLoading(false)
 				let duration = 2000
@@ -83,12 +83,19 @@
 				})
 				setTimeout(()=>{
 					uni.reLaunch({
-						url:`/pages/autoTribe?current=1`
+						url:`/pages/index`
 					})
 				},duration)
 				return false
 			}
-
+      if(!data.data) {
+        data.data = {
+          content : '',
+          title : '',
+          publishTime : '',
+          pictureUrl : ''
+        }
+      }
 			let {
 				content = '',
 				title = '',
