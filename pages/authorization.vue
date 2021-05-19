@@ -85,6 +85,12 @@
 					"regionCode": "500105"
 				}
 			}
+			const cityData = app.globalData.currentLocation.cityData
+			app.globalData.currentLocation.selectedCityData = { // 设置当前选择的省市
+				pro: cityData.pro,
+				city: cityData.city,
+			}
+			
 			let cs = ''
 			let url = '/pages/index'
 			for(let i in options){

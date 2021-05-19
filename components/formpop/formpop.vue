@@ -351,10 +351,10 @@
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
 					await this.reqProvinceList()
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
 						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.city.replace('市', ''))
+						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
 						if (crtLocationCityItem) {
 							this.crtProvinceItem = crtLocationProvinceItem
 							this.crtCityItem = crtLocationCityItem
