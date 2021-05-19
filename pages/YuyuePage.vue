@@ -95,26 +95,6 @@ const COUNTDOWN = 60
                     this.isAllSelect = false
                 }
             },
-
-            //获取城市列表
-            // async reqAllCityList() {
-            //     try {
-            //         const {code,data:{letterGroup}} = await api.fetchAllCityList()
-            //         let tempArr = []
-            //         if(code === 1) {
-            //             for(let k in letterGroup) {
-            //                letterGroup[k].map(v=>{
-            //                    tempArr.push(v)
-            //                })
-            //             }
-            //         }
-            //         this.cityList = tempArr
-            //         this.currentCity = tempArr[this.cityIndex]
-            //     } catch (error) {
-            //         console.error(error)
-            //     }
-            // },
-
             //获取经销商列表
             async reqDealersList(cityId) {
                 try {
@@ -175,7 +155,7 @@ const COUNTDOWN = 60
                     icon:"none"
                 })
                 try {
-                    const res = await api.postYuYueDrive({
+                    const res = await api.submitClue({
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
@@ -183,10 +163,16 @@ const COUNTDOWN = 60
                         source:2,
                         sourceId:1,
                         smsCode:this.codeNum,
-                        dealerId:this.currentDealer.id || ""
+                        dealerId:this.currentDealer.id || "",
+                        sourceId:this.serialId
                     })
                     if(res.code === 1) {
                          this.$refs.pop.isShow = true
+                    }else {
+                        return uni.showToast({
+                            title:res.msg,
+                            icon:"none"
+                        })
                     }
                     console.log('res :>> ', res);
                 } catch (error) {

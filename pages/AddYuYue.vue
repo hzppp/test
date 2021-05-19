@@ -28,11 +28,9 @@ export default {
     methods: {
         onLoad(options) {
             console.log('options :>> ', options);
-            if(options.pages === 'canpei') {
-                this.mids = options.mids
-                this.serialId = options.serialId
-                this.pages = options.pages
-            }
+            this.mids = options.mids || ""
+            this.serialId = options.serialId || ""
+            this.pages = options.pages || ""
             this.reqSerialScreenList()
         },
         async reqSerialScreenList() {

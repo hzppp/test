@@ -59,9 +59,10 @@
             },
             //go参配页
             add() {
-                let tempMids = ""
-                tempMids = this.mids + ","+ this.currentValue.join(",")
-                console.log('tempMids :>> ', tempMids);
+                // let newMids
+                let tempMids = this.mids + ","+ this.currentValue.join(",")
+                // newMids = tempMids.split(",")
+                // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
                     uni.navigateTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
@@ -71,7 +72,7 @@
             //goSingle 单选跳转
             goSingle(item) {
                 if(this.type === "calc") {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })
                 }
@@ -80,8 +81,6 @@
 				console.log('e :>> ', e);
 				this.currentCount = e.detail.value.length
 				this.currentValue = e.detail.value
-                console.log('this.currentCount :>> ', this.currentCount);
-                console.log('this.currentValue :>> ', this.currentValue);
                 var items = this.items,
                     values = e.detail.value;
                 // for (var i = 0, lenI = items.length; i < lenI; ++i) {
