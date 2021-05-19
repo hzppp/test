@@ -53,7 +53,7 @@ import api from '@/public/api/index'
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(id) {
                 if(this.type === "calc") {
-                    return  uni.navigateTo({
+                    return  uni.redirectTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
                 }

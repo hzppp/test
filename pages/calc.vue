@@ -523,7 +523,7 @@
 				this.animationData = animation.export()
 			},
 			goModel(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url: "/pages/ChooseSerial?type=calc"
 				})
 			},

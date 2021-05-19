@@ -41,7 +41,7 @@
 		methods: {
 			goCanPei() {
 				uni.redirectTo({
-					url:`/pages/canpei?navigateBack=1&compare=true&ids=${this.ids}&serialId=${this.serialId}`
+					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
 			},
             goSerialList() {
