@@ -60,7 +60,7 @@ import api from '@/public/api/index'
                 if(this.pages === "YuyuePage") {
                     this.$store.commit('changModel',id)
                     return  uni.navigateTo({
-                        url:`/pages/YuyuePage?`
+                        url:`/pages/YuyuePage?serialId=${id}`
                     })
                 }
                 if(this.noun) {

@@ -182,6 +182,7 @@ const COUNTDOWN = 60
                         serialGroupId:this.serialId,
                         source:2,
                         sourceId:1,
+                        smsCode:this.codeNum,
                         dealerId:this.currentDealer.id || ""
                     })
                     if(res.code === 1) {
@@ -191,12 +192,6 @@ const COUNTDOWN = 60
                 } catch (error) {
                     console.error(error)
                 }
-                console.log('this.currentCity :>> ', this.currentCity);
-                console.log('this.currentDealer :>> ', this.currentDealer);
-                console.log('this.phoneNum :>> ', this.phoneNum);
-                console.log('this.codeNum :>> ', this.codeNum);
-                console.log('this.serialId :>> ', this.serialId);
-                console.log('this.currentCity.provinceId :>> ', this.currentCity.provinceId);
             },
             //经销商点击，判断提示
             changDealers(){
