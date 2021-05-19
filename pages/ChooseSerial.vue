@@ -26,14 +26,17 @@ import api from '@/public/api/index'
                 noun:'', //改变左边或者右边的车系判断
                 leftSerialId:"", //左边车系id
                 rightSerialId:"", //右边车系id
-                pages:""
+                pages:"",
+                type:""
             }
         },
         onLoad(options) {
-            this.pages = options.pages
-            this.noun = options.noun
-            this.vs = options.vs
-            this.serialId = options.serialId
+            console.log('options :>> ', options);
+            this.pages = options.pages || ""
+            this.noun = options.noun || ""
+            this.vs = options.vs || ""
+            this.serialId = options.serialId || ""
+            this.type = options.type || ""
             this.reqSerialScreenList()
         },
         methods: {
@@ -49,9 +52,14 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(id) {
+                if(this.type === "calc") {
+                    return  uni.navigateTo({
+                        url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
+                    })
+                }
                 if(this.pages === "YuyuePage") {
-                  this.$store.commit('changModel',id)
-                  return  uni.navigateTo({
+                    this.$store.commit('changModel',id)
+                    return  uni.navigateTo({
                         url:`/pages/YuyuePage?`
                     })
                 }
