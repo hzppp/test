@@ -149,6 +149,10 @@ export default {
       } = e
       this.crtProvinceItem = this.provinceList[detail.value[0]]
       this.crtCityItem = this.cityList[detail.value[1]]
+	  app.globalData.currentLocation.selectedCityData = { // 设置当前选择的城市
+	  	pro: this.crtProvinceItem.name,
+	  	city: this.crtCityItem.name,
+	  }
       this.resetjson()
       this.getWelfare()
       this.getactivity()
@@ -250,6 +254,7 @@ export default {
     },
     // 请求所有的省份
     async reqProvinceList () {
+		this.provinceList = []
       try {
         const res = await api.fetchProvinceList()
         if (res.code == 1) {

@@ -9,7 +9,10 @@
 		  host:"https://testpocket.pcauto.com.cn",
 		  panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 		  //panorama:"http://t-panorama.pcauto.com.cn",
-		  currentLocation:{},//当前位置
+		  currentLocation:{ //当前位置
+			  cityData: {} , // 当前定位的位置
+			  selectedCityData: {}, // 当前选择的位置
+		  },
 		  userInfo: null,
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
       wxUserInfo: null,
