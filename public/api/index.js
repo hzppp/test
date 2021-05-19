@@ -26,22 +26,6 @@ module.exports = {
                 coords: zb
             }
         })
-        console.log(data)
-        app.globalData.currentLocation.realPositionSF = data
-        if (data.proCode == '330000' || data.proCode == '350000') {
-
-        } else {
-            data = {
-                "pro": "重庆市",
-                "proCode": "500000",
-                "city": "重庆",
-                "cityCode": "500000",
-                "region": "",
-                "regionCode": "",
-                "error": ""
-            }
-            console.log('---------------------')
-        }
         return data
     },
 	getAreaInfo: async (regionId) => {
@@ -218,10 +202,10 @@ module.exports = {
 			data
 		})
 		// 新增获取用户信息
-		if(!app.globalData.pocketUserInfo){
-			await module.exports.getPocketUserInfo();
-			// await this.getPocketUserInfo()
-		}
+		// if(!app.globalData.pocketUserInfo){
+		// 	await module.exports.getPocketUserInfo();
+		// 	// await this.getPocketUserInfo()
+		// }
 	},
 	// 手机号解密
 	decryptPhone: async (encryptedData, iv) => {
@@ -320,10 +304,10 @@ module.exports = {
             data
         })
         // 新增获取用户信息
-        if (!app.globalData.pocketUserInfo) {
-            await module.exports.getPocketUserInfo();
-            // await this.getPocketUserInfo()
-        }
+        // if (!app.globalData.pocketUserInfo) {
+        //     await module.exports.getPocketUserInfo();
+        //     // await this.getPocketUserInfo()
+        // }
     },
     // 手机号解密
     decryptPhone: async (encryptedData, iv) => {

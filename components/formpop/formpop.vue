@@ -288,7 +288,7 @@
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
-					serialGroupId: this.crtSerialItem.id,
+					serialGroupId: this.crtSerialItem.pcSerialGroupId,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,
@@ -342,7 +342,7 @@
 			},
 			async getpreClue() {
 				// 手机号码
-				this.phone = app.globalData.phone
+				this.phone = uni.getStorageSync('userPhone');
 				
 				// 车系
 				this.reqSerialList()
@@ -354,7 +354,7 @@
 					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
 						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.city.replace('市', ''))
 						if (crtLocationCityItem) {
 							this.crtProvinceItem = crtLocationProvinceItem
 							this.crtCityItem = crtLocationCityItem

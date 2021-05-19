@@ -61,28 +61,28 @@
 				let {data} = await api.getUser()
 				app.globalData.getUserData = data
 			}
-			if(!app.globalData.pocketUserInfo){
-				await api.getPocketUserInfo()
-			}
+			// if(!app.globalData.pocketUserInfo){
+			// 	await api.getPocketUserInfo()
+			// }
 			if(!app.globalData.currentLocation.wxPosition){
 				let position = await distance.getLocation()
 				console.log('position==================',position)
 				if(position){
 					let cs = `${position.longitude},${position.latitude}`
-					let wz = await api.getIpAreaCoord(cs)
-					let {cityData} = await api.getRegionIpArea(wz.cityCode)
-					if(app.globalData.currentLocation.realPositionSF){
-						api.getRegionIpArea(app.globalData.currentLocation.realPositionSF.cityCode).then(res=>{
-							console.log('真实定位城市', res.cityData,cityData)
-							// console.log('真实定位城市', wz,app.globalData.currentLocation.realPositionSF)
-							app.globalData.currentLocation.realPositionCS = res.cityData
-							app.globalData.currentLocation.cityData = res.cityData
-
-						}).catch(err => {
-							app.globalData.currentLocation.cityData = cityData
-						})
-					}
+					let cityData = await api.getIpAreaCoord(cs)
+          console.log('cityData',cityData)
+					app.globalData.currentLocation.cityData = cityData
 					app.globalData.currentLocation.wxPosition = position
+				}
+			} else {
+				app.globalData.currentLocation.cityData = {
+					"city": "重庆市",
+					"cityCode": "500000",
+					"error": "",
+					"pro": "重庆市",
+					"proCode": "500000",
+					"region": "江北区",
+					"regionCode": "500105"
 				}
 			}
 			let cs = ''
