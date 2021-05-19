@@ -21,7 +21,7 @@ var DOMAIN_R = {
 
 //测试环境域名
 var DOMAIN_T = {
-	csbHost:"https://price.pcauto.com.cn",//基础信息
+	csbHost:"https://testprice.pcauto.com.cn",//基础信息
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	magearHost:"https://magear.pcauto.com.cn",
 	host:"https://testpocket2.pcauto.com.cn",
