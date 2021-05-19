@@ -177,6 +177,10 @@ export default {
       }
     },
     handleLinkHot(type,id,status,sourceId) {
+      // type = 3
+      // id = 48965835
+      // status = 'verticalLive'
+      // status = 1
       //type:1资讯，2活动，3直播
       //status:1直播中，2预告，3回放
       console.log('type,id,status',type,id,status,typeof(type))
@@ -221,16 +225,19 @@ export default {
       }
     },
     goMP(id,type,sourceId) { //跳转pcauto+
+      const oUrl = `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+      console.log('oUrl',oUrl)
       uni.navigateToMiniProgram({
         appId: 'wxa860d5a996074dbb',
-        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`,
+        path: oUrl,
         success: res => {
           // 打开成功
           console.log("打开成功", res);
         },
         fail: err => {
           console.log(err);
-        }
+        },
+        envVersion: 'trial'
       });
     },
     goArtList() {
