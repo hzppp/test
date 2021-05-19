@@ -186,7 +186,17 @@
 					border-bottom-right-radius: 8rpx;
 					// .setbg(152rpx,  36rpx, 'live_tag3.png')
 					// .dflex(center,center);
-					
+					&::after{
+						content:"";
+						position: absolute;
+						left: 0;
+						top:100%;
+						border-width: 0 4rpx 4rpx;
+						    border-style: solid;
+						    border-color: transparent transparent #444444;
+							transform: rotate(45deg);
+							z-index: -1;
+					}
 					.icon {
 						display: inline-block;
 						margin-right:10rpx;
