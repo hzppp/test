@@ -112,7 +112,7 @@
 			// 前往车系详情页
 			tofirmIndex(serialId){
 				uni.navigateTo({
-					url:"/pages/firmIndex/firmIndex?serialId="+serialId
+					url:"/pages/LookCar?id="+serialId
 				})
 			},
 			// 0left 1right
