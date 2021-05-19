@@ -101,12 +101,13 @@ export default {
     }
   },
   async onLoad(options) {
-    const resData = (await this.getCityId()) || [500000,500000]
+    const resData = (await this.getCityId()) || [1000000022,1000000022]
     const provinceId = resData[0]
     const cityId = resData[1]
+    const cityCode = app.globalData.currentLocation ? app.globalData.currentLocation.cityData.cityCode : 500000
     this.pageData = await api.getHomepageData({
       cityId: cityId,
-      cityCode: app.globalData.currentLocation.cityData.cityCode
+      cityCode: cityCode
     }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
