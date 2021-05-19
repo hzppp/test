@@ -90,7 +90,7 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.phone = data.phoneNumber
+					uni.setStorageSync('userPhone', data.phoneNumber)
 					this.phone = data.phoneNumber
 				}
 				
@@ -98,10 +98,7 @@
 				this.isRuleShow = false
 			},
 			setcouponList(list) {
-				this.phone = ''
-				if (app.globalData && app.globalData.phone) {
-					this.phone = app.globalData.phone
-				}
+				this.phone = uni.getStorageSync('userPhone');
 				for (let i in list) {
 					list[i].endTime = list[i].endTime.replace(/-/g, ".")
 					list[i].startTime = list[i].startTime.replace(/-/g, ".")

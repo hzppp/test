@@ -342,7 +342,7 @@
 			},
 			async getpreClue() {
 				// 手机号码
-				this.phone = app.globalData.phone
+				this.phone = uni.getStorageSync('userPhone');
 				
 				// 车系
 				this.reqSerialList()
