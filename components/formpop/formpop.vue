@@ -1,6 +1,6 @@
 <template>
 	<view class="formpop" v-if="isShowFormPop">
-		<view class="form" v-if="popName == 'form'">
+		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
 				<view class="p1">{{title}}</view>
 				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
@@ -22,7 +22,7 @@
 					<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 				</picker>
 				<view class="input-view mobile-input name-input">
-					<input type="text" @input="getValue('name',$event)" :value="name" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
+					<input type="text" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
 				<view class="input-view mobile-input">
 					<input type="text" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
@@ -300,34 +300,27 @@
 				if (data.code == 1) { //成功留资
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
-					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
-						this.showToast('报名成功', 500)
-						// setTimeout(() => {
-						// 	this.towebView2()
-						// }, 500)
 					} else {
 						popname = 'form-success-pop'
 					}
+					this.popName = popname
 				} else if (data.code == 2) { //重复留资
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
-					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
-						this.showToast('您已留过资，可直接抽奖', 500)
-						// setTimeout(() => {
-						// 	this.towebView2()
-						// }, 500)
 					} else {
 						popname = 'form-warning-pop'
 					}
+					this.popName = popname
 				} else {
 					if (ly == 'coupon') {
 						popname = 'coupon-sb-pop'
+						this.showToast(data.msg)
 					} else {
 						popname = 'form-sb-pop'
+						this.showToast(data.msg)
 					}
 				}
-				this.popName = popname
-
+				
 				console.log(data)
 			},
 			toMyPage() {
@@ -336,31 +329,6 @@
 					url
 				})
 			},
-			// towebView2() {
-			// 	this.isShowFormPop = false
-			// 	if (this.currentObj.duibaUrl) {
-			// 		let redirect = {
-			// 			'redirect': this.currentObj.duibaUrl
-			// 		}
-			// 		api.getMallLink(redirect).then(res => {
-			// 			let vurl = escape(res.data)
-			// 			let url = `/pages/webview?webURL=${vurl}`
-			// 			uni.navigateTo({
-			// 				url
-			// 			})
-			// 			console.log('MallLink', res)
-			// 		})
-			// 	} else {
-			// 		api.getMallLink().then(res => {
-			// 			let vurl = escape(res.data)
-			// 			let url = `/pages/webview?webURL=${vurl}`
-			// 			uni.navigateTo({
-			// 				url
-			// 			})
-			// 			console.log('MallLink', res)
-			// 		})
-			// 	}
-			// },
 			isPoneAvailable(phoneNumber) {
 				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
 				if (!myreg.test(phoneNumber)) {

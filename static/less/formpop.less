@@ -13,7 +13,7 @@
 }
 .ppp{
     .pa(50%,50%);
-    transform: translate(-50%,-50%);
+    transform: translate(-50%,-55%);
 }
 .sb-icon{
     .arc(130rpx);
@@ -78,7 +78,13 @@
 }
 .form{
     width: 560rpx;
-    .ppp;
+    position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -48%);
+	&.coupon {
+		transform: translate(-50%, -55%);
+	}
     .header{
         height: 160rpx;
         background-color: #fa8845;
@@ -95,7 +101,7 @@
     }
     .content{
         background: #fff;
-        padding: 40rpx;
+        padding: 20rpx 20rpx;
         .bb20;
     }
     .input-view{
