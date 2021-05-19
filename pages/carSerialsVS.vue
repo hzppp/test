@@ -48,6 +48,10 @@
 			</view>
 		</view>
 		<!-- 数据对比E -->
+        <view class="view-all" @tap="goCanpei">
+            <view>查看完整配置对比</view>
+            <view class="arrow"></view>
+        </view>
 	</view>
 </template>
 <script>
@@ -78,7 +82,19 @@
 					this.SerialIds = this.SerialIds.split(',')[0] + ',' + val.id
 				}
 				this.init()
-			}
+			},
+            mid1() {
+                this.getVsDownData(this.mid1,this.mid2)
+            },
+            mid2() {
+                this.getVsDownData(this.mid1,this.mid2)
+            },
+            leftSerialId() {
+                this.init()
+            },
+            rightSerialId() {
+                this.init()
+            }
 		},
 		data() {
 			return {
@@ -117,8 +133,7 @@
 			}
 		},
         onShow(){
-            this.getVsDownData(this.mid1,this.mid2)
-            this.init()
+            // this.init()
         },
 		onLoad(options) {
 			console.log('options :>> ', options);
@@ -154,6 +169,12 @@
 					this.loadFail = true
 				}
 			},
+            //查看完整参数对比
+            goCanpei() {
+				uni.navigateTo({
+					url: `/pages/canpei?mids=${this.mid1},${this.mid2}`
+				})
+            },
             // 数组交叉排序重组
             setArr(arr1,arr2){
                 for (let i in arr2) {
@@ -339,6 +360,15 @@
         background-image: url("../static/images/right_arrow.png");
         background-size: auto 100%;
         background-repeat: no-repeat;
+    }
+    .view-all {
+        display: flex;
+        text-align: center;
+        font-size: 24rpx;
+        color: #333333;
+        align-items: center;
+        justify-content: center;
+        margin: 40rpx 0;
     }
 }
 </style>
