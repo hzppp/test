@@ -140,7 +140,6 @@
 </template>
 <script>
 	import { dataInit } from "@/jsfiles/canpei";
-	import ContrastCar from "@/units/ContrastCar.js";
 	import countPage from '@/configs/countPage';
 	export default {
 		data() {
@@ -295,15 +294,6 @@
 				this.difData = ""
 				// #endif
 				this.Data.detailArray.splice(index, 1);
-				// delete this.$store.state.selectCars["id_" + id];
-				// if (this.navigateBack == '2') {
-				// 	ContrastCar.remove(id);
-				// }
-				// let res = await dataInit(this.Data);
-				// this.dataList = res.dataList
-				// this.$nextTick(() => {
-				// 	this.difData = res.difData
-				// })
 			},
 			// 前往锚点位置
 			toView(index) {
@@ -617,6 +607,7 @@
 
 						.opc {
 							opacity: 0.3;
+                            pointer-events: none;
 						}
 					}
 				}
