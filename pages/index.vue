@@ -106,7 +106,7 @@ export default {
     const cityId = resData[1]
     this.pageData = await api.getHomepageData({
       cityId: cityId,
-      cityCode: app.globalData.currentLocation.realPositionCS.cityCode
+      cityCode: app.globalData.currentLocation.cityData.cityCode
     }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
@@ -135,7 +135,7 @@ export default {
         const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
         if (crtLocationProvinceItem) {
           const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.city.replace('市', ''))
           if (crtLocationCityItem) {
             this.crtProvinceItem = crtLocationProvinceItem
             this.crtCityItem = crtLocationCityItem

@@ -26,22 +26,6 @@ module.exports = {
                 coords: zb
             }
         })
-        console.log(data)
-        app.globalData.currentLocation.realPositionSF = data
-        if (data.proCode == '330000' || data.proCode == '350000') {
-
-        } else {
-            data = {
-                "pro": "重庆市",
-                "proCode": "500000",
-                "city": "重庆",
-                "cityCode": "500000",
-                "region": "",
-                "regionCode": "",
-                "error": ""
-            }
-            console.log('---------------------')
-        }
         return data
     },
 	getAreaInfo: async (regionId) => {
