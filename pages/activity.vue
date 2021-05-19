@@ -77,7 +77,7 @@
 			app.Interval = setInterval(() => {
 				this.downDate(data.endTime)
 			}, 1000)
-			this.phone = app.globalData.phone
+			this.phone = uni.getStorageSync('userPhone');
 			this.content = data
 		},
 		onShareAppMessage() {
@@ -118,7 +118,7 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.phone = data.phoneNumber
+					uni.setStorageSync('userPhone', data.phoneNumber)
 					this.phone = data.phoneNumber
 
 					this.$refs.formpop.formShow('form', 'activity', this.content)
