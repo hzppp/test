@@ -288,7 +288,7 @@
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
-					serialGroupId: this.crtSerialItem.id,
+					serialGroupId: this.crtSerialItem.pcSerialGroupId,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,

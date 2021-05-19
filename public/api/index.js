@@ -218,10 +218,10 @@ module.exports = {
 			data
 		})
 		// 新增获取用户信息
-		if(!app.globalData.pocketUserInfo){
-			await module.exports.getPocketUserInfo();
-			// await this.getPocketUserInfo()
-		}
+		// if(!app.globalData.pocketUserInfo){
+		// 	await module.exports.getPocketUserInfo();
+		// 	// await this.getPocketUserInfo()
+		// }
 	},
 	// 手机号解密
 	decryptPhone: async (encryptedData, iv) => {
@@ -320,10 +320,10 @@ module.exports = {
             data
         })
         // 新增获取用户信息
-        if (!app.globalData.pocketUserInfo) {
-            await module.exports.getPocketUserInfo();
-            // await this.getPocketUserInfo()
-        }
+        // if (!app.globalData.pocketUserInfo) {
+        //     await module.exports.getPocketUserInfo();
+        //     // await this.getPocketUserInfo()
+        // }
     },
     // 手机号解密
     decryptPhone: async (encryptedData, iv) => {

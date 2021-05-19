@@ -61,9 +61,9 @@
 				let {data} = await api.getUser()
 				app.globalData.getUserData = data
 			}
-			if(!app.globalData.pocketUserInfo){
-				await api.getPocketUserInfo()
-			}
+			// if(!app.globalData.pocketUserInfo){
+			// 	await api.getPocketUserInfo()
+			// }
 			if(!app.globalData.currentLocation.wxPosition){
 				let position = await distance.getLocation()
 				console.log('position==================',position)
