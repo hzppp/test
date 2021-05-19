@@ -25,8 +25,12 @@
 					<input type="text" @input="getValue('name',$event)" :value="name" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
 				<view class="input-view mobile-input">
-					<input type="text" :value="phone" :disabled="isphone ? true :false" placeholder="请填写您的手机号码" placeholder-class="placeholder"
+					<input type="text" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
 					 @input="getValue('phone',$event)" maxlength="11"></input>
+				</view>
+				<view class="input-view mobile-input sms-code-input">
+					<input type="text" v-model="smsCode" placeholder="请输入验证码" placeholder-class="placeholder"></input>
+					<view class="sms-code-btn" @tap="getSmsCodeClick">{{smsCodeText}}</view>
 				</view>
 				<view class="btn" @tap="submit">提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
@@ -104,7 +108,11 @@
 				phone: "",
 				isphone: false,
 				name: "",
-				isActLink: false
+				isActLink: false,
+				smsCode: "", // 验证码s
+				smsCodeTime: 0, // 验证码计时
+				smsCodeTimer: null, // 验证码计时器
+				smsCodeText: "获取验证码", // 显示的验证码文本
 			}
 		},
 		computed: {
@@ -143,10 +151,42 @@
 				this.from = from
 				this.currentObj = obj
 				this.title = title
+				this.smsCode = ''
 				this.getpreClue()
 			},
 			formHide() {
 				this.isShowFormPop = false
+			},
+			// 获取验证码被点击
+			getSmsCodeClick () {
+				if(!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(this.phone)) {
+					uni.showToast({
+					    title:"请输入正确的手机号码",
+					    icon:"none"
+					})
+					return
+				}
+				
+				if (this.smsCodeTime > 0) {
+					return
+				}
+				
+				this.smsCodeTime = 60
+				this.smsCodeText = this.smsCodeTime
+				this.reqCode()
+			},
+			// 验证码倒计时
+			smsCodeCD () {
+				this.smsCodeTimer = setTimeout(() => {
+					this.smsCodeTime--
+					this.smsCodeText = this.smsCodeTime
+					if (this.smsCodeTime <= 0) {
+						this.smsCodeText = '重新发送'
+						clearTimeout(this.smsCodeTimer)
+					} else {
+						this.smsCodeCD()
+					}
+				}, 1000)
 			},
 			getDealerChangeIndex(e) {
 				let {
@@ -240,6 +280,10 @@
 					this.showToast('请选择经销商')
 					return false
 				}
+				if (!this.smsCode) {
+					this.showToast('请输入验证码')
+					return false
+				}
 				let data = await api.submitClue({
 					mobile: this.phone,
 					name: this.name,
@@ -250,6 +294,7 @@
 					dealerId: this.crtDealerItem.id,
 					areaId: this.crtDistrictItem.id,
 					provinceId: this.crtProvinceItem.id,
+					smsCode: this.smsCode,
 				})
 				let popname
 				if (data.code == 1) { //成功留资
@@ -338,7 +383,7 @@
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
 					await this.reqProvinceList()
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
+					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
 						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
 						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
@@ -351,6 +396,21 @@
 					}
 				}
 				this.isShowFormPop = true
+			},
+			// 发送验证码
+			async reqCode () {
+				try {
+					const res = await api.fetchCode({mobile: this.phone})
+					if (res.code == 1) {
+						this.showToast('发送验证码成功')
+						this.smsCodeCD()
+					} else {
+						this.showToast(res.msg)
+					}
+				} catch(err) {
+					this.showToast('发送验证码失败')
+					console.error(err)
+				}
 			},
 			// 请求所有车系
 			async reqSerialList () {

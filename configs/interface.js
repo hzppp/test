@@ -29,7 +29,7 @@ var DOMAIN_T = {
 	panorama:"https://panorama.pcauto.com.cn",
     UPCHost:"https://upc.pcauto.com.cn",
     pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://devqd-changan.pcauto.com.cn",
+	changan:"https://tccar.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 }
 
@@ -41,7 +41,7 @@ const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
 const config = {
 
-	appName: '奥迪部落',
+	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
 
@@ -62,7 +62,8 @@ const config = {
 		//我的活动列表
 		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
-		getLiveList:'${DOMAIN.changan}/api/xcx/livestream/list',
+		getLiveList:`${DOMAIN.changan}/api/xcx/livestream/list`,
+		getLiveDetail:`${DOMAIN.changan}/api/xcx/livestream/detail`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
 		// 获取价格
@@ -168,18 +169,20 @@ const config = {
         //获取经销商列表
         fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
-		fetchProvinceList: `${DOMAIN.mock}/api/xcx/base/provinces`,
+		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
-		fetchCityListByProvinceId: `${DOMAIN.mock}/api/xcx/base/getCities`,
+		fetchCityListByProvinceId: `${DOMAIN.changan}/api/xcx/base/getCities`,
 		// 根据城市id获取地区
-		fetchDistrictListByCityId: `${DOMAIN.mock}/api/xcx/base/getDistricts`,
+		fetchDistrictListByCityId: `${DOMAIN.changan}/api/xcx/base/getDistricts`,
 		// 根据城市id获取经销商
-		fetchDealerListByCityId: `${DOMAIN.mock}/api/xcx/base/getDealers`,
+		fetchDealerListByCityId: `${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取车型对比对比数据
 		fetchCarSerialContrast: `${DOMAIN.changan}/api/xcx/model/pk`,
 		//获取车系详情
 		fetchSerialDetail: `${DOMAIN.changan}/api/xcx/serialGroup/detail`,
 		//获取车型列表
+		fetchModelsList:`${DOMAIN.changan}/api/xcx/model/list`,
+		//获取车系筛选列表
 		fetchSerialList:`${DOMAIN.changan}/api/xcx/model/list`,
 		//获取车系筛选列表
 		fetchSerialScreenList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
@@ -187,10 +190,16 @@ const config = {
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
 		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
+        //获取验证码
+        fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+        //预约试驾
+        postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
 		//计算器获取车型
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
+		// 获取验证码
+		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 	},
 	getAPI(key) {
 		let url;

@@ -101,6 +101,17 @@ module.exports = {
 		})
 		return data;
 	},
+	/* 直播详情 */
+	getLiveDetail:async(params)=>{
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getLiveDetail'),
+			data: params
+		})
+		console.log('直播详情===',data)
+		return data;
+	},
 	// 获取车系列表
 	getAutoSerialList: async () => {
 		if (app.globalData.showVehicle) {
@@ -877,9 +888,9 @@ module.exports = {
 		return data
 	},
 	// 获取车型列表
-	fetchSerialList: async(para) => {
+	fetchModelsList: async(para) => {
 		let {data} = await request({
-			url:domain.getAPI('fetchSerialList'),
+			url:domain.getAPI('fetchModelsList'),
 			method: "GET",
 			data: para
 		})
@@ -893,7 +904,28 @@ module.exports = {
 			data: para
 		})
 		return data
-    },
+	},
+    //获取验证码
+	fetchCode: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchCode'),
+			method: "POST",
+			data: para,
+            header: {
+                "Content-Type":"application/x-www-form-urlencoded"
+            }
+		})
+		return data
+	},
+    //预约试驾
+	postYuYueDrive: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('postYuYueDrive'),
+			method: "POST",
+			data: para,
+		})
+		return data
+	},
        	// 计算器获取车型
 	getCalcModel: async(para) => {
 		let {data} = await request({
@@ -903,4 +935,16 @@ module.exports = {
 		})
 		return data
     },
+	//获取验证码
+	fetchCode: async(para) => {
+			let {data} = await request({
+					url:domain.getAPI('fetchCode'),
+					method: "POST",
+					data: para,
+		header: {
+			"Content-Type":"application/x-www-form-urlencoded"
+		}
+			})
+			return data
+	},
 }

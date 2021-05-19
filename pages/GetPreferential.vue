@@ -6,12 +6,11 @@
         <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
-        <view class="head-info">
-            <image mode="heightFix" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1361135963,570304265&fm=26&gp=0.jpg" />
-            <view class="text-dec">
-                <view class="title">长安</view>
-                <view class="serial">2021款</view>
-                <view class="price">指导价:    11:55万</view>
+        <view class="head-info" >
+            <image mode="heightFix" :src="serialData.picHeadUrl" />
+            <view class="text-dec" @tap="changeSerial">
+                <view class="title">{{serialData.name}}</view>
+                <view class="price">指导价:    {{serialData.price}}万</view>
             </view>
             <view class="arrow"></view>
         </view>
@@ -33,18 +32,9 @@
             <!-- 验证码E -->
             <!-- 城市选择S -->
             <view class="list models">
-                <view class="list-title">城市</view>
-                <view class="select">
-                    <view class="uni-list">
-                        <view class="uni-list-cell">
-                            <view class="uni-list-cell-db">
-                                <picker @change="cityPickerChange" :value="cityList[cityIndex]" :range="cityList" range-key="name">
-                                    <view v-if="test">{{test}}</view>
-                                    <view class="uni-input" v-else>{{cityList[cityIndex].name}}</view>
-                                </picker>
-                            </view>
-                        </view>
-                    </view>
+                <view class="list-title" >城市</view>
+                <view class="select" @tap="goChooseCity">
+                    {{currentCity.name?currentCity.name:''}}
                 </view>
                 <view class="arrow"></view>
             </view>
@@ -52,16 +42,8 @@
             <!-- 经销商S -->
             <view class="list models">
                 <view class="list-title">经销商</view>
-                <view class="select">
-                    <view class="uni-list">
-                        <view class="uni-list-cell">
-                            <view class="uni-list-cell-db">
-                                <picker @change="dealersPickerChange" :value="cityList[dealersIndex]" :range="dealersList" range-key="name">
-                                    <view class="uni-input">{{dealersList[dealersIndex].name}}</view>
-                                </picker>
-                            </view>
-                        </view>
-                    </view>
+                <view class="select" @tap="changDealers">
+                    {{currentDealer.name? currentDealer.name : ''}}
                 </view>
                 <view class="arrow"></view>
             </view>
@@ -101,36 +83,51 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 dealersList: [], //经销商列表
 
                 currentCaraSerial: 'qq', //当前的车系名字
-                currentCity:{}, //当前选择的城市
-                test: '默认全局城市广州test',
-                cityIndex: 71, //城市默认下标(广州)
                 isAllSelect: false, //信息是否已经全部完成
+
+                currentCity:{}, //当前选择的城市
+
+                currentDealer: {}, //当前经销商
+                serialData: {}, //车系详情
+                serialId:"" //车系id
             }
         },
-        onLoad() {
-            this.reqAllCityList(0)
+        onLoad(options) {
+            this.serialId = options.serialId || ""
+            this.reqSerialDetail(options.serialId)
         },
         methods: {
-
-            //获取城市列表
-            async reqAllCityList() {
+            //车系详情
+            async reqSerialDetail(sgId) {
                 try {
-                    const {code,data:{letterGroup}} = await api.fetchAllCityList()
-                    let tempArr = []
-                    if(code === 1) {
-                        for(let k in letterGroup) {
-                           letterGroup[k].map(v=>{
-                               tempArr.push(v)
-                           })
-                        }
+                    const {code,data} = await api.fetchSerialDetail({sgId})
+                    if(code ===1 ) {
+                        this.serialData = data
+                        console.log('data :>> ', data);
                     }
-                    this.cityList = tempArr
-                    this.currentCity = tempArr[this.cityIndex]
                 } catch (error) {
                     console.error(error)
                 }
             },
-
+            //经销商点击，判断提示
+            changDealers(){
+                if(!this.currentCity.id) {
+                    return uni.showToast({
+                        title:"请选择城市",
+                        icon:"none"
+                    })
+                }
+                // /this.currentCity.id
+                uni.navigateTo({
+					url: "/pages/ChooseDealer?cityId="+ this.currentCity.id
+				})
+            },
+            //切换车系
+            changeSerial() {
+                uni.navigateTo({
+					url: "/pages/AddYuYue"
+				})
+            },
             //获取经销商列表
             async reqDealersList(cityId) {
                 try {
@@ -144,7 +141,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
 
             //获取验证码
-            getCode() {
+            async getCode() {
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -159,6 +156,12 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         clearInterval(this.timer)
                     }
                 },1000)
+                try {
+                    const res = await api.fetchCode({mobile:this.phoneNum})
+                    console.log('res :>> ', res);
+                } catch (error) {
+                    console.error(error)
+                }
             },
             //检测信息是否齐全
             checkInfo() {
@@ -167,6 +170,12 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 }else {
                     this.isAllSelect = false
                 }
+            },
+            //选择城市
+            goChooseCity(){
+                uni.navigateTo({
+					url: "/pages/ChooseCity"
+				})
             },
             //立即预约
             yuYue() {
@@ -253,6 +262,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             .select {
                 flex: 1;
                 margin-left: 20rpx;
+                height: 100%;
+                display: flex;
+                align-items: center;
             }
             .get-code {
                 color: #fa8943;

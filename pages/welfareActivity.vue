@@ -94,11 +94,11 @@ export default {
   },
   async onShow() {
     this.resetjson()
-    api.getUser()
+    // api.getUser()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '') == currentLocation.cityData.pro.replace('省', ''))
+      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
       if (crtLocationProvinceItem) {
         await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
         const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
@@ -117,7 +117,7 @@ export default {
 
   },
   onShareAppMessage() {
-    let title = '奥迪东海汇：活动优惠都在这里！'
+    let title = '长安云车展：活动优惠都在这里！'
     let path = `pages/authorization?to=welfareActivity`
     if (app.globalData.salesId) {
       path += `?salesId=${app.globalData.salesId}`

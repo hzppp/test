@@ -127,10 +127,10 @@
 					})
 				}
 			},
-			// 询底价
+			// 预约试驾
 			yuYue(id){
-				uni.redirectTo({
-					url:"/pages/YuyuePage?id="+id
+				uni.navigateTo({
+					url:"/pages/YuyuePage?serialId="+id
 				})
 			}
 		}

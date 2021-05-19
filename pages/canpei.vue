@@ -4,16 +4,6 @@
 		<!-- 车型对比计数器 S -->
 		<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
 		<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
-		
-		<!-- #ifdef MP-WEIXIN -->
-		<!-- <count :channel="9778" v-if="navigateBack == '1'"></count> -->
-		<!-- <count :channel="9787" v-if="navigateBack == '2'"></count> -->
-		<!-- #endif -->
-		<!-- #ifdef MP-BAIDU -->
-		<!-- <count :channel="9841" v-if="navigateBack == '1'" :__uuid="serialId+':1'"></count> -->
-		<!-- <count :channel="9850" v-if="navigateBack == '2'"></count> -->
-		<!-- #endif -->
-		<!-- 车型对比计数器 D -->
 		<back-home></back-home>
 		<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
 			<view class="icon">
@@ -21,13 +11,13 @@
 			</view>
 			<text>导航</text>
 		</view>
-		<!-- <block v-if="nodata">
+		<block v-if="nodata">
 			<view class="nodata_box">
 				<view class="nodata">
 					<view class="td">暂无参配信息</view>
 				</view>
 			</view>
-		</block> -->
+		</block>
 		<block>
 			<view class="canpei_top">
 				<view class="canpei_top_left" @tap="toggleHide">
@@ -109,7 +99,7 @@
                                                         <view :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']">{{d.value}}</view>
 														<view v-if="d.key === '官方报价'">
 															<view class="zdj_box">
-																<view class="zdj" @tap.stop="toXdj(idx)">预约试驾</view>
+																<view class="zdj" @tap.stop="toYuYue(idx)">预约试驾</view>
 															</view>
 														</view>
 													</view>
@@ -191,15 +181,10 @@
 			this.$store.state.selectCars = {}
 		},
 		onLoad(options) {
-			// options = {
-			// 	navigateBack: "1",
-			// 	max: "4",
-			// 	serialId: "3996",
-			// 	ids:"3996"
-			// };
 			uni.showLoading({
 				title: "加载中"
 			})
+            console.log('options :>> ', options);
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
 			this.mids = options.ids || "";
@@ -209,15 +194,6 @@
 				ids = ids.split(",").slice(0, 4);
 			}
 			this.ids = ids;
-			// if (options.navigateBack == '1') {
-			// 	uni.setNavigationBarTitle({
-			// 		title: '参配'
-			// 	})
-			// } else {
-			// 	uni.setNavigationBarTitle({
-			// 		title: '车型对比'
-			// 	})
-			// }
 			this.addGlobalSelectCar(this.ids)
 			this.init()
 		},
@@ -253,21 +229,10 @@
 				}
 				this.$store.state.selectCars = ret;
 			},
-			// 打开计算器
-			toCalc(index) {
-				// uni.navigateTo({
-				// 	url: `/pages_car/calc/calc?id=${this.Data.detailArray[index].modelId}&serialId=${this.Data.detailArray[index].serialGorupId}`
-				// })
-			},
-			// 前往询底价
-			// toXdj(index) {
-			// 	uni.navigateTo({
-			// 		url: `/pages_car/xdj/xdj?mid=${this.Data.detailArray[index].modelId}&sid=${this.Data.detailArray[index].serialGorupId}`
-			// 	})
-			// },
 			async init() {
 				try {
 					let data = await this.getCarData(this.mids);
+                    console.log('data :>> ', data);
 					//只传车系Id不传mids进来，会导致carNum未被初始化
 					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
 						let carIds = [];
@@ -283,7 +248,6 @@
 					let res = await dataInit(data);
 					this.dataList = res.dataList;
 					this.difData = res.difData;
-					// console.log('-------', this.dataList, this.difData)
 					uni.hideLoading()
 				} catch (e) {
 					if (e == 0) { //没有数据
@@ -299,6 +263,7 @@
 					// #endif
 					try {
 						let data = await this.getCarData(this.$store.state.selectCars.newSelect);
+                        console.log('data222 :>> ', data);
 						this.Data.detailArray = this.Data.detailArray.concat(data.detailArray[0]);
 						let res = await dataInit(this.Data);
 						this.dataList = res.dataList;
@@ -321,20 +286,24 @@
 			},
 			// 添加车型
 			addCar() {
-				if (!this.offon || this.Data.detailArray.length >= 4 || JSON.stringify(this.Data) == '{}') return;
-				this.offon = false;
-				let url = ""
-				if (this.navigateBack == '1') { //从车系首页点击参配过来，点击添加车带车系
-					url = '/pages_car/chooseModels/chooseModels?navigateBack=2&serialId=' + this.serialId + '&serialName=' + this.sidName;
-				} else if (this.navigateBack == '2') { //从车系首页点击开始对比过来，点击添加车型不带车系
-					url = '/pages_car/chooseModels/chooseModels?navigateBack=3&compare=true';
-				}
-				uni.navigateTo({
-					url,
-					success: () => {
-						this.offon = true
-					}
-				})
+                uni.navigateTo({
+					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids}&pages=canpei`
+                })
+				// if (!this.offon || this.Data.detailArray.length >= 4 || JSON.stringify(this.Data) == '{}') return;
+				// this.offon = false;
+				// let url = ""
+				// if (this.navigateBack == '1') { //从车系首页点击参配过来，点击添加车带车系
+				// 	url = '/pages_car/chooseModels/chooseModels?navigateBack=2&serialId=' + this.serialId + '&serialName=' + this.sidName;
+				// } else if (this.navigateBack == '2') { //从车系首页点击开始对比过来，点击添加车型不带车系
+				// 	url = '/pages_car/chooseModels/chooseModels?navigateBack=3&compare=true';
+				// }
+				// uni.navigateTo({
+				// 	url,
+				// 	success: () => {
+				// 		this.offon = true
+				// 	}
+				// })
+
 			},
 			// 删除车型
 			async delCar(id, index) {
@@ -361,6 +330,12 @@
 			getX(e) {
 				this.Left = e.detail.scrollLeft
 			},
+            //go预约试驾
+            toYuYue(idx) {
+                uni.navigateTo({
+                    url:"/pages/YuyuePage?serialId=" + this.serialId
+                })
+            },
 			// 设置scroll-view的值
 			setLeft(e) {
 				setTimeout(() => {
@@ -533,7 +508,7 @@
         }
 
 		.canpei_top {
-			height: 200rpx;
+			height: 170rpx;
 			width: #fff;
 			border-bottom: 2rpx solid #D9D9D9;
 			@include flex_left_center;
@@ -559,10 +534,14 @@
 				.canpei_top_left_title {
 					width: 100%;
 					text-align: center;
+                    height: 162rpx;
+                    line-height: 162rpx;
+                    border: 2rpx solid #ddd;
 					color: #333333;
 					margin-top: 10rpx;
 					font-size: 26rpx;
                     font-weight: 800;
+                    box-sizing: border-box;
 				}
 			}
 
@@ -579,15 +558,14 @@
 
 					.car_list {
 						width: 250rpx;
-						margin: 0 5rpx;
 						margin-top: 10rpx;
 						display: inline-block;
 						border: 2rpx solid #ddd;
-						border-radius: 10rpx;
 						padding: 5rpx 15rpx;
 						position: relative;
 						font-size: 24rpx !important;
-
+                        height: 162rpx;
+                        box-sizing: border-box;
 						.item {
 							@include flex_center_center;
 							height: 150rpx;

@@ -211,6 +211,23 @@
 		"navigationStyle": "custom"
 	  }
 	}
+	,{
+		"path" : "pages/AddYuYue",
+		"style" :                                                                                    
+		{
+		    "navigationBarTitleText": "添加试驾车型",
+		    "enablePullDownRefresh": false
+		}
+	}
+    ,{
+          "path" : "pages/vrInFrame/vrInFrame",
+          "style" :                                                                                    
+          {
+              "navigationBarTitleText": "",
+              "enablePullDownRefresh": false
+          }
+          
+      }
   ],
   "tabBar": {
     "custom": true,
