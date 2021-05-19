@@ -42,11 +42,9 @@
                 console.log('options :>> ', options);
                 this.single = options.single || false
                 this.type = options.type || ""
-                if(options.pages === "canpei") {
-                    this.pages = options.pages
-                    this.serialId = options.serialId
-                    this.mids = options.mids
-                }
+                this.serialId = options.serialId || ""
+                this.pages = options.pages || ""
+                this.mids = options.mids || ""
                 this.reqModelsList(options.serialId)
             },
             async reqModelsList(sgId) {
