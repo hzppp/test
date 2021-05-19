@@ -248,12 +248,12 @@
         "iconPath": "static/images/2.png",
         "selectedIconPath": "static/images/1.png"
       },
-      {
-        "pagePath": "pages/exhibition",
-        "text": "云展馆",
-        "iconPath": "static/images/2.png",
-        "selectedIconPath": "static/images/1.png"
-      },
+      // {
+      //   "pagePath": "pages/exhibition",
+      //   "text": "云展馆",
+      //   "iconPath": "static/images/2.png",
+      //   "selectedIconPath": "static/images/1.png"
+      // },
       {
         "pagePath": "pages/welfareActivity",
         "text": "活动",

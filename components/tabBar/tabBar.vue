@@ -64,9 +64,17 @@ export default {
   methods: {
     tabbarChange(path) {
       // this.$pageTo.toTab(path);
-      uni.switchTab({
-        url: path
-      })
+	  //  云展厅先加上导航可以返回
+	  if(path == 'exhibition'){
+		  uni.navigateTo({
+		  	url:'/pages/exhibition'
+		  })
+	  }else{
+		uni.switchTab({
+		  url: path
+		})  
+	  }
+     
     }
   }
 }
