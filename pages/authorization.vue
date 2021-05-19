@@ -73,9 +73,11 @@
 					let {cityData} = await api.getRegionIpArea(wz.cityCode)
 					if(app.globalData.currentLocation.realPositionSF){
 						api.getRegionIpArea(app.globalData.currentLocation.realPositionSF.cityCode).then(res=>{
-							console.log('真实定位城市', res)
+							console.log('真实定位城市', res.cityData,cityData)
+							// console.log('真实定位城市', wz,app.globalData.currentLocation.realPositionSF)
 							app.globalData.currentLocation.realPositionCS = res.cityData
 							app.globalData.currentLocation.cityData = res.cityData
+
 						}).catch(err => {
 							app.globalData.currentLocation.cityData = cityData
 						})

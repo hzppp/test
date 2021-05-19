@@ -198,6 +198,8 @@ const config = {
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
 		//计算器获取车型
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
+		// 获取验证码
+		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 	},
 	getAPI(key) {
 		let url;
