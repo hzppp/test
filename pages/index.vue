@@ -29,7 +29,7 @@
         <view class="hotTab">
           热门
         </view>
-        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
+        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -176,7 +176,7 @@ export default {
         return res
       }
     },
-    handleLinkHot(type,id,status) {
+    handleLinkHot(type,id,status,sourceId) {
       //type:1资讯，2活动，3直播
       //status:1直播中，2预告，3回放
       console.log('type,id,status',type,id,status,typeof(type))
@@ -195,8 +195,14 @@ export default {
         }
         case 3: {
           switch (status) {
+            case 0: {
+              uni.navigateTo({
+                url: `/pages/liveDetail?liveId=${id}`
+              })
+              break;
+            }
             case 1: {
-              this.goMP(id,'verticalLive')
+              this.goMP(id,'verticalLive',sourceId)
               break;
             }
             case 2: {
@@ -206,7 +212,7 @@ export default {
               break;
             }
             case 3: {
-              this.goMP(id,'verticalPlayback')
+              this.goMP(id,'verticalPlayback',sourceId)
               break;
             }
           }
@@ -214,10 +220,10 @@ export default {
         }
       }
     },
-    goMP(id,type) { //跳转pcauto+
+    goMP(id,type,sourceId) { //跳转pcauto+
       uni.navigateToMiniProgram({
         appId: 'wxa860d5a996074dbb',
-        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}`,
+        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`,
         success: res => {
           // 打开成功
           console.log("打开成功", res);

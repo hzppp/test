@@ -16,10 +16,10 @@
 						<view class="icon"></view> {{item.startTime}}开始播放
 					</view>
 					<view class="status yellow" v-if="item.status==1">
-						
+
 					</view>
 					<view class="status green" v-if="item.status==3">
-						
+
 					</view>
 				</view>
 				<view class="title">
@@ -86,7 +86,7 @@
 				}else if(item.status==1){ /* 直播中 */
 					uni.navigateToMiniProgram({
 						 appId: 'wxa860d5a996074dbb',
-						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive',
+						  path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=${item.roomId}&souceId=${item.id}`,
 						  extraData: {},
 						  success(res) {
 						    // 打开成功
@@ -96,7 +96,7 @@
 					//回放
 					uni.navigateToMiniProgram({
 						 appId: 'wxa860d5a996074dbb',
-						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback',
+						  path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=${item.playId}&souceId=${item.id}`,
 						  extraData: {},
 						  success(res) {
 						    // 打开成功
@@ -221,7 +221,7 @@
 				height: 100rpx;
 				.setbg(100rpx, 100rpx, 'livePlay.png')
 			}
-			
+
 		}
 		.title{
 			font-weight: 800;
