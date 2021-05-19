@@ -7,7 +7,7 @@
                 {{item.name}}
             </view>
             <view class="price">
-                ¥<text>{{item.minPrice*10000 | formatThousand}}</text>起
+                ¥<text>{{item.minPrice | formatThousand}}</text>起
             </view>
 		</view>
     </view>
@@ -88,9 +88,10 @@ import api from '@/public/api/index'
         },
         filters: {
             //千份位逗号
-            formatThousand (num) {  
-                var reg=/\d{1,3}(?=(\d{3})+$)/g;   
-                return (num + '').replace(reg, '$&,');  
+            formatThousand (num) {
+                num = num*1000*10
+                var reg=/\d{1,3}(?=(\d{3})+$)/g;
+                return (num + '').replace(reg, '$&,');
             }
         },
     }
@@ -101,7 +102,7 @@ import api from '@/public/api/index'
     padding: 40rpx;
 	.serial-item {
 		display: flex;
-        align-items: center;    
+        align-items: center;
         margin-top: 56rpx;
 		image {
 			width: 340rpx;
