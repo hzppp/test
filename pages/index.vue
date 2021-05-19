@@ -29,7 +29,7 @@
         <view class="hotTab">
           热门
         </view>
-        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
+        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -101,12 +101,13 @@ export default {
     }
   },
   async onLoad(options) {
-    const resData = (await this.getCityId()) || [500000,500000]
+    const resData = (await this.getCityId()) || [1000000022,1000000022]
     const provinceId = resData[0]
     const cityId = resData[1]
+    const cityCode = app.globalData.currentLocation ? app.globalData.currentLocation.cityData.cityCode : 500000
     this.pageData = await api.getHomepageData({
       cityId: cityId,
-      cityCode: app.globalData.currentLocation.cityData.cityCode
+      cityCode: cityCode
     }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
@@ -175,7 +176,11 @@ export default {
         return res
       }
     },
-    handleLinkHot(type,id,status) {
+    handleLinkHot(type,id,status,sourceId) {
+      // type = 3
+      // id = 48965835
+      // status = 'verticalLive'
+      // status = 1
       //type:1资讯，2活动，3直播
       //status:1直播中，2预告，3回放
       console.log('type,id,status',type,id,status,typeof(type))
@@ -194,8 +199,14 @@ export default {
         }
         case 3: {
           switch (status) {
+            case 0: {
+              uni.navigateTo({
+                url: `/pages/liveDetail?liveId=${id}`
+              })
+              break;
+            }
             case 1: {
-              this.goMP(id,'verticalLive')
+              this.goMP(id,'verticalLive',sourceId)
               break;
             }
             case 2: {
@@ -205,7 +216,7 @@ export default {
               break;
             }
             case 3: {
-              this.goMP(id,'verticalPlayback')
+              this.goMP(id,'verticalPlayback',sourceId)
               break;
             }
           }
@@ -213,17 +224,20 @@ export default {
         }
       }
     },
-    goMP(id,type) { //跳转pcauto+
+    goMP(id,type,sourceId) { //跳转pcauto+
+      const oUrl = `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+      console.log('oUrl',oUrl)
       uni.navigateToMiniProgram({
         appId: 'wxa860d5a996074dbb',
-        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}`,
+        path: oUrl,
         success: res => {
           // 打开成功
           console.log("打开成功", res);
         },
         fail: err => {
           console.log(err);
-        }
+        },
+        envVersion: 'trial'
       });
     },
     goArtList() {

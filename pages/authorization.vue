@@ -70,6 +70,7 @@
 				if(position){
 					let cs = `${position.longitude},${position.latitude}`
 					let cityData = await api.getIpAreaCoord(cs)
+          console.log('cityData',cityData)
 					app.globalData.currentLocation.cityData = cityData
 					app.globalData.currentLocation.wxPosition = position
 				}
