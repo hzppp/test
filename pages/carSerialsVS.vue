@@ -12,7 +12,21 @@
 			<basic-info :leftSerial="leftSerial" :rightSerial="rightSerial"></basic-info>
 			<!-- 基本信息E -->
 		</view>
-
+        <!-- 配置对比S -->
+        <view class="configuration">
+            <view class="title">配置对比</view>
+            <view class="models-wrap">
+                <view class="car-model" @tap="changModel(leftSerial.serialId,1)">
+                    <view class="dec">{{powerErank4ModelA.modelName}}</view>
+                     <view class="arrow"></view>
+                </view>
+                <view class="car-model" @tap="changModel(rightSerial.serialId,2)">
+                    <view class="dec">{{powerErank4ModelB.modelName}}</view>
+                    <view class="arrow"></view>
+                </view>
+            </view>
+        </view>
+        <!-- 配置对比E -->
 		<!-- 数据对比S -->
 		<view class="data-vs">
 			<view class="vs-content" v-for="(title,index) in powerEquipGroupList" :key="index">
@@ -71,7 +85,7 @@
 				countPage,//页面计数器id
 				loadFail: false,
 				types: 0, //顶部样式默认是0，滑动到一定距离后改成1
-				SerialIds: "",
+				// SerialIds: "",
 				city: "广州",
 				cityId: 1,
 				offon: true, //true走onload的init，false走onshow的init；防止onload数据还未初始化就执行了init(百度小程序)
@@ -83,7 +97,16 @@
 				powerEquipGroupList: [], //对比头
 
 				modelEquipA: [], //车a的数据-左
-				modelEquipB: [] //车b的数据-右
+				modelEquipB: [], //车b的数据-右
+                powerErank4ModelA:{}, //车型a的数据-左
+                powerErank4ModelB:{}, //车型b的数据-右
+
+                mid1:'', //左边车型id
+                mid2:'', //右边车型id
+
+                leftSerialId:"", //左车系id
+                rightSerialId:"" //右车系id
+
 			}
 		},
 		onPageScroll(e) {
@@ -93,11 +116,19 @@
 				this.types = 1
 			}
 		},
+        onShow(){
+            this.getVsDownData(this.mid1,this.mid2)
+            this.init()
+        },
 		onLoad(options) {
 			console.log('options :>> ', options);
-			if (options.leftSerialId && options.rightSerialId) {
-				this.SerialIds = options.leftSerialId + ',' + options.rightSerialId
-			}
+            this.mid1 = options.mid1 || ''
+            this.mid2 = options.mid2 || ''
+            this.leftSerialId = options.leftSerialId || ''
+            this.rightSerialId = options.rightSerialId || ''
+			// if (options.leftSerialId && options.rightSerialId) {
+			// 	this.SerialIds = options.leftSerialId + ',' + options.rightSerialId
+			// }
 			// Location.init((data) => {
 			// 	if (data) {
 			// 		this.city = data.city
@@ -106,12 +137,12 @@
 			// 	this.init()
 			// })
             this.init()
-			this.getVsDownData()
+			this.getVsDownData(options.mid1,options.mid2)
 		},
 		methods: {
 			async init() {
 				try {
-					let data = await this.getVsData(this.SerialIds);
+					let data = await this.getVsData();
 					this.worthRead = data.worthRead;
 					this.leftSerial = data.leftSerial;
 					this.rightSerial = data.rightSerial;
@@ -131,14 +162,13 @@
                 return arr1;
             },
             //获取对比车系
-             getVsData(ids,rid){
+             getVsData(){
                 return new Promise((reolve,resject)=>{
                     uni.request({
                         url:domain.getAPI('fetchVSserials'),
                         data:{
-                            rid,
-                            leftSerialId:ids.split(",")[0],
-                            rightSerialId:ids.split(",")[1]
+                            leftSerialId:this.leftSerialId,
+                            rightSerialId:this.rightSerialId
                         },
                         success:res=>{
                             let data =res.data;
@@ -171,21 +201,29 @@
 					}
 				})
 			},
+            //切换车型 
+            changModel(id,sort) {
+                uni.navigateTo({
+					url: `/pages/ChooseModels?pages=vs&serialId=${id}&sort=mid${sort}&single=true`
+				})
+            },
 			//获取文字对比数据
-			async getVsDownData() {
+			async getVsDownData(mid1,mid2) {
 				try {
-					const {modelEquipA,modelEquipB,modelEquipA:{powerEquipGroupList}} = await api.fetchCarSerialContrast({mid1:102631,mid2:94839})
-					this.powerEquipGroupList = powerEquipGroupList
+					const res = await api.fetchCarSerialContrast({mid1,mid2})
+                    this.powerErank4ModelA = res.modelEquipA.powerErank4Model
+                    this.powerErank4ModelB = res.modelEquipB.powerErank4Model
+					this.powerEquipGroupList = res.modelEquipA.powerEquipGroupList
 					let tempModelEquipA = []
 					let tempModelEquipB = []
-					for(let A in modelEquipA) {
-						if(A <= powerEquipGroupList.length) {
-							tempModelEquipA.push(modelEquipA[A])
+					for(let A in res.modelEquipA) {
+						if(A <= res.modelEquipA.powerEquipGroupList.length) {
+							tempModelEquipA.push(res.modelEquipA[A])
 						}
 					}
-					for(let B in modelEquipB) {
-						if(B <= powerEquipGroupList.length) {
-							tempModelEquipB.push(modelEquipB[B])
+					for(let B in res.modelEquipB) {
+						if(B <= res.modelEquipA.powerEquipGroupList.length) {
+							tempModelEquipB.push(res.modelEquipB[B])
 						}
 					}
 					this.modelEquipA = tempModelEquipA
@@ -219,6 +257,35 @@
 	.page {
 		padding-top: 425rpx;
 	}
+    .configuration {
+        .title {
+            text-align: center;
+            font-size: 40rpx;
+            color: #333333;
+            font-weight: bold;
+			margin: 50rpx 0;
+        }
+        .models-wrap {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 32rpx;
+            .car-model {
+                font-size: 28rpx;
+                font-weight: bold;
+                width: 308rpx;
+                padding: 10rpx;
+                box-sizing: border-box;
+                border-radius: 10rpx;
+                border: 2rpx solid #EBEBEB;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .dec {
+                    width: 280rpx;
+                }
+            }
+        }
+    }
 	.data-vs {
 		.vs-content {
 			padding: 0  20rpx;
@@ -266,5 +333,12 @@
 			}
 		}
 	}
+    .arrow {
+        width: 20rpx;
+        height: 20rpx;
+        background-image: url("../static/images/right_arrow.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+    }
 }
 </style>

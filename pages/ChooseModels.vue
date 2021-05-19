@@ -34,7 +34,8 @@
                 serialId:"",
                 mids:"",
                 single:false, // 是否是单选
-                type:""
+                type: "",
+                sort: "",
 			}
 		},
 		methods: {
@@ -45,6 +46,7 @@
                 this.serialId = options.serialId || ""
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
+                this.sort = options.sort || ""
                 this.reqModelsList(options.serialId)
             },
             async reqModelsList(sgId) {
@@ -75,6 +77,14 @@
                     uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })
+                }
+                if(this.pages === "vs") {
+                    let pages = getCurrentPages();  //获取所有页面栈实例列表
+                    let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+                    prevPage.$vm[this.sort] = item.pcModelId;   //修改上一页data里面的searchVal参数值为1211
+                    uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+                        delta: 1
+                    });
                 }
             },
             checkboxChange: function (e) {
@@ -111,7 +121,7 @@
 		background-color: #f5f5f6;
 		font-size: 24rpx;
 		color: #333333;
-		// padding-left: 39rpx;
+		padding-left: 39rpx;
 	}
 	.item-list {
 		display: flex;

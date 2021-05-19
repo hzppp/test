@@ -118,11 +118,11 @@
 			// 0left 1right
 			changeCarSearial(index){
 				if(index === 0) {
-					uni.redirectTo({
+					uni.navigateTo({
 						url:`/pages/ChooseSerial?vs=true&noun=left&serialId=${this.rightSerial.serialId}`
 					})
 				}else {
-					uni.redirectTo({
+					uni.navigateTo({
 						url:`/pages/ChooseSerial?&vs=true&noun=right&serialId=${this.leftSerial.serialId}`
 					})
 				}
