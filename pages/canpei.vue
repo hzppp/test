@@ -230,7 +230,6 @@
 			},
 			async init() {
 				try {
-                    console.log('this.mids :>> ', this.mids);
 					let data = await this.getCarData(this.mids);
 					//只传车系Id不传mids进来，会导致carNum未被初始化
 					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
@@ -290,19 +289,21 @@
 			},
 			// 删除车型
 			async delCar(id, index) {
+                let tempMids = this.mids.split(",")
+                this.mids = tempMids.splice(index,1)
 				// #ifdef MP-BAIDU
 				this.difData = ""
 				// #endif
 				this.Data.detailArray.splice(index, 1);
-				delete this.$store.state.selectCars["id_" + id];
-				if (this.navigateBack == '2') {
-					ContrastCar.remove(id);
-				}
-				let res = await dataInit(this.Data);
-				this.dataList = res.dataList
-				this.$nextTick(() => {
-					this.difData = res.difData
-				})
+				// delete this.$store.state.selectCars["id_" + id];
+				// if (this.navigateBack == '2') {
+				// 	ContrastCar.remove(id);
+				// }
+				// let res = await dataInit(this.Data);
+				// this.dataList = res.dataList
+				// this.$nextTick(() => {
+				// 	this.difData = res.difData
+				// })
 			},
 			// 前往锚点位置
 			toView(index) {
