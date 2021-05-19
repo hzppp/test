@@ -90,8 +90,10 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					uni.setStorageSync('userPhone', data.phoneNumber)
-					this.phone = data.phoneNumber
+					if (data && data.phoneNumber) {
+						uni.setStorageSync('userPhone', data.phoneNumber)
+						this.phone = data.phoneNumber						
+					}
 				}
 				
 				this.formpopShow('form', obj)
