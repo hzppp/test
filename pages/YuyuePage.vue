@@ -95,26 +95,6 @@ const COUNTDOWN = 60
                     this.isAllSelect = false
                 }
             },
-
-            //获取城市列表
-            // async reqAllCityList() {
-            //     try {
-            //         const {code,data:{letterGroup}} = await api.fetchAllCityList()
-            //         let tempArr = []
-            //         if(code === 1) {
-            //             for(let k in letterGroup) {
-            //                letterGroup[k].map(v=>{
-            //                    tempArr.push(v)
-            //                })
-            //             }
-            //         }
-            //         this.cityList = tempArr
-            //         this.currentCity = tempArr[this.cityIndex]
-            //     } catch (error) {
-            //         console.error(error)
-            //     }
-            // },
-
             //获取经销商列表
             async reqDealersList(cityId) {
                 try {

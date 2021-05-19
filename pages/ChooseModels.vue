@@ -57,16 +57,6 @@
                     console.error(error)
                 }
             },
-            //参配页面-全局添加对比车型id
-            // addGlobalSelectCar(ids) {
-			// 	var ret = {};
-			// 	if (ids.length > 0) {
-			// 		ids.forEach(function(id) {
-			// 			ret['id_' + id] = true;
-			// 		})
-			// 	}
-			// 	this.$store.state.selectCars = ret;
-			// },
             //go参配页
             add() {
                 // let newMids
@@ -91,8 +81,6 @@
 				console.log('e :>> ', e);
 				this.currentCount = e.detail.value.length
 				this.currentValue = e.detail.value
-                console.log('this.currentCount :>> ', this.currentCount);
-                console.log('this.currentValue :>> ', this.currentValue);
                 var items = this.items,
                     values = e.detail.value;
                 // for (var i = 0, lenI = items.length; i < lenI; ++i) {
