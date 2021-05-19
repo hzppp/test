@@ -117,7 +117,7 @@ export default {
 
   },
   onShareAppMessage() {
-    let title = '奥迪东海汇：活动优惠都在这里！'
+    let title = '长安云车展：活动优惠都在这里！'
     let path = `pages/authorization?to=welfareActivity`
     if (app.globalData.salesId) {
       path += `?salesId=${app.globalData.salesId}`
