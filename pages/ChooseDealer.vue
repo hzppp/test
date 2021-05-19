@@ -42,7 +42,6 @@ import api from '@/public/api/index'
             goBack(item) {
                 this.$store.commit("changDealer",item)
             	this.currentCity = item.name
-                this.$store.commit("changCity",item)
 				// console.log('app. :>> ', app.globalData);
                 let pages = getCurrentPages();  //获取所有页面栈实例列表
                 let prevPage = pages[ pages.length - 2 ];  //上一页页面实例

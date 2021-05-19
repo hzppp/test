@@ -62,6 +62,7 @@ let app = getApp()
 				this.targetId = id
 			},
 			changeCity(item) {
+                console.log('item :>> ', item);
 				this.currentCity = item.name
                 this.$store.commit("changCity",item)
                 let pages = getCurrentPages();  //获取所有页面栈实例列表

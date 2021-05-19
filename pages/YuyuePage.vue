@@ -175,7 +175,7 @@ const COUNTDOWN = 60
                     icon:"none"
                 })
                 try {
-                    const res = await api.postYuYueDrive({
+                    const res = await api.submitClue({
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
@@ -183,10 +183,16 @@ const COUNTDOWN = 60
                         source:2,
                         sourceId:1,
                         smsCode:this.codeNum,
-                        dealerId:this.currentDealer.id || ""
+                        dealerId:this.currentDealer.id || "",
+                        sourceId:this.serialId
                     })
                     if(res.code === 1) {
                          this.$refs.pop.isShow = true
+                    }else {
+                        return uni.showToast({
+                            title:res.msg,
+                            icon:"none"
+                        })
                     }
                     console.log('res :>> ', res);
                 } catch (error) {

@@ -57,11 +57,22 @@
                     console.error(error)
                 }
             },
+            //参配页面-全局添加对比车型id
+            // addGlobalSelectCar(ids) {
+			// 	var ret = {};
+			// 	if (ids.length > 0) {
+			// 		ids.forEach(function(id) {
+			// 			ret['id_' + id] = true;
+			// 		})
+			// 	}
+			// 	this.$store.state.selectCars = ret;
+			// },
             //go参配页
             add() {
-                let tempMids = ""
-                tempMids = this.mids + ","+ this.currentValue.join(",")
-                console.log('tempMids :>> ', tempMids);
+                // let newMids
+                let tempMids = this.mids + ","+ this.currentValue.join(",")
+                // newMids = tempMids.split(",")
+                // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
                     uni.navigateTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
@@ -71,7 +82,7 @@
             //goSingle 单选跳转
             goSingle(item) {
                 if(this.type === "calc") {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })
                 }
