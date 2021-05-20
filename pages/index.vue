@@ -92,15 +92,8 @@ export default {
       }
     },
   },
-  onShow() {
+  async onShow(options) {
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
-  },
-  watch: {
-    indexCity: function (newVal) {
-      console.log('indexCity===========', newVal)
-    }
-  },
-  async onLoad(options) {
     const resData = (await this.getCityId()) || [1000000022,1000000022]
     const provinceId = resData[0]
     const cityId = resData[1]
@@ -111,6 +104,14 @@ export default {
     }).then(res => {
       return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
     })
+  },
+  watch: {
+    indexCity: function (newVal) {
+      console.log('indexCity===========', newVal)
+    }
+  },
+  async onLoad(options) {
+
   },
   onUnload() {
   },
@@ -131,12 +132,15 @@ export default {
     async getCityId() {
       let currentLocation = app.globalData.currentLocation
       if (currentLocation) {
+        let pro = currentLocation.selectedCityData.pro || currentLocation.cityData.pro
+        let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
+
         const provinceList = await this.reqProvinceList()
         console.log('sdsdsd',provinceList)
-        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == pro.replace('省', '').replace('市', ''))
         if (crtLocationProvinceItem) {
           const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.city.replace('市', ''))
+          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == city.replace('市', ''))
           if (crtLocationCityItem) {
             this.crtProvinceItem = crtLocationProvinceItem
             this.crtCityItem = crtLocationCityItem
