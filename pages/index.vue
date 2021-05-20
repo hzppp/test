@@ -3,7 +3,7 @@
     <viewTabBar :current="0"></viewTabBar>
     <askOnline></askOnline>
     <view class="content">
-      <image class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">

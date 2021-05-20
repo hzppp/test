@@ -49,6 +49,13 @@
 			if (app.globalData.haveUserInfoAuth) {
 			  console.log('decryptUserInfo',app.globalData.haveUserInfoAuth)
 				let info = app.globalData.getUserData
+        console.log('tttt123',{
+          encryptedData:info.encryptedData,
+          iv:info.iv,
+          rawData:info.rawData,
+          signature:info.signature
+        })
+        return
 				await api.saveWXuserInfo({
 					encryptedData:info.encryptedData,
 					iv:info.iv,
@@ -90,7 +97,7 @@
 				pro: cityData.pro,
 				city: cityData.city,
 			}
-			
+
 			let cs = ''
 			let url = '/pages/index'
 			for(let i in options){
