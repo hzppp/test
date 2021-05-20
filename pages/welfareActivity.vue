@@ -16,7 +16,7 @@
         <view class="box-tit">
           长安福利
         </view>
-        <view v-if="welfareList.length == 0" class="welfareActivity-none"></view>
+        <view v-if="welfareList.length == 0" class="welfareActivity-none"><text class="tips">敬请期待</text></view>
         <coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon" @formShow="formShow"></coupon-list>
       </view>
 
@@ -35,7 +35,7 @@
             </view>
           </block>
         </view>
-        <view v-else class="activity-list-none"></view>
+        <view v-else class="activity-list-none"><text class="tips">敬请期待</text></view>
       </view>
 	  <view class="zw"></view>
     </scroll-view>
@@ -199,7 +199,7 @@ export default {
         let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
         let {
           rows
-        } = await api.getactivity(cityId, 3, this.activityListPageNumber)
+        } = await api.getactivity(cityId, 5, this.activityListPageNumber)
         this.activityListPageNumber++
         if (rows.length > 0) {
           this.isLoadGetActivity = true
@@ -229,16 +229,16 @@ export default {
       let currentLocation = app.globalData.currentLocation
       let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
 
-      let data = await api.getWelfare(cityId, 3, this.welfarePageNumber)
+      let data = await api.getWelfare(cityId, 2, this.welfarePageNumber)
       this.welfarePageNumber++
       let rows = data.rows ? data.rows : []
-      let total = Math.ceil(data.total / 3)
+      let total = Math.ceil(data.total / 2)
       let a = [...this.welfareList, ...rows]
       this.welfareList = a
       console.log('welfareList', this.welfareList)
       if(this.welfareList.length == 0){return;}
       this.$nextTick(function(){
-        if (this.welfarePageNumber > total || rows.length < 3) {
+        if (this.welfarePageNumber > total || rows.length < 2) {
           // this.$invoke('coupon-list', 'morebtnHide')
           console.log('couponlist=================',this.$refs.couponlist)
           this.$refs.couponlist.morebtnHide()

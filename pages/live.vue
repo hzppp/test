@@ -74,7 +74,7 @@
 					this.hasNext = false
 				}
 				data.rows.forEach((item,index)=>{
-					item.startTime = item.startTime.substring(0,13)
+					item.startTime = item.startTime.substring(0,16)
 				})
 				this.liveList = [...this.liveList,...data.rows]
 			},

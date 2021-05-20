@@ -26,6 +26,8 @@
 
 <script>
 import api from '@/public/api/index'
+import distance from '@/units/distance'
+
 let app = getApp()
 	export default {
 		data() {
@@ -36,12 +38,10 @@ let app = getApp()
 				currentCity: '' //当前城市
 			}
 		},
-		onLoad() {
+		async onLoad() {
+			await distance.getLocation()
 			this.getAllCityList()
-            // this.currentCity = this.$store.state.currentCity
             this.currentCity = app.globalData.currentLocation.selectedCityData.city
-            console.log('app :>> ', app);
-            console.log('app :>> ', app.globalData.currentLocation.cityData.city);
 		},
 		methods: {
 			async getAllCityList() {

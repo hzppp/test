@@ -44,7 +44,7 @@ export default {
 					resolve(res)
 				},
 				fail(){
-					reject()
+					reject("获取定位失败！！！")
 				}
 			})
 		})

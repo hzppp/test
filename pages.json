@@ -136,7 +136,7 @@
         "path" : "pages/canpei",
         "style" :
         {
-            "navigationBarTitleText": "车型对比",
+            "navigationBarTitleText": "参数配置",
             "enablePullDownRefresh": false
         }
     }
