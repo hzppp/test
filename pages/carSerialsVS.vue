@@ -151,8 +151,9 @@
 			// 	}
 			// 	this.init()
 			// })
-            this.init()
-			this.getVsDownData(options.mid1,options.mid2)
+			// this.getVsDownData(options.mid1,options.mid2)
+            this.reqModelsBySerialId("left", this.leftSerialId)
+            this.reqModelsBySerialId("right", this.rightSerialId)
 		},
 		methods: {
 			async init() {
@@ -175,6 +176,21 @@
 					url: `/pages/canpei?mids=${this.mid1},${this.mid2}`
 				})
             },
+            //获取车系下的车型
+            async reqModelsBySerialId(noun,sgId) {
+                try {
+                    const {code,data} = await api.fetchModelsList({sgId})
+                    if(code === 1) {
+                        if(noun === "left") {
+                            this.mid1 = data[0].pcModelId
+                        }else if(noun === "right") {
+                            this.mid2 = data[0].pcModelId
+                        }
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            },
             // 数组交叉排序重组
             setArr(arr1,arr2){
                 for (let i in arr2) {
@@ -192,7 +208,8 @@
                             rightSerialId:this.rightSerialId
                         },
                         success:res=>{
-                            let data =res.data;
+                            let data = res.data;
+                            console.log('res :>> ', res);
                             reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                         },
                         fail:err=>{
@@ -201,27 +218,6 @@
                     })
                 })
             },
-			//兼容获取的gbk
-			 resDecode(str, charset, callback) {
-				var script = document.createElement('script');
-				script.id = '_urlDecodeFn_';
-				var src = 'data:text/javascript;charset=' + charset + ',_urlDecodeFn_("' + str + '");'
-				src += 'document.getElementById("_urlDecodeFn_").parentNode.removeChild(document.getElementById("_urlDecodeFn_"));';
-				script.src = src;
-				document.body.appendChild(script);
-				window._urlDecodeFn_ = callback;
-			},
-			 gbkVerbUtf(str){
-				return new Promise ((resolve,reject) => {
-					try {
-						this.resDecode(str,'GBK',(res) => {
-							resolve(res)
-						})
-					} catch (error) {
-						console.error(error)
-					}
-				})
-			},
             //切换车型 
             changModel(id,sort) {
                 uni.navigateTo({
