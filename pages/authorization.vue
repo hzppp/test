@@ -55,7 +55,6 @@
           rawData:info.rawData,
           signature:info.signature
         })
-        return
 				await api.saveWXuserInfo({
 					encryptedData:info.encryptedData,
 					iv:info.iv,
