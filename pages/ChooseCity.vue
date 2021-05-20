@@ -2,7 +2,7 @@
 	<view class="choose-city">
 		<!-- 侧边导航 -->
 		<view class="side">
-			<view  v-for="(cityIndex,index) in letterGroup" :key="index" @tap="sidePoint(cityIndex)">
+			<view  v-for="(cityIndex,index) in letterGroup" :key="index" @tap.stop="sidePoint(cityIndex)">
 				{{cityIndex}}
 			</view>
 		</view>
@@ -85,10 +85,10 @@ let app = getApp()
 		position: fixed;
 		right: 20rpx;
 		top: 64rpx;
-		width: 28rpx;
+		width: 200rpx;
 		height: 942rpx;
 		font-size: 24rpx;
-		text-align: center;
+		text-align: right;
 		display: flex;
 		justify-content: space-around;
 		flex-direction: column;
