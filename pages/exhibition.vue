@@ -13,12 +13,8 @@ import shouquan from '@/units/shouquan'
 export default {
   components: {viewTabBar: tabBar},
   mixins: [shouquan],
+
 }
-
-
-
- 
-
 
 
 </script>

@@ -133,7 +133,7 @@
 					return false
 				}
 				// app.globalData.currentCoupon = obj
-				let url = '/pages/couponCode' + '?id=' + obj.id
+				let url = '/pages/couponCode' + '?id=' + obj.oid 
 				console.log('传送优惠券id===',url)
 				uni.navigateTo({
 					url
