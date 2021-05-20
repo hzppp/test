@@ -1,6 +1,6 @@
 <template>
   <view>
-    <loading ref="loading"></loading>
+<!--    <loading ref="loading"></loading>-->
     <articleList ref="articleList" @changeLoading="changeLoading"></articleList>
     <askOnline></askOnline>
   </view>
@@ -22,7 +22,7 @@ name: "articleListPage",
   },
   methods: {
     changeLoading(type = false) {
-      this.$refs.loading.changeLoading(type)
+      // this.$refs.loading.changeLoading(type)
     },
   }
 }
