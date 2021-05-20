@@ -34,7 +34,6 @@
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}" :disabled=!isAllSelect>立即预约</button>
-                <view class="tit">点击按钮即视为同意《个人信息保护声明》</view>
             </view>
         </view>
     </view>
