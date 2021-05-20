@@ -59,7 +59,7 @@ import api from '@/public/api/index'
                 }
                 if(this.pages === "YuyuePage") {
                     this.$store.commit('changModel',id)
-                    return  uni.navigateTo({
+                    return  uni.redirectTo({
                         url:`/pages/YuyuePage?serialId=${id}`
                     })
                 }
@@ -70,7 +70,6 @@ import api from '@/public/api/index'
                         // })
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-                        console.log('prevPage :>> ', prevPage);
                         prevPage.$vm.leftSerialId = id;   //修改上一页data里面的searchVal参数值为1211
                         uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
                             delta: 1
@@ -81,7 +80,6 @@ import api from '@/public/api/index'
                         // })
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-                        console.log('prevPage :>> ', prevPage);
                         prevPage.$vm.rightSerialId = id;   //修改上一页data里面的searchVal参数值为1211
                         uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
                             delta: 1
@@ -90,11 +88,11 @@ import api from '@/public/api/index'
                     return
                 }
                 if(this.vs) {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                     })
                 }else {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/LookCar?id=${id}`
                     })
                 }
