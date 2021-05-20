@@ -1,6 +1,6 @@
 <template>
 	<view class="cars-page">
-		
+    <askOnline></askOnline>
         <view class="image-wrap" v-if="serialData.videoCoverUrl">
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
             <!-- <i class="video-icon"></i> -->
@@ -35,9 +35,11 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
+import askOnline from '@/components/askOnline/askOnline'
+
 
 export default {
-    components: {btnWrap},
+    components: {btnWrap,askOnline},
     data() {
         return {
             serialData: {}, //车系详情
