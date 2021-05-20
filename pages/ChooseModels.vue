@@ -8,7 +8,7 @@
                     <view class="check-wrap" :class="[currentValue.includes(item.pcModelId)? 'hasChecked':'']">
                         <checkbox class="check-box" :value="item.pcModelId" :checked="item.checked" />
                     </view>
-                    <view class="model-name">{{item.modelMemo}}</view>
+                    <view class="model-name">{{item.name}}</view>
                 </label>
             </checkbox-group>
             <view class="btn" @tap="add">确定添加</view>
@@ -16,7 +16,7 @@
         <!-- 单选 -->
 		<view v-else>
             <view  class="item-list" v-for="(item,index) in modelsList" :key="index" @tap="goSingle(item)">
-                <view class="model-name">{{item.modelMemo}}</view>
+                <view class="model-name">{{item.name}}</view>
             </view>
 		</view>
 	</view>
@@ -66,7 +66,7 @@
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
                     })
                 }
