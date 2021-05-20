@@ -34,12 +34,12 @@
 					{{title.name}}
 				</view>
 				<view class="vs-detail">
-					<view class="left-a">
+					<view class="left-a" v-if="modelEquipA.length > 0">
 						<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
 							{{a.name}}
 						</view>
 					</view>
-					<view class="right-b">
+					<view class="right-b" v-if="modelEquipB.length > 0">
 						<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
 							{{b.name}}
 						</view>
@@ -91,9 +91,11 @@
             },
             leftSerialId() {
                 this.init()
+                this.reqModelsBySerialId("left", this.leftSerialId)
             },
             rightSerialId() {
                 this.init()
+                this.reqModelsBySerialId("right", this.rightSerialId)
             }
 		},
 		data() {
@@ -141,19 +143,6 @@
             this.mid2 = options.mid2 || ''
             this.leftSerialId = options.leftSerialId || ''
             this.rightSerialId = options.rightSerialId || ''
-			// if (options.leftSerialId && options.rightSerialId) {
-			// 	this.SerialIds = options.leftSerialId + ',' + options.rightSerialId
-			// }
-			// Location.init((data) => {
-			// 	if (data) {
-			// 		this.city = data.city
-			// 		this.cityId = data.cityId
-			// 	}
-			// 	this.init()
-			// })
-			// this.getVsDownData(options.mid1,options.mid2)
-            this.reqModelsBySerialId("left", this.leftSerialId)
-            this.reqModelsBySerialId("right", this.rightSerialId)
 		},
 		methods: {
 			async init() {
@@ -181,7 +170,7 @@
                 try {
                     const {code,data} = await api.fetchModelsList({sgId})
                     if(code === 1) {
-                        if(noun === "left") {
+                        if(noun === "left") { //获取车系下的车型,默认展示第一个车型的对比
                             this.mid1 = data[0].pcModelId
                         }else if(noun === "right") {
                             this.mid2 = data[0].pcModelId
@@ -209,7 +198,6 @@
                         },
                         success:res=>{
                             let data = res.data;
-                            console.log('res :>> ', res);
                             reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                         },
                         fail:err=>{
@@ -228,8 +216,8 @@
 			async getVsDownData(mid1,mid2) {
 				try {
 					const res = await api.fetchCarSerialContrast({mid1,mid2})
-                    this.powerErank4ModelA = res.modelEquipA.powerErank4Model
-                    this.powerErank4ModelB = res.modelEquipB.powerErank4Model
+                    this.powerErank4ModelA =  res.modelEquipA? res.modelEquipA.powerErank4Model : []
+                    this.powerErank4ModelB = res.modelEquipB? res.modelEquipB.powerErank4Model : []
 					this.powerEquipGroupList = res.modelEquipA.powerEquipGroupList
 					let tempModelEquipA = []
 					let tempModelEquipB = []
