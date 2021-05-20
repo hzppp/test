@@ -8,7 +8,7 @@
 		</view>
 		<!-- 当前城市 -->
 		<view class="current-city">
-			当前定位的城市：<text>{{currentCity.name}}</text>
+			当前定位的城市：<text>{{currentCity}}</text>
 		</view>
 		<!-- 城市索引 -->
 		<scroll-view class="scroll-view" :scroll-into-view="targetId" :scroll-y="true">
@@ -38,7 +38,10 @@ let app = getApp()
 		},
 		onLoad() {
 			this.getAllCityList()
-            this.currentCity = this.$store.state.currentCity
+            // this.currentCity = this.$store.state.currentCity
+            this.currentCity = app.globalData.currentLocation.selectedCityData.city
+            console.log('app :>> ', app);
+            console.log('app :>> ', app.globalData.currentLocation.cityData.city);
 		},
 		methods: {
 			async getAllCityList() {
