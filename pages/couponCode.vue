@@ -69,7 +69,7 @@
 		methods: {
 			/* 获取优惠券信息 */
 			async userOuponsDet(){
-				let data = await api.userOuponsDet({id:this.id})
+				let data = await api.userOuponsDet({old:this.id})
 				if(data.code==1){
 					let res = data.data
 					res.startTime =  res.startTime.replace(/-/g, ".")
