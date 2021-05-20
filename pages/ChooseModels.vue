@@ -114,7 +114,7 @@
         color: #fa8845;
     }
     .dischecked {
-        color: #eeeeee;
+        color: #888888
     }
     .hasChecked {
         background-image: url("../static/images/is_checked_icon.png");
