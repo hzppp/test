@@ -1,29 +1,54 @@
-
+import api from '@/public/api/index'
+let app = getApp()
 export default {
-    async getLocation(isgetLocation = true){
-        return new Promise(async (resolve)=>{
-              let data = {
-                wsq:true,
-                latitude:29.57,
-                longitude:106.5
-                // longitude:113.62,
-                // latitude:34.75
-              }
-            if (!isgetLocation) {
-              resolve(data)
-            }else{
-              uni.getLocation({
-                  type: 'wgs84',
-				  success(res) {
-					  resolve(res)
-				  },
-				  fail(){
-					resolve(data)
-				  }
-              })
-            }
-        })
+	// 获取定位信息
+    async getLocation(){
+		const currentLocation = app.globalData.currentLocation
+		if(!currentLocation.wxPosition.provider || currentLocation.wxPosition.provider == 'default'){
+			try {
+				const crtPosition = await this.reqLocation()
+				const crtCityData = await api.getIpAreaCoord(`${crtPosition.longitude},${crtPosition.latitude}`)
+				currentLocation.wxPosition = crtPosition
+				currentLocation.cityData = crtCityData
+			} catch (err) {
+				currentLocation.wxPosition = {
+					wsq: true,
+					latitude: 29.57,
+					longitude: 106.5,
+					provider: 'default',
+				}
+				currentLocation.cityData = {
+					"city": "重庆市",
+					"cityCode": "500000",
+					"error": "",
+					"pro": "重庆市",
+					"proCode": "500000",
+					"region": "江北区",
+					"regionCode": "500105"
+				}
+				console.error(err)
+			} finally {
+				currentLocation.selectedCityData = { // 设置当前选择的省市
+					pro: currentLocation.cityData.pro,
+					city: currentLocation.cityData.city,
+				}				
+			}
+		}
     },
+	// 请求定位信息
+	async reqLocation () {
+		return new Promise(async (resolve, reject)=>{
+			uni.getLocation({
+				type: 'wgs84',
+				success(res) {
+					resolve(res)
+				},
+				fail(){
+					reject()
+				}
+			})
+		})
+	},
     // 百度坐标转火星坐标
     bd_decrypt(bd_lon, bd_lat) {
         var x_PI = 3.14159265358979324 * 3000.0 / 180.0;

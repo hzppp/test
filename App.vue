@@ -10,8 +10,25 @@
 		  panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 		  //panorama:"http://t-panorama.pcauto.com.cn",
 		  currentLocation:{ //当前位置
-			  cityData: {} , // 当前定位的位置
-			  selectedCityData: {}, // 当前选择的位置
+			  wxPosition: { // 微信定位的坐标位置
+				  wsq: true,
+				  latitude: 29.57,
+				  longitude: 106.5,
+				  provider: 'default',
+			  },
+			  cityData: {  // 当前定位的位置
+				  "city": "重庆市",
+				  "cityCode": "500000",
+				  "error": "",
+				  "pro": "重庆市",
+				  "proCode": "500000",
+				  "region": "江北区",
+				  "regionCode": "500105"
+			  } ,
+			  selectedCityData: { // 当前选择的位置
+				  "pro": "重庆市",
+				  "city": "重庆市",
+			  },
 		  },
 		  userInfo: null,
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
