@@ -50,7 +50,7 @@ import api from '@/public/api/index'
 import shouquan from '@/units/shouquan'
 import tabBar from '@/components/tabBar/tabBar'
 import askOnline from '@/components/askOnline/askOnline'
-
+import distance from '@/units/distance'
 let app = getApp()
 export default {
   components: {
@@ -95,6 +95,7 @@ export default {
   async onShow() {
     this.resetjson()
     // api.getUser()
+	await distance.getLocation()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()

@@ -55,7 +55,6 @@
           rawData:info.rawData,
           signature:info.signature
         })
-        return
 				await api.saveWXuserInfo({
 					encryptedData:info.encryptedData,
 					iv:info.iv,
@@ -71,33 +70,8 @@
 			// if(!app.globalData.pocketUserInfo){
 			// 	await api.getPocketUserInfo()
 			// }
-			if(!app.globalData.currentLocation.wxPosition){
-				let position = await distance.getLocation()
-				console.log('position==================',position)
-				if(position){
-					let cs = `${position.longitude},${position.latitude}`
-					let cityData = await api.getIpAreaCoord(cs)
-          console.log('cityData',cityData)
-					app.globalData.currentLocation.cityData = cityData
-					app.globalData.currentLocation.wxPosition = position
-				}
-			} else {
-				app.globalData.currentLocation.cityData = {
-					"city": "重庆市",
-					"cityCode": "500000",
-					"error": "",
-					"pro": "重庆市",
-					"proCode": "500000",
-					"region": "江北区",
-					"regionCode": "500105"
-				}
-			}
-			const cityData = app.globalData.currentLocation.cityData
-			app.globalData.currentLocation.selectedCityData = { // 设置当前选择的省市
-				pro: cityData.pro,
-				city: cityData.city,
-			}
-
+			await distance.getLocation()
+			
 			let cs = ''
 			let url = '/pages/index'
 			for(let i in options){

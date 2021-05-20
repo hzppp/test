@@ -86,6 +86,7 @@
 
 <script>
 	import api from '@/public/api/index'
+	import distance from '@/units/distance'
 	let app = getApp()
 	export default {
 		data() {
@@ -346,7 +347,7 @@
 				
 				// 车系
 				this.reqSerialList()
-				
+				await distance.getLocation()
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
