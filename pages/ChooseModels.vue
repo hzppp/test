@@ -64,7 +64,12 @@
             //go参配页
             add() {
                 // let newMids
-                let tempMids = this.mids + ","+ this.currentValue.join(",")
+                let tempMids
+                if(this.mids) {
+                    tempMids = this.mids + ","+ this.currentValue.join(",")
+                }else {
+                    tempMids = this.currentValue.join(",")
+                }
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
