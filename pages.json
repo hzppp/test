@@ -144,7 +144,7 @@
         "path" : "pages/carSerialsVS",
         "style" :
         {
-            "navigationBarTitleText": "车系对比",
+            "navigationBarTitleText": "车型对比",
             "enablePullDownRefresh": false
         }
     }
@@ -168,7 +168,7 @@
         "path" : "pages/ChooseSerial",
         "style" :
         {
-            "navigationBarTitleText": "选择车系",
+            "navigationBarTitleText": "选择车型",
             "enablePullDownRefresh": false
         }
     }
@@ -176,7 +176,7 @@
         "path" : "pages/ChooseSerialList",
         "style" :
         {
-            "navigationBarTitleText": "选择车系",
+            "navigationBarTitleText": "选择车型",
             "enablePullDownRefresh": false
         }
     }

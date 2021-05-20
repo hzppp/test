@@ -37,6 +37,8 @@ import api from '@/public/api/index'
             this.vs = options.vs || ""
             this.serialId = options.serialId || ""
             this.type = options.type || ""
+            this.leftSerialId = options.leftSerialId || ""
+            this.rightSerialId = options.rightSerialId || ""
             this.reqSerialScreenList()
         },
         methods: {
@@ -68,6 +70,12 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${id}&rightSerialId=${this.serialId}`
                         // })
+                        if(this.serialId == id) {
+                            return  uni.showToast({
+                                icon: 'none',
+                                title: '该车型已在对比列表中，请选择另一款车型',
+                            })
+                        }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
                         prevPage.$vm.leftSerialId = id;   //修改上一页data里面的searchVal参数值为1211
@@ -78,6 +86,12 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                         // })
+                        if(this.serialId == id) {
+                            return  uni.showToast({
+                                icon: 'none',
+                                title: '该车型已在对比列表中，请选择另一款车型',
+                            })
+                        }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
                         prevPage.$vm.rightSerialId = id;   //修改上一页data里面的searchVal参数值为1211
@@ -88,6 +102,12 @@ import api from '@/public/api/index'
                     return
                 }
                 if(this.vs) {
+                    if(id == this.serialId) {
+                        return  uni.showToast({
+                            icon: 'none',
+                            title: '该车型已在对比列表中，请选择另一款车型',
+                        })
+                    }
                     uni.redirectTo({
                         url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                     })

@@ -4,9 +4,9 @@
         <!-- 多选 -->
 		<view v-if="!single">
 			<checkbox-group @change="checkboxChange">
-                <label class="item-list" v-for="(item,index) in modelsList" :key="index" :class="[currentValue.includes(item.pcModelId)? 'ischecked':'dischecked']">
+                <label class="item-list" v-for="(item,index) in modelsList" :key="index" :class="[currentValue.includes(item.pcModelId) ? 'ischecked': canSelectLength === currentCount?'dischecked' : '']">
                     <view class="check-wrap" :class="[currentValue.includes(item.pcModelId)? 'hasChecked':'']">
-                        <checkbox class="check-box" :value="item.pcModelId" :checked="item.checked" />
+                        <checkbox class="check-box" :value="item.pcModelId" :disabled="canSelectLength === currentCount && !currentValue.includes(item.pcModelId)" :checked="item.checked" />
                     </view>
                     <view class="model-name">{{item.name}}</view>
                 </label>
@@ -28,11 +28,12 @@
 		data() {
 			return {
                 modelsList: [], //车型列表
-				currentCount: "", //当前选择的个数
+				currentCount: 0, //当前选择的个数
 				currentValue:[], //选择的值
                 pages:"",
                 serialId:"",
                 mids:"",
+                canSelectLength:0, // 可选择的个数，总的不可以超过4个，跟传过来的mids的个数有关
                 single:false, // 是否是单选
                 type: "",
                 sort: "",
@@ -47,6 +48,7 @@
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
+                this.canSelectLength = 4 - options.mids.split(",").length
                 this.reqModelsList(options.serialId)
             },
             async reqModelsList(sgId) {
@@ -110,6 +112,9 @@
 .choose-models {
     .ischecked {
         color: #fa8845;
+    }
+    .dischecked {
+        color: #eeeeee;
     }
     .hasChecked {
         background-image: url("../static/images/is_checked_icon.png");
