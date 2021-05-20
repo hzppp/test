@@ -16,7 +16,7 @@
         <view class="box-tit">
           长安福利
         </view>
-        <view v-if="welfareList.length == 0" class="welfareActivity-none"></view>
+        <view v-if="welfareList.length == 0" class="welfareActivity-none"><text class="tips">敬请期待</text></view>
         <coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon" @formShow="formShow"></coupon-list>
       </view>
 
@@ -35,7 +35,7 @@
             </view>
           </block>
         </view>
-        <view v-else class="activity-list-none"></view>
+        <view v-else class="activity-list-none"><text class="tips">敬请期待</text></view>
       </view>
 	  <view class="zw"></view>
     </scroll-view>
