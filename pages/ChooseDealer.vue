@@ -8,6 +8,7 @@
                 {{item.address}}
             </view>
         </view>
+        <view class="no-dealer" v-if="dealersList.length === 0">暂无对应经销商</view>
     </view>
 </template>
 
@@ -71,6 +72,10 @@ import api from '@/public/api/index'
             margin-top: 24rpx;
             margin-bottom: 32rpx;
         }
+    }
+    .no-dealer {
+        text-align: center;
+        padding: 100rpx;
     }
 }
 </style>
