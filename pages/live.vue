@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-		<scroll-view scroll-y lower-threshold="200"  @scrolltolower="getList" class="live-list">
+		<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 			<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
 				<view class="top">
 					<image class="avator" :src="item.headPic"></image>
@@ -15,11 +15,12 @@
 					<view class="status blue" v-if="item.status==0 || item.status==2">
 						<view class="icon"></view> {{item.startTime}}开始播放
 					</view>
-					<view class="status yellow" v-if="item.status==1">
-						
+					
+					<view class="status yellow" v-if="item.status==1"> 
+
 					</view>
 					<view class="status green" v-if="item.status==3">
-						
+
 					</view>
 				</view>
 				<view class="title">
@@ -45,10 +46,10 @@
 			return {
 				title: "直播",
 				liveList: [],
-				hasNext:true,
+				hasNext: true,
 				pageNum: 1,
-				pageSize:10,
-				dealerGroupId:'',
+				pageSize: 10,
+				dealerGroupId: '',
 			}
 		},
 		// mixins: [],
@@ -58,13 +59,15 @@
 		onShow() {
 			// console.log('app.globalData.wxUserInfo  show:', app.globalData.wxUserInfo)
 		},
-		methods:{
+		methods: {
 			/* 获取列表 */
 			async getList() {
 				if (!this.hasNext) {
 					return false;
 				}
-				let {data} = await api.getLiveList({
+				let {
+					data
+				} = await api.getLiveList({
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				})
@@ -73,34 +76,38 @@
 				} else {
 					this.hasNext = false
 				}
-				data.rows.forEach((item,index)=>{
-					item.startTime = item.startTime.substring(0,16)
+				data.rows.forEach((item, index) => {
+					item.startTime = item.startTime.substring(0, 16)
 				})
-				this.liveList = [...this.liveList,...data.rows]
+				this.liveList = [...this.liveList, ...data.rows]
 			},
-			toLiveDet(item){
-				if(item.status==2 || item.status==0){ /* 直播预告 */
+			toLiveDet(item) {
+				if (item.status == 2 || item.status == 0) {
+					/* 直播预告 */
 					uni.navigateTo({
-						url:'/pages/liveDetail?liveId='+item.id
+						url: '/pages/liveDetail?liveId=' + item.id
 					})
-				}else if(item.status==1){ /* 直播中 */
+				} else if (item.status == 1) {
+					/* 直播中 */
 					uni.navigateToMiniProgram({
-						 appId: 'wxa860d5a996074dbb',
-						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive',
-						  extraData: {},
-						  success(res) {
-						    // 打开成功
-						  }
+						appId: 'wxa860d5a996074dbb',
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' + item.roomId ,
+						extraData: {},
+						envVersion:'trial',
+						success(res) {
+							// 打开成功 
+						}
 					})
-				}else if(item.status==3){
+				} else if (item.status == 3) {
 					//回放
 					uni.navigateToMiniProgram({
-						 appId: 'wxa860d5a996074dbb',
-						  path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback',
-						  extraData: {},
-						  success(res) {
-						    // 打开成功
-						  }
+						appId: 'wxa860d5a996074dbb',
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' + item.playId,
+						extraData: {},
+						envVersion:'trial',
+						success(res) {
+							// 打开成功
+						}
 					})
 				}
 			}
@@ -122,11 +129,13 @@
 	}
 
 	.live-item {
-		margin:0 32rpx;
+		margin: 0 32rpx;
 		border-bottom: 1px solid #ebebeb;
-		&:last-child{
-			border-bottom:none;
+
+		&:last-child {
+			border-bottom: none;
 		}
+
 		.top {
 			padding: 40rpx 0 24rpx;
 			.dflex(center, flex-start);
@@ -148,6 +157,7 @@
 			// width: 100%;
 			position: relative;
 			width: 686rpx;
+
 			.bg {
 				width: 686rpx;
 				height: 388rpx;
@@ -162,6 +172,7 @@
 				color: #ffffff;
 				.pa(-5rpx, -2rpx);
 				z-index: 3;
+
 				// .icon {
 				// 	width: 24rpx;
 				// 	height:24rpx;
@@ -169,12 +180,12 @@
 				// }
 				&.yellow {
 					// background-color: #fa843f;
-					.setbg(122rpx, 36rpx, 'live_tag1.png')
-					// .icon {
+					.setbg(122rpx, 36rpx, 'live_tag1.png') // .icon {
 					// 	.setbg(24rpx, 24rpx, 'livetimes.png')
 					// }
 				}
-				&.green{
+
+				&.green {
 					// background-color: #33CE99;
 					.setbg(104rpx, 36rpx, 'live_tag2.png')
 				}
@@ -186,13 +197,13 @@
 					border-bottom-right-radius: 8rpx;
 					// .setbg(152rpx,  36rpx, 'live_tag3.png')
 					// .dflex(center,center);
-					
+
 					.icon {
 						display: inline-block;
-						margin-right:10rpx;
+						margin-right: 10rpx;
 						.setbg(24rpx, 24rpx, 'livetimes.png');
 						position: relative;
-						top:2rpx;
+						top: 2rpx;
 					}
 				}
 
@@ -204,20 +215,28 @@
 				// 	}
 				// }
 			}
-			.play{
-				.pa(50%,50%);
-				transform: translate(-50%,-50%);
+
+			.play {
+				.pa(50%, 50%);
+				transform: translate(-50%, -50%);
 				width: 100rpx;
 				height: 100rpx;
 				.setbg(100rpx, 100rpx, 'livePlay.png')
 			}
-			
+
 		}
-		.title{
+
+		.title {
 			font-weight: 800;
 			text-align: left;
 			color: #333333;
-			padding:18rpx 0 35rpx;
+			padding: 18rpx 0 35rpx;
+			display: inline-block;
+			white-space: nowrap;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
 		}
 	}
 </style>
