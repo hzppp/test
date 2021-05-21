@@ -19,7 +19,7 @@
 			<image class="icon" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/arrow-bottom.png" mode="aspectFit"></image>
 		</view>
 		<block v-if="isRuleShow">
-			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 ? 'red' : 'blue')">
+			<view :class="'rule-desc ' + (couponList[couponListIndex].type == 1 ? 'blue' : 'red')">
 				<view class="content">
 					<view class="rule-desc-content">
 						<view class="title">
@@ -97,10 +97,15 @@
 					}
 				}
 				try {
+					uni.showLoading()
 					const detailObj = await this.reqCouponDetail(obj.id)
 					this.formpopShow('form', detailObj)
 					this.isRuleShow = false
-				} catch (err) {}
+				} catch (err) {
+
+				} finally {
+					uni.hideLoading()
+				}
 			},
 			setcouponList(list) {
 				this.phone = uni.getStorageSync('userPhone');
