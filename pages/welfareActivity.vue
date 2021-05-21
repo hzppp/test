@@ -26,7 +26,7 @@
         </view>
         <view class="activity-list" v-if="activityList.length > 0">
           <block v-for="(item,index) in activityList" :key="index">
-            <view class="pic-text" @tap="toActivityPage(item.id)">
+            <view class="pic-text" @tap="toActivityPage(item)">
               <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
                 <view class="label-name">{{item.typeText}}</view>
@@ -176,11 +176,17 @@ export default {
     scrollGetActivity() {
       this.getactivity()
     },
-    toActivityPage(id) {
-      let url = '/pages/activity?id=' + id
-      uni.navigateTo({
-        url
-      })
+    toActivityPage(item) {
+		if (item.duibaUrl) {
+			uni.navigateTo({
+			  url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+			})
+		} else {
+			let url = '/pages/activity?id=' + item.id
+			uni.navigateTo({
+			  url
+			})
+		}
     },
     resetjson() {
       this.getWelfarePageNumber = 1
