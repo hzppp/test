@@ -23,7 +23,8 @@
             </view>
             <view class="list models">
                 <view class="list-title">手机号</view>
-                <input class="select" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <view class="list models">
                 <view class="list-title">验证码</view>
@@ -42,6 +43,9 @@
 <script>
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
+import distance from '@/units/distance'
+let app = getApp()
+
 
 /* *
 * 倒计时默认时间
@@ -79,13 +83,32 @@ const COUNTDOWN = 60
 
                 // currentModelId: "", //当前车型id
 
+                getPhoneBtn: false,
+
             }
         },
-        onLoad(options) {
+         onLoad(options) {
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
+			distance.getLocation()
+            this.currentCity.name = app.globalData.currentLocation.selectedCityData.city || ""
         },
         methods: {
+            async getPhoneNumber(e) {
+				let {detail} = e
+				if (detail.iv) {
+					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
+					if (data && data.phoneNumber) {
+						this.phoneNum = data.phoneNumber						
+					}else {
+                        uni.showToast({
+                            icon:"none",
+                            title:"手机授权失败"
+                        })
+                    }
+				}
+				this.getPhoneBtn = true
+			},
             //检测信息是否齐全
             checkInfo() {
                 if(this.phoneNum && this.codeNum && this.currentCity) {
@@ -173,14 +196,13 @@ const COUNTDOWN = 60
                             icon:"none"
                         })
                     }
-                    console.log('res :>> ', res);
                 } catch (error) {
                     console.error(error)
                 }
             },
             //经销商点击，判断提示
             changDealers(){
-                if(!this.currentCity.id) {
+                if(!this.currentCity.name) {
                     return uni.showToast({
                         title:"请选择城市",
                         icon:"none"
@@ -188,13 +210,13 @@ const COUNTDOWN = 60
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: "/pages/ChooseDealer?cityId="+ this.currentCity.id
+					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}`
 				})
             },
             //选择城市
             goChooseCity(){
                 uni.navigateTo({
-					url: "/pages/ChooseCity"
+					url: "/pages/ChooseCity?name="+ this.currentCity.name
 				})
             },
             //选择车系
@@ -226,6 +248,16 @@ const COUNTDOWN = 60
     .content {
         padding: 32rpx 32rpx 10rpx;
         box-sizing: border-box;
+        .getPhoneBtn {
+            background-color: transparent;
+            color: #777777;
+            flex: 1;
+            margin-left: 20rpx;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 35rpx;
+        }
         .title {
             font-size: 40rpx;
             font-weight: 800;
@@ -237,7 +269,7 @@ const COUNTDOWN = 60
             height: 110rpx;
             border-bottom: 2rpx solid #EBEBEB;
             .list-title {
-                width: 100rpx;
+                width: 130rpx;
             }
             .select {
                 flex: 1;

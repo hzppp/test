@@ -40,12 +40,12 @@
         },
 		methods: {
 			goCanPei() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
 			},
             goSerialList() {
-                uni.redirectTo({
+                uni.navigateTo({
 					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
 				})
             },
