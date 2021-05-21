@@ -9,6 +9,7 @@
 					<view class="line"></view>
 				</view>
 				<view class="coupon-icon"></view>
+				<view :class="'coupon-type color-' + (item.type == 1 ? 'red':'blue')" >{{item.type == 1?'车型券':'通用券'}}</view>
 				<button class="coupon-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber(index,$event)" @tap.stop="stop" v-if="!phone">一键抢券</button>
 				<view v-else class="coupon-btn" @tap.stop="getPhoneNumber(index,$event)">一键抢券</view>
 			</view>
@@ -90,18 +91,17 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.phone = data.phoneNumber
-					this.phone = data.phoneNumber
+					if (data && data.phoneNumber) {
+						uni.setStorageSync('userPhone', data.phoneNumber)
+						this.phone = data.phoneNumber						
+					}
 				}
 				
 				this.formpopShow('form', obj)
 				this.isRuleShow = false
 			},
 			setcouponList(list) {
-				this.phone = ''
-				if (app.globalData && app.globalData.phone) {
-					this.phone = app.globalData.phone
-				}
+				this.phone = uni.getStorageSync('userPhone');
 				for (let i in list) {
 					list[i].endTime = list[i].endTime.replace(/-/g, ".")
 					list[i].startTime = list[i].startTime.replace(/-/g, ".")

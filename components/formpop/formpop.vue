@@ -1,6 +1,6 @@
 <template>
 	<view class="formpop" v-if="isShowFormPop">
-		<view class="form" v-if="popName == 'form'">
+		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
 				<view class="p1">{{title}}</view>
 				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
@@ -17,12 +17,19 @@
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
-				<picker mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
-				 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
-					<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
-				</picker>
+				<!-- 经销商 S -->
+				<block>
+					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
+					 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
+						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
+					</picker>
+					<view v-else class="input-view dealer-input jt-icon placeholder" @tap="dealerPickerClick">
+						<view>该城市无经销商</view>
+					</view>					
+				</block>
+				<!-- 经销商 E -->
 				<view class="input-view mobile-input name-input">
-					<input type="text" @input="getValue('name',$event)" :value="name" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
+					<input type="text" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
 				<view class="input-view mobile-input">
 					<input type="text" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
@@ -86,6 +93,7 @@
 
 <script>
 	import api from '@/public/api/index'
+	import distance from '@/units/distance'
 	let app = getApp()
 	export default {
 		data() {
@@ -188,6 +196,10 @@
 					}
 				}, 1000)
 			},
+			// 经销商选择器被点击
+			dealerPickerClick () {
+				this.showToast('该城市无经销商')
+			},
 			getDealerChangeIndex(e) {
 				let {
 					detail
@@ -288,7 +300,7 @@
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
-					serialGroupId: this.crtSerialItem.id,
+					serialGroupId: this.crtSerialItem.pcSerialGroupId,
 					source: source,
 					sourceId: sourceId,
 					dealerId: this.crtDealerItem.id,
@@ -300,34 +312,27 @@
 				if (data.code == 1) { //成功留资
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
-					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
-						this.showToast('报名成功', 500)
-						// setTimeout(() => {
-						// 	this.towebView2()
-						// }, 500)
 					} else {
 						popname = 'form-success-pop'
 					}
+					this.popName = popname
 				} else if (data.code == 2) { //重复留资
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
-					} else if (lydx.duibaUrl && ly == 'activity') { //如果有活动链接
-						this.showToast('您已留过资，可直接抽奖', 500)
-						// setTimeout(() => {
-						// 	this.towebView2()
-						// }, 500)
 					} else {
 						popname = 'form-warning-pop'
 					}
+					this.popName = popname
 				} else {
 					if (ly == 'coupon') {
 						popname = 'coupon-sb-pop'
+						this.showToast(data.msg)
 					} else {
 						popname = 'form-sb-pop'
+						this.showToast(data.msg)
 					}
 				}
-				this.popName = popname
-
+				
 				console.log(data)
 			},
 			toMyPage() {
@@ -336,31 +341,6 @@
 					url
 				})
 			},
-			// towebView2() {
-			// 	this.isShowFormPop = false
-			// 	if (this.currentObj.duibaUrl) {
-			// 		let redirect = {
-			// 			'redirect': this.currentObj.duibaUrl
-			// 		}
-			// 		api.getMallLink(redirect).then(res => {
-			// 			let vurl = escape(res.data)
-			// 			let url = `/pages/webview?webURL=${vurl}`
-			// 			uni.navigateTo({
-			// 				url
-			// 			})
-			// 			console.log('MallLink', res)
-			// 		})
-			// 	} else {
-			// 		api.getMallLink().then(res => {
-			// 			let vurl = escape(res.data)
-			// 			let url = `/pages/webview?webURL=${vurl}`
-			// 			uni.navigateTo({
-			// 				url
-			// 			})
-			// 			console.log('MallLink', res)
-			// 		})
-			// 	}
-			// },
 			isPoneAvailable(phoneNumber) {
 				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
 				if (!myreg.test(phoneNumber)) {
@@ -374,19 +354,19 @@
 			},
 			async getpreClue() {
 				// 手机号码
-				this.phone = app.globalData.phone
+				this.phone = uni.getStorageSync('userPhone');
 				
 				// 车系
 				this.reqSerialList()
-				
+				await distance.getLocation()
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
 					await this.reqProvinceList()
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
 						await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+						const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
 						if (crtLocationCityItem) {
 							this.crtProvinceItem = crtLocationProvinceItem
 							this.crtCityItem = crtLocationCityItem
@@ -428,6 +408,7 @@
 			},
 			// 请求所有的省份
 			async reqProvinceList () {
+				this.provinceList = []
 				try {
 					const res = await api.fetchProvinceList()
 					if (res.code == 1) {
@@ -454,11 +435,11 @@
 			// 根据城市id请求地区
 			async reqDistrictListByCityId (cityId) {
 				this.districtList = []
+				this.crtDistrictItem = {}
 				try {
 					const res = await api.fetchDistrictListByCityId({cityId})
 					if (res.code == 1) {
 						this.districtList = res.data
-						this.crtDistrictItem = {}
 					}
 				} catch (err) {
 					this.showToast('获取地区信息失败')
@@ -468,6 +449,7 @@
 			// 根据城市id请求经销商
 			async reqDealerListByCityId (cityId) {
 				this.dealerList = []
+				this.crtDealerItem = {}
 				try {
 					const res = await api.fetchDealerListByCityId({cityId})
 					if (res.code == 1) {

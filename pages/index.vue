@@ -3,7 +3,7 @@
     <viewTabBar :current="0"></viewTabBar>
     <askOnline></askOnline>
     <view class="content">
-      <image class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
@@ -29,7 +29,7 @@
         <view class="hotTab">
           热门
         </view>
-        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status)">
+        <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
           <view>
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -92,8 +92,18 @@ export default {
       }
     },
   },
-  onShow() {
+  async onShow(options) {
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
+    const resData = (await this.getCityId()) || [1000000022,1000000022]
+    const provinceId = resData[0]
+    const cityId = resData[1]
+    const cityCode = app.globalData.currentLocation ? app.globalData.currentLocation.cityData.cityCode : 500000
+    this.pageData = await api.getHomepageData({
+      cityId: cityId,
+      cityCode: cityCode
+    }).then(res => {
+      return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
+    })
   },
   watch: {
     indexCity: function (newVal) {
@@ -101,15 +111,7 @@ export default {
     }
   },
   async onLoad(options) {
-    const resData = (await this.getCityId()) || [500000,500000]
-    const provinceId = resData[0]
-    const cityId = resData[1]
-    this.pageData = await api.getHomepageData({
-      cityId: cityId,
-      cityCode: app.globalData.currentLocation.realPositionCS.cityCode
-    }).then(res => {
-      return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
-    })
+
   },
   onUnload() {
   },
@@ -130,12 +132,15 @@ export default {
     async getCityId() {
       let currentLocation = app.globalData.currentLocation
       if (currentLocation) {
+        let pro = currentLocation.selectedCityData.pro || currentLocation.cityData.pro
+        let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
+
         const provinceList = await this.reqProvinceList()
         console.log('sdsdsd',provinceList)
-        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+        const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == pro.replace('省', '').replace('市', ''))
         if (crtLocationProvinceItem) {
           const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.name.replace('市', ''))
+          const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == city.replace('市', ''))
           if (crtLocationCityItem) {
             this.crtProvinceItem = crtLocationProvinceItem
             this.crtCityItem = crtLocationCityItem
@@ -175,7 +180,11 @@ export default {
         return res
       }
     },
-    handleLinkHot(type,id,status) {
+    handleLinkHot(type,id,status,sourceId) {
+      // type = 3
+      // id = 48965835
+      // status = 'verticalLive'
+      // status = 1
       //type:1资讯，2活动，3直播
       //status:1直播中，2预告，3回放
       console.log('type,id,status',type,id,status,typeof(type))
@@ -194,8 +203,14 @@ export default {
         }
         case 3: {
           switch (status) {
+            case 0: {
+              uni.navigateTo({
+                url: `/pages/liveDetail?liveId=${id}`
+              })
+              break;
+            }
             case 1: {
-              this.goMP(id,'verticalLive')
+              this.goMP(id,'verticalLive',sourceId)
               break;
             }
             case 2: {
@@ -205,7 +220,7 @@ export default {
               break;
             }
             case 3: {
-              this.goMP(id,'verticalPlayback')
+              this.goMP(id,'verticalPlayback',sourceId)
               break;
             }
           }
@@ -213,17 +228,20 @@ export default {
         }
       }
     },
-    goMP(id,type) { //跳转pcauto+
+    goMP(id,type,sourceId) { //跳转pcauto+
+      const oUrl = `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+      console.log('oUrl',oUrl)
       uni.navigateToMiniProgram({
         appId: 'wxa860d5a996074dbb',
-        path: `/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}`,
+        path: oUrl,
         success: res => {
           // 打开成功
           console.log("打开成功", res);
         },
         fail: err => {
           console.log(err);
-        }
+        },
+        envVersion: 'trial'
       });
     },
     goArtList() {

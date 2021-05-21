@@ -27,7 +27,9 @@
       "path": "pages/exhibition",
       "style": {
         "navigationBarTitleText": "云展馆",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+//        "pageOrientation": "landscape",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -48,7 +50,7 @@
     {
       "path": "pages/articleListPage",
       "style": {
-        "navigationBarTitleText": "文章列表",
+        "navigationBarTitleText": "资讯",
         "enablePullDownRefresh": false
       }
     },
@@ -134,7 +136,7 @@
         "path" : "pages/canpei",
         "style" :
         {
-            "navigationBarTitleText": "车型对比",
+            "navigationBarTitleText": "参数配置",
             "enablePullDownRefresh": false
         }
     }
@@ -164,7 +166,7 @@
     }
     ,{
         "path" : "pages/ChooseSerial",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
@@ -172,7 +174,7 @@
     }
     ,{
         "path" : "pages/ChooseSerialList",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择车系",
             "enablePullDownRefresh": false
@@ -180,7 +182,7 @@
     }
     ,{
         "path" : "pages/ChooseModels",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择车型",
             "enablePullDownRefresh": false
@@ -188,7 +190,7 @@
     }
     ,{
         "path" : "pages/ChooseDealer",
-        "style" :                                                                                    
+        "style" :
         {
             "navigationBarTitleText": "选择经销商",
             "enablePullDownRefresh": false
@@ -196,7 +198,7 @@
     }
 	,{
 		"path" : "pages/liveDetail",
-		"style" :                                                                                    
+		"style" :
 		{
 		    "navigationBarTitleText": "",
 		    "enablePullDownRefresh": false,
@@ -213,7 +215,7 @@
 	}
 	,{
 		"path" : "pages/AddYuYue",
-		"style" :                                                                                    
+		"style" :
 		{
 		    "navigationBarTitleText": "添加试驾车型",
 		    "enablePullDownRefresh": false
@@ -221,12 +223,12 @@
 	}
     ,{
           "path" : "pages/vrInFrame/vrInFrame",
-          "style" :                                                                                    
+          "style" :
           {
               "navigationBarTitleText": "",
               "enablePullDownRefresh": false
           }
-          
+
       }
   ],
   "tabBar": {
@@ -248,12 +250,12 @@
         "iconPath": "static/images/2.png",
         "selectedIconPath": "static/images/1.png"
       },
-      {
-        "pagePath": "pages/exhibition",
-        "text": "云展馆",
-        "iconPath": "static/images/2.png",
-        "selectedIconPath": "static/images/1.png"
-      },
+      // {
+      //   "pagePath": "pages/exhibition",
+      //   "text": "云展馆",
+      //   "iconPath": "static/images/2.png",
+      //   "selectedIconPath": "static/images/1.png"
+      // },
       {
         "pagePath": "pages/welfareActivity",
         "text": "活动",

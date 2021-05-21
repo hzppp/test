@@ -51,7 +51,6 @@
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
-                <view class="tit">点击按钮即视为同意《个人信息保护声明》</view>
             </view>
         </view>
     </view>
@@ -178,7 +177,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 				})
             },
             //立即预约
-            yuYue() {
+            async yuYue() {
+                console.log('111 :>> ', 111);
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -187,7 +187,31 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
-                this.$refs.pop.isShow = true
+                try {
+                    const res = await api.submitClue({
+                        cityId:this.currentCity.id,
+                        mobile:this.phoneNum,
+                        provinceId:this.currentCity.provinceId,
+                        serialGroupId:this.serialId,
+                        source:3,
+                        sourceId:this.currentDealer.id,
+                        smsCode:this.codeNum,
+                        dealerId:this.currentDealer.id || "",
+                        sourceId:this.serialId
+                    })
+                    console.log('res :>> ', res);
+                    if(res.code === 1) {
+                        this.$refs.pop.isShow = true
+                        console.log('res :>> ', res);
+                    }else {
+                        return uni.showToast({
+                            title:res.msg,
+                            icon:"none"
+                        })
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
             },
             cityPickerChange: function(e) {
                 this.reqDealersList(this.cityList[e.target.value].id)

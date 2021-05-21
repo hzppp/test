@@ -77,7 +77,7 @@
 			app.Interval = setInterval(() => {
 				this.downDate(data.endTime)
 			}, 1000)
-			this.phone = app.globalData.phone
+			this.phone = uni.getStorageSync('userPhone');
 			this.content = data
 		},
 		onShareAppMessage() {
@@ -118,18 +118,12 @@
 					let {
 						data
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					app.globalData.phone = data.phoneNumber
-					this.phone = data.phoneNumber
-
-					this.$refs.formpop.formShow('form', 'activity', this.content)
-				} else {
-					uni.showToast({
-						title: '需要授权后才能报名',
-						icon: 'none',
-						duration: 1500
-					})
+					if (data && data.phoneNumber) {
+						uni.setStorageSync('userPhone', data.phoneNumber)
+						this.phone = data.phoneNumber						
+					}
 				}
-
+				this.$refs.formpop.formShow('form', 'activity', this.content)
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()

@@ -49,6 +49,12 @@
 			if (app.globalData.haveUserInfoAuth) {
 			  console.log('decryptUserInfo',app.globalData.haveUserInfoAuth)
 				let info = app.globalData.getUserData
+        console.log('tttt123',{
+          encryptedData:info.encryptedData,
+          iv:info.iv,
+          rawData:info.rawData,
+          signature:info.signature
+        })
 				await api.saveWXuserInfo({
 					encryptedData:info.encryptedData,
 					iv:info.iv,
@@ -61,30 +67,11 @@
 				let {data} = await api.getUser()
 				app.globalData.getUserData = data
 			}
-			if(!app.globalData.pocketUserInfo){
-				await api.getPocketUserInfo()
-			}
-			if(!app.globalData.currentLocation.wxPosition){
-				let position = await distance.getLocation()
-				console.log('position==================',position)
-				if(position){
-					let cs = `${position.longitude},${position.latitude}`
-					let wz = await api.getIpAreaCoord(cs)
-					let {cityData} = await api.getRegionIpArea(wz.cityCode)
-					if(app.globalData.currentLocation.realPositionSF){
-						api.getRegionIpArea(app.globalData.currentLocation.realPositionSF.cityCode).then(res=>{
-							console.log('真实定位城市', res.cityData,cityData)
-							// console.log('真实定位城市', wz,app.globalData.currentLocation.realPositionSF)
-							app.globalData.currentLocation.realPositionCS = res.cityData
-							app.globalData.currentLocation.cityData = res.cityData
-
-						}).catch(err => {
-							app.globalData.currentLocation.cityData = cityData
-						})
-					}
-					app.globalData.currentLocation.wxPosition = position
-				}
-			}
+			// if(!app.globalData.pocketUserInfo){
+			// 	await api.getPocketUserInfo()
+			// }
+			await distance.getLocation()
+			
 			let cs = ''
 			let url = '/pages/index'
 			for(let i in options){

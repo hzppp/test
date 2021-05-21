@@ -1,10 +1,9 @@
 <template>
 	<view class="cars-page">
-		
+    <askOnline></askOnline>
         <view class="image-wrap" v-if="serialData.videoCoverUrl">
-            <image  mode='widthFix' lazy-load :src='serialData.videoCoverUrl'>
-            </image>
-            <i class="video-icon"></i>
+            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
+            <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoCoverUrl"></btnWrap>
@@ -36,9 +35,11 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
+import askOnline from '@/components/askOnline/askOnline'
+
 
 export default {
-    components: {btnWrap},
+    components: {btnWrap,askOnline},
     data() {
         return {
             serialData: {}, //车系详情
@@ -55,6 +56,7 @@ export default {
                 const {code,data} = await api.fetchSerialDetail({sgId})
                 if(code ===1 ) {
                     this.serialData = data
+                    console.log('data :>> ', data);
                     this.serialId = data.pcSerialGroupId
                     this.reqModelsList(data.pcSerialGroupId)
                     uni.setNavigationBarTitle({
@@ -101,6 +103,9 @@ export default {
         z-index: 1;
         image {
             vertical-align: middle;
+            width: 100%;
+        }
+        video {
             width: 100%;
         }
         .video-icon {

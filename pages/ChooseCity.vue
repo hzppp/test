@@ -2,13 +2,13 @@
 	<view class="choose-city">
 		<!-- 侧边导航 -->
 		<view class="side">
-			<view  v-for="(cityIndex,index) in letterGroup" :key="index" @tap="sidePoint(cityIndex)">
+			<view  v-for="(cityIndex,index) in letterGroup" :key="index" @tap.stop="sidePoint(cityIndex)">
 				{{cityIndex}}
 			</view>
 		</view>
 		<!-- 当前城市 -->
 		<view class="current-city">
-			当前定位的城市：<text>{{currentCity.name}}</text>
+			当前定位的城市：<text>{{currentCity}}</text>
 		</view>
 		<!-- 城市索引 -->
 		<scroll-view class="scroll-view" :scroll-into-view="targetId" :scroll-y="true">
@@ -26,6 +26,8 @@
 
 <script>
 import api from '@/public/api/index'
+import distance from '@/units/distance'
+
 let app = getApp()
 	export default {
 		data() {
@@ -36,9 +38,10 @@ let app = getApp()
 				currentCity: '' //当前城市
 			}
 		},
-		onLoad() {
+		async onLoad() {
+			await distance.getLocation()
 			this.getAllCityList()
-            this.currentCity = this.$store.state.currentCity
+            this.currentCity = app.globalData.currentLocation.selectedCityData.city
 		},
 		methods: {
 			async getAllCityList() {
@@ -62,6 +65,7 @@ let app = getApp()
 				this.targetId = id
 			},
 			changeCity(item) {
+                console.log('item :>> ', item);
 				this.currentCity = item.name
                 this.$store.commit("changCity",item)
                 let pages = getCurrentPages();  //获取所有页面栈实例列表
@@ -81,10 +85,10 @@ let app = getApp()
 		position: fixed;
 		right: 20rpx;
 		top: 64rpx;
-		width: 28rpx;
+		width: 200rpx;
 		height: 942rpx;
 		font-size: 24rpx;
-		text-align: center;
+		text-align: right;
 		display: flex;
 		justify-content: space-around;
 		flex-direction: column;

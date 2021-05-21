@@ -8,7 +8,7 @@
                     <view class="check-wrap" :class="[currentValue.includes(item.pcModelId)? 'hasChecked':'']">
                         <checkbox class="check-box" :value="item.pcModelId" :checked="item.checked" />
                     </view>
-                    <view class="model-name">{{item.modelMemo}}</view>
+                    <view class="model-name">{{item.name}}</view>
                 </label>
             </checkbox-group>
             <view class="btn" @tap="add">确定添加</view>
@@ -16,7 +16,7 @@
         <!-- 单选 -->
 		<view v-else>
             <view  class="item-list" v-for="(item,index) in modelsList" :key="index" @tap="goSingle(item)">
-                <view class="model-name">{{item.modelMemo}}</view>
+                <view class="model-name">{{item.name}}</view>
             </view>
 		</view>
 	</view>
@@ -34,7 +34,8 @@
                 serialId:"",
                 mids:"",
                 single:false, // 是否是单选
-                type:""
+                type: "",
+                sort: "",
 			}
 		},
 		methods: {
@@ -45,6 +46,7 @@
                 this.serialId = options.serialId || ""
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
+                this.sort = options.sort || ""
                 this.reqModelsList(options.serialId)
             },
             async reqModelsList(sgId) {
@@ -59,11 +61,12 @@
             },
             //go参配页
             add() {
-                let tempMids = ""
-                tempMids = this.mids + ","+ this.currentValue.join(",")
-                console.log('tempMids :>> ', tempMids);
+                // let newMids
+                let tempMids = this.mids + ","+ this.currentValue.join(",")
+                // newMids = tempMids.split(",")
+                // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
                     })
                 }
@@ -71,17 +74,23 @@
             //goSingle 单选跳转
             goSingle(item) {
                 if(this.type === "calc") {
-                    uni.navigateTo({
+                    uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })
+                }
+                if(this.pages === "vs") {
+                    let pages = getCurrentPages();  //获取所有页面栈实例列表
+                    let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+                    prevPage.$vm[this.sort] = item.pcModelId;   //修改上一页data里面的searchVal参数值为1211
+                    uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+                        delta: 1
+                    });
                 }
             },
             checkboxChange: function (e) {
 				console.log('e :>> ', e);
 				this.currentCount = e.detail.value.length
 				this.currentValue = e.detail.value
-                console.log('this.currentCount :>> ', this.currentCount);
-                console.log('this.currentValue :>> ', this.currentValue);
                 var items = this.items,
                     values = e.detail.value;
                 // for (var i = 0, lenI = items.length; i < lenI; ++i) {
@@ -112,7 +121,7 @@
 		background-color: #f5f5f6;
 		font-size: 24rpx;
 		color: #333333;
-		// padding-left: 39rpx;
+		padding-left: 39rpx;
 	}
 	.item-list {
 		display: flex;

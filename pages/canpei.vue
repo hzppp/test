@@ -140,7 +140,6 @@
 </template>
 <script>
 	import { dataInit } from "@/jsfiles/canpei";
-	import ContrastCar from "@/units/ContrastCar.js";
 	import countPage from '@/configs/countPage';
 	export default {
 		data() {
@@ -184,10 +183,9 @@
 			uni.showLoading({
 				title: "加载中"
 			})
-            console.log('options :>> ', options);
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
-			this.mids = options.ids || "";
+			this.mids = options.mids || "";
 			this.max = options.max || 0;
 			let ids = options.ids || "";
 			if (ids) {
@@ -232,7 +230,6 @@
 			async init() {
 				try {
 					let data = await this.getCarData(this.mids);
-                    console.log('data :>> ', data);
 					//只传车系Id不传mids进来，会导致carNum未被初始化
 					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
 						let carIds = [];
@@ -263,7 +260,6 @@
 					// #endif
 					try {
 						let data = await this.getCarData(this.$store.state.selectCars.newSelect);
-                        console.log('data222 :>> ', data);
 						this.Data.detailArray = this.Data.detailArray.concat(data.detailArray[0]);
 						let res = await dataInit(this.Data);
 						this.dataList = res.dataList;
@@ -289,37 +285,15 @@
                 uni.navigateTo({
 					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids}&pages=canpei`
                 })
-				// if (!this.offon || this.Data.detailArray.length >= 4 || JSON.stringify(this.Data) == '{}') return;
-				// this.offon = false;
-				// let url = ""
-				// if (this.navigateBack == '1') { //从车系首页点击参配过来，点击添加车带车系
-				// 	url = '/pages_car/chooseModels/chooseModels?navigateBack=2&serialId=' + this.serialId + '&serialName=' + this.sidName;
-				// } else if (this.navigateBack == '2') { //从车系首页点击开始对比过来，点击添加车型不带车系
-				// 	url = '/pages_car/chooseModels/chooseModels?navigateBack=3&compare=true';
-				// }
-				// uni.navigateTo({
-				// 	url,
-				// 	success: () => {
-				// 		this.offon = true
-				// 	}
-				// })
-
 			},
 			// 删除车型
 			async delCar(id, index) {
+                let tempMids = this.mids.split(",")
+                this.mids = tempMids.splice(index,1)
 				// #ifdef MP-BAIDU
 				this.difData = ""
 				// #endif
 				this.Data.detailArray.splice(index, 1);
-				delete this.$store.state.selectCars["id_" + id];
-				if (this.navigateBack == '2') {
-					ContrastCar.remove(id);
-				}
-				let res = await dataInit(this.Data);
-				this.dataList = res.dataList
-				this.$nextTick(() => {
-					this.difData = res.difData
-				})
 			},
 			// 前往锚点位置
 			toView(index) {
@@ -348,7 +322,7 @@
 						uni.request({
 							url: "https://ics.pcauto.com.cn/magear/s/pcauto/info/v1/detailCompare.xsp",
 							data: {
-								serialId: this.serialId,
+								// serialId: this.serialId,
 								modelIds: ids,
 								rid: 1
 							},
@@ -633,6 +607,7 @@
 
 						.opc {
 							opacity: 0.3;
+                            pointer-events: none;
 						}
 					}
 				}

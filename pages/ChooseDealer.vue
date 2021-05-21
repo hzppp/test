@@ -8,6 +8,7 @@
                 {{item.address}}
             </view>
         </view>
+        <view class="no-dealer" v-if="dealersList.length === 0">暂无对应经销商</view>
     </view>
 </template>
 
@@ -42,7 +43,6 @@ import api from '@/public/api/index'
             goBack(item) {
                 this.$store.commit("changDealer",item)
             	this.currentCity = item.name
-                this.$store.commit("changCity",item)
 				// console.log('app. :>> ', app.globalData);
                 let pages = getCurrentPages();  //获取所有页面栈实例列表
                 let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
@@ -72,6 +72,10 @@ import api from '@/public/api/index'
             margin-top: 24rpx;
             margin-bottom: 32rpx;
         }
+    }
+    .no-dealer {
+        text-align: center;
+        padding: 100rpx;
     }
 }
 </style>

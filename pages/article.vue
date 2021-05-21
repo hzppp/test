@@ -1,7 +1,7 @@
 <template>
 	<view class="article">
 <!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-    <loading ref="loading"></loading>
+<!--    <loading ref="loading"></loading>-->
 		<share-pop ref="sharepop"></share-pop>
 		<getFormidbox>
 			<view class="content" slot="content">
@@ -9,7 +9,7 @@
 				<view class="header-box">
 					<view class="tit">{{title}}</view>
 					<view class="text">
-						{{publishTime || ''}}
+            {{publishTime ? publishTime.substr(0,10) :  ''}}
 					</view>
 				</view>
 				<view class="m-html" v-if="articleType == 2">
@@ -67,14 +67,14 @@
 		mixins: [shouquan],
 		async onLoad(options) {
 			// this.$invoke('loading','changeLoading',true)
-			this.$refs.loading.changeLoading(true)
+			// this.$refs.loading.changeLoading(true)
 			console.log('options',options)
 			this.articleType = 2
 			this.articleId = options.articleId
 			let data = await api.getArticleContent(options.articleId)
 			if(data.code !=1 || !data.data){
 				// this.$invoke('loading','changeLoading')
-				this.$refs.loading.changeLoading(false)
+				// this.$refs.loading.changeLoading(false)
 				let duration = 2000
 				uni.showToast({
 					title: '文章已被删除，请查看其它文章',
@@ -116,20 +116,12 @@
 			}else{
 				this.content = content
 			}
-			this.$refs.loading.changeLoading(false)
+			// this.$refs.loading.changeLoading(false)
 		},
 		onShareAppMessage(){
 			let title = this.title
 			let path = `pages/authorization?to=article&articleId=${this.articleId}&type=${this.articleType}`
 			console.log(path)
-			api.shareArticle(this.articleId,this.articleType).then(res=>{
-				console.log(res)
-				if(res.data > 0){
-					// setTimeout(()=>{
-					//     this.$invoke('share-pop','shareSuccessShow',res.data,'转发成功')
-					// },800)
-				}
-			})
 			return {
 				title: title,
 				path: path,

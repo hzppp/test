@@ -12,7 +12,21 @@
 			<basic-info :leftSerial="leftSerial" :rightSerial="rightSerial"></basic-info>
 			<!-- 基本信息E -->
 		</view>
-
+        <!-- 配置对比S -->
+        <view class="configuration">
+            <view class="title">配置对比</view>
+            <view class="models-wrap">
+                <view class="car-model" @tap="changModel(leftSerial.serialId,1)">
+                    <view class="dec">{{powerErank4ModelA.modelName}}</view>
+                     <view class="arrow"></view>
+                </view>
+                <view class="car-model" @tap="changModel(rightSerial.serialId,2)">
+                    <view class="dec">{{powerErank4ModelB.modelName}}</view>
+                    <view class="arrow"></view>
+                </view>
+            </view>
+        </view>
+        <!-- 配置对比E -->
 		<!-- 数据对比S -->
 		<view class="data-vs">
 			<view class="vs-content" v-for="(title,index) in powerEquipGroupList" :key="index">
@@ -20,12 +34,12 @@
 					{{title.name}}
 				</view>
 				<view class="vs-detail">
-					<view class="left-a">
+					<view class="left-a" v-if="modelEquipA.length > 0">
 						<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
 							{{a.name}}
 						</view>
 					</view>
-					<view class="right-b">
+					<view class="right-b" v-if="modelEquipB.length > 0">
 						<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
 							{{b.name}}
 						</view>
@@ -34,6 +48,10 @@
 			</view>
 		</view>
 		<!-- 数据对比E -->
+        <view class="view-all" @tap="goCanpei">
+            <view>查看完整配置对比</view>
+            <view class="arrow"></view>
+        </view>
 	</view>
 </template>
 <script>
@@ -64,14 +82,28 @@
 					this.SerialIds = this.SerialIds.split(',')[0] + ',' + val.id
 				}
 				this.init()
-			}
+			},
+            mid1() {
+                this.getVsDownData(this.mid1,this.mid2)
+            },
+            mid2() {
+                this.getVsDownData(this.mid1,this.mid2)
+            },
+            leftSerialId() {
+                this.init()
+                this.reqModelsBySerialId("left", this.leftSerialId)
+            },
+            rightSerialId() {
+                this.init()
+                this.reqModelsBySerialId("right", this.rightSerialId)
+            }
 		},
 		data() {
 			return {
 				countPage,//页面计数器id
 				loadFail: false,
 				types: 0, //顶部样式默认是0，滑动到一定距离后改成1
-				SerialIds: "",
+				// SerialIds: "",
 				city: "广州",
 				cityId: 1,
 				offon: true, //true走onload的init，false走onshow的init；防止onload数据还未初始化就执行了init(百度小程序)
@@ -83,7 +115,16 @@
 				powerEquipGroupList: [], //对比头
 
 				modelEquipA: [], //车a的数据-左
-				modelEquipB: [] //车b的数据-右
+				modelEquipB: [], //车b的数据-右
+                powerErank4ModelA:{}, //车型a的数据-左
+                powerErank4ModelB:{}, //车型b的数据-右
+
+                mid1:'', //左边车型id
+                mid2:'', //右边车型id
+
+                leftSerialId:"", //左车系id
+                rightSerialId:"" //右车系id
+
 			}
 		},
 		onPageScroll(e) {
@@ -93,25 +134,20 @@
 				this.types = 1
 			}
 		},
+        onShow(){
+            // this.init()
+        },
 		onLoad(options) {
 			console.log('options :>> ', options);
-			if (options.leftSerialId && options.rightSerialId) {
-				this.SerialIds = options.leftSerialId + ',' + options.rightSerialId
-			}
-			// Location.init((data) => {
-			// 	if (data) {
-			// 		this.city = data.city
-			// 		this.cityId = data.cityId
-			// 	}
-			// 	this.init()
-			// })
-            this.init()
-			this.getVsDownData()
+            this.mid1 = options.mid1 || ''
+            this.mid2 = options.mid2 || ''
+            this.leftSerialId = options.leftSerialId || ''
+            this.rightSerialId = options.rightSerialId || ''
 		},
 		methods: {
 			async init() {
 				try {
-					let data = await this.getVsData(this.SerialIds);
+					let data = await this.getVsData();
 					this.worthRead = data.worthRead;
 					this.leftSerial = data.leftSerial;
 					this.rightSerial = data.rightSerial;
@@ -123,6 +159,27 @@
 					this.loadFail = true
 				}
 			},
+            //查看完整参数对比
+            goCanpei() {
+				uni.navigateTo({
+					url: `/pages/canpei?mids=${this.mid1},${this.mid2}`
+				})
+            },
+            //获取车系下的车型
+            async reqModelsBySerialId(noun,sgId) {
+                try {
+                    const {code,data} = await api.fetchModelsList({sgId})
+                    if(code === 1) {
+                        if(noun === "left") { //获取车系下的车型,默认展示第一个车型的对比
+                            this.mid1 = data[0].pcModelId
+                        }else if(noun === "right") {
+                            this.mid2 = data[0].pcModelId
+                        }
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            },
             // 数组交叉排序重组
             setArr(arr1,arr2){
                 for (let i in arr2) {
@@ -131,17 +188,16 @@
                 return arr1;
             },
             //获取对比车系
-             getVsData(ids,rid){
+             getVsData(){
                 return new Promise((reolve,resject)=>{
                     uni.request({
                         url:domain.getAPI('fetchVSserials'),
                         data:{
-                            rid,
-                            leftSerialId:ids.split(",")[0],
-                            rightSerialId:ids.split(",")[1]
+                            leftSerialId:this.leftSerialId,
+                            rightSerialId:this.rightSerialId
                         },
                         success:res=>{
-                            let data =res.data;
+                            let data = res.data;
                             reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                         },
                         fail:err=>{
@@ -150,42 +206,29 @@
                     })
                 })
             },
-			//兼容获取的gbk
-			 resDecode(str, charset, callback) {
-				var script = document.createElement('script');
-				script.id = '_urlDecodeFn_';
-				var src = 'data:text/javascript;charset=' + charset + ',_urlDecodeFn_("' + str + '");'
-				src += 'document.getElementById("_urlDecodeFn_").parentNode.removeChild(document.getElementById("_urlDecodeFn_"));';
-				script.src = src;
-				document.body.appendChild(script);
-				window._urlDecodeFn_ = callback;
-			},
-			 gbkVerbUtf(str){
-				return new Promise ((resolve,reject) => {
-					try {
-						this.resDecode(str,'GBK',(res) => {
-							resolve(res)
-						})
-					} catch (error) {
-						console.error(error)
-					}
+            //切换车型 
+            changModel(id,sort) {
+                uni.navigateTo({
+					url: `/pages/ChooseModels?pages=vs&serialId=${id}&sort=mid${sort}&single=true`
 				})
-			},
+            },
 			//获取文字对比数据
-			async getVsDownData() {
+			async getVsDownData(mid1,mid2) {
 				try {
-					const {modelEquipA,modelEquipB,modelEquipA:{powerEquipGroupList}} = await api.fetchCarSerialContrast({mid1:102631,mid2:94839})
-					this.powerEquipGroupList = powerEquipGroupList
+					const res = await api.fetchCarSerialContrast({mid1,mid2})
+                    this.powerErank4ModelA =  res.modelEquipA? res.modelEquipA.powerErank4Model : []
+                    this.powerErank4ModelB = res.modelEquipB? res.modelEquipB.powerErank4Model : []
+					this.powerEquipGroupList = res.modelEquipA.powerEquipGroupList
 					let tempModelEquipA = []
 					let tempModelEquipB = []
-					for(let A in modelEquipA) {
-						if(A <= powerEquipGroupList.length) {
-							tempModelEquipA.push(modelEquipA[A])
+					for(let A in res.modelEquipA) {
+						if(A <= res.modelEquipA.powerEquipGroupList.length) {
+							tempModelEquipA.push(res.modelEquipA[A])
 						}
 					}
-					for(let B in modelEquipB) {
-						if(B <= powerEquipGroupList.length) {
-							tempModelEquipB.push(modelEquipB[B])
+					for(let B in res.modelEquipB) {
+						if(B <= res.modelEquipA.powerEquipGroupList.length) {
+							tempModelEquipB.push(res.modelEquipB[B])
 						}
 					}
 					this.modelEquipA = tempModelEquipA
@@ -219,6 +262,35 @@
 	.page {
 		padding-top: 425rpx;
 	}
+    .configuration {
+        .title {
+            text-align: center;
+            font-size: 40rpx;
+            color: #333333;
+            font-weight: bold;
+			margin: 50rpx 0;
+        }
+        .models-wrap {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 32rpx;
+            .car-model {
+                font-size: 28rpx;
+                font-weight: bold;
+                width: 308rpx;
+                padding: 10rpx;
+                box-sizing: border-box;
+                border-radius: 10rpx;
+                border: 2rpx solid #EBEBEB;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .dec {
+                    width: 280rpx;
+                }
+            }
+        }
+    }
 	.data-vs {
 		.vs-content {
 			padding: 0  20rpx;
@@ -266,5 +338,21 @@
 			}
 		}
 	}
+    .arrow {
+        width: 20rpx;
+        height: 20rpx;
+        background-image: url("../static/images/right_arrow.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+    }
+    .view-all {
+        display: flex;
+        text-align: center;
+        font-size: 24rpx;
+        color: #333333;
+        align-items: center;
+        justify-content: center;
+        margin: 40rpx 0;
+    }
 }
 </style>
