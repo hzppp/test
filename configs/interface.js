@@ -14,9 +14,9 @@ var DOMAIN_R = {
 	host:"https://pocket.pcauto.com.cn",
 	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	//panorama:"http://t-panorama.pcauto.com.cn",
-    UPCHost:"https://upc.pcauto.com.cn",
+	UPCHost:"https://upc.pcauto.com.cn",
 	changan:"http://ms-changan-auto.changan-cloud-auto",
-    pcauto: 'https://magear.pcauto.com.cn', //测试域名
+	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
 //测试环境域名
@@ -27,8 +27,8 @@ var DOMAIN_T = {
 	host:"https://testpocket2.pcauto.com.cn",
 	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	panorama:"https://panorama.pcauto.com.cn",
-    UPCHost:"https://upc.pcauto.com.cn",
-    pcauto: 'https://magear.pcauto.com.cn', //测试域名
+	UPCHost:"https://upc.pcauto.com.cn",
+	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
 	// changan:"https://devqd-changan.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
@@ -163,10 +163,10 @@ const config = {
 		mallCreateOrder:`${DOMAIN.host}/api/audi/xcx/gift/order/createWithAddr`,
 		//获取各城市
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
-        //获取车系对比
-        fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
-        //获取经销商列表
-        fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
+		//获取车系对比
+		fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
+		//获取经销商列表
+		fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
@@ -189,17 +189,21 @@ const config = {
 		fetchSerialList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 获取首页banner&活动数据
 		getHomepageData:`${DOMAIN.changan}/api/xcx/index/homepage`,
-        //获取验证码
-        fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
-        //预约试驾
-        postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
+		//获取验证码
+		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+		//预约试驾
+		postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
 		//计算器获取车型
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
 		// 获取验证码
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
-		// 获取车系列表
+		// 获取省份和城市的级联列表
+		fetchProvinceCityList: `${DOMAIN.changan}/api/xcx/base/allMap`,
+		// 请求优惠券详情
+		fetchCouponDetail: `${DOMAIN.changan}/api/xcx/coupon/detail`,
+		// 车系列表
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 	},
 	getAPI(key) {
