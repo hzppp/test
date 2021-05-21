@@ -80,6 +80,11 @@
 			this.phone = uni.getStorageSync('userPhone');
 			this.content = data
 		},
+		onHide () {
+			if (app.Interval) {
+				clearInterval(app.Interval)
+			}
+		},
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = `pages/authorization?to=activity&id=${this.content.id}`
@@ -127,7 +132,7 @@
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()
-				endtime = new Date(endtime).getTime()
+				endtime = new Date(endtime.replace(/-/g, '/')).getTime()
 				let j = endtime - time
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
