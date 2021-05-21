@@ -25,6 +25,7 @@
 					<view class="icon"></view>分享
 				</button>
 			</view>
+		</view>
 	</block>
 	<block v-else>
 		<view class="live-detail">
