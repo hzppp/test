@@ -111,7 +111,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title:"手机授权失败"
                         })
                     }
-                        this.getPhoneBtn = true
+                        this.getPhoneBtn = true 
 				}
 			},
             //车系详情
