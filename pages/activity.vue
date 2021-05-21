@@ -16,7 +16,7 @@
 		<view class="serial-list">
 			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index">
 				<view class="name">{{serialGroupItem.name}}</view>
-				<button class="see-car-btn" @tap="seeCarBtnClick">3D看车 ></button>
+				<button class="see-car-btn" @tap="seeCarBtnClick(serialGroupItem)">3D看车 ></button>
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
@@ -109,9 +109,9 @@
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 			},
 			// 看车按钮被点击
-			seeCarBtnClick () {
-				uni.switchTab({
-					url: '/pages/exhibition'
+			seeCarBtnClick (serialGroupItem) {
+				uni.navigateTo({
+					url: `/pages/exhibition?sid=${serialGroupItem.pcSerialGroupId}`
 				})
 			},
 			async getPhoneNumber(e) {
