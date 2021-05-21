@@ -157,10 +157,10 @@ export default {
 
       // 改变默认定位省市
       let currentLocation = app.globalData.currentLocation
-      currentLocation.selectedCityData.cityId = this.crtCityItem.id
-      currentLocation.selectedCityData.name = this.crtCityItem.name
       currentLocation.selectedCityData.proId = this.crtProvinceItem.id
       currentLocation.selectedCityData.pro = this.crtProvinceItem.name
+      currentLocation.selectedCityData.cityId = this.crtCityItem.id
+      currentLocation.selectedCityData.city = this.crtCityItem.name
     },
     bindMultiPickerColumnChange(e) {
       let {
