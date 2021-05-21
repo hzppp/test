@@ -80,6 +80,11 @@
 			this.phone = uni.getStorageSync('userPhone');
 			this.content = data
 		},
+		onHide () {
+			if (app.Interval) {
+				clearInterval(app.Interval)
+			}
+		},
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = `pages/authorization?to=activity&id=${this.content.id}`
@@ -101,7 +106,7 @@
 		},
 		methods: {
 			formShow() {
-				this.$refs.formpop.formShow('form', 'activity', this.content, '完善资料')
+				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 			},
 			// 看车按钮被点击
 			seeCarBtnClick () {
@@ -127,7 +132,7 @@
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()
-				endtime = new Date(endtime).getTime()
+				endtime = new Date(endtime.replace(/-/g, '/')).getTime()
 				let j = endtime - time
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
@@ -224,10 +229,10 @@
 			}
 			.cover {
 				position: absolute;
-				right: 17rpx;
+				right: 37rpx;
 				bottom: 31rpx;
-				max-width: 400rpx;
-				max-height: 200rpx;
+				width: 300rpx;
+				height: 200rpx;
 			}
 		}
 	}

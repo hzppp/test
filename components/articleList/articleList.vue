@@ -7,7 +7,7 @@
 				<view class="list-box" @tap="toArticlePage(item.id)">
 					<image class="image" :src="item.pictureUrl" mode="scaleToFill" lazy-load="true"></image>
 					<view class="tit">{{item.title}}</view>
-					<view class="date">{{item.publishTime || ''}}</view>
+					<view class="date">{{item.publishTime ? item.publishTime.substr(0,10) :  ''}}</view>
 				</view>
 			</block>
 			<mp-loading type="circle"></mp-loading>

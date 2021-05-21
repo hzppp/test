@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<loading ref="loading"></loading>
+<!--		<loading ref="loading"></loading>-->
 <!--		<view class="authorization" v-if="isUserInfoPage">-->
 <!--			<view class="authorization-pop">-->
 <!--				<button class="getUserInfo-btn" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>-->
@@ -19,7 +19,7 @@
 			return {}
 		},
 		async onLoad(options) {
-			this.$refs.loading.changeLoading(true);
+			// this.$refs.loading.changeLoading(true);
       app.globalData.haveUserInfoAuth = uni.getStorageSync('haveUserInfoAuth')
       app.globalData.getUserData = uni.getStorageSync('getUserData')
 			console.log('页面参数', options)
@@ -41,20 +41,10 @@
 			if(options.salesId){
 				app.globalData.salesId = options.salesId
 			}
-			let loginJson = await login.login()
-			if(!app.globalData.wxUserInfo){
-				// await this.getWxUserInfo()
-
-			}
-			if (app.globalData.haveUserInfoAuth) {
+			let loginJson = await login.login() //请求登录 公共请求头写入token
+			if (app.globalData.haveUserInfoAuth) { //保存用户信息
 			  console.log('decryptUserInfo',app.globalData.haveUserInfoAuth)
 				let info = app.globalData.getUserData
-        console.log('tttt123',{
-          encryptedData:info.encryptedData,
-          iv:info.iv,
-          rawData:info.rawData,
-          signature:info.signature
-        })
 				await api.saveWXuserInfo({
 					encryptedData:info.encryptedData,
 					iv:info.iv,
@@ -63,15 +53,20 @@
 				})
 			}
 
-			if(!app.globalData.getUserData){
-				let {data} = await api.getUser()
-				app.globalData.getUserData = data
+			if(!app.globalData.getUserData){ //获取用户信息
+				let {code,data} = await api.getUser()
+        console.log('ttttttt123',data)
+        if(code==1&&data) {
+          app.globalData.haveUserInfoAuth = true
+          uni.setStorageSync('haveUserInfoAuth', true)
+          app.globalData.getUserData = {rawData:{...data}}
+          app.globalData.wxUserInfo = data
+          uni.setStorageSync('wxUserInfo', data)
+          uni.setStorageSync('getUserData', app.globalData.getUserData)
+        }
 			}
-			// if(!app.globalData.pocketUserInfo){
-			// 	await api.getPocketUserInfo()
-			// }
 			await distance.getLocation()
-			
+
 			let cs = ''
 			let url = '/pages/index'
 			for(let i in options){
@@ -99,25 +94,4 @@
 </script>
 
 <style lang="less">
-@import '@/static/less/public.less';
-.authorization{
-    &-pop{
-        .setbg(560rpx,750rpx,'sq.png');
-        .pa(50%,50%);
-        transform: translate(-50%,-50%);
-        margin-top: -100rpx;
-        border-radius: 20rpx;
-    }
-    .getUserInfo-btn{
-        height:88rpx;
-        width: 360rpx;
-        position: absolute;
-        left: 100rpx;
-        bottom: 40rpx;
-        background: none;
-        &:after{
-            display: none;
-        }
-    }
-}
 </style>

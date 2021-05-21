@@ -17,10 +17,17 @@
 				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
-				<picker mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
-				 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
-					<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
-				</picker>
+				<!-- 经销商 S -->
+				<block>
+					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
+					 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
+						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
+					</picker>
+					<view v-else class="input-view dealer-input jt-icon placeholder" @tap="dealerPickerClick">
+						<view>该城市无经销商</view>
+					</view>					
+				</block>
+				<!-- 经销商 E -->
 				<view class="input-view mobile-input name-input">
 					<input type="text" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
@@ -173,14 +180,14 @@
 				}
 				
 				this.smsCodeTime = 60
-				this.smsCodeText = this.smsCodeTime
+				this.smsCodeText = this.smsCodeTime + 's'
 				this.reqCode()
 			},
 			// 验证码倒计时
 			smsCodeCD () {
 				this.smsCodeTimer = setTimeout(() => {
 					this.smsCodeTime--
-					this.smsCodeText = this.smsCodeTime
+					this.smsCodeText = this.smsCodeTime + 's'
 					if (this.smsCodeTime <= 0) {
 						this.smsCodeText = '重新发送'
 						clearTimeout(this.smsCodeTimer)
@@ -188,6 +195,10 @@
 						this.smsCodeCD()
 					}
 				}, 1000)
+			},
+			// 经销商选择器被点击
+			dealerPickerClick () {
+				this.showToast('该城市无经销商')
 			},
 			getDealerChangeIndex(e) {
 				let {

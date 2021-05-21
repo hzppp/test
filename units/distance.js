@@ -4,7 +4,7 @@ export default {
 	// 获取定位信息
     async getLocation(){
 		const currentLocation = app.globalData.currentLocation
-		if(!currentLocation.wxPosition.provider || currentLocation.wxPosition.provider == 'default'){
+		if(currentLocation.wxPosition.provider && currentLocation.wxPosition.provider == 'default'){
 			try {
 				const crtPosition = await this.reqLocation()
 				const crtCityData = await api.getIpAreaCoord(`${crtPosition.longitude},${crtPosition.latitude}`)
