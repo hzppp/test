@@ -408,7 +408,7 @@ export default {
       position: relative;
     }
     .hotCar {
-      width: 100vw;
+      width: 700rpx;
       overflow: hidden;
       white-space:nowrap;
       .hotCarItem {
