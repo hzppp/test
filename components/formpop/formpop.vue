@@ -180,14 +180,14 @@
 				}
 				
 				this.smsCodeTime = 60
-				this.smsCodeText = this.smsCodeTime
+				this.smsCodeText = this.smsCodeTime + 's'
 				this.reqCode()
 			},
 			// 验证码倒计时
 			smsCodeCD () {
 				this.smsCodeTimer = setTimeout(() => {
 					this.smsCodeTime--
-					this.smsCodeText = this.smsCodeTime
+					this.smsCodeText = this.smsCodeTime + 's'
 					if (this.smsCodeTime <= 0) {
 						this.smsCodeText = '重新发送'
 						clearTimeout(this.smsCodeTimer)

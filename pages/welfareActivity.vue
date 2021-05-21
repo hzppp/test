@@ -26,7 +26,7 @@
         </view>
         <view class="activity-list" v-if="activityList.length > 0">
           <block v-for="(item,index) in activityList" :key="index">
-            <view class="pic-text" @tap="toActivityPage(item.id)">
+            <view class="pic-text" @tap="toActivityPage(item)">
               <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
                 <view class="label-name">{{item.typeText}}</view>
@@ -99,10 +99,10 @@ export default {
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
       if (crtLocationProvinceItem) {
         await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-        const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.cityData.city.replace('市', ''))
+        const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
         if (crtLocationCityItem) {
           this.crtProvinceItem = crtLocationProvinceItem
           this.crtCityItem = crtLocationCityItem
@@ -176,11 +176,17 @@ export default {
     scrollGetActivity() {
       this.getactivity()
     },
-    toActivityPage(id) {
-      let url = '/pages/activity?id=' + id
-      uni.navigateTo({
-        url
-      })
+    toActivityPage(item) {
+		if (item.duibaUrl) {
+			uni.navigateTo({
+			  url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+			})
+		} else {
+			let url = '/pages/activity?id=' + item.id
+			uni.navigateTo({
+			  url
+			})
+		}
     },
     resetjson() {
       this.getWelfarePageNumber = 1
