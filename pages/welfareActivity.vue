@@ -76,8 +76,8 @@ export default {
       title: '活动',
       indexCity: {},
       getWelfarePageNumber: 1,
-      provinceList: [],
-      cityList: [],
+	  provinceList: [],
+	  cityList: [],
       crtProvinceItem: {}, // 当前选择的省份
       crtCityItem: {}, // 当前选择的城市
       isLoadGetWelfare: true,
@@ -96,12 +96,15 @@ export default {
       }
       return text
     },
-    selectIndex() {
-      let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
-      let cityIndex = this.cityList.findIndex(item => item.id == this.crtCityItem.id)
-      provinceIndex = provinceIndex > -1 ? provinceIndex : 0
-      cityIndex = cityIndex > -1 ? cityIndex : 0
-      return [provinceIndex, cityIndex]
+    selectIndex () {
+		let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+		let cityIndex = -1
+		if (this.crtProvinceItem.cities) {
+			cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+		}
+		provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+		cityIndex = cityIndex > -1 ? cityIndex : 0
+		return [provinceIndex, cityIndex]
     }
   },
   async onShow() {
@@ -110,20 +113,18 @@ export default {
     await distance.getLocation()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
-      await this.reqProvinceList()
-      const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-      if (crtLocationProvinceItem) {
-        await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-        const crtLocationCityItem = this.cityList.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-        if (crtLocationCityItem) {
-          this.crtProvinceItem = crtLocationProvinceItem
-          this.crtCityItem = crtLocationCityItem
-        }
-      }
-      // 精选活动
-      this.getactivity()
-      // 福利列表
-      this.getWelfare()
+		await this.reqProvinceCityList()
+		const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+		if (crtLocationProvinceItem) {
+			const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+			this.crtProvinceItem = crtLocationProvinceItem
+			this.cityList = this.crtProvinceItem.cities
+			this.crtCityItem = crtLocationCityItem
+		}
+		// 精选活动
+		this.getactivity()
+		// 福利列表
+		this.getWelfare()
     }
   },
   async onLoad() {
@@ -160,29 +161,25 @@ export default {
       let {
         detail
       } = e
-      this.crtProvinceItem = this.provinceList[detail.value[0]]
-      this.crtCityItem = this.cityList[detail.value[1]]
-      app.globalData.currentLocation.selectedCityData = { // 设置当前选择的城市
-        pro: this.crtProvinceItem.name,
-        city: this.crtCityItem.name,
-      }
+	  this.crtProvinceItem = this.provinceList[detail.value[0]]
+	  this.crtCityItem = this.cityList[detail.value[1]]
       this.resetjson()
       this.getWelfare()
       this.getactivity()
 
       // 改变默认定位省市
       let currentLocation = app.globalData.currentLocation
-      currentLocation.cityData.cityId = this.crtCityItem.id
-      currentLocation.cityData.name = this.crtCityItem.name
-      currentLocation.cityData.proId = this.crtProvinceItem.id
-      currentLocation.cityData.pro = this.crtProvinceItem.name
+      currentLocation.selectedCityData.proId = this.crtProvinceItem.id
+      currentLocation.selectedCityData.pro = this.crtProvinceItem.name
+      currentLocation.selectedCityData.cityId = this.crtCityItem.id
+      currentLocation.selectedCityData.city = this.crtCityItem.name
     },
     bindMultiPickerColumnChange(e) {
       let {
         detail
       } = e
       if (detail.column == 0) {
-        this.reqCityListByProvinceId(this.provinceList[detail.value].id)
+			this.cityList = this.provinceList[detail.value].cities
       }
     },
     scrollGetActivity() {
@@ -273,32 +270,21 @@ export default {
 
 
     },
-    // 请求所有的省份
-    async reqProvinceList() {
-      this.provinceList = []
-      try {
-        const res = await api.fetchProvinceList()
-        if (res.code == 1) {
-          this.provinceList = res.data
-        }
-      } catch (err) {
-        this.$toast('获取省份信息失败', 'none', 1500);
-        console.error(err)
-      }
-    },
-    // 根据省份id请求城市
-    async reqCityListByProvinceId(provinceId) {
-      this.cityList = []
-      try {
-        const res = await api.fetchCityListByProvinceId({provinceId})
-        if (res.code == 1) {
-          this.cityList = res.data
-        }
-      } catch (err) {
-        this.$toast('获取城市信息失败', 'none', 1500);
-        console.error(err)
-      }
-    },
+	// 请求省份和城市的级联列表
+	async reqProvinceCityList () {		
+		try {
+		  const res = await api.fetchProvinceCityList()
+		  if (res.code == 1) {
+		    this.provinceList = res.data
+			if (this.provinceList && this.provinceList.length) {
+				this.cityList = this.provinceList[0].cities
+			}
+		  }
+		} catch(err) {
+		  this.$toast('获取省份和城市信息失败', 'none', 1500);
+		  console.error(err)
+		}
+	},
   }
 }
 </script>

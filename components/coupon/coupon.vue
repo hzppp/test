@@ -96,9 +96,11 @@
 						this.phone = data.phoneNumber						
 					}
 				}
-				
-				this.formpopShow('form', obj)
-				this.isRuleShow = false
+				try {
+					const detailObj = await this.reqCouponDetail(obj.id)
+					this.formpopShow('form', detailObj)
+					this.isRuleShow = false
+				} catch (err) {}
 			},
 			setcouponList(list) {
 				this.phone = uni.getStorageSync('userPhone');
@@ -112,6 +114,19 @@
 			formpopShow(name, obj) {
 				this.$emit('formShow', name, 'coupon', obj, '领取优惠券')
 				// this.$invoke('../form-pop','formShow',name,'coupon',obj)
+			},
+			// 请求优惠券详情
+			async reqCouponDetail (id) {
+				try {
+				  const res = await api.fetchCouponDetail({id})
+				  if (res.code == 1) {
+				    return Object.assign(res.data, {regionList: res.data.cityList})
+				  }
+				} catch(err) {
+				  this.$toast('获取优惠券详情失败', 'none', 1500);
+				  console.error(err)
+				  throw new Error('获取优惠券详情失败')
+				}
 			}
 		}
 	}
