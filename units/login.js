@@ -1,10 +1,10 @@
-
 import domain from '@/configs/interface';
 import request from "@/units/request.js"
 import toast from '@/units/showToast.js';
+
 let app = getApp()
 export default {
-    loginNumber:true,
+    loginNumber: true,
     getSessionKey() {
         return uni.getStorageSync('session-3rd')
     },
@@ -15,78 +15,75 @@ export default {
         uni.setStorageSync('session-3rd', sessionKey)
     },
     async checkSession() {//判断是否存在session已经登录是否有效
-        return new Promise( async (resolve, reject)=>{
-            let s=this.getSessionKey()
-            uni.checkSession().then(res=>{
-                if(s){
+        return new Promise(async (resolve, reject) => {
+            let s = this.getSessionKey()
+            uni.checkSession().then(res => {
+                if (s) {
                     resolve(true)
-                }else{
+                } else {
                     this.removeSessionKey()
                     resolve(false)
                 }
-            }).catch(err=>{
+            }).catch(err => {
                 this.removeSessionKey()
                 resolve(false)
             })
         })
     },
-	uniLogin(){
-		return new Promise((resolve, reject) => {
-			uni.login({
-				success: (res) => {
-				    console.log('uni login',res)
-					resolve(res);
-				},
-				fail: (err) => {
-                    console.log('uni login',err)
+    uniLogin() {
+        return new Promise((resolve, reject) => {
+            uni.login({
+                success: (res) => {
+                    console.log('uni login', res)
+                    resolve(res);
+                },
+                fail: (err) => {
+                    console.log('uni login', err)
                     reject();
-				}
-			})
-		})
-	},
-    async login(){
+                }
+            })
+        })
+    },
+    async login() {
         console.log('loginloginloginloginlogin')
-		console.log('getApp=============',getApp())
-        if(app.globalData.loginJson){
+        console.log('getApp=============', getApp())
+        if (app.globalData.loginJson) {
             return app.globalData.loginJson
         }
-        let isSession=await this.checkSession()
-        console.log('isSession',isSession)
         // let isSession = this.getSessionKey()
         let _data = {}
-        if(!isSession) {
-            let data = await this.uniLogin()//获取jscode
-			console.log('uni.login()==================',data)
-            _data['code'] = data.code
-        }
+        let data1 = await this.uniLogin()//获取jscode
+        console.log('uni.login()==================', data1)
+        _data['code'] = data1.code
 
-        if(app.globalData.salesId){
+
+        if (app.globalData.salesId) {
             _data.salesId = app.globalData.salesId
         }
         let {data} = await request({
-			url: domain.getAPI('login'),
-			method: 'POST',
-			data:{
-				..._data
-			}
-		})
-		console.log(data)
-        for(let ii in data.data){
+            url: domain.getAPI('login'),
+            method: 'POST',
+            data: {
+                ..._data
+            }
+        })
+        console.log(data)
+        for (let ii in data.data) {
             let o = data.data[ii]
             data[ii] = o
-            if(ii == 'id'){
+            if (ii == 'id') {
                 data['userId'] = o
             }
         }
-        console.log('login-data=======',data)
-        if(data.code == 1){
-            if(data.token){//保存sessionKey
+        console.log('login-data=======', data)
+        if (data.code == 1) {
+            if (data.token) {//保存sessionKey
                 this.setSessionKey(data.token)
             }
             app.globalData.loginJson = data
-        }else{
+        } else {
             this.removeSessionKey()
-            if(this.loginNumber){//重登一次
+            if (this.loginNumber) {//重登一次
                 this.loginNumber = false
                 let d = await this.login()
                 return d;
