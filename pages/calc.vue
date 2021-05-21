@@ -36,15 +36,15 @@
 							<view class="icon" >+</view>
 							<view class="hd-price">
 								<view class="title">月供</view>
-								<view class="price">{{monthPay}}</view>
+								<view class="price">{{monthPay}} x {{monthly[monthlyIdx].monthly}}</view>
 							</view>
 							<view class="icon">+</view>
 						</block>
-						<view class="hd-price">
+						<view class="hd-price" v-if="!isLoans">
 							<view class="title">裸车价</view>
 							<view class="price">{{modelPrice}}</view>
 						</view>
-						<view class="icon">+</view>
+						<view class="icon" v-if="!isLoans">+</view>
 						<view class="hd-price">
 							<view class="title">必要花费</view>
 							<view class="price">{{needPrice}}</view>
@@ -203,6 +203,21 @@
 										</block>
 									</picker>
 								</block>
+								<block v-else-if="item.default">
+									<view :class="['checkbox', item.checked == true ? 'checked' : '']" :for="'check_'+item.label" @tap="selectItem(idx)"></view>
+									<!-- <label :class="['checkbox',item.checked == true ? 'checked' : '']" :for="'check_'+item.label" @tap="selectItem(idx)">
+										<checkbox class="checkbox-btn" :value="item.label" :id="'check_'+item.label" :checked="item.checked" />
+									</label> -->
+									<view class="section-hd">{{item.name}}
+										<text class="section-desc">{{item.option[item.index]}}</text>
+									</view>
+									<block  v-if="item.checked">
+											<view class="section-bd ">{{item.optionValue[item.index]}}</view>
+									</block>
+									<block v-else>
+										<view class="section-bd section-picker">0</view>
+									</block>
+								</block>
 								<block v-else>
 
 									<!-- <label :class="['checkbox', item.checked == true ? 'checked' : '']" :for="'check_'+item.label" @tap="selectItem(idx)">
@@ -307,14 +322,14 @@
 				}, {
 					label: 'nd_4',
 					name: "交强险",
-					optionValue: ["950", "1,110"],
+					optionValue: ["950", "1,100"],
 					index: 0,
 					option: ["家用6座以下", "家用6座及以上"],
 					picker: true
 				}],
 				baoxian_item: [{
 						label: 'bx_0',
-						name: "商业险",
+						name: "商业保险",
 					}, {
 						label: 'bx_1',
 						name: "第三者责任险",
@@ -335,15 +350,26 @@
 						name: "全车盗抢险",
 						value: "",
 						checked: true
-					},  {
+					}, 
+					{
 						label: 'bx_4',
 						name: "玻璃单独破碎险",
-						optionValue: ["0.31", "0.19"],
-						option: ["进口", "国产"],
-						picker: true,
+						optionValue: ["0.19"],
+						option: ["国产"],
+						default: true,
 						checked: true,
 						index: 0
-					}, {
+					}, 
+					// {
+					// 	label: 'bx_4',
+					// 	name: "玻璃单独破碎险",
+					// 	optionValue: ["0.31", "0.19"],
+					// 	option: ["进口", "国产"],
+					// 	picker: true,
+					// 	checked: true,
+					// 	index: 0
+					// }, 
+					{
 						label: 'bx_5',
 						name: "自燃损失险",
 						value: "",
@@ -612,7 +638,8 @@
 				needItem[2].value = this.w2k(spfy);
 				needItem[3].value = this.w2k(ccsy);
 				needItem[4].value = this.w2k(jqx);
-				this.modelPrice = this.w2k(objPrice)
+				// this.modelPrice = this.w2k(objPrice)
+				this.modelPrice = this.k2w(objPrice)
 				this.need_item = needItem
 				this.needPrice = this.w2k(needPrice)
 
