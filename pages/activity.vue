@@ -106,7 +106,7 @@
 		},
 		methods: {
 			formShow() {
-				this.$refs.formpop.formShow('form', 'activity', this.content, '完善资料')
+				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 			},
 			// 看车按钮被点击
 			seeCarBtnClick () {
