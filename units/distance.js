@@ -31,8 +31,18 @@ export default {
 				currentLocation.selectedCityData = { // 设置当前选择的省市
 					pro: currentLocation.cityData.pro,
 					city: currentLocation.cityData.city,
-				}				
+				}
 			}
+			
+			try {
+				const provinceList = await this.reqProvinceCityList()
+				const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+				if (crtLocationProvinceItem) {
+					const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+					currentLocation.selectedCityData.proId = crtLocationProvinceItem.id
+					currentLocation.selectedCityData.cityId = crtLocationCityItem.id
+				}				
+			} catch(err) {}
 		}
     },
 	// 请求定位信息
@@ -48,6 +58,18 @@ export default {
 				}
 			})
 		})
+	},
+	// 请求省份和城市的级联列表
+	async reqProvinceCityList () {		
+		try {
+		  const res = await api.fetchProvinceCityList()
+		  if (res.code == 1) {
+			return res.data
+		  }
+		} catch(err) {
+		  console.error(err)
+		  throw new Error('获取省份和城市信息失败')
+		}
 	},
     // 百度坐标转火星坐标
     bd_decrypt(bd_lon, bd_lat) {
