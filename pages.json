@@ -249,6 +249,18 @@
         "text": "直播",
         "iconPath": "static/images/tab2_icon.png",
         "selectedIconPath": "static/images/tab2_icon_c.png"
+      },
+      {
+        "pagePath": "pages/welfareActivity",
+        "text": "活动",
+        "iconPath": "static/images/tab4_icon.png",
+        "selectedIconPath": "static/images/tab4_icon_c.png"
+      },
+      {
+        "pagePath": "pages/mypage",
+        "text": "我的",
+        "iconPath": "static/images/tab5_icon.png",
+        "selectedIconPath": "static/images/tab5_icon_c.png"
       }
     ]
   },
