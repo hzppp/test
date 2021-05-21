@@ -91,7 +91,7 @@
 					/* 直播中 */
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' + item.roomId ,
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' + item.roomId + '&sourceId=' + item.id,
 						extraData: {},
 						envVersion:'trial',
 						success(res) {
@@ -102,7 +102,7 @@
 					//回放
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' + item.playId,
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' + item.playId + '&sourceId=' + item.id,
 						extraData: {},
 						envVersion:'trial',
 						success(res) {
