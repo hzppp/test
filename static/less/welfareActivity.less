@@ -29,11 +29,14 @@
 			align-items: center;
 			font-size: 28rpx;
 			color: #333333;
-			&::before {
-				margin-right: 16rpx;
+			margin-top: 20rpx;
+			&::after {
 				display: view;
 				content: '';
-				.setbg(28rpx,32rpx,'locate-icon.png');
+				margin-left: 10rpx;
+				background: url("../images/arrowBottom.png") no-repeat;
+				width: 8rpx;
+				height: 4rpx;
 			}
 		}
 	}
@@ -58,7 +61,7 @@
 		font-size: 28rpx;
 		text-align: center;
 	}
-	
+
 }
 .activity-list-none{
     .setbg(100%, 100%, 'welfareActivity2.png');

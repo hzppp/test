@@ -1,23 +1,29 @@
 <template>
   <view class="welfareActivity">
-	<ask-online></ask-online>
+    <ask-online></ask-online>
     <viewTabBar :current="3"></viewTabBar>
     <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
-    <form-pop ref="formpop"></form-pop>
-    <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
-                 scroll-with-animation>
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
-          <view>{{selectCity || indexCity.name}}</view>
+          <view>{{ selectCity || indexCity.name }}</view>
         </picker>
       </view>
+    </pageTopCity>
+
+    <form-pop ref="formpop"></form-pop>
+    <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
+                 scroll-with-animation>
       <view class="box">
         <view class="box-tit">
           长安福利
         </view>
-        <view v-if="welfareList.length == 0" class="welfareActivity-none"><text class="tips">敬请期待</text></view>
-        <coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon" @formShow="formShow"></coupon-list>
+        <view v-if="welfareList.length == 0" class="welfareActivity-none">
+          <text class="tips">敬请期待</text>
+        </view>
+        <coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon"
+                     @formShow="formShow"></coupon-list>
       </view>
 
       <view class="box">
@@ -29,15 +35,17 @@
             <view class="pic-text" @tap="toActivityPage(item)">
               <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
-                <view class="label-name">{{item.typeText}}</view>
+                <view class="label-name">{{ item.typeText }}</view>
               </view>
-              <view class="text">{{item.name}}</view>
+              <view class="text">{{ item.name }}</view>
             </view>
           </block>
         </view>
-        <view v-else class="activity-list-none"><text class="tips">敬请期待</text></view>
+        <view v-else class="activity-list-none">
+          <text class="tips">敬请期待</text>
+        </view>
       </view>
-	  <view class="zw"></view>
+      <view class="zw"></view>
     </scroll-view>
   </view>
 </template>
@@ -51,17 +59,21 @@ import shouquan from '@/units/shouquan'
 import tabBar from '@/components/tabBar/tabBar'
 import askOnline from '@/components/askOnline/askOnline'
 import distance from '@/units/distance'
+import pageTopCity from '@/components/pageTopCity/pageTopCity'
+
 let app = getApp()
 export default {
   components: {
     'coupon-list': coupon,
     'form-pop': formpop,
-    viewTabBar:tabBar,
-	askOnline
+    viewTabBar: tabBar,
+    askOnline,
+    pageTopCity
   },
   mixins: [shouquan],
   data() {
     return {
+      title: '活动',
       indexCity: {},
       getWelfarePageNumber: 1,
       provinceList: [],
@@ -77,14 +89,14 @@ export default {
     }
   },
   computed: {
-    selectCity () {
+    selectCity() {
       let text = ''
       if (this.crtCityItem.id) {
         text = this.crtCityItem.name
       }
       return text
     },
-    selectIndex () {
+    selectIndex() {
       let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
       let cityIndex = this.cityList.findIndex(item => item.id == this.crtCityItem.id)
       provinceIndex = provinceIndex > -1 ? provinceIndex : 0
@@ -95,7 +107,7 @@ export default {
   async onShow() {
     this.resetjson()
     // api.getUser()
-	await distance.getLocation()
+    await distance.getLocation()
     let currentLocation = app.globalData.currentLocation
     if (currentLocation) {
       await this.reqProvinceList()
@@ -139,9 +151,9 @@ export default {
       this.getWelfare()
     },
     // 跳转商城页
-    toMall(){
+    toMall() {
       uni.navigateTo({
-        url:'/pages/mall/index'
+        url: '/pages/mall/index'
       })
     },
     bindMultiPickerChange(e) {
@@ -150,10 +162,10 @@ export default {
       } = e
       this.crtProvinceItem = this.provinceList[detail.value[0]]
       this.crtCityItem = this.cityList[detail.value[1]]
-	  app.globalData.currentLocation.selectedCityData = { // 设置当前选择的城市
-	  	pro: this.crtProvinceItem.name,
-	  	city: this.crtCityItem.name,
-	  }
+      app.globalData.currentLocation.selectedCityData = { // 设置当前选择的城市
+        pro: this.crtProvinceItem.name,
+        city: this.crtCityItem.name,
+      }
       this.resetjson()
       this.getWelfare()
       this.getactivity()
@@ -177,16 +189,16 @@ export default {
       this.getactivity()
     },
     toActivityPage(item) {
-		if (item.duibaUrl) {
-			uni.navigateTo({
-			  url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
-			})
-		} else {
-			let url = '/pages/activity?id=' + item.id
-			uni.navigateTo({
-			  url
-			})
-		}
+      if (item.duibaUrl) {
+        uni.navigateTo({
+          url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+        })
+      } else {
+        let url = '/pages/activity?id=' + item.id
+        uni.navigateTo({
+          url
+        })
+      }
     },
     resetjson() {
       this.getWelfarePageNumber = 1
@@ -221,8 +233,8 @@ export default {
           } else if (type == 3) {
             typeText = '线下活动'
           } else if (type == 4) {
-			typeText = '试驾活动'
-		  }
+            typeText = '试驾活动'
+          }
           obj.typeText = typeText
         }
         this.activityList = [...this.activityList, ...rows]
@@ -242,11 +254,13 @@ export default {
       let a = [...this.welfareList, ...rows]
       this.welfareList = a
       console.log('welfareList', this.welfareList)
-      if(this.welfareList.length == 0){return;}
-      this.$nextTick(function(){
+      if (this.welfareList.length == 0) {
+        return;
+      }
+      this.$nextTick(function () {
         if (this.welfarePageNumber > total || rows.length < 2) {
           // this.$invoke('coupon-list', 'morebtnHide')
-          console.log('couponlist=================',this.$refs.couponlist)
+          console.log('couponlist=================', this.$refs.couponlist)
           this.$refs.couponlist.morebtnHide()
         } else {
           // this.$invoke('coupon-list', 'morebtnShow')
@@ -260,20 +274,20 @@ export default {
 
     },
     // 请求所有的省份
-    async reqProvinceList () {
-		this.provinceList = []
+    async reqProvinceList() {
+      this.provinceList = []
       try {
         const res = await api.fetchProvinceList()
         if (res.code == 1) {
           this.provinceList = res.data
         }
-      } catch(err) {
+      } catch (err) {
         this.$toast('获取省份信息失败', 'none', 1500);
         console.error(err)
       }
     },
     // 根据省份id请求城市
-    async reqCityListByProvinceId (provinceId) {
+    async reqCityListByProvinceId(provinceId) {
       this.cityList = []
       try {
         const res = await api.fetchCityListByProvinceId({provinceId})
