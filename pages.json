@@ -241,32 +241,14 @@
       {
         "pagePath": "pages/index",
         "text": "首页",
-        "iconPath": "static/images/2.png",
-        "selectedIconPath": "static/images/1.png"
+        "iconPath": "static/images/tab1_icon.png",
+        "selectedIconPath": "static/images/tab1_icon_c.png"
       },
       {
         "pagePath": "pages/live",
         "text": "直播",
-        "iconPath": "static/images/2.png",
-        "selectedIconPath": "static/images/1.png"
-      },
-      // {
-      //   "pagePath": "pages/exhibition",
-      //   "text": "云展馆",
-      //   "iconPath": "static/images/2.png",
-      //   "selectedIconPath": "static/images/1.png"
-      // },
-      {
-        "pagePath": "pages/welfareActivity",
-        "text": "活动",
-        "iconPath": "static/images/4.png",
-        "selectedIconPath": "static/images/3.png"
-      },
-      {
-        "pagePath": "pages/mypage",
-        "text": "我的",
-        "iconPath": "static/images/12.png",
-        "selectedIconPath": "static/images/11.png"
+        "iconPath": "static/images/tab2_icon.png",
+        "selectedIconPath": "static/images/tab2_icon_c.png"
       }
     ]
   },
