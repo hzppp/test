@@ -927,4 +927,13 @@ module.exports = {
 		})
 		return data
 	},
+	// 获取优惠券详情
+	fetchCouponDetail: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchCouponDetail'),
+			method: "GET",
+			data: para,
+		})
+		return data
+	},
 }

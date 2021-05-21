@@ -201,6 +201,8 @@ const config = {
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 		// 获取省份和城市的级联列表
 		fetchProvinceCityList: `${DOMAIN.changan}/api/xcx/base/allMap`,
+		// 请求优惠券详情
+		fetchCouponDetail: `${DOMAIN.changan}/api/xcx/coupon/detail`
 	},
 	getAPI(key) {
 		let url;
