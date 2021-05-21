@@ -97,10 +97,15 @@
 					}
 				}
 				try {
+					uni.showLoading()
 					const detailObj = await this.reqCouponDetail(obj.id)
 					this.formpopShow('form', detailObj)
 					this.isRuleShow = false
-				} catch (err) {}
+				} catch (err) {
+
+				} finally {
+					uni.hideLoading()
+				}
 			},
 			setcouponList(list) {
 				this.phone = uni.getStorageSync('userPhone');
