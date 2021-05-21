@@ -9,7 +9,7 @@
 				<view class="header-box">
 					<view class="tit">{{title}}</view>
 					<view class="text">
-            {{publishTime ? publishTime.substr(0,10) :  ''}}
+            {{publishTime}}
 					</view>
 				</view>
 				<view class="m-html" v-if="articleType == 2">
