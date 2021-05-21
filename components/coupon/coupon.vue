@@ -1,7 +1,7 @@
 <template>
 	<view class="coupon">
 		<block v-for="(item,index) in couponList" :key="index">
-			<view :class="'coupon-box bg-' + (item.type == 1 ? 'red' : 'blue')" @tap="ruleShow(index)">
+			<view :class="'coupon-box bg-' + (item.type == 1 ? 'blue' : 'red')" @tap="ruleShow(index)">
 				<view class="coupon-name">{{item.title}}</view>
 				<view class="coupon-desc">{{item.subhead}}</view>
 				<view class="coupon-date">有效期：{{item.startTime}}-{{item.endTime}}</view>
@@ -9,7 +9,7 @@
 					<view class="line"></view>
 				</view>
 				<view class="coupon-icon"></view>
-				<view :class="'coupon-type color-' + (item.type == 1 ? 'red':'blue')" >{{item.type == 1?'车型券':'通用券'}}</view>
+				<view :class="'coupon-type color-' + (item.type == 1 ? 'blue':'red')" >{{item.type == 1?'通用券':'车型券'}}</view>
 				<button class="coupon-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber(index,$event)" @tap.stop="stop" v-if="!phone">一键抢券</button>
 				<view v-else class="coupon-btn" @tap.stop="getPhoneNumber(index,$event)">一键抢券</view>
 			</view>
