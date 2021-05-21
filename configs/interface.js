@@ -199,6 +199,8 @@ const config = {
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
 		// 获取验证码
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+		// 获取省份和城市的级联列表
+		fetchProvinceCityList: `${DOMAIN.changan}/api/xcx/base/allMap`,
 	},
 	getAPI(key) {
 		let url;

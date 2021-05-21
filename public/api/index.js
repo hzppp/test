@@ -918,4 +918,13 @@ module.exports = {
 			})
 			return data
 	},
+	// 获取省份和城市的级联列表
+	fetchProvinceCityList: async(para) => {
+		let {data} = await request({
+			url:domain.getAPI('fetchProvinceCityList'),
+			method: "GET",
+			data: para,
+		})
+		return data
+	},
 }
