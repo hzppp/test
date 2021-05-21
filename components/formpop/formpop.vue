@@ -29,14 +29,14 @@
 				</block>
 				<!-- 经销商 E -->
 				<view class="input-view mobile-input name-input">
-					<input type="text" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
+					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
 				<view class="input-view mobile-input">
-					<input type="text" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
+					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
 					 @input="getValue('phone',$event)" maxlength="11"></input>
 				</view>
 				<view class="input-view mobile-input sms-code-input">
-					<input type="text" v-model="smsCode" placeholder="请输入验证码" placeholder-class="placeholder"></input>
+					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码" placeholder-class="placeholder"></input>
 					<view class="sms-code-btn" @tap="getSmsCodeClick">{{smsCodeText}}</view>
 				</view>
 				<view class="btn" @tap="submit">提交</view>
