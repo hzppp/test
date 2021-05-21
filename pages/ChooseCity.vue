@@ -16,7 +16,7 @@
 				<view class="index">
 					{{cityIndex}}
 				</view>
-				<view class="city" v-for="(city,i) in cityList[index]" :key="i" @tap="changeCity(city)">
+				<view class="city" v-for="(city,i) in cityList[index]" :class="{'isSelect':currentCity === city.name}" :key="i" @tap="changeCity(city)">
 					{{city.name}}
 				</view>
 			</view>
@@ -35,13 +35,14 @@ let app = getApp()
 				letterGroup:[], //城市索引
 				cityList: [], //城市列表
 				targetId: 'A', //当前城市导航索引
-				currentCity: '' //当前城市
+				currentCity: '', //当前城市
 			}
 		},
-		async onLoad() {
+		async onLoad(options) {
+            console.log('options :>> ', options);
 			await distance.getLocation()
 			this.getAllCityList()
-            this.currentCity = app.globalData.currentLocation.selectedCityData.city
+            this.currentCity = options.name == "undefined" ? false:options.name || app.globalData.currentLocation.selectedCityData.city || ""
 		},
 		methods: {
 			async getAllCityList() {
@@ -121,6 +122,9 @@ let app = getApp()
 			margin-left: 32rpx;
 			line-height: 50rpx;
 			height: 50rpx;
+            &.isSelect {
+                color: #FA8845;
+            }
 		}
 	}
 }

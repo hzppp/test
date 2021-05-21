@@ -1,10 +1,10 @@
 <template>
     <view class="choose-dealer">
         <view class="dealer-item" v-for="(item,index) in dealersList" :key="index" @tap="goBack(item)">
-            <view class="title">
+            <view class="title" :class="{'isSelect':currentDealerId==item.id}">
                 {{item.name}}
             </view>
-            <view class="address">
+            <view class="address" :class="{'isSelect':currentDealerId==item.id}">
                 {{item.address}}
             </view>
         </view>
@@ -19,11 +19,13 @@ import api from '@/public/api/index'
         data() {
             return {
                 dealersList: [], //经销商列表
-                currentDealer:{}, //
+                currentDealerId:"", //
             }
         },
         methods: {
             onLoad(options) {
+                console.log('options :>> ', options);
+                this.currentDealerId = options.dealersId
                 this.reqDealersList(options.cityId)
             },
             //获取经销商列表
@@ -65,13 +67,20 @@ import api from '@/public/api/index'
             color: #333333;
             font-size: 32rpx;
             font-weight: bold;
+            &.isSelect {
+                color: #FA8845 !important;
+            }
         }
         .address {
             color: #999999;
             font-size: 24rpx;
             margin-top: 24rpx;
             margin-bottom: 32rpx;
+            &.isSelect {
+                color: #FA8845 !important;
+            }
         }
+     
     }
     .no-dealer {
         text-align: center;
