@@ -918,4 +918,11 @@ module.exports = {
 			})
 			return data
 	},
+    getSgList: async() => {
+        let {data} = await request({
+            url:domain.getAPI('getSgList'),
+            method: "GET",
+        })
+        return data
+    },
 }

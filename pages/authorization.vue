@@ -63,6 +63,8 @@
           app.globalData.wxUserInfo = data
           uni.setStorageSync('wxUserInfo', data)
           uni.setStorageSync('getUserData', app.globalData.getUserData)
+        }else {
+
         }
 			}
 			await distance.getLocation()

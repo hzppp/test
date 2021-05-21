@@ -1,10 +1,10 @@
 <template>
   <view class="index">
     <viewTabBar :current="0"></viewTabBar>
-    <askOnline></askOnline>
+    <testDrive></testDrive>
     <view class="content">
       <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
-      <view class="linkCont">
+      <view class="linkCont" v-if="false">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
             <view class="title">发现</view>
@@ -16,7 +16,7 @@
           <view class="testDrive linkItem rItem"  @tap="goTestDrive">
             <view class="title">预约试驾</view>
             <view class="info">试驾快人一步</view>
-            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png"></image>
+            <image class="img" lazy-load src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDriveIcon.png"></image>
           </view>
           <view class="calculation linkItem rItem" @tap="goCalc">
             <view class="title">购车计算</view>
@@ -25,9 +25,28 @@
           </view>
         </view>
       </view>
+      <view class="hotAct">
+        <view class="hotTab">
+          热车速递
+        </view>
+        <scroll-view scroll-x show-scrollbar class="hotCar">
+          <view class="hotCarItem" v-for="(item,index) in sgList" :key="index">
+            <image :src="item.pcSerialGroupPic" class="img"></image>
+            <view class="title">{{item.name}}</view>
+          </view>
+        </scroll-view>
+      </view>
+      <view class="hotAct">
+        <view class="hotTab">
+          VR看车
+        </view>
+        <view class="actItem vrCar" @tap="goVr">
+          <image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
+        </view>
+      </view>
       <view class="hotAct" v-if="pageData.list.length">
         <view class="hotTab">
-          热门
+          精选
         </view>
         <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
           <view>
@@ -58,14 +77,15 @@ import login from '@/units/login'
 import api from '@/public/api/index'
 import tabBar from '@/components/tabBar/tabBar'
 import shouquan from '@/units/shouquan'
-import askOnline from '@/components/askOnline/askOnline'
+import testDrive from '@/components/testDrive/testDrive'
 
 let app = getApp()
 export default {
-  components: {viewTabBar: tabBar, askOnline},
+  components: {viewTabBar: tabBar, testDrive},
   mixins: [shouquan],
   data() {
     return {
+      sgList: [],
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
     }
@@ -111,7 +131,11 @@ export default {
     }
   },
   async onLoad(options) {
-
+    let sgList = await api.getSgList().then(res => {
+      console.log('sssssssss',res)
+      return res.code == 1 && res.data ? res.data : []
+    })
+    this.sgList = [...sgList]
   },
   onUnload() {
   },
@@ -179,6 +203,11 @@ export default {
         console.error(err)
         return res
       }
+    },
+    goVr() {
+      uni.navigateTo({
+        url:'/pages/exhibition'
+      })
     },
     handleLinkHot(type,id,status,sourceId) {
       // type = 3
@@ -376,6 +405,36 @@ export default {
       margin: 30rpx 0;
       background: #fff;
       position: relative;
+    }
+    .hotCar {
+      width: 100vw;
+      overflow: hidden;
+      white-space:nowrap;
+      .hotCarItem {
+        display: inline-block;
+        width: 210rpx;
+        align-items: center;
+        margin-right: 16rpx;
+        .img {
+          width: 210rpx;
+          height: 140rpx;
+          border-radius: 20rpx;
+          margin: 30rpx 0 16rpx 0;
+        }
+        .title {
+          font-size: 24rpx;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+    }
+    .vrCar {
+      .img {
+        display: inline-block;
+        width: 686rpx;
+        height: 360rpx;
+        border-radius: 20rpx;
+      }
     }
     .icon1 {
       position: absolute;

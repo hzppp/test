@@ -50,8 +50,9 @@ export default {
         if(app.globalData.loginJson){
             return app.globalData.loginJson
         }
-        // let isSession=await this.checkSession()
-        let isSession = this.getSessionKey()
+        let isSession=await this.checkSession()
+        console.log('isSession',isSession)
+        // let isSession = this.getSessionKey()
         let _data = {}
         if(!isSession) {
             let data = await this.uniLogin()//获取jscode

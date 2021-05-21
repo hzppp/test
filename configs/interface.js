@@ -199,6 +199,8 @@ const config = {
 		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
 		// 获取验证码
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
+		// 获取车系列表
+		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 	},
 	getAPI(key) {
 		let url;
