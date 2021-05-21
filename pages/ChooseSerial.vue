@@ -32,11 +32,14 @@ import api from '@/public/api/index'
         },
         onLoad(options) {
             console.log('options :>> ', options);
+            console.log('options.pages :>> ', options.pages);
             this.pages = options.pages || ""
             this.noun = options.noun || ""
             this.vs = options.vs || ""
             this.serialId = options.serialId || ""
             this.type = options.type || ""
+            this.leftSerialId = options.leftSerialId || ""
+            this.rightSerialId = options.rightSerialId || ""
             this.reqSerialScreenList()
         },
         methods: {
@@ -57,10 +60,10 @@ import api from '@/public/api/index'
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
                 }
-                if(this.pages === "YuyuePage") {
+                if(this.pages) {
                     this.$store.commit('changModel',id)
                     return  uni.redirectTo({
-                        url:`/pages/YuyuePage?serialId=${id}`
+                        url:`/pages/${this.pages}?serialId=${id}`
                     })
                 }
                 if(this.noun) {
@@ -68,6 +71,12 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${id}&rightSerialId=${this.serialId}`
                         // })
+                        if(this.serialId == id) {
+                            return  uni.showToast({
+                                icon: 'none',
+                                title: '该车型已在对比列表中，请选择另一款车型',
+                            })
+                        }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
                         prevPage.$vm.leftSerialId = id;   //修改上一页data里面的searchVal参数值为1211
@@ -78,6 +87,12 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                         // })
+                        if(this.serialId == id) {
+                            return  uni.showToast({
+                                icon: 'none',
+                                title: '该车型已在对比列表中，请选择另一款车型',
+                            })
+                        }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
                         prevPage.$vm.rightSerialId = id;   //修改上一页data里面的searchVal参数值为1211
@@ -88,6 +103,12 @@ import api from '@/public/api/index'
                     return
                 }
                 if(this.vs) {
+                    if(id == this.serialId) {
+                        return  uni.showToast({
+                            icon: 'none',
+                            title: '该车型已在对比列表中，请选择另一款车型',
+                        })
+                    }
                     uni.redirectTo({
                         url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                     })

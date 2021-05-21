@@ -19,7 +19,8 @@
             <!-- 手机号S -->
             <view class="list models">
                 <view class="list-title">手机号</view>
-                <input class="select" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <!-- 手机号E -->
             <!-- 验证码S -->
@@ -88,7 +89,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
                 currentDealer: {}, //当前经销商
                 serialData: {}, //车系详情
-                serialId:"" //车系id
+                serialId:"", //车系id
+
+                getPhoneBtn: false,
             }
         },
         onLoad(options) {
@@ -96,6 +99,21 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+            async getPhoneNumber(e) {
+				let {detail} = e
+				if (detail.iv) {
+					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
+					if (data && data.phoneNumber) {
+                        this.phoneNum = data.phoneNumber
+					}else {
+                        uni.showToast({
+                            icon:"none",
+                            title:"手机授权失败"
+                        })
+                    }
+                        this.getPhoneBtn = true
+				}
+			},
             //车系详情
             async reqSerialDetail(sgId) {
                 try {
@@ -124,7 +142,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //切换车系
             changeSerial() {
                 uni.navigateTo({
-					url: "/pages/AddYuYue"
+					url: "/pages/ChooseSerial?pages=GetPreferential"
 				})
             },
             //获取经销商列表
@@ -178,7 +196,6 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //立即预约
             async yuYue() {
-                console.log('111 :>> ', 111);
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -229,6 +246,16 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
 <style lang="scss" scoped>
 .get-preferential {
+    .getPhoneBtn {
+        background-color: transparent;
+        color: #777777;
+        flex: 1;
+        margin-left: 20rpx;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 35rpx;
+    }
     .top-tit {
         width: 100%;
         height: 64rpx;
@@ -298,6 +325,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 color: #999999;
                 font-size: 28rpx;
             }
+            
         }
         .btn-area {
             text-align: center;

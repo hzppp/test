@@ -183,15 +183,16 @@
 			uni.showLoading({
 				title: "加载中"
 			})
+            console.log('options.mids :>> ', options.mids);
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
-			this.mids = options.mids || "";
 			this.max = options.max || 0;
-			let ids = options.ids || "";
-			if (ids) {
-				ids = ids.split(",").slice(0, 4);
+
+			let mids = options.mids || "";
+			if (mids) {
+				mids = mids.split(",").slice(0, 4);
 			}
-			this.ids = ids;
+			this.mids = mids;
 			this.addGlobalSelectCar(this.ids)
 			this.init()
 		},
@@ -229,7 +230,7 @@
 			},
 			async init() {
 				try {
-					let data = await this.getCarData(this.mids);
+					let data = await this.getCarData(this.mids.join(","));
 					//只传车系Id不传mids进来，会导致carNum未被初始化
 					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
 						let carIds = [];
@@ -283,13 +284,12 @@
 			// 添加车型
 			addCar() {
                 uni.navigateTo({
-					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids}&pages=canpei`
+					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids.join(',')}&pages=canpei`
                 })
 			},
 			// 删除车型
 			async delCar(id, index) {
-                let tempMids = this.mids.split(",")
-                this.mids = tempMids.splice(index,1)
+                this.mids =  this.mids.splice(index,1)
 				// #ifdef MP-BAIDU
 				this.difData = ""
 				// #endif

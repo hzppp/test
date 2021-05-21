@@ -353,6 +353,8 @@
         align-items: center;
         justify-content: center;
         margin: 40rpx 0;
+		padding-bottom: 33rpx;
     }
+
 }
 </style>
