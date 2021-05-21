@@ -229,10 +229,10 @@
 			}
 			.cover {
 				position: absolute;
-				right: 17rpx;
+				right: 37rpx;
 				bottom: 31rpx;
-				max-width: 400rpx;
-				max-height: 200rpx;
+				width: 300rpx;
+				height: 200rpx;
 			}
 		}
 	}
