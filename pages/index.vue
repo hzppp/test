@@ -318,6 +318,7 @@ export default {
 @import '@/static/less/index.less';
 .index {
   padding-top: 16rpx;
+  overflow-x: hidden;
 }
 .ovh {
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
