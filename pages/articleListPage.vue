@@ -2,20 +2,20 @@
   <view>
 <!--    <loading ref="loading"></loading>-->
     <articleList ref="articleList" @changeLoading="changeLoading"></articleList>
-    <askOnline></askOnline>
+    <testDrive></testDrive>
   </view>
 </template>
 
 <script>
 import articleList from '@/components/articleList/articleList'
 import login from '@/units/login'
-import askOnline from '@/components/askOnline/askOnline'
+import testDrive from '@/components/testDrive/testDrive'
 
 export default {
 name: "articleListPage",
   components: {
     articleList,
-    askOnline
+    testDrive
   },
   onLoad(options) {
     this.$refs.articleList.startGetData()

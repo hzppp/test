@@ -48,7 +48,7 @@
 		<!-- <view class="banner_bot">
 			<image src=""></image>
 		</view> -->
-		<askOnline></askOnline>
+		<testDrive></testDrive>
 		<viewTabBar :current="4"></viewTabBar>
 
 	</view>
@@ -58,7 +58,7 @@
 	import login from '@/units/login'
 	import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
-	import askOnline from '@/components/askOnline/askOnline'
+	import testDrive from '@/components/testDrive/testDrive'
 	// import chooseImg from '@/units/chooseImg'
 	// import getUserInfo from '@/units/getUserInfo'
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
@@ -69,7 +69,7 @@
 		components: {
 			'page-top': pageTop,
 			'viewTabBar':tabBar,
-			askOnline
+			testDrive
 			// 'share-pop': shareSuccess
 		},
 		mixins: [shouquan],
@@ -91,7 +91,7 @@
 		},
 
 		async onShow() {
-			
+
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()

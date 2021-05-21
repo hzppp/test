@@ -28,7 +28,7 @@
 				<view class="zw"></view>
 			</view>
 		</getFormidbox>
-    <askOnline></askOnline>
+    <testDrive></testDrive>
 		<view class="share-btn">
 			<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 		</view>
@@ -40,7 +40,7 @@
 	import pageTop from '@/components/pageTop/pageTop'
 	import mpHtml from '@/components/mp-html/mp-html'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	import askOnline from '@/components/askOnline/askOnline'
+	import testDrive from '@/components/testDrive/testDrive'
 
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
@@ -49,7 +49,7 @@
 		components: {
 			getFormidbox,
 			htmlParser: mpHtml,
-      askOnline,
+      testDrive,
 			'page-top': pageTop,
 			'share-pop': shareSuccess
 		},

@@ -1,19 +1,19 @@
 <template>
 	<view class="cars-page">
-    <askOnline></askOnline>
+    <testDrive></testDrive>
         <view class="image-wrap" v-if="serialData.videoCoverUrl">
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoCoverUrl"></btnWrap>
-		
-		
+
+
         <view class="image-wrap">
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl'>
             </image>
         </view>
-        
+
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
 
@@ -21,13 +21,13 @@
             <image mode='widthFix' lazy-load :src='serialData.picCoverUrl'>
             </image>
         </view>
-		
+
         <view class="btn-wrap">
             <button class="yuyue-btn" @tap="goYuyue">
                 预约试驾
             </button>
         </view>
-		
+
 	</view>
 </template>
 
@@ -35,11 +35,11 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
-import askOnline from '@/components/askOnline/askOnline'
+import testDrive from '@/components/testDrive/testDrive'
 
 
 export default {
-    components: {btnWrap,askOnline},
+    components: {btnWrap,testDrive},
     data() {
         return {
             serialData: {}, //车系详情

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-name: "askOnline",
+name: "testDrive",
   methods: {
     goTestDrive() {
       uni.navigateTo({

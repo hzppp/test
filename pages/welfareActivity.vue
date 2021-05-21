@@ -1,6 +1,6 @@
 <template>
   <view class="welfareActivity">
-    <ask-online></ask-online>
+    <testDrive></testDrive>
     <viewTabBar :current="3"></viewTabBar>
     <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
@@ -57,7 +57,7 @@ import login from '@/units/login'
 import api from '@/public/api/index'
 import shouquan from '@/units/shouquan'
 import tabBar from '@/components/tabBar/tabBar'
-import askOnline from '@/components/askOnline/askOnline'
+import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
 import pageTopCity from '@/components/pageTopCity/pageTopCity'
 
@@ -67,7 +67,7 @@ export default {
     'coupon-list': coupon,
     'form-pop': formpop,
     viewTabBar: tabBar,
-    askOnline,
+    testDrive,
     pageTopCity
   },
   mixins: [shouquan],
@@ -271,7 +271,7 @@ export default {
 
     },
 	// 请求省份和城市的级联列表
-	async reqProvinceCityList () {		
+	async reqProvinceCityList () {
 		try {
 		  const res = await api.fetchProvinceCityList()
 		  if (res.code == 1) {
