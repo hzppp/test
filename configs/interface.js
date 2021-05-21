@@ -104,7 +104,7 @@ const config = {
 		getFormDealer: `${DOMAIN.host}/api/audi/xcx/dealer`,
 		// 我的页面
 		// 获得用户基础信息
-		getUser: `${DOMAIN.host}/api/audi/xcx/getUser`,
+		getUser: `${DOMAIN.changan}/api/xcx/user/info`,
 		// 上传驾驶证
 		uploadLicencePic: `${DOMAIN.host}/api/audi/xcx/uploadVehicleLicencePic`,
 		//获得用户个人信息
