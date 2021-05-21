@@ -101,14 +101,18 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         methods: {
             async getPhoneNumber(e) {
 				let {detail} = e
-				console.log('getPhoneNumber===============',e)
 				if (detail.iv) {
 					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
 					if (data && data.phoneNumber) {
-						this.phoneNum = data.phoneNumber						
-					}
+                        this.phoneNum = data.phoneNumber
+					}else {
+                        uni.showToast({
+                            icon:"none",
+                            title:"手机授权失败"
+                        })
+                    }
+                        this.getPhoneBtn = true
 				}
-				this.getPhoneBtn = true
 			},
             //车系详情
             async reqSerialDetail(sgId) {
@@ -138,7 +142,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //切换车系
             changeSerial() {
                 uni.navigateTo({
-					url: "/pages/AddYuYue"
+					url: "/pages/ChooseSerial?pages=GetPreferential"
 				})
             },
             //获取经销商列表
@@ -192,7 +196,6 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //立即预约
             async yuYue() {
-                console.log('111 :>> ', 111);
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"

@@ -96,12 +96,16 @@ const COUNTDOWN = 60
         methods: {
             async getPhoneNumber(e) {
 				let {detail} = e
-				console.log('getPhoneNumber===============',e)
 				if (detail.iv) {
 					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
 					if (data && data.phoneNumber) {
 						this.phoneNum = data.phoneNumber						
-					}
+					}else {
+                        uni.showToast({
+                            icon:"none",
+                            title:"手机授权失败"
+                        })
+                    }
 				}
 				this.getPhoneBtn = true
 			},

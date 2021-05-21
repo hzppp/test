@@ -32,6 +32,7 @@ import api from '@/public/api/index'
         },
         onLoad(options) {
             console.log('options :>> ', options);
+            console.log('options.pages :>> ', options.pages);
             this.pages = options.pages || ""
             this.noun = options.noun || ""
             this.vs = options.vs || ""
@@ -59,10 +60,10 @@ import api from '@/public/api/index'
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
                 }
-                if(this.pages === "YuyuePage") {
+                if(this.pages) {
                     this.$store.commit('changModel',id)
                     return  uni.redirectTo({
-                        url:`/pages/YuyuePage?serialId=${id}`
+                        url:`/pages/${this.pages}?serialId=${id}`
                     })
                 }
                 if(this.noun) {
