@@ -30,7 +30,7 @@
           热车速递
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
-          <view class="hotCarItem" v-for="(item,index) in sgList" :key="index">
+          <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
             <view class="title">{{item.name}}</view>
           </view>
@@ -78,6 +78,7 @@ import api from '@/public/api/index'
 import tabBar from '@/components/tabBar/tabBar'
 import shouquan from '@/units/shouquan'
 import testDrive from '@/components/testDrive/testDrive'
+import distance from '@/units/distance'
 
 let app = getApp()
 export default {
@@ -113,6 +114,8 @@ export default {
     },
   },
   async onShow(options) {
+    await distance.getLocation()
+
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
     const resData = (await this.getCityId()) || [1000000022,1000000022]
     const provinceId = resData[0]
@@ -291,6 +294,11 @@ export default {
     goActDetail(id) {
       uni.navigateTo({
         url: `/pages/activity?id=${id}`
+      })
+    },
+    goLookCar(item) {
+      uni.navigateTo({
+        url: `/pages/LookCar?id=${item.pcSerialGroupId}`
       })
     },
     goArticlePage() {

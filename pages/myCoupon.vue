@@ -15,7 +15,7 @@
 			<scroll-view class="scroll-view"  @scrolltolower="getList"  scroll-y scroll-with-animation>
 				<view class="coupon" v-if="couponList.length > 0">
 					<block v-for="(item,index) in couponList" :key="index">
-						<view :class="'coupon-box bg-' + (item.status == 1 || item.status == 3 ? 'gray':item.type == 1?'red':'blue')" @tap="ruleShow(index)">
+						<view :class="'coupon-box bg-' + (item.status == 1 || item.status == 3 ? 'gray':item.type == 1?'blue':'red')" @tap="ruleShow(index)">
 							<view class="coupon-name">{{item.title}}</view>
 							<view class="coupon-desc">{{item.subhead}}</view>
 							<view class="coupon-date">有效期：{{item.startTime}}-{{item.endTime}}</view>
