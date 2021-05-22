@@ -145,7 +145,7 @@ export default {
     }
   },
   methods: {
-    formShow(name, from = "", obj = {}, title = "完善资料") {
+    formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
     },
     loadMoreCoupon() {
