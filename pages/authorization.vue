@@ -59,8 +59,6 @@ export default {
       await this.handleLogin()
     }
 
-    await distance.getLocation()
-
     let cs = ''
     let url = '/pages/index'
     for (let i in options) {
