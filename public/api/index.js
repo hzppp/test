@@ -196,11 +196,13 @@ module.exports = {
         return data
     },
     // 保存用户信息
-    saveWXuserInfo: async (data) => {
-        await request({
+    saveWXuserInfo: async (param) => {
+        const {data,code} = await request({
             url: domain.getAPI('saveWXuserInfo'),
-            data
+            data:param
         })
+        console.log('ststst',data)
+        return data
         // 新增获取用户信息
         // if(!app.globalData.pocketUserInfo){
         // 	await module.exports.getPocketUserInfo();

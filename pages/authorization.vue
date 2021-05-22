@@ -22,7 +22,6 @@ export default {
   async onLoad(options) {
     // this.$refs.loading.changeLoading(true);
     app.globalData.haveUserInfoAuth = uni.getStorageSync('haveUserInfoAuth')
-    app.globalData.getUserData = uni.getStorageSync('getUserData')
     console.log('页面参数', options)
     // to=dynamicDetails-dynamicId=205扫码进来带参方式
     // options.scene = 'salesId=386-to=carShow-id=89-wxacode'
@@ -44,25 +43,21 @@ export default {
     }
 
     let isSession = await login.checkSession()
-    console.log('isSession',isSession)
-    if(isSession) {
+    console.log('isSession', isSession)
+    if (isSession) {
       let {code, data} = await api.getUser()
       console.log('ttttttt123', data)
       if (code == 1 && data) {
         app.globalData.haveUserInfoAuth = true
         uni.setStorageSync('haveUserInfoAuth', true)
-        app.globalData.getUserData = {rawData: {...data}}
         app.globalData.wxUserInfo = data
         uni.setStorageSync('wxUserInfo', data)
-        uni.setStorageSync('getUserData', app.globalData.getUserData)
-      }else if(code == -4){
+      } else if (code == -4) {
         await this.handleLogin()
       }
-    }else {
+    } else {
       await this.handleLogin()
     }
-
-    await distance.getLocation()
 
     let cs = ''
     let url = '/pages/index'
@@ -90,21 +85,9 @@ export default {
     async handleLogin() {
       app.globalData.haveUserInfoAuth = false
       uni.setStorageSync('haveUserInfoAuth', false)
-      app.globalData.getUserData = null
       app.globalData.wxUserInfo = null
       uni.setStorageSync('wxUserInfo', null)
-      uni.setStorageSync('getUserData', null)
       let loginJson = await login.login() //请求登录 公共请求头写入token
-      if (app.globalData.haveUserInfoAuth) { //保存用户信息
-        console.log('decryptUserInfo', app.globalData.haveUserInfoAuth)
-        let info = app.globalData.getUserData
-        await api.saveWXuserInfo({
-          encryptedData: info.encryptedData,
-          iv: info.iv,
-          rawData: info.rawData,
-          signature: info.signature
-        })
-      }
     }
   }
 }

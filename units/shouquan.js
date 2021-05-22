@@ -27,15 +27,21 @@ export default {
             wx.getUserProfile({
                 desc: '完善信息',
                 success: async (res) => {
-                    console.log('成功授权', res)
-                    uni.setStorageSync('haveUserInfoAuth',true)
-                    app.globalData.haveUserInfoAuth = true
-                    this.haveUserInfoAuth = true
-                    uni.setStorageSync('wxUserInfo',res.userInfo)
-                    uni.setStorageSync('getUserData',res)
-                    app.globalData.wxUserInfo = res.userInfo
-                    await login.login()
-                    //成功授权
+                    let info = res
+                    await api.saveWXuserInfo({
+                        encryptedData: info.encryptedData,
+                        iv: info.iv,
+                        rawData: info.rawData,
+                        signature: info.signature
+                    }).then(async sRes=> {
+                        console.log('sssres',sRes)
+                        uni.setStorageSync('haveUserInfoAuth',true)
+                        app.globalData.haveUserInfoAuth = true
+                        this.haveUserInfoAuth = true
+                        uni.setStorageSync('wxUserInfo',sRes)
+                        app.globalData.wxUserInfo = sRes
+                        await login.login()
+                    })
                 },
                 fail: (res) => {
                     //拒绝授权
@@ -44,7 +50,6 @@ export default {
                     app.globalData.haveUserInfoAuth = false
                     this.haveUserInfoAuth = false
                     uni.setStorageSync('wxUserInfo',null)
-                    uni.setStorageSync('getUserData',null)
                     app.globalData.wxUserInfo = null
                 }
             })

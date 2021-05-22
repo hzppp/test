@@ -1,6 +1,7 @@
 <template>
 	<view>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
+     <block v-if="nothing">
 		<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 			<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
 				<view class="top">
@@ -17,10 +18,10 @@
 					</view>
 					
 					<view class="status yellow" v-if="item.status==1"> 
-
+		
 					</view>
 					<view class="status green" v-if="item.status==3">
-
+		
 					</view>
 				</view>
 				<view class="title">
@@ -28,6 +29,20 @@
 				</view>
 			</view>
 		</scroll-view>
+		</block>
+		<block v-else>
+			<view class="live-detail">
+				<view style="height:145rpx;"></view>
+				<view class="none-icon"></view>
+				<view class="none-text">暂无数据</view>
+			</view>
+		</block>
+		
+		
+		
+		
+		
+		
 		<viewTabBar :current="1"></viewTabBar>
 	</view>
 </template>
@@ -50,19 +65,20 @@
 				pageNum: 1,
 				pageSize: 10,
 				dealerGroupId: '',
+				nothing:1
 			}
 		},
 		// mixins: [],
 		onLoad() {
-			this.getList()
+			// this.getList()
 		},
 		onShow() {
-			// console.log('app.globalData.wxUserInfo  show:', app.globalData.wxUserInfo)
-		},
+			this.getList() 
+		}, 
 		methods: {
 			/* 获取列表 */
 			async getList() {
-				if (!this.hasNext) {
+				if (!this.hasNext && this.pageNum != 1) {
 					return false;
 				}
 				let {
@@ -79,7 +95,17 @@
 				data.rows.forEach((item, index) => {
 					item.startTime = item.startTime.substring(0, 16)
 				})
-				this.liveList = [...this.liveList, ...data.rows]
+				if(this.pageNum == 1){
+				  this.liveList = data.rows;
+				}else{
+				  this.liveList = [...this.liveList, ...data.rows]	
+				}
+				
+				 if(data.rows.length == 0){
+					 this.nothing = 0
+				 }else{
+					 this.nothing= 1
+				 }
 			},
 			toLiveDet(item) {
 				if (item.status == 2 || item.status == 0) {
@@ -225,7 +251,7 @@
 			}
 
 		}
-
+	
 		.title {
 			font-weight: 800;
 			text-align: left;
@@ -238,5 +264,16 @@
 			text-overflow: ellipsis;
 
 		}
+	
+		
 	}
+	.none-text {
+		width: -2rpx;
+			text-align: center;
+		}
+	
+		.none-icon {
+			.setbg(610rpx, 312rpx, 'articleList-none-data-icon2.png');
+			margin: 215rpx auto 0;
+		}
 </style>

@@ -8,9 +8,18 @@
 	export default {
 		data() {
 			return {
-				src:'https://www1.pcauto.com.cn/test/gz/20210512/vri/index.html'
+        src:'',
 			};
-		}
+		},
+    mounted(){
+      let routes = getCurrentPages();
+      let curObj = routes[routes.length - 1]
+      let curRoute = curObj.route 
+      let curParam = curObj.options
+      
+      this.src = 'https://cdc.pcauto.com.cn/vue/hall/a/vrkrpano.html?sid='+curParam.sid
+      // this.src = 'http://localhost:8080/vrkrpano.html?sid='+curParam.sid
+    }
 	}
 </script>
 

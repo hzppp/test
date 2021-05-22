@@ -26,8 +26,9 @@
 				  "regionCode": "500105"
 			  } ,
 			  selectedCityData: { // 当前选择的位置
-				  "pro": "重庆市",
-				  "city": "重庆市",
+				"isChange": false, // 是否已手动修改
+				"pro": "重庆市",
+				"city": "重庆市",
 			  },
 		  },
 		  userInfo: null,

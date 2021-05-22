@@ -2,7 +2,6 @@
   <view class="welfareActivity">
     <testDrive></testDrive>
     <viewTabBar :current="3"></viewTabBar>
-    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
@@ -19,10 +18,10 @@
         <view class="box-tit">
           长安福利
         </view>
-        <view v-if="welfareList.length == 0" class="welfareActivity-none">
+        <view v-if="isWelfareInit && welfareList.length == 0" class="welfareActivity-none">
           <text class="tips">敬请期待</text>
         </view>
-        <coupon-list v-else ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon"
+        <coupon-list v-else-if="welfareList.length > 0" ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon"
                      @formShow="formShow"></coupon-list>
       </view>
 
@@ -33,7 +32,7 @@
         <view class="activity-list" v-if="activityList.length > 0">
           <block v-for="(item,index) in activityList" :key="index">
             <view class="pic-text" @tap="toActivityPage(item)">
-              <image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
+              <image mode="aspectFill" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
@@ -41,7 +40,7 @@
             </view>
           </block>
         </view>
-        <view v-else class="activity-list-none">
+        <view v-else-if="isActivityInit && activityList.length == 0" class="activity-list-none">
           <text class="tips">敬请期待</text>
         </view>
       </view>
@@ -86,6 +85,8 @@ export default {
       activityListPageNumber: 1,
       activityList: [],
       welfareList: [],
+	  isActivityInit: false, // 活动是否已初始化
+	  isWelfareInit: false, // 优惠券是否已初始化
     }
   },
   computed: {
@@ -169,6 +170,7 @@ export default {
 
       // 改变默认定位省市
       let currentLocation = app.globalData.currentLocation
+	  currentLocation.selectedCityData.isChange = true
       currentLocation.selectedCityData.proId = this.crtProvinceItem.id
       currentLocation.selectedCityData.pro = this.crtProvinceItem.name
       currentLocation.selectedCityData.cityId = this.crtCityItem.id
@@ -205,6 +207,8 @@ export default {
       this.activityListPageNumber = 1
       this.activityList = []
       this.welfareList = []
+	  this.isActivityInit = false
+	  this.isWelfareInit = false
     },
     // 获取精选活动
     async getactivity() {
@@ -212,61 +216,72 @@ export default {
         this.isLoadGetActivity = false
         let currentLocation = app.globalData.currentLocation
         let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
-        let {
-          rows
-        } = await api.getactivity(cityId, 5, this.activityListPageNumber)
-        this.activityListPageNumber++
-        if (rows.length > 0) {
-          this.isLoadGetActivity = true
-        }
-        for (let i in rows) {
-          let obj = rows[i]
-          let type = obj.type
-          let typeText
-          if (type == 1) {
-            typeText = '购车福利'
-          } else if (type == 2) {
-            typeText = '车主福利'
-          } else if (type == 3) {
-            typeText = '线下活动'
-          } else if (type == 4) {
-            typeText = '试驾活动'
-          }
-          obj.typeText = typeText
-        }
-        this.activityList = [...this.activityList, ...rows]
+		try {
+			let {
+			  rows
+			} = await api.getactivity(cityId, 5, this.activityListPageNumber)
+			this.activityListPageNumber++
+			if (rows.length > 0) {
+			  this.isLoadGetActivity = true
+			}
+			for (let i in rows) {
+			  let obj = rows[i]
+			  let type = obj.type
+			  let typeText
+			  if (type == 1) {
+				typeText = '购车福利'
+			  } else if (type == 2) {
+				typeText = '车主福利'
+			  } else if (type == 3) {
+				typeText = '线下活动'
+			  } else if (type == 4) {
+				typeText = '试驾活动'
+			  }
+			  obj.typeText = typeText
+			}
+			this.activityList = [...this.activityList, ...rows]
 
-        console.log('activityList', this.activityList)
+			console.log('activityList', this.activityList)
+		} catch (err) {
+			console.error(err)
+		} finally {
+			this.isActivityInit = true
+		}
       }
     },
     // 获取福利列表
     async getWelfare() {
       let currentLocation = app.globalData.currentLocation
       let cityId = this.crtCityItem.id || currentLocation.cityData.cityId
+		try {
+		  let data = await api.getWelfare(cityId, 2, this.welfarePageNumber)
+		  this.welfarePageNumber++
+		  let rows = data.rows ? data.rows : []
+		  let total = Math.ceil(data.total / 2)
+		  let a = [...this.welfareList, ...rows]
+		  this.welfareList = a
+		  console.log('welfareList', this.welfareList)
+		  if (this.welfareList.length == 0) {
+			return;
+		  }
+		  this.$nextTick(function () {
+			if (this.welfarePageNumber > total || rows.length < 2) {
+			  // this.$invoke('coupon-list', 'morebtnHide')
+			  console.log('couponlist=================', this.$refs.couponlist)
+			  this.$refs.couponlist.morebtnHide()
+			} else {
+			  // this.$invoke('coupon-list', 'morebtnShow')
+			  this.$refs.couponlist.morebtnShow()
+			}
 
-      let data = await api.getWelfare(cityId, 2, this.welfarePageNumber)
-      this.welfarePageNumber++
-      let rows = data.rows ? data.rows : []
-      let total = Math.ceil(data.total / 2)
-      let a = [...this.welfareList, ...rows]
-      this.welfareList = a
-      console.log('welfareList', this.welfareList)
-      if (this.welfareList.length == 0) {
-        return;
-      }
-      this.$nextTick(function () {
-        if (this.welfarePageNumber > total || rows.length < 2) {
-          // this.$invoke('coupon-list', 'morebtnHide')
-          console.log('couponlist=================', this.$refs.couponlist)
-          this.$refs.couponlist.morebtnHide()
-        } else {
-          // this.$invoke('coupon-list', 'morebtnShow')
-          this.$refs.couponlist.morebtnShow()
-        }
-
-        // this.$invoke('coupon-list', 'setcouponList', this.welfareList)
-        this.$refs.couponlist.setcouponList(this.welfareList)
-      })
+			// this.$invoke('coupon-list', 'setcouponList', this.welfareList)
+			this.$refs.couponlist.setcouponList(this.welfareList)
+		  })
+		} catch (err) {
+			console.error(err)
+		} finally {
+			this.isWelfareInit = true
+		}
 
 
     },
