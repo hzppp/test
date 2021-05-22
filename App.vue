@@ -25,10 +25,7 @@
 				  "region": "江北区",
 				  "regionCode": "500105"
 			  } ,
-			  selectedCityData: { // 当前选择的位置
-				  "pro": "重庆市",
-				  "city": "重庆市",
-			  },
+			  selectedCityData: {}, // 当前选择的位置
 		  },
 		  userInfo: null,
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
