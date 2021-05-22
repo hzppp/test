@@ -34,13 +34,35 @@ export default {
                         rawData: info.rawData,
                         signature: info.signature
                     }).then(async sRes=> {
-                        console.log('sssres',sRes)
-                        uni.setStorageSync('haveUserInfoAuth',true)
-                        app.globalData.haveUserInfoAuth = true
-                        this.haveUserInfoAuth = true
-                        uni.setStorageSync('wxUserInfo',sRes)
-                        app.globalData.wxUserInfo = sRes
-                        await login.login()
+                        console.log('saveWXuserInfo',sRes)
+                        const {data,code} = sRes
+                        if(code == 1) {
+                            uni.setStorageSync('haveUserInfoAuth',true)
+                            app.globalData.haveUserInfoAuth = true
+                            this.haveUserInfoAuth = true
+                            uni.setStorageSync('wxUserInfo',data)
+                            app.globalData.wxUserInfo = data
+                        }
+                        if(code == -4) {  //如果未登录 则重新登录 并执行原逻辑
+                            console.log('如果未登录 则重新登录 并执行原逻辑')
+                            await login.login()
+                            await api.saveWXuserInfo({
+                                encryptedData: info.encryptedData,
+                                iv: info.iv,
+                                rawData: info.rawData,
+                                signature: info.signature
+                            }).then(async sRes=> {
+                                console.log('sssres',sRes)
+                                let {data,code} = sRes
+                                if(code == 1) {
+                                    uni.setStorageSync('haveUserInfoAuth',true)
+                                    app.globalData.haveUserInfoAuth = true
+                                    this.haveUserInfoAuth = true
+                                    uni.setStorageSync('wxUserInfo',data)
+                                    app.globalData.wxUserInfo = data
+                                }
+                            })
+                        }
                     })
                 },
                 fail: (res) => {

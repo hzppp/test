@@ -1,5 +1,7 @@
 import domain from '@/configs/interface';
 import request from "@/units/request.js"
+import login from '@/units/login'
+import toast from '@/units/showToast';
 
 let app = getApp()
 
@@ -73,7 +75,21 @@ module.exports = {
             url: domain.getAPI('getActivityUser'),
             data: params
         })
-        return data
+        if(data&&data.code == 1) {
+            return data
+        }
+        if(data.code == -4) {
+            await login.login()
+            let {
+                data
+            } = await request({
+                url: domain.getAPI('getActivityUser'),
+                data: params
+            })
+            if(data&&data.code == 1) {
+                return data
+            }
+        }
     },
     /* 直播列表 */
     getLiveList:async (params) => {
@@ -197,11 +213,10 @@ module.exports = {
     },
     // 保存用户信息
     saveWXuserInfo: async (param) => {
-        const {data,code} = await request({
+        const {data} = await request({
             url: domain.getAPI('saveWXuserInfo'),
             data:param
         })
-        console.log('ststst',data)
         return data
         // 新增获取用户信息
         // if(!app.globalData.pocketUserInfo){
@@ -212,22 +227,50 @@ module.exports = {
     /* 优惠券详情 */
     userOuponsDet:async (param) => {
         let {
-            data
+            data={}
         } = await request({
             url: domain.getAPI('userOuponsDet'),
             data:param
         })
-        return data
+        if(data.code == -4) {
+            await login.login()
+            let {
+                data
+            } = await request({
+                url: domain.getAPI('userOuponsDet'),
+                data:param
+            })
+            if(data&&data.code ==1) {
+                return data
+            }
+        }
+        if(data&&data.code ==1) {
+            return data
+        }
     },
     /* 优惠券核销 */
     doCouponVerifiy:async (param) => {
         let {
-            data
+            data={}
         } = await request({
             url: domain.getAPI('doCouponVerifiy'),
             data:param
         })
-        return data
+        if(data&&data.code ==1) {
+            return data
+        }
+        if(data.code ==-4) {
+            await login.login()
+            let {
+                data
+            } = await request({
+                url: domain.getAPI('doCouponVerifiy'),
+                data:param
+            })
+            if(data&&data.code ==1) {
+                return data
+            }
+        }
     },
     // getPanosInfo2 获取vr看车图片
     getPanosInfo2: async (sgId, bId = 2) => {
@@ -245,8 +288,9 @@ module.exports = {
     },
     // 手机号解密
     decryptPhone: async (encryptedData, iv) => {
+
         let {
-            data
+            data={}
         } = await request({
             url: domain.getAPI('decryptPhone'),
             data: {
@@ -254,16 +298,36 @@ module.exports = {
                 iv: iv
             }
         })
-        return data
+        console.log('dddd',data)
+        if(data.code == -4) {
+            toast('获取手机号失败',"none",4000)
+            await login.login()
+        }
+        if(data&&data.code ==1) {
+            return data
+        }
     },
     // 获取用户领取的优惠券
     getUserOupons: async () => {
         let {
-            data
+            data={}
         } = await request({
             url: domain.getAPI('getUserOupons'),
         })
-        return data
+        if(data.code == -4) {
+            await login.login()
+            let {
+                data
+            } = await request({
+                url: domain.getAPI('getUserOupons'),
+            })
+            if(data&&data.code ==1) {
+                return data
+            }
+        }
+        if(data&&data.code ==1) {
+            return data
+        }
     },
     // /interface/sales/get_sales_list.jsp
     getSalesList: async (cs) => {

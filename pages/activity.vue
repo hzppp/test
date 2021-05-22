@@ -68,10 +68,10 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			await login.login()
+			// await login.login()
 			this.activityId = options.id
 			let {
-				data
+				data={}
 			} = await api.getActivityContent(this.activityId)
 			this.downDate(data.endTime)
 			app.Interval = setInterval(() => {
@@ -125,7 +125,7 @@
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
 					if (data && data.phoneNumber) {
 						uni.setStorageSync('userPhone', data.phoneNumber)
-						this.phone = data.phoneNumber						
+						this.phone = data.phoneNumber
 					}
 				}
 				this.$refs.formpop.formShow('form', 'activity', this.content)

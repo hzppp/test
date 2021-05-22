@@ -64,7 +64,9 @@
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import pageTop from '@/components/pageTop/pageTop'
 	import tabBar from '@/components/tabBar/tabBar'
-	let app = getApp()
+  import toast from '@/units/showToast'
+
+  let app = getApp()
 	export default {
 		components: {
 			'page-top': pageTop,
@@ -110,7 +112,7 @@
 			*/
 		},
 		async onLoad(options) {
-			await login.login()
+			// await login.login()
 			// console.log(app.globalData)
 			// if (app.globalData && app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.userId) {
 			// 	this.userId = app.globalData.pocketUserInfo.userId;
