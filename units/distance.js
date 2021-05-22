@@ -27,22 +27,23 @@ export default {
 					"regionCode": "500105"
 				}
 				console.error(err)
-			} finally {
+			}
+			
+			if (!currentLocation.selectedCityData.pro || !currentLocation.selectedCityData.city) {
 				currentLocation.selectedCityData = { // 设置当前选择的省市
 					pro: currentLocation.cityData.pro,
 					city: currentLocation.cityData.city,
 				}
+				try {
+					const provinceList = await this.reqProvinceCityList()
+					const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+					if (crtLocationProvinceItem) {
+						const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+						currentLocation.selectedCityData.proId = crtLocationProvinceItem.id
+						currentLocation.selectedCityData.cityId = crtLocationCityItem.id
+					}				
+				} catch(err) {}
 			}
-			
-			try {
-				const provinceList = await this.reqProvinceCityList()
-				const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-				if (crtLocationProvinceItem) {
-					const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-					currentLocation.selectedCityData.proId = crtLocationProvinceItem.id
-					currentLocation.selectedCityData.cityId = crtLocationCityItem.id
-				}				
-			} catch(err) {}
 		}
     },
 	// 请求定位信息
