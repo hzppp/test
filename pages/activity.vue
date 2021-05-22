@@ -6,8 +6,8 @@
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
 		<view class="date">
-			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分<view
-			 class="db">{{artDownDate[3]}}</view>秒
+			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
+			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
 
 		<view class="content">
