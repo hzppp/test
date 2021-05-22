@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-     <block v-if="getList">
+     <block v-if="nothing">
 		<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 			<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
 				<view class="top">
@@ -65,6 +65,7 @@
 				pageNum: 1,
 				pageSize: 10,
 				dealerGroupId: '',
+				nothing:1
 			}
 		},
 		// mixins: [],
@@ -73,7 +74,7 @@
 		},
 		onShow() {
 			this.getList() 
-		},
+		}, 
 		methods: {
 			/* 获取列表 */
 			async getList() {
@@ -94,9 +95,16 @@
 				data.rows.forEach((item, index) => {
 					item.startTime = item.startTime.substring(0, 16)
 				})
-				this.liveList = [...this.liveList, ...data.rows]
+				if(this.pageNum == 1){
+				  this.liveList = data.rows;
+				}else{
+				  this.liveList = [...this.liveList, ...data.rows]	
+				}
+				
 				 if(data.rows.length == 0){
-					 this.liveList = null
+					 this.nothing = 0
+				 }else{
+					 this.nothing= 1
 				 }
 			},
 			toLiveDet(item) {
