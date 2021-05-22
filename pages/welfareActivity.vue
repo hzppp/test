@@ -170,6 +170,7 @@ export default {
 
       // 改变默认定位省市
       let currentLocation = app.globalData.currentLocation
+	  currentLocation.selectedCityData.isChange = true
       currentLocation.selectedCityData.proId = this.crtProvinceItem.id
       currentLocation.selectedCityData.pro = this.crtProvinceItem.name
       currentLocation.selectedCityData.cityId = this.crtCityItem.id

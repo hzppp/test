@@ -29,7 +29,7 @@ export default {
 				console.error(err)
 			}
 			
-			if (!currentLocation.selectedCityData.pro || !currentLocation.selectedCityData.city) {
+			if (!currentLocation.selectedCityData.isChange) {
 				currentLocation.selectedCityData = { // 设置当前选择的省市
 					pro: currentLocation.cityData.pro,
 					city: currentLocation.cityData.city,
