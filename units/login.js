@@ -45,8 +45,10 @@ export default {
         })
     },
     async login() {
-        console.log('loginloginloginloginlogin')
-        console.log('getApp=============', getApp())
+        app.globalData.haveUserInfoAuth = false
+        uni.setStorageSync('haveUserInfoAuth', false)
+        app.globalData.wxUserInfo = null
+        uni.setStorageSync('wxUserInfo', null)
         if (app.globalData.loginJson) {
             return app.globalData.loginJson
         }

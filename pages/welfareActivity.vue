@@ -59,6 +59,7 @@ import tabBar from '@/components/tabBar/tabBar'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
 import pageTopCity from '@/components/pageTopCity/pageTopCity'
+import toast from '@/units/showToast'
 
 let app = getApp()
 export default {
@@ -129,7 +130,6 @@ export default {
     }
   },
   async onLoad() {
-
   },
   onShareAppMessage() {
     let title = '长安云车展：活动优惠都在这里！'
