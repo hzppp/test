@@ -490,13 +490,7 @@
 			obj.id = options.id || this.model.id;
 			obj.serialId = options.serialId || this.model.serialId;
 
-			// Location.init(function(data) {
-			// 	var cityId = data.cityId;
-			// 	that.getSerial(obj.id, obj.serialId, cityId, function(data) {
-			// 		that.getPrice(data);
-			// 	});
-			// 	this.cityId = cityId
-			// });
+			
 		this.serialId = obj.serialId
 			that.getSerial(obj.id, obj.serialId, 1, function(data) {
 				that.getPrice(data);
@@ -905,6 +899,9 @@
 					})
 			
 				if(data){
+					if(modelId=='' ||modelId ==undefined){
+						modelId = data.sections[0].data[0].id
+					}
 					var sales = data.sections;
 					that.carData = data
 					that.serial = sales
