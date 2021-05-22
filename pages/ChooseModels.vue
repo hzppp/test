@@ -48,7 +48,9 @@
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
-                this.canSelectLength = 4 - options.mids.split(",").length
+                if(options.mids) {
+                    this.canSelectLength = 4 - options.mids.split(",").length
+                }
                 this.reqModelsList(options.serialId)
             },
             async reqModelsList(sgId) {
