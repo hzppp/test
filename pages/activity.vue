@@ -6,8 +6,8 @@
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
 		<view class="date">
-			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分<view
-			 class="db">{{artDownDate[3]}}</view>秒
+			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
+			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
 
 		<view class="content">
@@ -68,10 +68,10 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			await login.login()
+			// await login.login()
 			this.activityId = options.id
 			let {
-				data
+				data={}
 			} = await api.getActivityContent(this.activityId)
 			this.downDate(data.endTime)
 			app.Interval = setInterval(() => {
@@ -125,7 +125,7 @@
 					} = await api.decryptPhone(detail.encryptedData, detail.iv)
 					if (data && data.phoneNumber) {
 						uni.setStorageSync('userPhone', data.phoneNumber)
-						this.phone = data.phoneNumber						
+						this.phone = data.phoneNumber
 					}
 				}
 				this.$refs.formpop.formShow('form', 'activity', this.content)

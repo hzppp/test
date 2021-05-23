@@ -59,6 +59,7 @@ import tabBar from '@/components/tabBar/tabBar'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
 import pageTopCity from '@/components/pageTopCity/pageTopCity'
+import toast from '@/units/showToast'
 
 let app = getApp()
 export default {
@@ -129,7 +130,6 @@ export default {
     }
   },
   async onLoad() {
-
   },
   onShareAppMessage() {
     let title = '长安云车展：活动优惠都在这里！'
@@ -145,7 +145,7 @@ export default {
     }
   },
   methods: {
-    formShow(name, from = "", obj = {}, title = "完善资料") {
+    formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
     },
     loadMoreCoupon() {

@@ -17,8 +17,8 @@
       let curRoute = curObj.route 
       let curParam = curObj.options
       
-      this.src = 'https://cdc.pcauto.com.cn/vue/hall/a/vrkrpano.html?sid='+curParam.sid
-      // this.src = 'http://localhost:8080/vrkrpano.html?sid='+curParam.sid
+      this.src = `https://cdc.pcauto.com.cn/vue/hall/a/vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}`
+      // this.src = `http://localhost:8080/vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}`
     }
 	}
 </script>

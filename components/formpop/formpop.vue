@@ -103,7 +103,7 @@
 	export default {
 		data() {
 			return {
-				title: '完善资料',
+				title: '报名活动',
 				currentObj: {},
 				from: "",
 				serialList: [],

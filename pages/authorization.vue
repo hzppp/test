@@ -53,10 +53,18 @@ export default {
         app.globalData.wxUserInfo = data
         uni.setStorageSync('wxUserInfo', data)
       } else if (code == -4) {
-        await this.handleLogin()
+        await login.login()
+        let {code, data} = await api.getUser()
+        console.log('ttttttt123', data)
+        if (code == 1 && data) {
+          app.globalData.haveUserInfoAuth = true
+          uni.setStorageSync('haveUserInfoAuth', true)
+          app.globalData.wxUserInfo = data
+          uni.setStorageSync('wxUserInfo', data)
+        }
       }
     } else {
-      await this.handleLogin()
+      await login.login()
     }
 
     let cs = ''
@@ -81,13 +89,6 @@ export default {
       var r = str.match(reg);
       if (r != null) return unescape(r[2]);
       return null;
-    },
-    async handleLogin() {
-      app.globalData.haveUserInfoAuth = false
-      uni.setStorageSync('haveUserInfoAuth', false)
-      app.globalData.wxUserInfo = null
-      uni.setStorageSync('wxUserInfo', null)
-      let loginJson = await login.login() //请求登录 公共请求头写入token
     }
   }
 }

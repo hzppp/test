@@ -93,6 +93,9 @@
 					} else if (type == 2) {
 						typeText = '车主福利'
 						typeClass = ''
+					}else if (type == 4) {
+						typeText = '试驾活动'
+						typeClass = ''
 					} else {
 						typeText = '线下活动'
 						typeClass = 'yellow-bg'
