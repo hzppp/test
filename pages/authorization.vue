@@ -52,6 +52,7 @@ export default {
         uni.setStorageSync('haveUserInfoAuth', true)
         app.globalData.wxUserInfo = data
         uni.setStorageSync('wxUserInfo', data)
+        uni.setStorageSync('userPhone', data.mobile)
       } else if (code == -4) {
         await login.login()
         let {code, data} = await api.getUser()

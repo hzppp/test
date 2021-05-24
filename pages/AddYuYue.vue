@@ -44,7 +44,7 @@ export default {
             }
         },
         goChooseModels(item) {
-            uni.navigateTo({
+            uni.redirectTo({
                 url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}`
             })
         }

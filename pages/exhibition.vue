@@ -30,7 +30,7 @@
 				await distance.getLocation()
 				var cityCode = 50000
 				var name = '重庆市'
-				
+
 				if (app.globalData.currentLocation.selectedCityData) {
 					cityCode = app.globalData.currentLocation.selectedCityData.pro ? app.globalData.currentLocation.selectedCityData.pro : 500000
 					name = app.globalData.currentLocation.selectedCityData.city ? app.globalData.currentLocation.selectedCityData.city : '重庆市'
