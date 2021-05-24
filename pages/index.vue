@@ -484,7 +484,7 @@ export default {
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
-    width: 686rpx;
+    width: 100%;
     height: 360rpx;
     border-radius: 20rpx;
   }
