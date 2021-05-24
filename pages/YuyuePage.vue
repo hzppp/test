@@ -1,7 +1,7 @@
 <template>
     <view class="yuyue">
         <pop ref="pop"></pop>
-        <image mode="widthFix" :src="serialData.picHeadUrl" />
+        <image mode="widthFix" src="http://img.pcauto.com.cn/images/upload/upc/tx/auto5/2102/02/c16/252303537_1612261476705.png" />
         <view class="content">
             <view class="title">预约试驾</view>
             <view class="list models">
