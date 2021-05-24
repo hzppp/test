@@ -1,5 +1,13 @@
 <template>
   <view class="index">
+<!--    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">-->
+<!--      <view class="city">-->
+<!--        <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"-->
+<!--                mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">-->
+<!--          <view>{{ selectCity || indexCity.name }}</view>-->
+<!--        </picker>-->
+<!--      </view>-->
+<!--    </pageTopCity>-->
     <viewTabBar :current="0"></viewTabBar>
     <testDrive></testDrive>
     <view class="content">
@@ -32,7 +40,7 @@
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
-            <view class="title">{{item.name}}</view>
+            <view class="title">{{item.name.trim() || '无'}}</view>
           </view>
         </scroll-view>
       </view>
@@ -49,14 +57,15 @@
           精选
         </view>
         <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
-          <view>
+          <view :class="item.contentType == 3 ? 'playType':''">
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1直播中  2预告  3回放-->
 <!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
-            <view :class="'icon1 '+ `status_${item.contentType}`" v-if="item.contentType !=3"></view>
+            <view class="icon1" v-if="item.contentType !=3"><image :src="typeIcon[item.contentType-1]" class="iconK"></image>{{item.contentType | formatType}}</view>
             <view v-else>
-              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status == 2 && item.startTime">{{item.startTime}}开播</view>
-              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status !== 2"></view>
+              <view class="icon1 iconB" v-if="item.status == 1"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
+              <view class="icon1" v-if="item.status == 2 && item.startTime"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.startTime}}开播</view>
+              <view class="icon1" v-if="item.status == 3"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
             </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
             <image class="img banner" :src="item.picUrl" lazy-load></image>
@@ -79,17 +88,35 @@ import tabBar from '@/components/tabBar/tabBar'
 import shouquan from '@/units/shouquan'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
+import pageTopCity from '@/components/pageTopCity/pageTopCity'
 
 let app = getApp()
 export default {
-  components: {viewTabBar: tabBar, testDrive},
+  components: {viewTabBar: tabBar, testDrive,pageTopCity},
   mixins: [shouquan],
   data() {
     return {
+      provinceList: [],
+      cityList: [],
+      title:'云车展',
       sgList: [],
+      typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
+      liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
     }
+  },
+  computed: {
+    // selectIndex () {
+    //   let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+    //   let cityIndex = -1
+    //   if (this.crtProvinceItem.cities) {
+    //     cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+    //   }
+    //   provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+    //   cityIndex = cityIndex > -1 ? cityIndex : 0
+    //   return [provinceIndex, cityIndex]
+    // }
   },
   filters: {
     actType(type) {
@@ -108,6 +135,34 @@ export default {
         }
         case 4: {
           return '试驾活动'
+          break;
+        }
+      }
+    },
+    formatType(type) {
+      // <!--contentType 1文章资讯，2活动，3直播-->
+      // <!--status 当为直播类型时 1直播中  2预告  3回放-->
+      switch (type) {
+        case 1: {
+          return '资讯'
+          break;
+        }
+        case 2: {
+          return '活动'
+          break;
+        }
+      }
+    },
+    formatStatus(status) {
+      // <!--contentType 1文章资讯，2活动，3直播-->
+      // <!--status 当为直播类型时 1直播中  2预告  3回放-->
+      switch (status) {
+        case 1: {
+          return '直播中'
+          break;
+        }
+        case 3: {
+          return '回放'
           break;
         }
       }
@@ -323,7 +378,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '@/static/less/index.less';
+@import '@/static/less/public.less';
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
@@ -431,54 +486,88 @@ export default {
           margin: 30rpx 0 16rpx 0;
         }
         .title {
+          height: 34rpx;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
         }
       }
     }
+    .playType {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/pause_icon.png');
+        background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+      }
+    }
     .vrCar {
+      position: relative;
       .img {
         display: inline-block;
         width: 686rpx;
         height: 360rpx;
         border-radius: 20rpx;
       }
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vr_icon.png');
+        background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+      }
     }
     .icon1 {
       position: absolute;
-      width: 104rpx;
       height: 40rpx;
-      left:-4rpx;
-      top: -2rpx;
-
-      &.status_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art.png") no-repeat;
-        background-size: contain;
+      left:24rpx;
+      top: 20rpx;
+      background: rgba(0,0,0,.3);
+      box-sizing: border-box;
+      padding: 5rpx 14rpx 5rpx 10rpx;
+      color: #fff;
+      border-radius: 12rpx;
+      font-size: 24rpx;
+      .iconK {
+        width: 32rpx;
+        height: 32rpx;
+        vertical-align: bottom;
+        margin-right: 8rpx;
       }
-      &.status_2 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act.png") no-repeat;
-        background-size: contain;
-      }
-      &.play_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.play_2 {
-        width: 270rpx;
-        font-size: 20rpx;
-        color: #fff;
-        width: auto;
-        background: #55a4f1;
+      &.iconB {
         padding-left: 48rpx;
-        box-sizing: border-box;
-        line-height: 36rpx;
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay.png") no-repeat;
-        background-size: contain;
+        .iconK {
+          position: absolute;
+          left: -4rpx;
+          top: 0;
+          width: 40rpx;
+          height: 40rpx;
+          vertical-align: bottom;
+        }
       }
-      &.play_3 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay.png") no-repeat;
+    }
+    .palyType {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/pause_icon.png');
         background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
       }
     }
     .banner {

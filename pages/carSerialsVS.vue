@@ -17,12 +17,14 @@
             <view class="title">配置对比</view>
             <view class="models-wrap">
                 <view class="car-model" @tap="changModel(leftSerial.serialId,1)">
-                    <view class="dec">{{powerErank4ModelA.modelName}}</view>
-                     <view class="arrow"></view>
+                    <view class="dec" v-if="powerErank4ModelA.modelName">{{powerErank4ModelA.modelName}}</view>
+                     <view class="arrow" v-if="powerErank4ModelA.modelName"></view>
+                     <view v-else>暂无该车系车型</view>
                 </view>
                 <view class="car-model" @tap="changModel(rightSerial.serialId,2)">
-                    <view class="dec">{{powerErank4ModelB.modelName}}</view>
-                    <view class="arrow"></view>
+                    <view class="dec" v-if="powerErank4ModelB.modelName">{{powerErank4ModelB.modelName}}</view>
+                    <view class="arrow" v-if="powerErank4ModelB.modelName"></view>
+                    <view v-else>暂无该车系车型</view>
                 </view>
             </view>
         </view>
@@ -84,18 +86,22 @@
 				this.init()
 			},
             mid1() {
+                console.log('1111 :>> ', 1111);
                 this.getVsDownData(this.mid1,this.mid2)
             },
             mid2() {
+                console.log('22222 :>> ', 22222);
                 this.getVsDownData(this.mid1,this.mid2)
             },
             leftSerialId() {
-                this.init()
+                console.log('zuo :>> ', 'zuo');
                 this.reqModelsBySerialId("left", this.leftSerialId)
+                this.init()
             },
             rightSerialId() {
-                this.init()
+                console.log('you :>> ', 'you');
                 this.reqModelsBySerialId("right", this.rightSerialId)
+                this.init()
             }
 		},
 		data() {
@@ -169,11 +175,12 @@
             async reqModelsBySerialId(noun,sgId) {
                 try {
                     const {code,data} = await api.fetchModelsList({sgId})
+                    console.log('data11111111111111 :>> ', data);
                     if(code === 1) {
                         if(noun === "left") { //获取车系下的车型,默认展示第一个车型的对比
-                            this.mid1 = data[0].pcModelId
+                            this.mid1 =  data[0] ? data[0].pcModelId : ''
                         }else if(noun === "right") {
-                            this.mid2 = data[0].pcModelId
+                            this.mid2 = data[0] ? data[0].pcModelId : ''
                         }
                     }
                 } catch (error) {
