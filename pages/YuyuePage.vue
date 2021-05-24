@@ -1,5 +1,5 @@
 <template>
-    <view class="yuyue">
+    <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="http://img.pcauto.com.cn/images/upload/upc/tx/auto5/2102/02/c16/252303537_1612261476705.png" />
         <view class="content">
@@ -38,6 +38,7 @@
             </view>
         </view>
     </view>
+    <view v-else class="no-data">暂无数据</view>
 </template>
 
 <script>
@@ -89,6 +90,7 @@ const COUNTDOWN = 60
             }
         },
         async onLoad(options) {
+            console.log('options :>> ', options);
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -101,14 +103,17 @@ const COUNTDOWN = 60
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
-					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					if (data && data.phoneNumber) {
-						this.phoneNum = data.phoneNumber						
-					}else {
+                    try {
+                        let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
+                        if (data && data.phoneNumber) {
+                            this.phoneNum = data.phoneNumber						
+					    }
+                    } catch (error) {
                         uni.showToast({
                             icon:"none",
                             title:"手机授权失败"
                         })
+                        this.isFocus = true
                     }
 				}else {
                     this.isFocus = true
@@ -247,6 +252,10 @@ const COUNTDOWN = 60
 </script>
 
 <style lang="scss" scoped>
+.no-data {
+    padding: 32rpx 0;
+    text-align: center;
+}
 .yuyue {
 	image {
 		width: 100%;
