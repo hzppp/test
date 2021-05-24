@@ -1,12 +1,12 @@
 <template>
-    <view class="get-preferential">
+    <view class="get-preferential" v-if="serialData.id">
         <!--提交弹窗 -->
         <pop ref="pop"></pop>
         <!-- 顶部提示S -->
         <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
-        <view class="head-info" >
+        <view class="head-info">
             <image mode="heightFix" :src="serialData.picHeadUrl" />
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
@@ -19,7 +19,7 @@
             <!-- 手机号S -->
             <view class="list models">
                 <view class="list-title">手机号</view>
-                <input class="select" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <!-- 手机号E -->
@@ -55,6 +55,7 @@
             </view>
         </view>
     </view>
+    <view v-else class="no-data">暂无数据</view>
 </template>
 
 <script>
@@ -94,9 +95,12 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 serialId:"", //车系id
 
                 getPhoneBtn: false,
+
+                isFocus:false,
             }
         },
        async onLoad(options) {
+            console.log('options :>> ', options);
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -109,25 +113,30 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
-					let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					if (data && data.phoneNumber) {
-                        this.phoneNum = data.phoneNumber
-					}else {
+                    try {
+                        let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
+                        if (data && data.phoneNumber) {
+                            this.phoneNum = data.phoneNumber						
+					    }
+                    } catch (error) {
                         uni.showToast({
                             icon:"none",
                             title:"手机授权失败"
                         })
+                        this.isFocus = true
                     }
-                        this.getPhoneBtn = true 
-				}
+				}else {
+                    this.isFocus = true
+                }
+                this.getPhoneBtn = true 
 			},
             //车系详情
             async reqSerialDetail(sgId) {
                 try {
                     const {code,data} = await api.fetchSerialDetail({sgId})
+                    console.log('data1111111111111 :>> ', data);
                     if(code ===1 ) {
                         this.serialData = data
-                        console.log('data :>> ', data);
                     }
                 } catch (error) {
                     console.error(error)
@@ -253,6 +262,10 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 </script>
 
 <style lang="scss" scoped>
+.no-data {
+    padding: 32rpx 0;
+    text-align: center;
+}
 .get-preferential {
     .getPhoneBtn {
         background-color: transparent;
