@@ -14,7 +14,7 @@
     <form-pop ref="formpop"></form-pop>
     <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
                  scroll-with-animation>
-      <view class="box">
+      <!-- <view class="box">
         <view class="box-tit">
           长安福利
         </view>
@@ -23,17 +23,18 @@
         </view>
         <coupon-list v-else-if="welfareList.length > 0" ref="couponlist" :from="'welfareActivity'" @load-more-coupon="loadMoreCoupon"
                      @formShow="formShow"></coupon-list>
-      </view>
+      </view> -->
 
       <view class="box">
-        <view class="box-tit">
+        <!-- <view class="box-tit">
           精选活动
-        </view>
+        </view> -->
         <view class="activity-list" v-if="activityList.length > 0">
           <block v-for="(item,index) in activityList" :key="index">
             <view class="pic-text" @tap="toActivityPage(item)">
               <image mode="aspectFill" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
+				<image class="logo" src="../static/images/gift-logo.png" mode="aspectFit"></image>
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
@@ -126,7 +127,7 @@ export default {
 		// 精选活动
 		this.getactivity()
 		// 福利列表
-		this.getWelfare()
+		// this.getWelfare()
     }
   },
   onHide() {
@@ -168,7 +169,7 @@ export default {
 	  this.crtProvinceItem = this.provinceList[detail.value[0]]
 	  this.crtCityItem = this.cityList[detail.value[1]]
       this.resetjson()
-      this.getWelfare()
+      // this.getWelfare()
       this.getactivity()
 
       // 改变默认定位省市
@@ -269,15 +270,12 @@ export default {
 		  }
 		  this.$nextTick(function () {
 			if (this.welfarePageNumber > total || rows.length < 2) {
-			  // this.$invoke('coupon-list', 'morebtnHide')
 			  console.log('couponlist=================', this.$refs.couponlist)
 			  this.$refs.couponlist.morebtnHide()
 			} else {
-			  // this.$invoke('coupon-list', 'morebtnShow')
 			  this.$refs.couponlist.morebtnShow()
 			}
 
-			// this.$invoke('coupon-list', 'setcouponList', this.welfareList)
 			this.$refs.couponlist.setcouponList(this.welfareList)
 		  })
 		} catch (err) {
