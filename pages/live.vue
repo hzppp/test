@@ -1,34 +1,44 @@
 <template>
 	<view>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-     <block v-if="nothing">
-		<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
-			<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
-				<view class="top">
-					<image class="avator" :src="item.headPic"></image>
-					<view class="name">
-						{{item.nickName}}
+		<block v-if="nothing">
+			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
+				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
+					<view class="top">
+						<image class="avator" :src="item.headPic"></image>
+						<view class="name">
+							{{item.nickName}}
+						</view>
 					</view>
-				</view>
-				<view class="banner">
-					<image class="bg" :src="item.cover"></image>
-					<view class="play"></view>
-					<view class="status blue" v-if="item.status==0 || item.status==2">
-						<view class="icon"></view> {{item.startTime}}开始播放
+					<view class="banner">
+						<image class="bg" :src="item.cover"></image>
+						<view class="play"></view>
+
+						<view class="icon1 iconB" v-if="item.status == 1">
+							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}
+						</view>
+						<view class="icon1" v-if="item.status == 2 && item.startTime">
+							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.startTime}}开播
+						</view>
+						<view class="icon1" v-if="item.status == 3">
+							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}
+						</view>
+						<!-- <view class="status blue" v-if="item.status==0 || item.status==2">
+						<view class="icon1"></view> {{item.startTime}}开始播放
 					</view>
 					
-					<view class="status yellow" v-if="item.status==1"> 
+					<view class="icon1 status yellow" v-if="item.status==1"> 
 		
 					</view>
-					<view class="status green" v-if="item.status==3">
+					<view class="icon1  status green" v-if="item.status==3">
 		
+					</view> -->
+					</view>
+					<view class="title">
+						{{item.title}}
 					</view>
 				</view>
-				<view class="title">
-					{{item.title}}
-				</view>
-			</view>
-		</scroll-view>
+			</scroll-view>
 		</block>
 		<block v-else>
 			<view class="live-detail">
@@ -37,12 +47,6 @@
 				<view class="none-text">暂无数据</view>
 			</view>
 		</block>
-		
-		
-		
-		
-		
-		
 		<viewTabBar :current="1"></viewTabBar>
 	</view>
 </template>
@@ -65,7 +69,11 @@
 				pageNum: 1,
 				pageSize: 10,
 				dealerGroupId: '',
-				nothing:1
+				nothing: 1,
+				liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png',
+					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png',
+					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'
+				],
 			}
 		},
 		// mixins: [],
@@ -75,9 +83,25 @@
 		onShow() {
 			this.pageNum = 1
 			this.hasNext = true
-			this.liveList=[]
-			this.getList() 
-		}, 
+			this.liveList = []
+			this.getList()
+		},
+		filters: {
+			formatStatus(status) {
+				// <!--contentType 1文章资讯，2活动，3直播-->
+				// <!--status 当为直播类型时 1直播中  2预告  3回放-->
+				switch (status) {
+					case 1: {
+						return '直播中'
+						break;
+					}
+					case 3: {
+						return '回放'
+						break;
+					}
+				}
+			},
+		},
 		methods: {
 			/* 获取列表 */
 			async getList() {
@@ -98,14 +122,15 @@
 				data.rows.forEach((item, index) => {
 					item.startTime = item.startTime.substring(0, 16)
 				})
-				 this.liveList = [...this.liveList, ...data.rows]	
-				console.log(this.liveList.length,data.rows.length);
-				 if(data.rows.length == 0){
-					 this.nothing = 0
-				 }else{
-					 this.nothing= 1
-				 }
+				this.liveList = [...this.liveList, ...data.rows]
+				console.log(this.liveList.length, data.rows.length);
+				if (data.rows.length == 0) {
+					this.nothing = 0
+				} else {
+					this.nothing = 1
+				}
 			},
+
 			toLiveDet(item) {
 				if (item.status == 2 || item.status == 0) {
 					/* 直播预告 */
@@ -116,9 +141,10 @@
 					/* 直播中 */
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' + item.roomId + '&sourceId=' + item.id,
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' +
+							item.roomId + '&sourceId=' + item.id,
 						extraData: {},
-						envVersion:'trial',
+						envVersion: 'trial',
 						success(res) {
 							// 打开成功 
 						}
@@ -127,9 +153,10 @@
 					//回放
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' + item.playId + '&sourceId=' + item.id,
+						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' +
+							item.playId + '&sourceId=' + item.id,
 						extraData: {},
-						envVersion:'trial',
+						envVersion: 'trial',
 						success(res) {
 							// 打开成功
 						}
@@ -250,7 +277,7 @@
 			}
 
 		}
-	
+
 		.title {
 			font-weight: 800;
 			text-align: left;
@@ -263,16 +290,50 @@
 			text-overflow: ellipsis;
 
 		}
-	
-		
+
+
 	}
+
 	.none-text {
 		width: -2rpx;
-			text-align: center;
+		text-align: center;
+	}
+
+	.none-icon {
+		.setbg(610rpx, 312rpx, 'articleList-none-data-icon2.png');
+		margin: 215rpx auto 0;
+	}
+
+	.icon1 {
+		position: absolute;
+		height: 40rpx;
+		left: 24rpx;
+		top: 20rpx;
+		background: rgba(0, 0, 0, .3);
+		box-sizing: border-box;
+		padding: 5rpx 14rpx 5rpx 10rpx;
+		color: #fff;
+		border-radius: 12rpx;
+		font-size: 24rpx;
+
+		.iconK {
+			width: 32rpx;
+			height: 32rpx;
+			vertical-align: bottom;
+			margin-right: 8rpx;
 		}
-	
-		.none-icon {
-			.setbg(610rpx, 312rpx, 'articleList-none-data-icon2.png');
-			margin: 215rpx auto 0;
+
+		&.iconB {
+			padding-left: 48rpx;
+
+			.iconK {
+				position: absolute;
+				left: -4rpx;
+				top: 0;
+				width: 40rpx;
+				height: 40rpx;
+				vertical-align: bottom;
+			}
 		}
+	}
 </style>

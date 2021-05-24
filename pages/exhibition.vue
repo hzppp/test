@@ -28,11 +28,11 @@
 		methods: {
 			async getcity() {
 				await distance.getLocation()
-				var cityCode = 50000
+				var cityCode = 1000000262
 				var name = '重庆市'
-				
+                console.log(JSON.stringify(app.globalData.currentLocation.selectedCityData))
 				if (app.globalData.currentLocation.selectedCityData) {
-					cityCode = app.globalData.currentLocation.selectedCityData.pro ? app.globalData.currentLocation.selectedCityData.pro : 500000
+					cityCode = app.globalData.currentLocation.selectedCityData.cityId ? app.globalData.currentLocation.selectedCityData.cityId : 1000000262
 					name = app.globalData.currentLocation.selectedCityData.city ? app.globalData.currentLocation.selectedCityData.city : '重庆市'
 				}
 				this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name

@@ -1,13 +1,13 @@
 <template>
   <view class="index">
-<!--    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">-->
-<!--      <view class="city">-->
-<!--        <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"-->
-<!--                mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">-->
-<!--          <view>{{ selectCity || indexCity.name }}</view>-->
-<!--        </picker>-->
-<!--      </view>-->
-<!--    </pageTopCity>-->
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
+      <view class="city">
+        <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+                mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
+          <view>{{ selectCity || indexCity.name }}</view>
+        </picker>
+      </view>
+    </pageTopCity>
     <viewTabBar :current="0"></viewTabBar>
     <testDrive></testDrive>
     <view class="content">
@@ -40,7 +40,7 @@
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
-            <view class="title">{{item.name.trim() || '无'}}</view>
+            <view class="title">{{item.name.trim() ? item.name : '无'}}</view>
           </view>
         </scroll-view>
       </view>
@@ -96,8 +96,10 @@ export default {
   mixins: [shouquan],
   data() {
     return {
+      crtCityItem: [],
       provinceList: [],
       cityList: [],
+      crtProvinceItem: {}, // 当前选择的省份
       title:'云车展',
       sgList: [],
       typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
@@ -107,16 +109,23 @@ export default {
     }
   },
   computed: {
-    // selectIndex () {
-    //   let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
-    //   let cityIndex = -1
-    //   if (this.crtProvinceItem.cities) {
-    //     cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
-    //   }
-    //   provinceIndex = provinceIndex > -1 ? provinceIndex : 0
-    //   cityIndex = cityIndex > -1 ? cityIndex : 0
-    //   return [provinceIndex, cityIndex]
-    // }
+    selectCity() {
+      let text = ''
+      if (this.crtCityItem.id) {
+        text = this.crtCityItem.name
+      }
+      return text
+    },
+    selectIndex () {
+      let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+      let cityIndex = -1
+      if (this.crtProvinceItem.cities) {
+        cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+      }
+      provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+      cityIndex = cityIndex > -1 ? cityIndex : 0
+      return [provinceIndex, cityIndex]
+    }
   },
   filters: {
     actType(type) {
@@ -170,18 +179,24 @@ export default {
   },
   async onShow(options) {
     await distance.getLocation()
-
+    await this.reqProvinceCityList()
+    let currentLocation = app.globalData.currentLocation
+    if(!currentLocation) {
+      return
+    }
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
-    const resData = (await this.getCityId()) || [1000000022,1000000022]
-    const provinceId = resData[0]
-    const cityId = resData[1]
-    const cityCode = app.globalData.currentLocation ? app.globalData.currentLocation.cityData.cityCode : 500000
-    this.pageData = await api.getHomepageData({
-      cityId: cityId,
-      cityCode: cityCode
-    }).then(res => {
-      return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
-    })
+    const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+    if (crtLocationProvinceItem) {
+      const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+      this.crtProvinceItem = crtLocationProvinceItem
+      this.cityList = this.crtProvinceItem.cities
+      this.crtCityItem = crtLocationCityItem
+
+      console.log('tstst',this.crtProvinceItem,this.crtCityItem)
+      // const resData = (await this.getCityId()) || [1000000022,1000000022]
+      // const provinceId = this.crtProvinceItem.id
+      await this.getPageData()
+    }
   },
   watch: {
     indexCity: function (newVal) {
@@ -211,6 +226,55 @@ export default {
     }
   },
   methods: {
+    async getPageData() {
+      const cityId = this.crtCityItem.id
+      const cityCode = this.crtCityItem.code
+      this.pageData = await api.getHomepageData({
+        cityId: cityId,
+        cityCode: cityCode
+      }).then(res => {
+        return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
+      })
+    },
+    // 请求省份和城市的级联列表
+    async reqProvinceCityList () {
+      try {
+        const res = await api.fetchProvinceCityList()
+        if (res.code == 1) {
+          this.provinceList = res.data
+          if (this.provinceList && this.provinceList.length) {
+            this.cityList = this.provinceList[0].cities
+          }
+        }
+      } catch(err) {
+        this.$toast('获取省份和城市信息失败', 'none', 1500);
+        console.error(err)
+      }
+    },
+    async bindMultiPickerChange(e) {
+      let {
+        detail
+      } = e
+      this.crtProvinceItem = this.provinceList[detail.value[0]]
+      this.crtCityItem = this.cityList[detail.value[1]]
+      await this.getPageData()
+
+      // 改变默认定位省市
+      let currentLocation = app.globalData.currentLocation
+      currentLocation.selectedCityData.isChange = true
+      currentLocation.selectedCityData.proId = this.crtProvinceItem.id
+      currentLocation.selectedCityData.pro = this.crtProvinceItem.name
+      currentLocation.selectedCityData.cityId = this.crtCityItem.id
+      currentLocation.selectedCityData.city = this.crtCityItem.name
+    },
+    bindMultiPickerColumnChange(e) {
+      let {
+        detail
+      } = e
+      if (detail.column == 0) {
+        this.cityList = this.provinceList[detail.value].cities
+      }
+    },
     async getCityId() {
       let currentLocation = app.globalData.currentLocation
       if (currentLocation) {
@@ -379,12 +443,39 @@ export default {
 
 <style lang="less" scoped>
 @import '@/static/less/public.less';
+.city {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 35%;
+  padding: 15rpx 32rpx 0;
+  background-color: #ffffff;
+  .select-city{
+    view {
+      display: flex;
+      align-items: center;
+      font-size: 28rpx;
+      color: #333333;
+      &::after {
+        flex: 0 0 auto;
+        margin-left: 10rpx;
+        display: view;
+        content: '';
+        background: url("../static/images/arrowBottom.png") no-repeat;
+        width: 8rpx;
+        height: 4rpx;
+        background-size: 8rpx 4rpx;
+      }
+    }
+  }
+}
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
 }
 .ovh {
-  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
+  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
 }
 .shadow {
   box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
@@ -393,7 +484,7 @@ export default {
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
-    width: 686rpx;
+    width: 100%;
     height: 360rpx;
     border-radius: 20rpx;
   }
@@ -487,9 +578,13 @@ export default {
         }
         .title {
           height: 34rpx;
+          width: 100%;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
         }
       }
     }
