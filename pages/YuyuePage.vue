@@ -23,7 +23,7 @@
             </view>
             <view class="list models">
                 <view class="list-title">手机号</view>
-                <input class="select" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <view class="list models">
@@ -84,14 +84,18 @@ const COUNTDOWN = 60
                 // currentModelId: "", //当前车型id
 
                 getPhoneBtn: false,
+                isFocus:false,
 
             }
         },
-         onLoad(options) {
+        async onLoad(options) {
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
-			distance.getLocation()
-            this.currentCity.name = app.globalData.currentLocation.selectedCityData.city || ""
+            await distance.getLocation()
+            const cityData = app.globalData.currentLocation.selectedCityData
+            this.$set(this.currentCity,'id',cityData.cityId )
+            this.$set(this.currentCity,'name',cityData.city )
+            this.$set(this.currentCity,'provinceId',cityData.proId )
         },
         methods: {
             async getPhoneNumber(e) {
@@ -106,7 +110,9 @@ const COUNTDOWN = 60
                             title:"手机授权失败"
                         })
                     }
-				}
+				}else {
+                    this.isFocus = true
+                }
 				this.getPhoneBtn = true
 			},
             //检测信息是否齐全
@@ -215,6 +221,7 @@ const COUNTDOWN = 60
             },
             //选择城市
             goChooseCity(){
+                this.currentDealer = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity?name="+ this.currentCity.name
 				})

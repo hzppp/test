@@ -5,6 +5,7 @@
             <view class="title">预约成功</view>
             <view class="text">我们的销售将尽快与您联系</view>
             <button class="btn" @tap="closeShow">完成</button>
+            <i class="close" @tap="isShow = false"></i>
         </view>
     </view>
 </template>
@@ -79,6 +80,14 @@
             margin-top: 34px;
             color: #ffffff;
             background-color: #fa8943;
+        }
+        .close {
+            margin: 0 auto;
+            margin-top: 60rpx;
+            width: 64rpx;
+            height: 64rpx;
+            background-image: url("../../static/images/close_btn.png");
+            background-size: cover;
         }
     }
 }

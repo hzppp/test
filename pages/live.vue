@@ -73,12 +73,15 @@
 			// this.getList()
 		},
 		onShow() {
+			this.pageNum = 1
+			this.hasNext = true
+			this.liveList=[]
 			this.getList() 
 		}, 
 		methods: {
 			/* 获取列表 */
 			async getList() {
-				if (!this.hasNext && this.pageNum != 1) {
+				if (!this.hasNext) {
 					return false;
 				}
 				let {
@@ -95,12 +98,8 @@
 				data.rows.forEach((item, index) => {
 					item.startTime = item.startTime.substring(0, 16)
 				})
-				if(this.pageNum == 1){
-				  this.liveList = data.rows;
-				}else{
-				  this.liveList = [...this.liveList, ...data.rows]	
-				}
-				
+				 this.liveList = [...this.liveList, ...data.rows]	
+				console.log(this.liveList.length,data.rows.length);
 				 if(data.rows.length == 0){
 					 this.nothing = 0
 				 }else{

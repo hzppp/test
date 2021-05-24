@@ -27,11 +27,15 @@
 			align-items: center;
 			font-size: 28rpx;
 			color: #333333;
-			&::before {
-				margin-right: 16rpx;
+			&::after {
+				flex: 0 0 auto;
+				margin-left: 10rpx;
 				display: view;
 				content: '';
-				.setbg(28rpx,32rpx,'locate-icon.png');
+				background: url("../images/arrowBottom.png") no-repeat;
+				width: 8rpx;
+				height: 4rpx;
+				background-size: 8rpx 4rpx;
 			}
 		}
 	}

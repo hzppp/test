@@ -60,6 +60,8 @@
 <script>
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
+import distance from '@/units/distance'
+let app = getApp()
 
 /* *
 * 倒计时默认时间
@@ -82,7 +84,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 cityList: [], //城市列表
                 dealersList: [], //经销商列表
 
-                currentCaraSerial: 'qq', //当前的车系名字
+                currentCaraSerial: '', //当前的车系名字
                 isAllSelect: false, //信息是否已经全部完成
 
                 currentCity:{}, //当前选择的城市
@@ -94,9 +96,14 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 getPhoneBtn: false,
             }
         },
-        onLoad(options) {
+       async onLoad(options) {
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
+            await distance.getLocation()
+            const cityData = app.globalData.currentLocation.selectedCityData
+            this.$set(this.currentCity,'id',cityData.cityId )
+            this.$set(this.currentCity,'name',cityData.city )
+            this.$set(this.currentCity,'provinceId',cityData.proId )
         },
         methods: {
             async getPhoneNumber(e) {
@@ -128,7 +135,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //经销商点击，判断提示
             changDealers(){
-                if(!this.currentCity.id) {
+                if(!this.currentCity.name) {
                     return uni.showToast({
                         title:"请选择城市",
                         icon:"none"
@@ -141,7 +148,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //切换车系
             changeSerial() {
-                uni.navigateTo({
+                uni.redirectTo({
 					url: "/pages/ChooseSerial?pages=GetPreferential"
 				})
             },
@@ -190,6 +197,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //选择城市
             goChooseCity(){
+                this.currentDealer = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity"
 				})

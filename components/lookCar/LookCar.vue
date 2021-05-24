@@ -51,7 +51,7 @@
             },
             goCalc() {
                 uni.navigateTo({
-                    url:`/pages/ChooseModels?serialId=${this.serialId}&type=calc&single=true`
+                    url:`/pages/calc?serialId=${this.serialId}`
                 })
             },
 		}
