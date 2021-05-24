@@ -11,6 +11,7 @@
 	import tabBar from '@/components/tabBar/tabBar'
 	import shouquan from '@/units/shouquan'
 	import distance from '@/units/distance'
+	import domain from '@/configs/interface';
 	let app = getApp()
 	export default {
 		components: {
@@ -19,7 +20,7 @@
 		mixins: [shouquan],
 		data() {
 			return {
-				webrul: 'https://cdc.pcauto.com.cn/vue/hall/a/'
+				webrul: domain.getAPI('webUrl'),
 			}
 		},
 		onLoad() {
