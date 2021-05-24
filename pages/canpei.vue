@@ -285,21 +285,21 @@
 			},
 			// 添加车型
 			addCar() {
+                console.log('this.mids :>> ', this.mids);
+                console.log('this.serialId :>> ', this.serialId);
                 uni.redirectTo({
 					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids.join(',')}&pages=canpei`
                 })
 			},
 			// 删除车型
 			delCar(id, index) {
-                console.log('id :>> ', id);
-                console.log('index :>> ', index);
-                this.mids =  this.mids.splice(index,1)
-				// #ifdef MP-BAIDU
-				this.difData = ""
-				// #endif
-				this.Data.detailArray.splice(index, 1);
-				// this.$set(this.Data,detailArray,this.Data.detailArray.splice(index, 1))
-				console.log('this.Data.detailArray :>> ', this.Data.detailArray);
+                this.mids =  this.mids.filter( item => item !=id )
+                if(!this.mids.length) {
+                    this.Data.detailArray = []
+                    this.dataList = []
+                }else {
+                    this.init()
+                }
 			},
 			// 前往锚点位置
 			toView(index) {
