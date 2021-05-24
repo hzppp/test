@@ -290,13 +290,15 @@
                 })
 			},
 			// 删除车型
-			async delCar(id, index) {
+			delCar(id, index) {
+                console.log('id :>> ', id);
+                console.log('index :>> ', index);
                 this.mids =  this.mids.splice(index,1)
 				// #ifdef MP-BAIDU
 				this.difData = ""
 				// #endif
-				// this.Data.detailArray.splice(index, 1);
-				this.$set(this.Data,detailArray,this.Data.detailArray.splice(index, 1))
+				this.Data.detailArray.splice(index, 1);
+				// this.$set(this.Data,detailArray,this.Data.detailArray.splice(index, 1))
 				console.log('this.Data.detailArray :>> ', this.Data.detailArray);
 			},
 			// 前往锚点位置
