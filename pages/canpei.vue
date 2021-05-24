@@ -99,7 +99,7 @@
                                                         <view :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']">{{d.value}}</view>
 														<view v-if="d.key === '官方报价'">
 															<view class="zdj_box">
-																<view class="zdj" @tap.stop="toYuYue(idx)">预约试驾</view>
+																<view class="zdj" @tap.stop="toYuYue(Data.detailArray[idx].serialGorupId)">预约试驾</view>
 															</view>
 														</view>
 													</view>
@@ -193,7 +193,8 @@
 				mids = mids.split(",").slice(0, 4);
 			}
 			this.mids = mids;
-			this.addGlobalSelectCar(this.ids)
+			console.log('mids :>> ', mids);
+			// this.addGlobalSelectCar(this.ids)
 			this.init()
 		},
 		onShow() {
@@ -219,27 +220,28 @@
 			// }
 		},
 		methods: {
-			addGlobalSelectCar(ids) {
-				var ret = {};
-				if (ids.length > 0) {
-					ids.forEach(function(id) {
-						ret['id_' + id] = true;
-					})
-				}
-				this.$store.state.selectCars = ret;
-			},
+			// addGlobalSelectCar(ids) {
+			// 	var ret = {};
+			// 	if (ids.length > 0) {
+			// 		ids.forEach(function(id) {
+			// 			ret['id_' + id] = true;
+			// 		})
+			// 	}
+			// 	this.$store.state.selectCars = ret;
+			// },
 			async init() {
 				try {
 					let data = await this.getCarData(this.mids.join(","));
 					//只传车系Id不传mids进来，会导致carNum未被初始化
-					if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
-						let carIds = [];
-						data.detailArray.forEach((car) => {
-							carIds.push(car.modelId);
-						})
-						this.addGlobalSelectCar(carIds);
-					}
+					// if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
+					// 	let carIds = [];
+					// 	data.detailArray.forEach((car) => {
+					// 		carIds.push(car.modelId);
+					// 	})
+					// 	this.addGlobalSelectCar(carIds);
+					// }
 					this.width += data.detailArray.length * 250;
+					console.log('data. :>> ', data.detailArray);
 					this.max = data.detailArray.length;
 					this.Data = data;
 					this.sidName = data.detailArray[0].serialGorup;
@@ -293,7 +295,9 @@
 				// #ifdef MP-BAIDU
 				this.difData = ""
 				// #endif
-				this.Data.detailArray.splice(index, 1);
+				// this.Data.detailArray.splice(index, 1);
+				this.$set(this.Data,detailArray,this.Data.detailArray.splice(index, 1))
+				console.log('this.Data.detailArray :>> ', this.Data.detailArray);
 			},
 			// 前往锚点位置
 			toView(index) {
@@ -307,7 +311,7 @@
             //go预约试驾
             toYuYue(idx) {
                 uni.navigateTo({
-                    url:"/pages/YuyuePage?serialId=" + this.serialId
+                    url:"/pages/YuyuePage?serialId=" + idx
                 })
             },
 			// 设置scroll-view的值

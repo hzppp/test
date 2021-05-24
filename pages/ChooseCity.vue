@@ -2,7 +2,7 @@
 	<view class="choose-city">
 		<!-- 侧边导航 -->
 		<view class="side">
-			<view  v-for="(cityIndex,index) in letterGroup" :key="index" @tap.stop="sidePoint(cityIndex)">
+			<view class="item"  v-for="(cityIndex,index) in letterGroup" :key="index" @tap.stop="sidePoint(cityIndex)">
 				{{cityIndex}}
 			</view>
 		</view>
@@ -82,11 +82,12 @@ let app = getApp()
 
 <style lang="scss">
 .choose-city {
+	padding-bottom: 33rpx;
 	.side {
 		position: fixed;
-		right: 20rpx;
-		top: 64rpx;
-		width: 200rpx;
+		right: 0;
+		top: 105rpx;
+		width: 120rpx;
 		height: 942rpx;
 		font-size: 24rpx;
 		text-align: right;
@@ -94,6 +95,9 @@ let app = getApp()
 		justify-content: space-around;
 		flex-direction: column;
 		z-index: 99;
+		.item {
+			padding-right: 20rpx;
+		}
 		.side-city {
 			display: flex;
 		}
