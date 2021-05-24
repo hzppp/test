@@ -82,7 +82,9 @@
 				this.isMoreBtnShow = true
 			},
 			async getPhoneNumber(i, e) {
-				uni.showLoading('正在加载...')
+				uni.showLoading({
+					title: '正在加载...'
+				})
 				let obj = this.couponList[i]
 				let {
 					detail
