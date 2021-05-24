@@ -491,11 +491,15 @@
 			obj.id = options.id || this.model.id;
 			obj.serialId = options.serialId || this.model.serialId;
 
+			this.serialId = obj.serialId
+			if(obj.id == '' ||obj.id == undefined){
+				this.reqModelsList(obj.serialId)
+			}else{
+				that.getSerial(obj.id, obj.serialId, 1, function(data) {
+					that.getPrice(data);
+				});
+			}
 			
-		this.serialId = obj.serialId
-			that.getSerial(obj.id, obj.serialId, 1, function(data) {
-				that.getPrice(data);
-			});
 		},
 		async created(){
 			let {
@@ -878,6 +882,21 @@
 				return Math.round(price);
 			},
 			
+			async reqModelsList(sgId) {
+				const that = this
+			    try {
+			        const {code,data} = await api.fetchModelsList({sgId})
+			        if(code === 1) {
+			            that.modelsList = data
+						let modelId = data[0].pcModelId
+						that.getSerial(modelId,sgId, 1, function(data) {
+							that.getPrice(data);
+						});
+			        }
+			    } catch (error) {
+			        console.error(error)
+			    }
+			},
 			//获取车系数据
 			async getSerial(modelId, serialId, cityId, callback) {
 				// var modelId = modelId;

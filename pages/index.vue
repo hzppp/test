@@ -475,7 +475,7 @@ export default {
   overflow-x: hidden;
 }
 .ovh {
-  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
+  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
 }
 .shadow {
   box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
@@ -484,7 +484,7 @@ export default {
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
-    width: 686rpx;
+    width: 100%;
     height: 360rpx;
     border-radius: 20rpx;
   }
@@ -578,9 +578,13 @@ export default {
         }
         .title {
           height: 34rpx;
+          width: 230rpx;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
         }
       }
     }
