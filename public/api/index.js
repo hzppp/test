@@ -172,6 +172,10 @@ module.exports = {
     },
     // 用户留资
     submitClue: async (cs) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data
         } = await request({

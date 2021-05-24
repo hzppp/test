@@ -135,6 +135,11 @@
 			width: 100%;
 			margin-bottom: 10rpx;
 			font-weight: 700;
+			display: inline-block;
+			white-space: nowrap;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	
 		.p2 {
