@@ -129,6 +129,9 @@ export default {
 		this.getWelfare()
     }
   },
+  onHide() {
+	this.resetjson()
+  },
   async onLoad() {
   },
   onShareAppMessage() {
