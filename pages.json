@@ -13,7 +13,8 @@
       "path": "pages/index",
       "style": {
         "navigationBarTitleText": "云车展",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
       }
     },
     {
