@@ -285,8 +285,6 @@
 			},
 			// 添加车型
 			addCar() {
-                console.log('this.mids :>> ', this.mids);
-                console.log('this.serialId :>> ', this.serialId);
                 uni.redirectTo({
 					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids.join(',')}&pages=canpei`
                 })
