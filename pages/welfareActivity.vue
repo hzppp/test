@@ -26,14 +26,15 @@
       </view> -->
 
       <view class="box">
-        <view class="box-tit">
+        <!-- <view class="box-tit">
           精选活动
-        </view>
+        </view> -->
         <view class="activity-list" v-if="activityList.length > 0">
           <block v-for="(item,index) in activityList" :key="index">
             <view class="pic-text" @tap="toActivityPage(item)">
               <image mode="aspectFill" :src="item.picUrl" lazy-load="true"></image>
               <view class="label">
+				<image class="logo" src="../static/images/gift-logo.png" mode="aspectFit"></image>
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
