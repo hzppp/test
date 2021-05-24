@@ -82,22 +82,27 @@
 				this.isMoreBtnShow = true
 			},
 			async getPhoneNumber(i, e) {
+				uni.showLoading('正在加载...')
 				let obj = this.couponList[i]
 				let {
 					detail
 				} = e
 				console.log('getPhoneNumber===============',e)
 				if (detail.iv) {
-					let {
-						data
-					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					if (data && data.phoneNumber) {
-						uni.setStorageSync('userPhone', data.phoneNumber)
-						this.phone = data.phoneNumber						
+					try {
+						let {
+							data
+						} = await api.decryptPhone(detail.encryptedData, detail.iv)
+						if (data && data.phoneNumber) {
+							uni.setStorageSync('userPhone', data.phoneNumber)
+							this.phone = data.phoneNumber						
+						}						
+					} catch (err) {
+						this.$toast('手机号码授权失败', 'none', 1500);
+						console.error(err)
 					}
 				}
 				try {
-					uni.showLoading()
 					const detailObj = await this.reqCouponDetail(obj.id)
 					this.formpopShow('form', detailObj)
 					this.isRuleShow = false
