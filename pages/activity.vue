@@ -120,12 +120,17 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
-					let {
-						data
-					} = await api.decryptPhone(detail.encryptedData, detail.iv)
-					if (data && data.phoneNumber) {
-						uni.setStorageSync('userPhone', data.phoneNumber)
-						this.phone = data.phoneNumber
+					try {
+						let {
+							data
+						} = await api.decryptPhone(detail.encryptedData, detail.iv)
+						if (data && data.phoneNumber) {
+							uni.setStorageSync('userPhone', data.phoneNumber)
+							this.phone = data.phoneNumber						
+						}						
+					} catch (err) {
+						this.$toast('手机号码授权失败', 'none', 1500);
+						console.error(err)
 					}
 				}
 				this.$refs.formpop.formShow('form', 'activity', this.content)
