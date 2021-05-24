@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
-
+const CUR_ENV = ENV.RELEASE;
+ 
 // 正式域名
 var DOMAIN_R = {
 	csbHost:"https://price.pcauto.com.cn",//基础信息
@@ -15,7 +15,7 @@ var DOMAIN_R = {
 	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	//panorama:"http://t-panorama.pcauto.com.cn",
 	UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
+	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 }
 
