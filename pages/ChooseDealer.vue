@@ -8,7 +8,7 @@
                 {{item.address}}
             </view>
         </view>
-        <view class="no-dealer" v-if="dealersList.length === 0">暂无对应经销商</view>
+        <view class="no-dealer" v-if="dealersList.length === 0 && isComplete">暂无对应经销商</view>
     </view>
 </template>
 
@@ -20,6 +20,7 @@ import api from '@/public/api/index'
             return {
                 dealersList: [], //经销商列表
                 currentDealerId:"", //
+                isComplete: false,
             }
         },
         methods: {
@@ -34,9 +35,11 @@ import api from '@/public/api/index'
                     const {code,data} = await api.fetchDealersList({cityId})
                     if(code === 1) {
                         this.dealersList = data
-                        console.log('data :>> ', data);
+                    }else {
+                        this.isComplete = true
                     }
                 } catch (error) {
+                    this.isComplete = true
                     console.error(error)
                 }
             },
