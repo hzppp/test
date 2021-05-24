@@ -1,5 +1,13 @@
 <template>
   <view class="index">
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
+      <view class="city">
+        <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+                mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
+          <view>{{ selectCity || indexCity.name }}</view>
+        </picker>
+      </view>
+    </pageTopCity>
     <viewTabBar :current="0"></viewTabBar>
     <testDrive></testDrive>
     <view class="content">
@@ -32,7 +40,7 @@
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
-            <view class="title">{{item.name}}</view>
+            <view class="title">{{item.name.trim() || '无'}}</view>
           </view>
         </scroll-view>
       </view>
@@ -49,14 +57,15 @@
           精选
         </view>
         <view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
-          <view>
+          <view :class="item.contentType == 3 ? 'playType':''">
             <!--contentType 1文章资讯，2活动，3直播-->
             <!--status 当为直播类型时 1直播中  2预告  3回放-->
 <!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
-            <view :class="'icon1 '+ `status_${item.contentType}`" v-if="item.contentType !=3"></view>
+            <view class="icon1" v-if="item.contentType !=3"><image :src="typeIcon[item.contentType-1]" class="iconK"></image>{{item.contentType | formatType}}</view>
             <view v-else>
-              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status == 2 && item.startTime">{{item.startTime}}开播</view>
-              <view :class="'icon1 '+ `play_${item.status}`" v-if="item.status !== 2"></view>
+              <view class="icon1 iconB" v-if="item.status == 1"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
+              <view class="icon1" v-if="item.status == 2 && item.startTime"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.startTime}}开播</view>
+              <view class="icon1" v-if="item.status == 3"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
             </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
             <image class="img banner" :src="item.picUrl" lazy-load></image>
@@ -79,16 +88,43 @@ import tabBar from '@/components/tabBar/tabBar'
 import shouquan from '@/units/shouquan'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
+import pageTopCity from '@/components/pageTopCity/pageTopCity'
 
 let app = getApp()
 export default {
-  components: {viewTabBar: tabBar, testDrive},
+  components: {viewTabBar: tabBar, testDrive,pageTopCity},
   mixins: [shouquan],
   data() {
     return {
+      crtCityItem: [],
+      provinceList: [],
+      cityList: [],
+      crtProvinceItem: {}, // 当前选择的省份
+      title:'云车展',
       sgList: [],
+      typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
+      liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
+    }
+  },
+  computed: {
+    selectCity() {
+      let text = ''
+      if (this.crtCityItem.id) {
+        text = this.crtCityItem.name
+      }
+      return text
+    },
+    selectIndex () {
+      let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
+      let cityIndex = -1
+      if (this.crtProvinceItem.cities) {
+        cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+      }
+      provinceIndex = provinceIndex > -1 ? provinceIndex : 0
+      cityIndex = cityIndex > -1 ? cityIndex : 0
+      return [provinceIndex, cityIndex]
     }
   },
   filters: {
@@ -112,21 +148,55 @@ export default {
         }
       }
     },
+    formatType(type) {
+      // <!--contentType 1文章资讯，2活动，3直播-->
+      // <!--status 当为直播类型时 1直播中  2预告  3回放-->
+      switch (type) {
+        case 1: {
+          return '资讯'
+          break;
+        }
+        case 2: {
+          return '活动'
+          break;
+        }
+      }
+    },
+    formatStatus(status) {
+      // <!--contentType 1文章资讯，2活动，3直播-->
+      // <!--status 当为直播类型时 1直播中  2预告  3回放-->
+      switch (status) {
+        case 1: {
+          return '直播中'
+          break;
+        }
+        case 3: {
+          return '回放'
+          break;
+        }
+      }
+    },
   },
   async onShow(options) {
     await distance.getLocation()
-
+    await this.reqProvinceCityList()
+    let currentLocation = app.globalData.currentLocation
+    if(!currentLocation) {
+      return
+    }
     console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
-    const resData = (await this.getCityId()) || [1000000022,1000000022]
-    const provinceId = resData[0]
-    const cityId = resData[1]
-    const cityCode = app.globalData.currentLocation ? app.globalData.currentLocation.cityData.cityCode : 500000
-    this.pageData = await api.getHomepageData({
-      cityId: cityId,
-      cityCode: cityCode
-    }).then(res => {
-      return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
-    })
+    const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+    if (crtLocationProvinceItem) {
+      const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+      this.crtProvinceItem = crtLocationProvinceItem
+      this.cityList = this.crtProvinceItem.cities
+      this.crtCityItem = crtLocationCityItem
+
+      console.log('tstst',this.crtProvinceItem,this.crtCityItem)
+      // const resData = (await this.getCityId()) || [1000000022,1000000022]
+      // const provinceId = this.crtProvinceItem.id
+      await this.getPageData()
+    }
   },
   watch: {
     indexCity: function (newVal) {
@@ -156,6 +226,55 @@ export default {
     }
   },
   methods: {
+    async getPageData() {
+      const cityId = this.crtCityItem.id
+      const cityCode = this.crtCityItem.code
+      this.pageData = await api.getHomepageData({
+        cityId: cityId,
+        cityCode: cityCode
+      }).then(res => {
+        return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
+      })
+    },
+    // 请求省份和城市的级联列表
+    async reqProvinceCityList () {
+      try {
+        const res = await api.fetchProvinceCityList()
+        if (res.code == 1) {
+          this.provinceList = res.data
+          if (this.provinceList && this.provinceList.length) {
+            this.cityList = this.provinceList[0].cities
+          }
+        }
+      } catch(err) {
+        this.$toast('获取省份和城市信息失败', 'none', 1500);
+        console.error(err)
+      }
+    },
+    async bindMultiPickerChange(e) {
+      let {
+        detail
+      } = e
+      this.crtProvinceItem = this.provinceList[detail.value[0]]
+      this.crtCityItem = this.cityList[detail.value[1]]
+      await this.getPageData()
+
+      // 改变默认定位省市
+      let currentLocation = app.globalData.currentLocation
+      currentLocation.selectedCityData.isChange = true
+      currentLocation.selectedCityData.proId = this.crtProvinceItem.id
+      currentLocation.selectedCityData.pro = this.crtProvinceItem.name
+      currentLocation.selectedCityData.cityId = this.crtCityItem.id
+      currentLocation.selectedCityData.city = this.crtCityItem.name
+    },
+    bindMultiPickerColumnChange(e) {
+      let {
+        detail
+      } = e
+      if (detail.column == 0) {
+        this.cityList = this.provinceList[detail.value].cities
+      }
+    },
     async getCityId() {
       let currentLocation = app.globalData.currentLocation
       if (currentLocation) {
@@ -323,13 +442,40 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '@/static/less/index.less';
+@import '@/static/less/public.less';
+.city {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 35%;
+  padding: 15rpx 32rpx 0;
+  background-color: #ffffff;
+  .select-city{
+    view {
+      display: flex;
+      align-items: center;
+      font-size: 28rpx;
+      color: #333333;
+      &::after {
+        flex: 0 0 auto;
+        margin-left: 10rpx;
+        display: view;
+        content: '';
+        background: url("../static/images/arrowBottom.png") no-repeat;
+        width: 8rpx;
+        height: 4rpx;
+        background-size: 8rpx 4rpx;
+      }
+    }
+  }
+}
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
 }
 .ovh {
-  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 520rpx;
+  overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
 }
 .shadow {
   box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
@@ -338,7 +484,7 @@ export default {
 .content {
   padding: 0 32rpx 150rpx;
   .banner {
-    width: 686rpx;
+    width: 100%;
     height: 360rpx;
     border-radius: 20rpx;
   }
@@ -431,54 +577,92 @@ export default {
           margin: 30rpx 0 16rpx 0;
         }
         .title {
+          height: 34rpx;
+          width: 230rpx;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
         }
       }
     }
+    .playType {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/pause_icon.png');
+        background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+      }
+    }
     .vrCar {
+      position: relative;
       .img {
         display: inline-block;
         width: 686rpx;
         height: 360rpx;
         border-radius: 20rpx;
       }
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vr_icon.png');
+        background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+      }
     }
     .icon1 {
       position: absolute;
-      width: 104rpx;
       height: 40rpx;
-      left:-4rpx;
-      top: -2rpx;
-
-      &.status_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art.png") no-repeat;
-        background-size: contain;
+      left:24rpx;
+      top: 20rpx;
+      background: rgba(0,0,0,.3);
+      box-sizing: border-box;
+      padding: 5rpx 14rpx 5rpx 10rpx;
+      color: #fff;
+      border-radius: 12rpx;
+      font-size: 24rpx;
+      .iconK {
+        width: 32rpx;
+        height: 32rpx;
+        vertical-align: bottom;
+        margin-right: 8rpx;
       }
-      &.status_2 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act.png") no-repeat;
-        background-size: contain;
-      }
-      &.play_1 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/playing.png") no-repeat;
-        background-size: contain;
-      }
-      &.play_2 {
-        width: 270rpx;
-        font-size: 20rpx;
-        color: #fff;
-        width: auto;
-        background: #55a4f1;
+      &.iconB {
         padding-left: 48rpx;
-        box-sizing: border-box;
-        line-height: 36rpx;
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay.png") no-repeat;
-        background-size: contain;
+        .iconK {
+          position: absolute;
+          left: -4rpx;
+          top: 0;
+          width: 40rpx;
+          height: 40rpx;
+          vertical-align: bottom;
+        }
       }
-      &.play_3 {
-        background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay.png") no-repeat;
+    }
+    .palyType {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100rpx;
+        height: 100rpx;
+        background: url('https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/pause_icon.png');
         background-size: contain;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
       }
     }
     .banner {

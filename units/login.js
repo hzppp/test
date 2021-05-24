@@ -9,25 +9,26 @@ export default {
         return uni.getStorageSync('session-3rd')
     },
     removeSessionKey() {
+		app.globalData.loginJson = null
         uni.setStorageSync('session-3rd', '')
     },
     setSessionKey(sessionKey) {
         uni.setStorageSync('session-3rd', sessionKey)
     },
-    async checkSession() {//判断是否存在session已经登录是否有效
-        return new Promise(async (resolve, reject) => {
-            let s = this.getSessionKey()
-            uni.checkSession().then(res => {
-                if (s) {
-                    resolve(true)
-                } else {
-                    this.removeSessionKey()
-                    resolve(false)
-                }
-            }).catch(err => {
-                this.removeSessionKey()
-                resolve(false)
-            })
+    checkSession() {//判断是否存在session已经登录是否有效
+        return new Promise((resolve, reject) => {
+            uni.checkSession({
+				success: () => {
+					resolve(true)
+				},
+				fail: () => {
+					this.removeSessionKey()
+					resolve(false)
+				},
+				complete: () => {
+					
+				}
+			})
         })
     },
     uniLogin() {

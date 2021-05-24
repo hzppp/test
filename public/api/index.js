@@ -69,6 +69,10 @@ module.exports = {
         return data
     },
     getActivityUser:async (params) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data
         } = await request({
@@ -168,6 +172,10 @@ module.exports = {
     },
     // 用户留资
     submitClue: async (cs) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data
         } = await request({
@@ -213,6 +221,10 @@ module.exports = {
     },
     // 保存用户信息
     saveWXuserInfo: async (param) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         const {data} = await request({
             url: domain.getAPI('saveWXuserInfo'),
             data:param
@@ -226,6 +238,10 @@ module.exports = {
     },
     /* 优惠券详情 */
     userOuponsDet:async (param) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data={}
         } = await request({
@@ -250,6 +266,10 @@ module.exports = {
     },
     /* 优惠券核销 */
     doCouponVerifiy:async (param) => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data={}
         } = await request({
@@ -288,7 +308,10 @@ module.exports = {
     },
     // 手机号解密
     decryptPhone: async (encryptedData, iv) => {
-
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data={}
         } = await request({
@@ -309,6 +332,10 @@ module.exports = {
     },
     // 获取用户领取的优惠券
     getUserOupons: async () => {
+        const isSession = await login.checkSession()
+        if(!isSession) {
+            await login.login()
+        }
         let {
             data={}
         } = await request({

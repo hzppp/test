@@ -3,10 +3,6 @@
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
     <view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
       <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
-        <block v-if="isShowBackBtn">
-          <view class="pageTop-back-btn" @tap="navigateBack"></view>
-          <view class="pageTop-line"></view>
-        </block>
         <slot></slot>
         <view class="pageTop-text" :style="'color:' + titleys ">{{title}}</view>
       </view>
@@ -19,7 +15,6 @@ export default {
   props:["background","btnys","titleys","title","isstoppageback"],
   data() {
     return {
-      isShowBackBtn:false,
       height:0,
       jnHeight:0,
       jnTop:0,
@@ -33,36 +28,11 @@ export default {
     this.height = height + top + Math.floor(top/3)
     this.jnHeight = height
     this.jnTop = top
-    this.getPages()
     console.log('son==',this.height)
     this.$emit('getTopNavHeigth',this.height)
   },
   methods:{
-    getPages(){
-      let pages = getCurrentPages()
-      let len = pages.length
-      if(len > 1){
-        this.isShowBackBtn = true
-      }
-    },
-    navigateBack(){
-      if(!this.isstoppageback){
-        uni.navigateBack({
-          delta: 1
-        })
-      }else{
-        this.$emit('page-back')
-      }
-    },
-    topIndexPage(){
-      if(!this.isstoppageback){
-        uni.reLaunch({
-          url:"/pages/authorization"
-        })
-      }else{
-        this.$emit('page-back')
-      }
-    }
+
   }
 }
 </script>
