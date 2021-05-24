@@ -27,10 +27,10 @@
 				</block>
 			</view>
 			<view class="box">
-			<!-- 	<view class="box-list list2" @tap="tocard">
+				<view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>
-				</view> -->
+				</view>
 				<view class="line"></view>
 				<view class="box-list list4" @tap="toactivity">
 					<view class="p1">我的活动</view>
