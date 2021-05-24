@@ -289,6 +289,7 @@
 				cityId: '',
 				changed: "",
 				carData: {},
+				deive:true,//预约试驾
 				model: {
 					title: '', //车型名字
 					id: '', //车型id
@@ -899,6 +900,7 @@
 					})
 			
 				if(data){
+					this.deive = true
 					if(modelId=='' ||modelId ==undefined){
 						modelId = data.sections[0].data[0].id
 					}
@@ -930,7 +932,7 @@
 					
 						uni.hideLoading()
 					if (!findFlag ) {
-						console.log('none-----------')
+						this.deive = false
 						uni.showModal({
 							title: '没有找到你查询的车型',
 							content: '请返回重新选择试试',
@@ -944,6 +946,20 @@
 							}
 						})
 					}
+				}else{
+					uni.hideLoading()
+					this.deive = false
+					uni.showModal({
+						title: '没有找到你查询的车系',
+						confirmColor: '#007adf',
+						success: function(res) {
+							if (res.confirm) {
+								uni.navigateBack({
+									delta: 1
+								});
+							}
+						}
+					})
 				}
 			},
 			defaultLoans(mIndex,rIndex){
@@ -998,9 +1014,13 @@
 				this.isLoans = false
 			},
 			goDrive(){
-				uni.navigateTo({
-					url: "/pages/YuyuePage?serialId="+this.serialId
-				})
+				if(this.drive == true){
+					uni.navigateTo({
+						url: "/pages/YuyuePage?serialId="+this.serialId
+					})
+					
+				}
+				
 			}
 		}
 	}
