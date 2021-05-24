@@ -9,6 +9,7 @@ export default {
         return uni.getStorageSync('session-3rd')
     },
     removeSessionKey() {
+		app.globalData.loginJson = null
         uni.setStorageSync('session-3rd', '')
     },
     setSessionKey(sessionKey) {
