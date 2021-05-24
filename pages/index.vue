@@ -578,9 +578,13 @@ export default {
         }
         .title {
           height: 34rpx;
+          width: 230rpx;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
         }
       }
     }
