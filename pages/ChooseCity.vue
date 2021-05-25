@@ -8,7 +8,7 @@
 		</view>
 		<!-- 当前城市 -->
 		<view class="current-city">
-			当前定位的城市：<text>{{currentCity}}</text>
+			当前定位的城市：<text>{{cuurentPositioningCity}}</text>
 		</view>
 		<!-- 城市索引 -->
 		<scroll-view class="scroll-view" :scroll-into-view="targetId" :scroll-y="true">
@@ -35,6 +35,7 @@ let app = getApp()
 				letterGroup:[], //城市索引
 				cityList: [], //城市列表
 				targetId: 'A', //当前城市导航索引
+                cuurentPositioningCity: "",
 				currentCity: '', //当前城市
 			}
 		},
@@ -42,6 +43,7 @@ let app = getApp()
             console.log('options :>> ', options);
 			await distance.getLocation()
 			this.getAllCityList()
+            this.cuurentPositioningCity = app.globalData.currentLocation.selectedCityData.city || ""
             this.currentCity = options.name == "undefined" ? false:options.name || app.globalData.currentLocation.selectedCityData.city || ""
 		},
 		methods: {
@@ -67,7 +69,6 @@ let app = getApp()
 			},
 			changeCity(item) {
                 console.log('item :>> ', item);
-				this.currentCity = item.name
                 this.$store.commit("changCity",item)
                 let pages = getCurrentPages();  //获取所有页面栈实例列表
                 let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
