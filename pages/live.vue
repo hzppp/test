@@ -4,12 +4,12 @@
 		<block v-if="nothing">
 			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
-					<view class="top">
+					<!-- <view class="top">
 						<image class="avator" :src="item.headPic"></image>
 						<view class="name">
 							{{item.nickName}}
 						</view>
-					</view>
+					</view> -->
 					<view class="banner">
 						<image class="bg" :src="item.cover"></image>
 						<view class="play"></view>

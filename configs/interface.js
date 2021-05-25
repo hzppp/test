@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.TEST;
-
+ 
 // 正式域名
 var DOMAIN_R = {
 	csbHost:"https://price.pcauto.com.cn",//基础信息
@@ -15,8 +15,9 @@ var DOMAIN_R = {
 	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
 	//panorama:"http://t-panorama.pcauto.com.cn",
 	UPCHost:"https://upc.pcauto.com.cn",
-	changan:"http://ms-changan-auto.changan-cloud-auto",
+	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
+	webUrl:'https://ccar.pcauto.com.cn/h5/' //云展厅
 }
 
 //测试环境域名
@@ -32,6 +33,7 @@ var DOMAIN_T = {
 	changan:"https://tccar.pcauto.com.cn",
 	// changan:"https://devqd-changan.pcauto.com.cn",
 	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
+	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
 }
 
 
@@ -205,6 +207,8 @@ const config = {
 		fetchCouponDetail: `${DOMAIN.changan}/api/xcx/coupon/detail`,
 		// 车系列表
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
+		// 云展厅地址
+		webUrl:`${DOMAIN.webUrl}`,
 	},
 	getAPI(key) {
 		let url;

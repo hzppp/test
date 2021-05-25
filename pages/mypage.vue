@@ -83,7 +83,7 @@
 				// qdIndex: 0, //第几天签到
 				// credits: 0, //众享币数
 				// isUserInfoPage:app.globalData.isUserInfoPage,
-				title: "综合服务区",
+				title: "我的",
 				isUserInfoPage: true,
 				// user: false,
 				// userId: null,
