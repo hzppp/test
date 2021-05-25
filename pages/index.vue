@@ -100,7 +100,7 @@ export default {
       provinceList: [],
       cityList: [],
       crtProvinceItem: {}, // 当前选择的省份
-      title:'云车展',
+      title:'长安汽车云车展',
       sgList: [],
       typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
       liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
