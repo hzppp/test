@@ -15,6 +15,7 @@
         "navigationBarTitleText": "云车展",
         "enablePullDownRefresh": false,
         "navigationStyle": "custom"
+	
       }
     },
     {
@@ -29,7 +30,7 @@
       "style": {
         "navigationBarTitleText": "云展馆",
         "enablePullDownRefresh": false,
-//        "pageOrientation": "landscape",
+       "pageOrientation": "landscape",
         "navigationStyle": "custom"
       }
     },
