@@ -12,8 +12,6 @@
     </pageTopCity>
 
     <form-pop ref="formpop"></form-pop>
-    <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
-                 scroll-with-animation>
       <!-- <view class="box">
         <view class="box-tit">
           长安福利
@@ -46,7 +44,6 @@
         </view>
       </view>
       <view class="zw"></view>
-    </scroll-view>
   </view>
 </template>
 
@@ -148,6 +145,9 @@ export default {
       imageUrl: imageUrl
     }
   },
+  onReachBottom () {
+	  this.getactivity()
+  },
   methods: {
     formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
@@ -187,9 +187,6 @@ export default {
       if (detail.column == 0) {
 			this.cityList = this.provinceList[detail.value].cities
       }
-    },
-    scrollGetActivity() {
-      this.getactivity()
     },
     toActivityPage(item) {
       if (item.duibaUrl) {
