@@ -96,7 +96,7 @@ export default {
 <style lang="scss">
 .cars-page {
 	min-height: 100vh;
-    padding-bottom: 128rpx;
+    padding-bottom: 161rpx;
     .image-wrap {
         position: relative;
         width: 100%;
@@ -122,7 +122,7 @@ export default {
     .btn-wrap {
         position: fixed;
         width: 100%;
-        height: 128rpx;
+        height: 161rpx;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
