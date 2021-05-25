@@ -10,16 +10,14 @@
 
 
         <view class="image-wrap">
-            <image mode='widthFix' lazy-load :src='serialData.picHeadUrl'>
-            </image>
+            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl' />
         </view>
 
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
 
-        <view class="image-wrap">
-            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl'>
-            </image>
+        <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
+            <image mode='widthFix' lazy-load :src='item' />
         </view>
 
         <view class="btn-wrap">
