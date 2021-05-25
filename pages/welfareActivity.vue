@@ -108,24 +108,33 @@ export default {
     }
   },
   async onShow() {
-    this.resetjson()
-    // api.getUser()
-    await distance.getLocation()
-    let currentLocation = app.globalData.currentLocation
-    if (currentLocation) {
-		await this.reqProvinceCityList()
-		const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-		if (crtLocationProvinceItem) {
-			const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-			this.crtProvinceItem = crtLocationProvinceItem
-			this.cityList = this.crtProvinceItem.cities
-			this.crtCityItem = crtLocationCityItem
-		}
-		// 精选活动
-		this.getactivity()
-		// 福利列表
-		// this.getWelfare()
-    }
+	try {
+		uni.showLoading({
+			title: '正在加载...'
+		})
+		this.resetjson()
+		// api.getUser()
+		await distance.getLocation()
+		let currentLocation = app.globalData.currentLocation
+		if (currentLocation) {
+			await this.reqProvinceCityList()
+			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+			if (crtLocationProvinceItem) {
+				const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+				this.crtProvinceItem = crtLocationProvinceItem
+				this.cityList = this.crtProvinceItem.cities
+				this.crtCityItem = crtLocationCityItem
+			}
+			// 精选活动
+			await this.getactivity()
+			// 福利列表
+			// this.getWelfare()
+		}		
+	} catch (err) {
+		console.error(err)
+	} finally {
+		uni.hideLoading()
+	}
   },
   onHide() {
 	this.resetjson()
