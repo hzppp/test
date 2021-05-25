@@ -1,6 +1,6 @@
 <template>
   <view class="index">
-    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
@@ -11,7 +11,7 @@
     <viewTabBar :current="0"></viewTabBar>
     <testDrive></testDrive>
     <view class="content">
-      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont" v-if="false">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
@@ -35,7 +35,7 @@
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          热车速递
+          热销车型
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
@@ -46,7 +46,7 @@
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          VR看车
+          云展厅
         </view>
         <view class="actItem vrCar" @tap="goVr">
           <image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
@@ -100,7 +100,7 @@ export default {
       provinceList: [],
       cityList: [],
       crtProvinceItem: {}, // 当前选择的省份
-      title:'云车展',
+      title:'长安汽车云车展',
       sgList: [],
       typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
       liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
@@ -448,7 +448,7 @@ export default {
   left: 0;
   top: 0;
   z-index: 1;
-  width: 35%;
+  width: 150rpx;
   padding: 15rpx 32rpx 0;
   background-color: #ffffff;
   .select-city{
@@ -473,6 +473,8 @@ export default {
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
+  font-family: PingFang SC;
+  color: #3C4650;
 }
 .ovh {
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
@@ -483,6 +485,11 @@ export default {
 
 .content {
   padding: 0 32rpx 150rpx;
+  .bannerTop {
+    width: 100%;
+    height: 500rpx;
+    border-radius: 20rpx;
+  }
   .banner {
     width: 100%;
     height: 360rpx;
@@ -585,6 +592,7 @@ export default {
           overflow: hidden;
           text-overflow:ellipsis;
           white-space: nowrap;
+          color: #4A4A4A;
         }
       }
     }

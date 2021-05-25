@@ -12,8 +12,6 @@
     </pageTopCity>
 
     <form-pop ref="formpop"></form-pop>
-    <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
-                 scroll-with-animation>
       <!-- <view class="box">
         <view class="box-tit">
           长安福利
@@ -46,7 +44,6 @@
         </view>
       </view>
       <view class="zw"></view>
-    </scroll-view>
   </view>
 </template>
 
@@ -111,24 +108,33 @@ export default {
     }
   },
   async onShow() {
-    this.resetjson()
-    // api.getUser()
-    await distance.getLocation()
-    let currentLocation = app.globalData.currentLocation
-    if (currentLocation) {
-		await this.reqProvinceCityList()
-		const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-		if (crtLocationProvinceItem) {
-			const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-			this.crtProvinceItem = crtLocationProvinceItem
-			this.cityList = this.crtProvinceItem.cities
-			this.crtCityItem = crtLocationCityItem
-		}
-		// 精选活动
-		this.getactivity()
-		// 福利列表
-		// this.getWelfare()
-    }
+	try {
+		uni.showLoading({
+			title: '正在加载...'
+		})
+		this.resetjson()
+		// api.getUser()
+		await distance.getLocation()
+		let currentLocation = app.globalData.currentLocation
+		if (currentLocation) {
+			await this.reqProvinceCityList()
+			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+			if (crtLocationProvinceItem) {
+				const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+				this.crtProvinceItem = crtLocationProvinceItem
+				this.cityList = this.crtProvinceItem.cities
+				this.crtCityItem = crtLocationCityItem
+			}
+			// 精选活动
+			await this.getactivity()
+			// 福利列表
+			// this.getWelfare()
+		}		
+	} catch (err) {
+		console.error(err)
+	} finally {
+		uni.hideLoading()
+	}
   },
   onHide() {
 	this.resetjson()
@@ -147,6 +153,9 @@ export default {
       path: path,
       imageUrl: imageUrl
     }
+  },
+  onReachBottom () {
+	  this.getactivity()
   },
   methods: {
     formShow(name, from = "", obj = {}, title = "报名活动") {
@@ -187,9 +196,6 @@ export default {
       if (detail.column == 0) {
 			this.cityList = this.provinceList[detail.value].cities
       }
-    },
-    scrollGetActivity() {
-      this.getactivity()
     },
     toActivityPage(item) {
       if (item.duibaUrl) {

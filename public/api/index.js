@@ -924,12 +924,23 @@ module.exports = {
     },
     // 获取省份和城市的级联列表
     fetchProvinceCityList: async(para) => {
-        let {data} = await request({
-            url:domain.getAPI('fetchProvinceCityList'),
-            method: "GET",
-            data: para,
-        })
-        return data
+		if (!app.globalData.provinceList.length) {
+			let {data} = await request({
+				url:domain.getAPI('fetchProvinceCityList'),
+				method: "GET",
+				data: para,
+			})
+			if (data.code == 1) {
+				app.globalData.provinceList = data.data
+			}
+			return data
+		} else {
+			return {
+				code: 1,
+				data: app.globalData.provinceList,
+				msg: 'ok'
+			}
+		}
     },
     // 获取优惠券详情
     fetchCouponDetail: async(para) => {

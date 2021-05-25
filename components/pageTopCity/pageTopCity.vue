@@ -88,9 +88,10 @@ export default {
   left: 32rpx;
 }
 .pageTop-text{
+  font-weight: 700;
   width: 336rpx;
   .tc;
-  .seth(42rpx,30rpx,#fff);
+  .seth(42rpx,38rpx,#fff);
   .ellipsis;
   .pa(50%,50%);
   transform: translate(-50%,-50%);
