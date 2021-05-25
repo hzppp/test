@@ -448,7 +448,7 @@ export default {
   left: 0;
   top: 0;
   z-index: 1;
-  width: 35%;
+  width: 150rpx;
   padding: 15rpx 32rpx 0;
   background-color: #ffffff;
   .select-city{
