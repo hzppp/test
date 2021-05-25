@@ -66,6 +66,9 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+      uni.showLoading({
+        title: '正在加载...'
+      })
 			// this.$invoke('loading','changeLoading',true)
 			// this.$refs.loading.changeLoading(true)
 			console.log('options',options)
@@ -118,6 +121,9 @@
 			}
 			// this.$refs.loading.changeLoading(false)
 		},
+    mounted() {
+      uni.hideLoading()
+    },
 		onShareAppMessage(){
 			let title = this.title
 			let path = `pages/authorization?to=article&articleId=${this.articleId}&type=${this.articleType}`
