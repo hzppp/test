@@ -1,4 +1,5 @@
 <template>
+    <view>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="http://img.pcauto.com.cn/images/upload/upc/tx/auto5/2102/02/c16/252303537_1612261476705.png" />
@@ -38,7 +39,8 @@
             </view>
         </view>
     </view>
-    <view v-else class="no-data">暂无数据</view>
+    <view v-if="!serialData.id && isNoData" class="no-data">暂无数据</view>
+    </view>
 </template>
 
 <script>
@@ -86,11 +88,20 @@ const COUNTDOWN = 60
 
                 getPhoneBtn: false,
                 isFocus:false,
-
+                isNoData:false,
+            }
+        },
+        watch: {
+            currentCity(n) {
+                console.log('n :>> ', n);
             }
         },
         async onLoad(options) {
             console.log('options :>> ', options);
+            uni.showLoading({
+                title: '正在加载...',
+                mask:true
+			})
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -132,6 +143,7 @@ const COUNTDOWN = 60
             async reqDealersList(cityId) {
                 try {
                     const {code,data} = await api.fetchDealersList({cityId})
+                    console.log('data :>> ', data);
                     if(code === 1) {
                         this.dealersList = data
                     }
@@ -149,6 +161,8 @@ const COUNTDOWN = 60
                     }
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    uni.hideLoading()
                 }
             },
             //获取验证码
@@ -170,7 +184,6 @@ const COUNTDOWN = 60
                 },1000)
                 try {
                     const res = await api.fetchCode({mobile:this.phoneNum})
-                    console.log('res :>> ', res);
                 } catch (error) {
                     console.error(error)
                 }
@@ -238,6 +251,7 @@ const COUNTDOWN = 60
 				})
             },
             cityPickerChange: function(e) {
+                console.log('this.cityList[e.target.value].id :>> ', this.cityList[e.target.value].id);
                 this.reqDealersList(this.cityList[e.target.value].id)
                 this.cityIndex = e.target.value
                 this.test = ''
