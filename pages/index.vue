@@ -35,7 +35,7 @@
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          热车速递
+          热销车型
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
@@ -46,7 +46,7 @@
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          VR看车
+          云展厅
         </view>
         <view class="actItem vrCar" @tap="goVr">
           <image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
