@@ -30,7 +30,7 @@
       "style": {
         "navigationBarTitleText": "云展馆",
         "enablePullDownRefresh": false,
-       "pageOrientation": "landscape",
+       // "pageOrientation": "landscape",
         "navigationStyle": "custom"
       }
     },
