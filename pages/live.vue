@@ -83,7 +83,7 @@
 		onShow() {
 			this.pageNum = 1
 			this.hasNext = true
-			this.liveList = []
+			// this.liveList = []
 			this.getList()
 		},
 		filters: {
@@ -114,15 +114,20 @@
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				})
+			
+				data.rows.forEach((item, index) => {
+					item.startTime = item.startTime.substring(0, 16)
+				})
+				if(this.pageNum == 1){
+					this.liveList =data.rows
+				}else{
+				this.liveList = [...this.liveList, ...data.rows]	
+				}
 				if (data.hasNext) {
 					this.pageNum++
 				} else {
 					this.hasNext = false
 				}
-				data.rows.forEach((item, index) => {
-					item.startTime = item.startTime.substring(0, 16)
-				})
-				this.liveList = [...this.liveList, ...data.rows]
 				console.log(this.liveList.length, data.rows.length);
 				if (data.rows.length == 0) {
 					this.nothing = 0
