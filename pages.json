@@ -232,7 +232,16 @@
               "enablePullDownRefresh": false
           }
 
-      }
+      },
+			{
+			      "path" : "pages/vr360Frame/vr360Frame",
+			      "style" :
+			      {
+			          "navigationBarTitleText": "",
+			          "enablePullDownRefresh": false
+			      }
+			
+			  }
   ],
   "tabBar": {
     "custom": true,
