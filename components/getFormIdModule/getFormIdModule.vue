@@ -1,10 +1,10 @@
 <template>
-	<form bindsubmit="formSubmit" class="layout" report-submit="true">
-	    <button class="button" formType="submit" plain="true" hover-class="none">
+	<form class="layout" report-submit="true">
+	    <view class="button" plain="true" hover-class="none">
 	        <slot name="content">
 	            getFormIdModules
 	        </slot>
-	    </button>
+	    </view>
 	  </form>
 </template>
 
@@ -12,7 +12,7 @@
 	export default {
 		data() {
 			return {
-				
+
 			}
 		},
 		methods: {

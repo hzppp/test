@@ -36,12 +36,12 @@
 					{{title.name}}
 				</view>
 				<view class="vs-detail">
-					<view class="left-a" v-if="modelEquipA.length > 0">
+					<view class="left-a" v-if="modelEquipA.length > 0 &&　powerErank4ModelA.modelName">
 						<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
 							{{a.name}}
 						</view>
 					</view>
-					<view class="right-b" v-if="modelEquipB.length > 0">
+					<view class="right-b" v-if="modelEquipB.length > 0 && powerErank4ModelB.modelName">
 						<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
 							{{b.name}}
 						</view>
@@ -86,20 +86,16 @@
 				this.init()
 			},
             mid1() {
-                console.log('1111 :>> ', 1111);
                 this.getVsDownData(this.mid1,this.mid2)
             },
             mid2() {
-                console.log('22222 :>> ', 22222);
                 this.getVsDownData(this.mid1,this.mid2)
             },
             leftSerialId() {
-                console.log('zuo :>> ', 'zuo');
                 this.reqModelsBySerialId("left", this.leftSerialId)
                 this.init()
             },
             rightSerialId() {
-                console.log('you :>> ', 'you');
                 this.reqModelsBySerialId("right", this.rightSerialId)
                 this.init()
             }
@@ -175,7 +171,6 @@
             async reqModelsBySerialId(noun,sgId) {
                 try {
                     const {code,data} = await api.fetchModelsList({sgId})
-                    console.log('data11111111111111 :>> ', data);
                     if(code === 1) {
                         if(noun === "left") { //获取车系下的车型,默认展示第一个车型的对比
                             this.mid1 =  data[0] ? data[0].pcModelId : ''
@@ -223,23 +218,30 @@
 			async getVsDownData(mid1,mid2) {
 				try {
 					const res = await api.fetchCarSerialContrast({mid1,mid2})
-                    this.powerErank4ModelA =  res.modelEquipA? res.modelEquipA.powerErank4Model : []
-                    this.powerErank4ModelB = res.modelEquipB? res.modelEquipB.powerErank4Model : []
-					this.powerEquipGroupList = res.modelEquipA.powerEquipGroupList
-					let tempModelEquipA = []
+                    this.powerErank4ModelA =  res.modelEquipA ? res.modelEquipA.powerErank4Model : []
+                    this.powerErank4ModelB =  res.modelEquipB ? res.modelEquipB.powerErank4Model : []
+					this.powerEquipGroupList = res.modelEquipA ? res.modelEquipA.powerEquipGroupList : res.modelEquipB ? res.modelEquipB.powerEquipGroupList : []
+                    console.log('this.powerEquipGroupList :>> ', this.powerEquipGroupList);
+                    let tempModelEquipA = []
 					let tempModelEquipB = []
-					for(let A in res.modelEquipA) {
-						if(A <= res.modelEquipA.powerEquipGroupList.length) {
-							tempModelEquipA.push(res.modelEquipA[A])
-						}
-					}
-					for(let B in res.modelEquipB) {
-						if(B <= res.modelEquipA.powerEquipGroupList.length) {
-							tempModelEquipB.push(res.modelEquipB[B])
-						}
-					}
+                    if(res.modelEquipA && res.modelEquipA.powerEquipGroupList) {
+                        for(let A in res.modelEquipA) {
+                            if(A <= res.modelEquipA.powerEquipGroupList.length) {
+                                tempModelEquipA.push(res.modelEquipA[A])
+                            }
+                        }
+                    }
+                    if(res.modelEquipB && res.modelEquipB.powerEquipGroupList) {
+                        for(let B in res.modelEquipB) {
+                            if(B <= res.modelEquipB.powerEquipGroupList.length) {
+                                tempModelEquipB.push(res.modelEquipB[B])
+                            }
+                        }
+                    }
+
 					this.modelEquipA = tempModelEquipA
 					this.modelEquipB = tempModelEquipB
+
 				} catch (error) {
 					console.error(error)
 				}
@@ -315,7 +317,7 @@
 				.left-a {
 					display: flex;
 					flex-wrap: wrap;
-					flex: 1;
+                    width: 50%;
 					.l-tit {
 						background-color: #FFF2EC;
 						flex-wrap: nowrap;
@@ -330,7 +332,7 @@
 				.right-b {
 					display: flex;
 					flex-wrap: wrap;
-					flex: 1;
+                    width: 50%;
 					.r-tit {
 						background-color: #E6F3FF;
 						flex-wrap: nowrap;
