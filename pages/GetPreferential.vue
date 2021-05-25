@@ -7,7 +7,7 @@
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
         <view class="head-info">
-            <image mode="heightFix" :src="serialData.picHeadUrl" />
+            <image :src="serialData.picHeadUrl" />
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
                 <view class="price">指导价:    {{serialData.price}}万</view>
@@ -291,6 +291,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         display: flex;
         align-items: center;
         image {
+            width: 180rpx;
             height: 136rpx;
             vertical-align: middle;
         }
