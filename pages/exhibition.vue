@@ -21,9 +21,11 @@
 		data() {
 			return {
 				webrul: domain.getAPI('webUrl'),
+				sid:null
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.sid  = options.sid;
 			this.getcity()
 		},
 		methods: {
@@ -36,7 +38,12 @@
 					cityCode = app.globalData.currentLocation.selectedCityData.cityId ? app.globalData.currentLocation.selectedCityData.cityId : 1000000262
 					name = app.globalData.currentLocation.selectedCityData.city ? app.globalData.currentLocation.selectedCityData.city : '重庆市'
 				}
-				this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name
+				if(this.sid){
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&sid=' + this.sid
+				}else{
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name
+				}
+				
 				console.log(this.webrul );
 			}
 		}

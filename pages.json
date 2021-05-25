@@ -28,7 +28,7 @@
     {
       "path": "pages/exhibition",
       "style": {
-        "navigationBarTitleText": "云展馆",
+        "navigationBarTitleText": "云展厅",
         "enablePullDownRefresh": false,
        // "pageOrientation": "landscape",
         "navigationStyle": "custom"
