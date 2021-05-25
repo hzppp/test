@@ -95,7 +95,7 @@
 			}
 			return {
 				title: this.liveObj.title,
-				path: '/pages/liveDetail?id=' + this.id
+				path: '/pages/liveDetail?liveId=' + this.id
 			}
 		},
 		onLoad(options) {
