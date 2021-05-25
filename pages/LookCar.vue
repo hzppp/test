@@ -10,21 +10,16 @@
 
 
         <view class="image-wrap">
-            <image mode='widthFix' lazy-load :src='serialData.picHeadUrl'>
-            </image>
+            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl' />
         </view>
 
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
-	<view  v-for="(item,index) in serialData.picUrlArray" :key="item.id" >
-		<view class="image-wrap" >
-		    <image mode='widthFix' lazy-load :src='item'>
-		    </image>
-		</view>
-		
-		
-	</view>
-  
+
+        <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
+            <image mode='widthFix' lazy-load :src='item' />
+        </view>
+
         <view class="btn-wrap">
             <button class="yuyue-btn" @tap="goYuyue">
                 预约试驾
@@ -99,7 +94,7 @@ export default {
 <style lang="scss">
 .cars-page {
 	min-height: 100vh;
-    padding-bottom: 128rpx;
+    padding-bottom: 161rpx;
     .image-wrap {
         position: relative;
         width: 100%;
@@ -125,7 +120,7 @@ export default {
     .btn-wrap {
         position: fixed;
         width: 100%;
-        height: 128rpx;
+        height: 161rpx;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);

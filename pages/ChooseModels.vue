@@ -1,6 +1,5 @@
 <template>
 	<view class="choose-models">
-		<view class="top-title">2019</view>
         <!-- 多选 -->
 		<view v-if="!single">
 			<checkbox-group @change="checkboxChange">
@@ -129,14 +128,6 @@
         background-image: url("../static/images/is_checked_icon.png");
         background-size: cover;
     }
-	.top-title {
-		height: 56rpx;
-		line-height: 56rpx;
-		background-color: #f5f5f6;
-		font-size: 24rpx;
-		color: #333333;
-		padding-left: 39rpx;
-	}
 	.item-list {
 		display: flex;
 		padding-left: 32rpx;
