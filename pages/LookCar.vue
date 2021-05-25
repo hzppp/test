@@ -16,12 +16,15 @@
 
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
-
-        <view class="image-wrap">
-            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl'>
-            </image>
-        </view>
-
+	<view  v-for="(item,index) in serialData.picUrlArray" :key="item.id" >
+		<view class="image-wrap" >
+		    <image mode='widthFix' lazy-load :src='item'>
+		    </image>
+		</view>
+		
+		
+	</view>
+  
         <view class="btn-wrap">
             <button class="yuyue-btn" @tap="goYuyue">
                 预约试驾
