@@ -40,7 +40,7 @@
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
-            <view class="title">{{item.name.trim() || '无'}}</view>
+            <view class="title">{{item.name.trim() ? item.name : '无'}}</view>
           </view>
         </scroll-view>
       </view>
@@ -578,7 +578,7 @@ export default {
         }
         .title {
           height: 34rpx;
-          width: 230rpx;
+          width: 100%;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;

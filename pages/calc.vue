@@ -289,7 +289,7 @@
 				cityId: '',
 				changed: "",
 				carData: {},
-				deive:true,//预约试驾
+				drive:true,//预约试驾
 				model: {
 					title: '', //车型名字
 					id: '', //车型id
@@ -461,7 +461,7 @@
 				height:0,
 				jnHeight:0,
 				jnTop:0,
-				carPhoto:''
+				carPhoto:'',
 				
 			}
 		},
@@ -886,7 +886,7 @@
 				const that = this
 			    try {
 			        const {code,data} = await api.fetchModelsList({sgId})
-			        if(code === 1) {
+			        if(code === 1 && data[0].pcModelId) {
 			            that.modelsList = data
 						let modelId = data[0].pcModelId
 						that.getSerial(modelId,sgId, 1, function(data) {
@@ -894,7 +894,17 @@
 						});
 			        }
 			    } catch (error) {
-			        console.error(error)
+			       uni.showModal({
+			       	title: '没有找到你查询的车系',
+			       	confirmColor: '#007adf',
+			       	success: function(res) {
+			       		if (res.confirm) {
+			       			uni.navigateBack({
+			       				delta: 1
+			       			});
+			       		}
+			       	}
+			       })
 			    }
 			},
 			//获取车系数据
@@ -919,7 +929,7 @@
 					})
 			
 				if(data){
-					this.deive = true
+					this.drive = true
 					if(modelId=='' ||modelId ==undefined){
 						modelId = data.sections[0].data[0].id
 					}
@@ -951,7 +961,7 @@
 					
 						uni.hideLoading()
 					if (!findFlag ) {
-						this.deive = false
+						this.drive = false
 						uni.showModal({
 							title: '没有找到你查询的车型',
 							content: '请返回重新选择试试',
@@ -967,7 +977,7 @@
 					}
 				}else{
 					uni.hideLoading()
-					this.deive = false
+					this.drive = false
 					uni.showModal({
 						title: '没有找到你查询的车系',
 						confirmColor: '#007adf',
