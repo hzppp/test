@@ -1,6 +1,6 @@
 <template>
   <view class="index">
-    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
@@ -11,7 +11,7 @@
     <viewTabBar :current="0"></viewTabBar>
     <testDrive></testDrive>
     <view class="content">
-      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont" v-if="false">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
@@ -473,6 +473,8 @@ export default {
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
+  font-family: PingFang SC;
+  color: #3C4650;
 }
 .ovh {
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
@@ -483,6 +485,11 @@ export default {
 
 .content {
   padding: 0 32rpx 150rpx;
+  .bannerTop {
+    width: 100%;
+    height: 500rpx;
+    border-radius: 20rpx;
+  }
   .banner {
     width: 100%;
     height: 360rpx;
@@ -585,6 +592,7 @@ export default {
           overflow: hidden;
           text-overflow:ellipsis;
           white-space: nowrap;
+          color: #4A4A4A;
         }
       }
     }
