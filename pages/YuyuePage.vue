@@ -16,6 +16,11 @@
                 <view class="arrow"></view>
             </view>
             <view class="list models">
+                <view class="list-title">地区</view>
+                <view class="select" @tap="goChooseRegion">{{currentRegion.name}}</view>
+                <view class="arrow"></view>
+            </view>
+            <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
                     {{currentDealer.name?currentDealer.name:""}}
@@ -84,6 +89,8 @@ const COUNTDOWN = 60
 
                 currentDealer: {}, //当前经销商
 
+                currentRegion: {}, //当前选择的地区
+
                 // currentModelId: "", //当前车型id
 
                 getPhoneBtn: false,
@@ -98,10 +105,7 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             console.log('options :>> ', options);
-            uni.showLoading({
-                title: '正在加载...',
-                mask:true
-			})
+      
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -140,9 +144,9 @@ const COUNTDOWN = 60
                 }
             },
             //获取经销商列表
-            async reqDealersList(cityId) {
+            async reqDealersList(cityId,districtId) {
                 try {
-                    const {code,data} = await api.fetchDealersList({cityId})
+                    const {code,data} = await api.fetchDealersList({cityId,districtId})
                     console.log('data :>> ', data);
                     if(code === 1) {
                         this.dealersList = data
@@ -154,6 +158,10 @@ const COUNTDOWN = 60
             //获取车系详情
             async reqSerialDetail(sgId) {
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1) {
                         this.serialData = data
@@ -202,6 +210,7 @@ const COUNTDOWN = 60
                 })
                 try {
                     const res = await api.submitClue({
+                        areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
@@ -234,14 +243,28 @@ const COUNTDOWN = 60
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}`
+					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
 				})
             },
             //选择城市
             goChooseCity(){
                 this.currentDealer = {}
+                this.currentRegion = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity?name="+ this.currentCity.name
+				})
+            },
+            //选择地区
+            goChooseRegion(){
+                if(!this.currentCity.name) {
+                    return uni.showToast({
+                        title:"请先选择城市",
+                        icon:none
+                    })
+                }
+                this.currentDealer = {}
+                uni.navigateTo({
+					url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
 				})
             },
             //选择车系
@@ -252,13 +275,14 @@ const COUNTDOWN = 60
             },
             cityPickerChange: function(e) {
                 console.log('this.cityList[e.target.value].id :>> ', this.cityList[e.target.value].id);
-                this.reqDealersList(this.cityList[e.target.value].id)
+                this.currentRegion = {}
+                // this.reqDealersList(this.cityList[e.target.value].id)
                 this.cityIndex = e.target.value
                 this.test = ''
                 this.checkInfo()
             },
             dealersPickerChange: function(e) {
-                this.dealersIndex = e.target.value
+                // this.dealersIndex = e.target.value
                 this.checkInfo()
             },
         },
@@ -286,7 +310,7 @@ const COUNTDOWN = 60
             height: 100%;
             display: flex;
             align-items: center;
-            font-size: 35rpx;
+            font-size: 34rpx;
         }
         .title {
             font-size: 40rpx;
@@ -307,6 +331,7 @@ const COUNTDOWN = 60
                 height: 100%;
                 display: flex;
                 align-items: center;
+                font-size: 34rpx;
             }
             .get-code {
                 color: #fa8943;

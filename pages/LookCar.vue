@@ -1,6 +1,5 @@
 <template>
 	<view class="cars-page">
-    <testDrive></testDrive>
         <view class="image-wrap" v-if="serialData.videoUrl">
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
             <!-- <i class="video-icon"></i> -->
@@ -34,11 +33,10 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
-import testDrive from '@/components/testDrive/testDrive'
 
 
 export default {
-    components: {btnWrap,testDrive},
+    components: {btnWrap},
     data() {
         return {
             serialData: {}, //车系详情
