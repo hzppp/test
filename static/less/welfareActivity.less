@@ -22,21 +22,21 @@
 	padding: 15rpx 32rpx 0;
 	background-color: #ffffff;
 	.select-city{
-		view {
+		.select-city-inner {
 			display: flex;
 			align-items: center;
-			font-size: 28rpx;
-			color: #333333;
-			&::after {
-				flex: 0 0 auto;
-				margin-left: 10rpx;
-				display: view;
-				content: '';
-				background: url("../images/arrowBottom.png") no-repeat;
-				width: 8rpx;
-				height: 4rpx;
-				background-size: 8rpx 4rpx;
+			view {
+				font-size: 28rpx;
+				color: #333333;
+				max-width: 190rpx;
+				height: 40rpx;
+				.ellipsis;
 			}
+			.icon {
+				margin-left: 10rpx;
+				width: 16rpx;
+				height: 8rpx;
+			}			
 		}
 	}
 }
