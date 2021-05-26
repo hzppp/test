@@ -10,7 +10,7 @@
 
 
         <view class="image-wrap">
-            <image mode='widthFix' lazy-load :src='serialData.picCoverUrl' />
+            <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
         </view>
 
         <!-- 按钮 -->
@@ -18,6 +18,7 @@
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
+
         </view>
 
         <view class="btn-wrap">
