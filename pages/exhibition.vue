@@ -21,6 +21,7 @@
 		data() {
 			return {
 				webrul: domain.getAPI('webUrl'),
+				// webrul: 'http://localhost:8080/',
 				sid:null
 			}
 		},
