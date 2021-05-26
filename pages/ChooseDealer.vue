@@ -27,13 +27,21 @@ import api from '@/public/api/index'
             onLoad(options) {
                 console.log('options :>> ', options);
                 this.currentDealerId = options.dealersId
-                this.reqDealersList(options.cityId)
+                if(options.districtId != "undefined") {
+                    this.reqDealersList(options.cityId,options.districtId)
+                }else {
+                    this.reqDealersList(options.cityId,"")
+                }
             },
             //获取经销商列表
-            async reqDealersList(cityId) {
+            async reqDealersList(cityId,districtId) {
                 try {
-                    const {code,data} = await api.fetchDealersList({cityId})
-                    if(code === 1) {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    const {code,data} = await api.fetchDealersList({cityId,districtId})
+                    if(code === 1 && data.length) {
                         this.dealersList = data
                     }else {
                         this.isComplete = true
@@ -41,6 +49,8 @@ import api from '@/public/api/index'
                 } catch (error) {
                     this.isComplete = true
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
 

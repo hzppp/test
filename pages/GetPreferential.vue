@@ -40,6 +40,15 @@
                 <view class="arrow"></view>
             </view>
             <!-- 城市选择E -->
+            <!-- 地区选择E -->
+            <view class="list models">
+                <view class="list-title" >地区</view>
+                <view class="select" @tap="goChooseRegion">
+                    {{currentRegion.name || ""}}
+                </view>
+                <view class="arrow"></view>
+            </view>
+            <!-- 地区选择S -->
             <!-- 经销商S -->
             <view class="list models">
                 <view class="list-title">经销商</view>
@@ -92,6 +101,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 currentCity:{}, //当前选择的城市
 
                 currentDealer: {}, //当前经销商
+
+                currentRegion: {}, //当前选择的地区
                 serialData: {}, //车系详情
                 serialId:"", //车系id
 
@@ -161,7 +172,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: "/pages/ChooseDealer?cityId="+ this.currentCity.id
+					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
 				})
             },
             //切换车系
@@ -216,8 +227,22 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //选择城市
             goChooseCity(){
                 this.currentDealer = {}
+                this.currentRegion = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity"
+				})
+            },
+            //选择地区
+            goChooseRegion(){
+                if(!this.currentCity.name) {
+                    return uni.showToast({
+                        title:"请先选择城市",
+                        icon:none
+                    })
+                }
+                this.currentDealer = {}
+                uni.navigateTo({
+					url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
 				})
             },
             //立即预约
@@ -232,6 +257,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 })
                 try {
                     const res = await api.submitClue({
+                        areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
@@ -284,7 +310,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         height: 100%;
         display: flex;
         align-items: center;
-        font-size: 35rpx;
+        font-size: 34.5rpx;
     }
     .top-tit {
         width: 100%;
@@ -347,6 +373,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 height: 100%;
                 display: flex;
                 align-items: center;
+                font-size: 34rpx;
             }
             .get-code {
                 color: #fa8943;
