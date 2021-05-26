@@ -6,7 +6,10 @@
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
-          <view>{{ selectCity || indexCity.name }}</view>
+			<view class="select-city-inner">
+				<view>{{ selectCity || indexCity.name }}</view>
+				<image class="icon" src="../static/images/arrowBottom.png" mode="aspectFit"></image>				
+			</view>
         </picker>
       </view>
     </pageTopCity>
