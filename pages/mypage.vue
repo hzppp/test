@@ -48,7 +48,7 @@
 		<!-- <view class="banner_bot">
 			<image src=""></image>
 		</view> -->
-		<testDrive></testDrive>
+		<testDrive aldEventName = '我的页面预约试驾'></testDrive>
 		<viewTabBar :current="4"></viewTabBar>
 
 	</view>
@@ -140,11 +140,13 @@
 		},
 		methods: {
 			tocard() {
+				aldstat.sendEvent('我的优惠券点击') 
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
 			},
 			toactivity(){
+				aldstat.sendEvent('我的活动点击') 
 				uni.navigateTo({
 					url: '/pages/myActivity'
 				})

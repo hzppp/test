@@ -47,7 +47,7 @@
 				</view>
 				<view class="btn" @tap="submit">提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
-				<view class="close-btn-bd" @tap="formHide"></view>
+				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 			</view>
 		</view>
 		<!-- 失败 -->
@@ -180,6 +180,12 @@
 				this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
 				this.getpreClue()
 			},
+			closeBtnClick () {
+				if (this.from == 'activity') {
+					wx.aldstat.sendEvent('报名活动留资退出')
+				}
+				this.formHide()
+			},
 			formHide() {
 				this.isShowFormPop = false
 			},
@@ -266,6 +272,9 @@
 
 			},
 			async submit() {
+				if (this.from == 'activity') {
+					wx.aldstat.sendEvent('报名活动留资提交')
+				}
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId

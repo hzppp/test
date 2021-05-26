@@ -23,8 +23,8 @@
 	  </view>
 		<!-- <back-home></back-home> -->
 		<!-- <activity-ad-view pageIsLoaded="{{loadFail == false}}" mode="rightBottom"></activity-ad-view> -->
-		<scroll-view class="container" scroll-y="true">
-			<view class="box">
+		<view class="container" scroll-y="true">
+			<view class="box" style="width: 100%;">
 				<!-- 头部.s -->
 				<view class="box-hd" :class="{'box-Loans':isLoans}">
 					<view class="info-price">
@@ -264,7 +264,7 @@
 				<view class="mask" v-if="slide" @tap="closeSlide"></view>
 				<!-- 弹出车型.e -->
 			</view>
-		</scroll-view>
+		</view>
 	</view>
 </template>
 
@@ -622,7 +622,7 @@
 					"4.0": 4500
 				};
 				var ccsy = 180;
-				for (var plItem in ccsy_item) {
+				for (var plItem in ccsy_item) { 
 					if (pl > parseFloat(plItem)) {
 						ccsy = ccsy_item[plItem];
 					}

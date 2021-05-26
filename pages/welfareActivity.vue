@@ -1,6 +1,6 @@
 <template>
   <view class="welfareActivity">
-    <testDrive></testDrive>
+    <testDrive :aldEventName="'报名列表预约试驾'"></testDrive>
     <viewTabBar :current="3"></viewTabBar>
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
@@ -202,6 +202,7 @@ export default {
       }
     },
     toActivityPage(item) {
+		wx.aldstat.sendEvent('活动点击')
       if (item.duibaUrl) {
         uni.navigateTo({
           url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
