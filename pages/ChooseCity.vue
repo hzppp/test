@@ -132,8 +132,8 @@ let app = getApp()
 		}
 		.city {
 			margin-left: 32rpx;
-			line-height: 50rpx;
-			height: 50rpx;
+			padding: 16rpx 0;
+			font-size: 28rpx;
             &.isSelect {
                 color: #FA8845;
             }
