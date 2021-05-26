@@ -228,7 +228,7 @@
 			.dflex(center, center);
 
 			.btns {
-				width: 330rpx;
+				width: 630rpx;
 				height: 88rpx;
 				line-height: 88rpx;
 				background-color: #fff3ed;
