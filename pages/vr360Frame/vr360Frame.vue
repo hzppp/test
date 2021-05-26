@@ -5,6 +5,7 @@
 </template>
 
 <script>
+	import domain from '@/configs/interface';
 	export default {
 		data() {
 			return {
@@ -24,7 +25,8 @@
       // this.src = `http://192.168.16.53:8080/vr360.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}`
 			
 			// this.src = `http://192.168.16.53:8080/vr360.html?data=${_data}`
-			this.src = `https://cdc.pcauto.com.cn/vue/hall/a/vr360.html?data=${_data}`
+			// this.src = 'https://cdc.pcauto.com.cn/vue/hall/a/vr360.html?data=${_data}'
+			this.src = domain.getAPI('webUrl') + `vr360.html?data=${_data}`
     }
 	}
 </script>

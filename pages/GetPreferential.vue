@@ -1,13 +1,13 @@
 <template>
-    <view class="get-preferential" v-if="serialData.id">
-        <!--提交弹窗 -->
+    <view>
+        <view  class="get-preferential" v-if="serialData.id">
         <pop ref="pop"></pop>
         <!-- 顶部提示S -->
         <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
         <view class="head-info">
-            <image mode="heightFix" :src="serialData.picHeadUrl" />
+            <image :src="serialData.picHeadUrl" />
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
                 <view class="price">指导价:    {{serialData.price}}万</view>
@@ -54,8 +54,9 @@
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
             </view>
         </view>
+        </view>
+        <view v-if="isNoData && !serialData.id" class="no-data">暂无数据</view>
     </view>
-    <view v-else class="no-data">暂无数据</view>
 </template>
 
 <script>
@@ -97,10 +98,15 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 getPhoneBtn: false,
 
                 isFocus:false,
+
+                isNoData:false,
             }
         },
        async onLoad(options) {
-            console.log('options :>> ', options);
+            uni.showLoading({
+                title: '正在加载...',
+                mask:true
+			})
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -134,12 +140,15 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             async reqSerialDetail(sgId) {
                 try {
                     const {code,data} = await api.fetchSerialDetail({sgId})
-                    console.log('data1111111111111 :>> ', data);
                     if(code ===1 ) {
                         this.serialData = data
+                    }else {
+                        this.isNoData = true
                     }
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    uni.hideLoading()
                 }
             },
             //经销商点击，判断提示
@@ -291,6 +300,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         display: flex;
         align-items: center;
         image {
+            width: 180rpx;
             height: 136rpx;
             vertical-align: middle;
         }
