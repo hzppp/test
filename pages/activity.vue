@@ -68,17 +68,26 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			// await login.login()
-			this.activityId = options.id
-			let {
-				data={}
-			} = await api.getActivityContent(this.activityId)
-			this.downDate(data.endTime)
-			app.Interval = setInterval(() => {
+			try {
+				uni.showLoading({
+					title: '正在加载...'
+				})
+				// await login.login()
+				this.activityId = options.id
+				let {
+					data={}
+				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-			}, 1000)
-			this.phone = uni.getStorageSync('userPhone');
-			this.content = data
+				app.Interval = setInterval(() => {
+					this.downDate(data.endTime)
+				}, 1000)
+				this.phone = uni.getStorageSync('userPhone');
+				this.content = data				
+			} catch (err) {
+				console.error(err)
+			} finally {
+				uni.hideLoading()
+			}
 		},
 		onHide () {
 			if (app.Interval) {
