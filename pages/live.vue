@@ -1,5 +1,8 @@
 <template>
+	
 	<view>
+		
+		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" :isShowBackBtn="'false'"></pageTopCity>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 		<block v-if="nothing">
 			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
@@ -55,11 +58,13 @@
 	import tabBar from '@/components/tabBar/tabBar'
 	// import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
+	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 
 	let app = getApp()
 	export default {
 		components: {
-			viewTabBar: tabBar
+			viewTabBar: tabBar,
+			'pageTopCity': pageTopCity,
 		},
 		data() {
 			return {
@@ -176,11 +181,11 @@
 	@import '@/static/less/public.less';
 
 	.live-list {
-		position: fixed;
+		// position: fixed;
 		width: 100%;
 		height: 100%;
 		left: 0;
-		top: 0;
+		top: 45rpx;
 		padding: 0 0 100rpx;
 		box-sizing: border-box;
 	}
