@@ -7,10 +7,15 @@
 <script>
 export default {
 name: "testDrive",
+  props:['aldEventName'],
   methods: {
     goTestDrive() {
+      if(this.aldEventName) {
+        console.log('首页 浮窗',this.aldEventName)
+        wx.aldstat.sendEvent(this.aldEventName)
+      }
       uni.navigateTo({
-        url: `/pages/ChooseSerial`
+        url: `/pages/ChooseSerial?type=yuyue`
       })
     }
   }

@@ -90,6 +90,7 @@
 			},
 		},
 		onShareAppMessage(res) {
+			wx.aldstat.sendEvent('直播预告分享') 
 			if (res.from === 'button') { // 来自页面内分享按钮
 				console.log(res.target)
 			}
@@ -228,7 +229,7 @@
 			.dflex(center, center);
 
 			.btns {
-				width: 330rpx;
+				width: 630rpx;
 				height: 88rpx;
 				line-height: 88rpx;
 				background-color: #fff3ed;

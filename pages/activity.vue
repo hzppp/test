@@ -26,12 +26,12 @@
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
 			<view class="type-b" v-else-if="content.needApply == 0">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 			</view>
 		</view>
 	</view>
@@ -115,10 +115,16 @@
 		},
 		methods: {
 			formShow() {
+				wx.aldstat.sendEvent('报名活动')
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+			},
+			// 分享按钮被点击
+			shareBtnClick () {
+				wx.aldstat.sendEvent('活动分享点击')
 			},
 			// 看车按钮被点击
 			seeCarBtnClick (serialGroupItem) {
+				wx.aldstat.sendEvent('3D看车点击')
 				const currentLocation = app.globalData.currentLocation
 				let cityId = '1000000262'
 				let cityName = '重庆市'
@@ -149,7 +155,7 @@
 						console.error(err)
 					}
 				}
-				this.$refs.formpop.formShow('form', 'activity', this.content)
+				this.formShow()
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()

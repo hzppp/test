@@ -59,7 +59,6 @@
 	// import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
-
 	let app = getApp()
 	export default {
 		components: {
@@ -142,6 +141,7 @@
 			},
 
 			toLiveDet(item) {
+				wx.aldstat.sendEvent('直播点击') 
 				if (item.status == 2 || item.status == 0) {
 					/* 直播预告 */
 					uni.navigateTo({
