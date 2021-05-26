@@ -622,7 +622,7 @@
 					"4.0": 4500
 				};
 				var ccsy = 180;
-				for (var plItem in ccsy_item) {
+				for (var plItem in ccsy_item) { 
 					if (pl > parseFloat(plItem)) {
 						ccsy = ccsy_item[plItem];
 					}
