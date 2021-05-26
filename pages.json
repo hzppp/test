@@ -241,7 +241,16 @@
 			          "enablePullDownRefresh": false
 			      }
 			
-			  }
+			  },
+    {
+            "path" : "pages/ChooseRegion",
+            "style" :
+            {
+                "navigationBarTitleText": "选择地区",
+                "enablePullDownRefresh": false
+            }
+    
+    }
   ],
   "tabBar": {
     "custom": true,
