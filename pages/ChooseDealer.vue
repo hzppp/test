@@ -8,7 +8,7 @@
                 {{item.address}}
             </view>
         </view>
-        <view class="no-dealer" v-if="dealersList.length === 0">暂无对应经销商</view>
+        <view class="no-dealer" v-if="dealersList.length === 0 && isComplete">暂无对应经销商</view>
     </view>
 </template>
 
@@ -20,24 +20,37 @@ import api from '@/public/api/index'
             return {
                 dealersList: [], //经销商列表
                 currentDealerId:"", //
+                isComplete: false,
             }
         },
         methods: {
             onLoad(options) {
                 console.log('options :>> ', options);
                 this.currentDealerId = options.dealersId
-                this.reqDealersList(options.cityId)
+                if(options.districtId != "undefined") {
+                    this.reqDealersList(options.cityId,options.districtId)
+                }else {
+                    this.reqDealersList(options.cityId,"")
+                }
             },
             //获取经销商列表
-            async reqDealersList(cityId) {
+            async reqDealersList(cityId,districtId) {
                 try {
-                    const {code,data} = await api.fetchDealersList({cityId})
-                    if(code === 1) {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    const {code,data} = await api.fetchDealersList({cityId,districtId})
+                    if(code === 1 && data.length) {
                         this.dealersList = data
-                        console.log('data :>> ', data);
+                    }else {
+                        this.isComplete = true
                     }
                 } catch (error) {
+                    this.isComplete = true
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
 

@@ -14,9 +14,9 @@
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
 		<view class="serial-list">
-			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index">
+			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index" @tap="seeCarBtnClick(serialGroupItem)">
 				<view class="name">{{serialGroupItem.name}}</view>
-				<button class="see-car-btn" @tap="seeCarBtnClick(serialGroupItem)">3D看车 ></button>
+				<button class="see-car-btn">3D看车 ></button>
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
@@ -26,12 +26,12 @@
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
 			<view class="type-b" v-else-if="content.needApply == 0">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share">分享好友</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 			</view>
 		</view>
 	</view>
@@ -68,17 +68,26 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			// await login.login()
-			this.activityId = options.id
-			let {
-				data={}
-			} = await api.getActivityContent(this.activityId)
-			this.downDate(data.endTime)
-			app.Interval = setInterval(() => {
+			try {
+				uni.showLoading({
+					title: '正在加载...'
+				})
+				// await login.login()
+				this.activityId = options.id
+				let {
+					data={}
+				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-			}, 1000)
-			this.phone = uni.getStorageSync('userPhone');
-			this.content = data
+				app.Interval = setInterval(() => {
+					this.downDate(data.endTime)
+				}, 1000)
+				this.phone = uni.getStorageSync('userPhone');
+				this.content = data				
+			} catch (err) {
+				console.error(err)
+			} finally {
+				uni.hideLoading()
+			}
 		},
 		onHide () {
 			if (app.Interval) {
@@ -106,12 +115,25 @@
 		},
 		methods: {
 			formShow() {
+				wx.aldstat.sendEvent('报名活动')
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+			},
+			// 分享按钮被点击
+			shareBtnClick () {
+				wx.aldstat.sendEvent('活动分享点击')
 			},
 			// 看车按钮被点击
 			seeCarBtnClick (serialGroupItem) {
+				wx.aldstat.sendEvent('3D看车点击')
+				const currentLocation = app.globalData.currentLocation
+				let cityId = '1000000262'
+				let cityName = '重庆市'
+				if (currentLocation.selectedCityData && currentLocation.selectedCityData.cityId) {
+					cityId = currentLocation.selectedCityData.cityId
+					cityName = currentLocation.selectedCityData.city
+				}
 				uni.navigateTo({
-					url: `/pages/exhibition?sid=${serialGroupItem.pcSerialGroupId}`
+					url: `/pages/vr360Frame/vr360Frame?sid=${serialGroupItem.pcSerialGroupId}&cityId=${cityId}&cityName=${cityName}`
 				})
 			},
 			async getPhoneNumber(e) {
@@ -133,7 +155,7 @@
 						console.error(err)
 					}
 				}
-				this.$refs.formpop.formShow('form', 'activity', this.content)
+				this.formShow()
 			},
 			downDate(endtime) {
 				let time = new Date().getTime()

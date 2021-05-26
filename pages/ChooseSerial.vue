@@ -59,6 +59,10 @@ import api from '@/public/api/index'
                     return  uni.navigateTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
+                }else if(this.type === "yuyue") {
+                    return  uni.redirectTo({
+                        url:`/pages/YuyuePage?serialId=${id}`
+                    })
                 }
                 if(this.pages) {
                     this.$store.commit('changModel',id)

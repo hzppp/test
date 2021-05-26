@@ -1,15 +1,18 @@
 <template>
+	
 	<view>
+		
+		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" :isShowBackBtn="'false'"></pageTopCity>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 		<block v-if="nothing">
 			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
-					<view class="top">
+					<!-- <view class="top">
 						<image class="avator" :src="item.headPic"></image>
 						<view class="name">
 							{{item.nickName}}
 						</view>
-					</view>
+					</view> -->
 					<view class="banner">
 						<image class="bg" :src="item.cover"></image>
 						<view class="play"></view>
@@ -55,11 +58,13 @@
 	import tabBar from '@/components/tabBar/tabBar'
 	// import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
+	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 
 	let app = getApp()
 	export default {
 		components: {
-			viewTabBar: tabBar
+			viewTabBar: tabBar,
+			'pageTopCity': pageTopCity,
 		},
 		data() {
 			return {
@@ -83,7 +88,7 @@
 		onShow() {
 			this.pageNum = 1
 			this.hasNext = true
-			this.liveList = []
+			// this.liveList = []
 			this.getList()
 		},
 		filters: {
@@ -114,15 +119,20 @@
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				})
+			
+				data.rows.forEach((item, index) => {
+					item.startTime = item.startTime.substring(0, 16)
+				})
+				if(this.pageNum == 1){
+					this.liveList =data.rows
+				}else{
+				this.liveList = [...this.liveList, ...data.rows]	
+				}
 				if (data.hasNext) {
 					this.pageNum++
 				} else {
 					this.hasNext = false
 				}
-				data.rows.forEach((item, index) => {
-					item.startTime = item.startTime.substring(0, 16)
-				})
-				this.liveList = [...this.liveList, ...data.rows]
 				console.log(this.liveList.length, data.rows.length);
 				if (data.rows.length == 0) {
 					this.nothing = 0
@@ -171,11 +181,11 @@
 	@import '@/static/less/public.less';
 
 	.live-list {
-		position: fixed;
+		// position: fixed;
 		width: 100%;
 		height: 100%;
 		left: 0;
-		top: 0;
+		top: 45rpx;
 		padding: 0 0 100rpx;
 		box-sizing: border-box;
 	}

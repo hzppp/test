@@ -15,21 +15,23 @@
         "navigationBarTitleText": "云车展",
         "enablePullDownRefresh": false,
         "navigationStyle": "custom"
+	
       }
     },
     {
       "path": "pages/live",
       "style": {
         "navigationBarTitleText": "直播",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+		 "navigationStyle": "custom"
       }
     },
     {
       "path": "pages/exhibition",
       "style": {
-        "navigationBarTitleText": "云展馆",
+        "navigationBarTitleText": "云展厅",
         "enablePullDownRefresh": false,
-//        "pageOrientation": "landscape",
+       // "pageOrientation": "landscape",
         "navigationStyle": "custom"
       }
     },
@@ -231,7 +233,25 @@
               "enablePullDownRefresh": false
           }
 
-      }
+      },
+			{
+			      "path" : "pages/vr360Frame/vr360Frame",
+			      "style" :
+			      {
+			          "navigationBarTitleText": "",
+			          "enablePullDownRefresh": false
+			      }
+			
+			  },
+    {
+            "path" : "pages/ChooseRegion",
+            "style" :
+            {
+                "navigationBarTitleText": "选择地区",
+                "enablePullDownRefresh": false
+            }
+    
+    }
   ],
   "tabBar": {
     "custom": true,

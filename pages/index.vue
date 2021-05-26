@@ -1,17 +1,18 @@
 <template>
   <view class="index">
-    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
+    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
-          <view>{{ selectCity || indexCity.name }}</view>
+          <view class="cityName">{{ selectCity || indexCity.name }}</view>
+          <image src="../static/images/arrowBottom.png" class="img"></image>
         </picker>
       </view>
     </pageTopCity>
     <viewTabBar :current="0"></viewTabBar>
-    <testDrive></testDrive>
+    <testDrive aldEventName="首页预约试驾点击"></testDrive>
     <view class="content">
-      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="banner" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
+      <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont" v-if="false">
         <view class="linkContL">
           <view class="article linkItem" @tap="goArtList">
@@ -35,18 +36,18 @@
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          热车速递
+          热销车型
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
           <view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
             <image :src="item.pcSerialGroupPic" class="img"></image>
-            <view class="title">{{item.name.trim() || '无'}}</view>
+            <view class="title">{{item.name.trim() ? item.name : '无'}}</view>
           </view>
         </scroll-view>
       </view>
       <view class="hotAct">
         <view class="hotTab">
-          VR看车
+          云展厅
         </view>
         <view class="actItem vrCar" @tap="goVr">
           <image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
@@ -100,7 +101,7 @@ export default {
       provinceList: [],
       cityList: [],
       crtProvinceItem: {}, // 当前选择的省份
-      title:'云车展',
+      title:'长安汽车云车展',
       sgList: [],
       typeIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/art_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/act_icon_3x.png'],
       liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
@@ -235,6 +236,7 @@ export default {
       }).then(res => {
         return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
       })
+	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanbanner.png';
     },
     // 请求省份和城市的级联列表
     async reqProvinceCityList () {
@@ -256,7 +258,8 @@ export default {
         detail
       } = e
       this.crtProvinceItem = this.provinceList[detail.value[0]]
-      this.crtCityItem = this.cityList[detail.value[1]]
+      this.cityList = this.crtProvinceItem.cities
+      this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
       await this.getPageData()
 
       // 改变默认定位省市
@@ -327,6 +330,7 @@ export default {
       }
     },
     goVr() {
+      wx.aldstat.sendEvent('云展厅点击')
       uni.navigateTo({
         url:'/pages/exhibition'
       })
@@ -341,18 +345,21 @@ export default {
       console.log('type,id,status',type,id,status,typeof(type))
       switch (type) {
         case 1: {
+          wx.aldstat.sendEvent('精选资讯点击')
           uni.navigateTo({
             url: `/pages/article?articleId=${id}`
           })
           break;
         }
         case 2: {
+          wx.aldstat.sendEvent('精选活动点击')
           uni.navigateTo({
             url: `/pages/activity?id=${id}`
           })
           break;
         }
         case 3: {
+          wx.aldstat.sendEvent('精选直播点击')
           switch (status) {
             case 0: {
               uni.navigateTo({
@@ -411,11 +418,12 @@ export default {
       })
     },
     goActDetail(id) {
-      uni.navigateTo({
-        url: `/pages/activity?id=${id}`
-      })
+      // uni.navigateTo({
+      //   url: `/pages/activity?id=${id}`
+      // })
     },
     goLookCar(item) {
+      wx.aldstat.sendEvent('热销车型点击')
       uni.navigateTo({
         url: `/pages/LookCar?id=${item.pcSerialGroupId}`
       })
@@ -444,35 +452,38 @@ export default {
 <style lang="less" scoped>
 @import '@/static/less/public.less';
 .city {
-  position: sticky;
+  display: inline-block;
   left: 0;
   top: 0;
   z-index: 1;
-  width: 35%;
   padding: 15rpx 32rpx 0;
   background-color: #ffffff;
   .select-city{
+    position: relative;
     view {
-      display: flex;
-      align-items: center;
       font-size: 28rpx;
+      max-width: 164rpx;
       color: #333333;
-      &::after {
-        flex: 0 0 auto;
-        margin-left: 10rpx;
-        display: view;
-        content: '';
-        background: url("../static/images/arrowBottom.png") no-repeat;
-        width: 8rpx;
-        height: 4rpx;
-        background-size: 8rpx 4rpx;
-      }
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .img {
+      position: absolute;
+      bottom: 15rpx;
+      right: -24rpx;
+      content: '';
+      width: 16rpx;
+      height: 8rpx;
+      background-size: 16rpx 8rpx;
     }
   }
 }
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
+  font-family: PingFang SC;
+  color: #3C4650;
 }
 .ovh {
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
@@ -483,6 +494,11 @@ export default {
 
 .content {
   padding: 0 32rpx 150rpx;
+  .bannerTop {
+    width: 100%;
+    height: 500rpx;
+    border-radius: 20rpx;
+  }
   .banner {
     width: 100%;
     height: 360rpx;
@@ -576,15 +592,17 @@ export default {
           border-radius: 20rpx;
           margin: 30rpx 0 16rpx 0;
         }
+
         .title {
           height: 34rpx;
-          width: 230rpx;
+          width: 100%;
           font-size: 24rpx;
           font-weight: bold;
           text-align: center;
           overflow: hidden;
           text-overflow:ellipsis;
           white-space: nowrap;
+          color: #4A4A4A;
         }
       }
     }

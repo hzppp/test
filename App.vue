@@ -35,6 +35,7 @@
 		  UPCHost:"https://upc.pcauto.com.cn/upload_quick.jsp?application=autopocket",
       wxUserInfo: null,
 		  phone: '', //  授权的手机号码
+		  provinceList: [], // 省市列表
 		},
 		onLaunch: function() {
 			uni.hideTabBar({

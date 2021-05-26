@@ -1,19 +1,20 @@
 <template>
   <view class="welfareActivity">
-    <testDrive></testDrive>
+    <testDrive :aldEventName="'报名列表预约试驾'"></testDrive>
     <viewTabBar :current="3"></viewTabBar>
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
-          <view>{{ selectCity || indexCity.name }}</view>
+			<view class="select-city-inner">
+				<view>{{ selectCity || indexCity.name }}</view>
+				<image class="icon" src="../static/images/arrowBottom.png" mode="aspectFit"></image>				
+			</view>
         </picker>
       </view>
     </pageTopCity>
 
     <form-pop ref="formpop"></form-pop>
-    <scroll-view class="scroll-view" @scrolltolower="scrollGetActivity" lower-threshold="200" scroll-y
-                 scroll-with-animation>
       <!-- <view class="box">
         <view class="box-tit">
           长安福利
@@ -46,7 +47,6 @@
         </view>
       </view>
       <view class="zw"></view>
-    </scroll-view>
   </view>
 </template>
 
@@ -111,24 +111,33 @@ export default {
     }
   },
   async onShow() {
-    this.resetjson()
-    // api.getUser()
-    await distance.getLocation()
-    let currentLocation = app.globalData.currentLocation
-    if (currentLocation) {
-		await this.reqProvinceCityList()
-		const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-		if (crtLocationProvinceItem) {
-			const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-			this.crtProvinceItem = crtLocationProvinceItem
-			this.cityList = this.crtProvinceItem.cities
-			this.crtCityItem = crtLocationCityItem
-		}
-		// 精选活动
-		this.getactivity()
-		// 福利列表
-		// this.getWelfare()
-    }
+	try {
+		uni.showLoading({
+			title: '正在加载...'
+		})
+		this.resetjson()
+		// api.getUser()
+		await distance.getLocation()
+		let currentLocation = app.globalData.currentLocation
+		if (currentLocation) {
+			await this.reqProvinceCityList()
+			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+			if (crtLocationProvinceItem) {
+				const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+				this.crtProvinceItem = crtLocationProvinceItem
+				this.cityList = this.crtProvinceItem.cities
+				this.crtCityItem = crtLocationCityItem
+			}
+			// 精选活动
+			await this.getactivity()
+			// 福利列表
+			// this.getWelfare()
+		}		
+	} catch (err) {
+		console.error(err)
+	} finally {
+		uni.hideLoading()
+	}
   },
   onHide() {
 	this.resetjson()
@@ -147,6 +156,9 @@ export default {
       path: path,
       imageUrl: imageUrl
     }
+  },
+  onReachBottom () {
+	  this.getactivity()
   },
   methods: {
     formShow(name, from = "", obj = {}, title = "报名活动") {
@@ -167,7 +179,8 @@ export default {
         detail
       } = e
 	  this.crtProvinceItem = this.provinceList[detail.value[0]]
-	  this.crtCityItem = this.cityList[detail.value[1]]
+	  this.cityList = this.crtProvinceItem.cities
+	  this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
       this.resetjson()
       // this.getWelfare()
       this.getactivity()
@@ -188,10 +201,8 @@ export default {
 			this.cityList = this.provinceList[detail.value].cities
       }
     },
-    scrollGetActivity() {
-      this.getactivity()
-    },
     toActivityPage(item) {
+		wx.aldstat.sendEvent('活动点击')
       if (item.duibaUrl) {
         uni.navigateTo({
           url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,

@@ -1,13 +1,13 @@
 <template>
-    <view class="get-preferential" v-if="serialData.id">
-        <!--提交弹窗 -->
+    <view>
+        <view  class="get-preferential" v-if="serialData.id">
         <pop ref="pop"></pop>
         <!-- 顶部提示S -->
         <view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
         <view class="head-info">
-            <image mode="heightFix" :src="serialData.picHeadUrl" />
+            <image :src="serialData.picHeadUrl" />
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
                 <view class="price">指导价:    {{serialData.price}}万</view>
@@ -17,7 +17,7 @@
         <!-- 头部信息E -->
         <view class="content">
             <!-- 手机号S -->
-            <view class="list models">
+            <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
                 <input class="select" :focus="isFocus" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
@@ -40,6 +40,15 @@
                 <view class="arrow"></view>
             </view>
             <!-- 城市选择E -->
+            <!-- 地区选择E -->
+            <view class="list models">
+                <view class="list-title" >地区</view>
+                <view class="select" @tap="goChooseRegion">
+                    {{currentRegion.name || ""}}
+                </view>
+                <view class="arrow"></view>
+            </view>
+            <!-- 地区选择S -->
             <!-- 经销商S -->
             <view class="list models">
                 <view class="list-title">经销商</view>
@@ -54,8 +63,9 @@
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
             </view>
         </view>
+        </view>
+        <view v-if="isNoData && !serialData.id" class="no-data">暂无数据</view>
     </view>
-    <view v-else class="no-data">暂无数据</view>
 </template>
 
 <script>
@@ -91,16 +101,23 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 currentCity:{}, //当前选择的城市
 
                 currentDealer: {}, //当前经销商
+
+                currentRegion: {}, //当前选择的地区
                 serialData: {}, //车系详情
                 serialId:"", //车系id
 
                 getPhoneBtn: false,
 
                 isFocus:false,
+
+                isNoData:false,
             }
         },
        async onLoad(options) {
-            console.log('options :>> ', options);
+            uni.showLoading({
+                title: '正在加载...',
+                mask:true
+			})
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -134,12 +151,15 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             async reqSerialDetail(sgId) {
                 try {
                     const {code,data} = await api.fetchSerialDetail({sgId})
-                    console.log('data1111111111111 :>> ', data);
                     if(code ===1 ) {
                         this.serialData = data
+                    }else {
+                        this.isNoData = true
                     }
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    uni.hideLoading()
                 }
             },
             //经销商点击，判断提示
@@ -152,7 +172,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: "/pages/ChooseDealer?cityId="+ this.currentCity.id
+					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
 				})
             },
             //切换车系
@@ -207,8 +227,22 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //选择城市
             goChooseCity(){
                 this.currentDealer = {}
+                this.currentRegion = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity"
+				})
+            },
+            //选择地区
+            goChooseRegion(){
+                if(!this.currentCity.name) {
+                    return uni.showToast({
+                        title:"请先选择城市",
+                        icon:none
+                    })
+                }
+                this.currentDealer = {}
+                uni.navigateTo({
+					url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
 				})
             },
             //立即预约
@@ -223,6 +257,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 })
                 try {
                     const res = await api.submitClue({
+                        areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
@@ -275,7 +310,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         height: 100%;
         display: flex;
         align-items: center;
-        font-size: 35rpx;
+        font-size: 34.5rpx;
     }
     .top-tit {
         width: 100%;
@@ -291,6 +326,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         display: flex;
         align-items: center;
         image {
+            width: 180rpx;
             height: 136rpx;
             vertical-align: middle;
         }
@@ -337,6 +373,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 height: 100%;
                 display: flex;
                 align-items: center;
+                font-size: 34rpx;
             }
             .get-code {
                 color: #fa8943;

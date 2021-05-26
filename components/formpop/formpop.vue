@@ -19,7 +19,8 @@
 				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择省市' ? 'placeholder':'')" :value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
-				<picker @change="bindMultiPickerColumnChangeArea" mode="selector" :range="districtList" :range-key="'name'" :class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
+				<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector" :range="districtList" :range-key="'name'" 
+				:class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
 				<!-- 经销商 S -->
@@ -28,8 +29,8 @@
 					 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
 						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 					</picker>
-					<view v-else class="input-view dealer-input jt-icon placeholder" @tap="showToast('该城市无经销商')">
-						<view>该城市无经销商</view>
+					<view v-else class="input-view dealer-input jt-icon placeholder" @tap="showToast(!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商')">
+						<view>{{!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商'}}</view>
 					</view>					
 				</block>
 				<!-- 经销商 E -->
@@ -46,7 +47,7 @@
 				</view>
 				<view class="btn" @tap="submit">提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
-				<view class="close-btn-bd" @tap="formHide"></view>
+				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 			</view>
 		</view>
 		<!-- 失败 -->
@@ -160,6 +161,11 @@
 				cityIndex = cityIndex > -1 ? cityIndex : 0
 				return [provinceIndex, cityIndex]
 			},
+			selectDistrictIndex () {
+				let districtIndex = this.districtList.findIndex(item => item.id == this.crtDistrictItem.id)
+				districtIndex = districtIndex > -1 ? districtIndex : 0
+				return districtIndex
+			}
 		},
 		methods: {
 			formShow(name, from = "", obj = {}, title) {
@@ -173,6 +179,12 @@
 				this.serialList = this.currentObj.serialGroupList
 				this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
 				this.getpreClue()
+			},
+			closeBtnClick () {
+				if (this.from == 'activity') {
+					wx.aldstat.sendEvent('报名活动留资退出')
+				}
+				this.formHide()
 			},
 			formHide() {
 				this.isShowFormPop = false
@@ -225,6 +237,7 @@
 					detail
 				} = e
 				this.crtDistrictItem = this.districtList[detail.value]
+				this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
 			},
 			bindMultiPickerChange(e) {
 				console.log(e)
@@ -232,9 +245,10 @@
 				  detail
 				} = e
 				this.crtProvinceItem = this.provinceList[detail.value[0]]
-				this.crtCityItem = this.cityList[detail.value[1]]
-				this.reqDealerListByCityId(this.crtCityItem.id)
+				this.cityList = this.crtProvinceItem.cityList
+				this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
 				this.reqDistrictListByCityId(this.crtCityItem.id)
+				this.reqDealerListByCityId(this.crtCityItem.id)
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
@@ -258,6 +272,9 @@
 
 			},
 			async submit() {
+				if (this.from == 'activity') {
+					wx.aldstat.sendEvent('报名活动留资提交')
+				}
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
@@ -374,8 +391,8 @@
 						this.crtProvinceItem = crtLocationProvinceItem
 						this.cityList = this.crtProvinceItem.cityList
 						this.crtCityItem = crtLocationCityItem
-						this.reqDealerListByCityId(this.crtCityItem.id)
 						this.reqDistrictListByCityId(this.crtCityItem.id)
+						this.reqDealerListByCityId(this.crtCityItem.id)
 					}
 				}
 				this.isShowFormPop = true
@@ -397,12 +414,16 @@
 			},
 			// 根据城市id请求地区
 			async reqDistrictListByCityId (cityId) {
-				this.districtList = []
+				this.districtList = [{
+					id: '',
+					name: '请选择您的地区',
+					letter: '',
+				}]
 				this.crtDistrictItem = {}
 				try {
 					const res = await api.fetchDistrictListByCityId({cityId})
 					if (res.code == 1) {
-						this.districtList = res.data
+						this.districtList.push(...res.data)
 					}
 				} catch (err) {
 					this.showToast('获取地区信息失败')
@@ -410,11 +431,11 @@
 				}
 			},
 			// 根据城市id请求经销商
-			async reqDealerListByCityId (cityId) {
+			async reqDealerListByCityId (cityId = '', districtId = '') {
 				this.dealerList = []
 				this.crtDealerItem = {}
 				try {
-					const res = await api.fetchDealerListByCityId({cityId})
+					const res = await api.fetchDealerListByCityId({cityId, districtId})
 					if (res.code == 1) {
 						this.dealerList = res.data
 						if (this.dealerList && this.dealerList.length) {

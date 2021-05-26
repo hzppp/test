@@ -67,7 +67,7 @@ export default {
 	  //  云展厅先加上导航可以返回
 	  if(path == 'exhibition'){
 		  uni.navigateTo({
-		  	url:'/pages/exhibition'
+			url:'/pages/exhibition'
 		  })
 	  }else{
 		uni.switchTab({
