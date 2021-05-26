@@ -14,9 +14,9 @@
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
 		<view class="serial-list">
-			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index">
+			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index" @tap="seeCarBtnClick(serialGroupItem)">
 				<view class="name">{{serialGroupItem.name}}</view>
-				<button class="see-car-btn" @tap="seeCarBtnClick(serialGroupItem)">3D看车 ></button>
+				<button class="see-car-btn">3D看车 ></button>
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
