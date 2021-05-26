@@ -41,6 +41,7 @@ let app = getApp()
 		},
 		async onLoad(options) {
             console.log('options :>> ', options);
+     
 			await distance.getLocation()
 			this.getAllCityList()
             this.cuurentPositioningCity = app.globalData.currentLocation.selectedCityData.city || ""
@@ -49,6 +50,10 @@ let app = getApp()
 		methods: {
 			async getAllCityList() {
 				try{
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
 					const {code,data:{letterGroup}} = await api.fetchAllCityList({hasHot:0})
 					let tempLetterGroup = []
 					let tempCityList = []
@@ -62,7 +67,9 @@ let app = getApp()
 					this.cityList = tempCityList
 				}catch(e){
 					console.error(e)
-				}
+				}finally {
+                    uni.hideLoading()
+                }
 			},
 			sidePoint(id) {
 				this.targetId = id
