@@ -110,8 +110,15 @@
 			},
 			// 看车按钮被点击
 			seeCarBtnClick (serialGroupItem) {
+				const currentLocation = app.globalData.currentLocation
+				let cityId = '1000000262'
+				let cityName = '重庆市'
+				if (currentLocation.selectedCityData && currentLocation.selectedCityData.cityId) {
+					cityId = currentLocation.selectedCityData.cityId
+					cityName = currentLocation.selectedCityData.city
+				}
 				uni.navigateTo({
-					url: `/pages/exhibition?sid=${serialGroupItem.pcSerialGroupId}`
+					url: `/pages/vr360Frame/vr360Frame?sid=${serialGroupItem.pcSerialGroupId}&cityId=${cityId}&cityName=${cityName}`
 				})
 			},
 			async getPhoneNumber(e) {
