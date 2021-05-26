@@ -584,6 +584,7 @@ export default {
           border-radius: 20rpx;
           margin: 30rpx 0 16rpx 0;
         }
+
         .title {
           height: 34rpx;
           width: 100%;
