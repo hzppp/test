@@ -10,7 +10,7 @@
       </view>
     </pageTopCity>
     <viewTabBar :current="0"></viewTabBar>
-    <testDrive></testDrive>
+    <testDrive aldEventName="首页预约试驾点击"></testDrive>
     <view class="content">
       <image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop" :src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image>
       <view class="linkCont" v-if="false">
@@ -330,6 +330,7 @@ export default {
       }
     },
     goVr() {
+      wx.aldstat.sendEvent('云展厅点击')
       uni.navigateTo({
         url:'/pages/exhibition'
       })
@@ -344,18 +345,21 @@ export default {
       console.log('type,id,status',type,id,status,typeof(type))
       switch (type) {
         case 1: {
+          wx.aldstat.sendEvent('精选资讯点击')
           uni.navigateTo({
             url: `/pages/article?articleId=${id}`
           })
           break;
         }
         case 2: {
+          wx.aldstat.sendEvent('精选活动点击')
           uni.navigateTo({
             url: `/pages/activity?id=${id}`
           })
           break;
         }
         case 3: {
+          wx.aldstat.sendEvent('精选直播点击')
           switch (status) {
             case 0: {
               uni.navigateTo({
@@ -419,6 +423,7 @@ export default {
       // })
     },
     goLookCar(item) {
+      wx.aldstat.sendEvent('热销车型点击')
       uni.navigateTo({
         url: `/pages/LookCar?id=${item.pcSerialGroupId}`
       })
