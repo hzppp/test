@@ -4,7 +4,8 @@
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
                 mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
-          <view>{{ selectCity || indexCity.name }}</view>
+          <view class="cityName">{{ selectCity || indexCity.name }}</view>
+          <image src="../static/images/arrowBottom.png" class="img"></image>
         </picker>
       </view>
     </pageTopCity>
@@ -257,7 +258,8 @@ export default {
         detail
       } = e
       this.crtProvinceItem = this.provinceList[detail.value[0]]
-      this.crtCityItem = this.cityList[detail.value[1]]
+      this.cityList = this.crtProvinceItem.cities
+      this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
       await this.getPageData()
 
       // 改变默认定位省市
@@ -445,29 +447,30 @@ export default {
 <style lang="less" scoped>
 @import '@/static/less/public.less';
 .city {
-  position: sticky;
+  display: inline-block;
   left: 0;
   top: 0;
   z-index: 1;
-  width: 150rpx;
   padding: 15rpx 32rpx 0;
   background-color: #ffffff;
   .select-city{
+    position: relative;
     view {
-      display: flex;
-      align-items: center;
       font-size: 28rpx;
+      max-width: 164rpx;
       color: #333333;
-      &::after {
-        flex: 0 0 auto;
-        margin-left: 10rpx;
-        display: view;
-        content: '';
-        background: url("../static/images/arrowBottom.png") no-repeat;
-        width: 8rpx;
-        height: 4rpx;
-        background-size: 8rpx 4rpx;
-      }
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .img {
+      position: absolute;
+      bottom: 15rpx;
+      right: -24rpx;
+      content: '';
+      width: 16rpx;
+      height: 8rpx;
+      background-size: 16rpx 8rpx;
     }
   }
 }
