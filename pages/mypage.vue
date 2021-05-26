@@ -135,18 +135,18 @@
 			// this.qdIndex = index
 			// this.signInList = data.data
 			// this.signInList
-
+ 
 			// console.log('getsignIn', data)
 		},
 		methods: {
 			tocard() {
-				aldstat.sendEvent('我的优惠券点击') 
+				wx.aldstat.sendEvent('我的优惠券点击') 
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
 			},
 			toactivity(){
-				aldstat.sendEvent('我的活动点击') 
+				wx.aldstat.sendEvent('我的活动点击') 
 				uni.navigateTo({
 					url: '/pages/myActivity'
 				})

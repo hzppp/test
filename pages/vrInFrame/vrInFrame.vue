@@ -9,7 +9,7 @@
 	export default {
 		data() {
 			return {
-             src:'',
+				src:domain.getAPI('webUrl'),
 			};
 		},
     mounted(){
@@ -18,8 +18,7 @@
       let curRoute = curObj.route 
       let curParam = curObj.options
       
-      this.src =  domain.getAPI('webUrl') + `vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}`
-      // this.src = `http://192.168.16.53:8080/vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}`
+      this.src = this.src+ `vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}`
     }
 	}
 </script>
