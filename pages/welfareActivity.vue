@@ -176,7 +176,8 @@ export default {
         detail
       } = e
 	  this.crtProvinceItem = this.provinceList[detail.value[0]]
-	  this.crtCityItem = this.cityList[detail.value[1]]
+	  this.cityList = this.crtProvinceItem.cities
+	  this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
       this.resetjson()
       // this.getWelfare()
       this.getactivity()
