@@ -20,7 +20,7 @@
 		</block>
 		<block>
 			<view class="canpei_top">
-				<view class="canpei_top_left" @tap="toggleHide">
+				<view class="canpei_top_left" @tap="">
 					<!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
 					<view class="canpei_top_left_title">
 						<!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
@@ -96,7 +96,9 @@
 												<!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
 												<block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
 													<view :class="['right_list_item' , d.key === '官方报价' ? 'h76px' : '']">
-                                                        <view :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']">{{d.value}}</view>
+                                                        <!-- :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']" -->
+                                                        <!--  :class="[difData[d.key] ? 'origin' : '']" -->
+                                                        <view>{{d.value}}</view>
 														<view v-if="d.key === '官方报价'">
 															<view class="zdj_box">
 																<view class="zdj" @tap.stop="toYuYue(Data.detailArray[idx].serialGorupId)">预约试驾</view>
@@ -281,7 +283,7 @@
 			toggleHide(){
 				if(JSON.stringify(this.Data)!='{}'&&this.Data.detailArray.length>1) {
 					this.showOrhide = !this.showOrhide
-					}
+				}
 			},
 			// 添加车型
 			addCar() {
