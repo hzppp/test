@@ -29,12 +29,12 @@
             </view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <view class="list models">
                 <view class="list-title">验证码</view>
-                <input class="select" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
+                <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
@@ -105,20 +105,27 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             console.log('options :>> ', options);
-      
             this.serialId = options.serialId || ""
+            if(options.cityId) {
+                this.$set(this.currentCity,'id',options.cityId)
+                this.$set(this.currentCity,'name',cityData.cityName)
+            }else {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'id',cityData.cityId )
+                this.$set(this.currentCity,'name',cityData.city )
+                this.$set(this.currentCity,'provinceId',cityData.proId )
+            }
             this.reqSerialDetail(options.serialId)
-            await distance.getLocation()
-            const cityData = app.globalData.currentLocation.selectedCityData
-            this.$set(this.currentCity,'id',cityData.cityId )
-            this.$set(this.currentCity,'name',cityData.city )
-            this.$set(this.currentCity,'provinceId',cityData.proId )
         },
         methods: {
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
                     try {
+                    	uni.showLoading({
+                            title: '正在加载...'
+                        })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
                             this.phoneNum = data.phoneNumber						
@@ -129,6 +136,8 @@ const COUNTDOWN = 60
                             title:"手机授权失败"
                         })
                         this.isFocus = true
+                    }finally {
+                        uni.hideLoading()
                     }
 				}else {
                     this.isFocus = true
@@ -243,16 +252,16 @@ const COUNTDOWN = 60
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
-				})
+                    url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
+                })
             },
             //选择城市
             goChooseCity(){
                 this.currentDealer = {}
                 this.currentRegion = {}
                 uni.navigateTo({
-					url: "/pages/ChooseCity?name="+ this.currentCity.name
-				})
+                    url: "/pages/ChooseCity?name="+ this.currentCity.name
+                })
             },
             //选择地区
             goChooseRegion(){
@@ -264,14 +273,14 @@ const COUNTDOWN = 60
                 }
                 this.currentDealer = {}
                 uni.navigateTo({
-					url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
-				})
+                    url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
+                })
             },
             //选择车系
             goChooseSerial() {
                 uni.navigateTo({
-					url: "/pages/ChooseSerial?pages=YuyuePage"
-				})
+                    url: "/pages/ChooseSerial?pages=YuyuePage"
+                })
             },
             cityPickerChange: function(e) {
                 console.log('this.cityList[e.target.value].id :>> ', this.cityList[e.target.value].id);
@@ -300,7 +309,7 @@ const COUNTDOWN = 60
         vertical-align: middle;
 	}
     .content {
-        padding: 32rpx 32rpx 10rpx;
+        padding: 32rpx 32rpx 34rpx;
         box-sizing: border-box;
         .getPhoneBtn {
             background-color: transparent;
