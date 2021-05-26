@@ -1,12 +1,12 @@
 <template>
 	<view class="cars-page">
     <testDrive></testDrive>
-        <view class="image-wrap" v-if="serialData.videoCoverUrl">
+        <view class="image-wrap" v-if="serialData.videoUrl">
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoCoverUrl"></btnWrap>
+        <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap>
 
 
         <view class="image-wrap">
@@ -14,7 +14,7 @@
         </view>
 
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoCoverUrl"></btnWrap>
+        <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoUrl"></btnWrap>
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
@@ -52,9 +52,9 @@ export default {
         async reqSerialDetail(sgId) {
             try {
                 const {code,data} = await api.fetchSerialDetail({sgId})
+                console.log('data :>> ', data);
                 if(code ===1 ) {
                     this.serialData = data
-                    console.log('data :>> ', data);
                     this.serialId = data.pcSerialGroupId
                     this.reqModelsList(data.pcSerialGroupId)
                     uni.setNavigationBarTitle({
