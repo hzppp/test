@@ -327,12 +327,14 @@
 						margin: 8rpx 4rpx;
 						padding: 2rpx 4rpx;
 						border-radius: 10rpx;
+						font-size: 22rpx;
 					}
 				}
 				.right-b {
 					display: flex;
 					flex-wrap: wrap;
                     width: 50%;
+					justify-content: flex-end;
 					.r-tit {
 						background-color: #E6F3FF;
 						flex-wrap: nowrap;
@@ -342,6 +344,7 @@
 						margin: 4rpx;
 						padding: 2rpx 4rpx;
 						border-radius: 10rpx;
+						font-size: 22rpx;
 					}
 				}
 			}

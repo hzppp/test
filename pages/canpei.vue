@@ -1,143 +1,149 @@
 <template>
 	<!-- 参配页 -->
-	<view class='canpei uni'>
-		<!-- 车型对比计数器 S -->
-		<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
-		<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
-		<back-home></back-home>
-		<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
-			<view class="icon">
-				<i class="iconfont icondaohangpinlei"></i>
-			</view>
-			<text>导航</text>
-		</view>
-		<block v-if="nodata">
-			<view class="nodata_box">
-				<view class="nodata">
-					<view class="td">暂无参配信息</view>
+	<view>
+		<view class='canpei uni' v-if="max > 0">
+			<!-- 车型对比计数器 S -->
+			<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
+			<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
+			<back-home></back-home>
+			<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
+				<view class="icon">
+					<i class="iconfont icondaohangpinlei"></i>
 				</view>
+				<text>导航</text>
 			</view>
-		</block>
-		<block>
-			<view class="canpei_top">
-				<view class="canpei_top_left" @tap="">
-					<!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
-					<view class="canpei_top_left_title">
-						<!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
-						参数配置
+			<block v-if="nodata">
+				<view class="nodata_box">
+					<view class="nodata">
+						<view class="td">暂无参配信息</view>
 					</view>
 				</view>
-				<scroll-view scroll-x @scroll="getX" :scroll-left="scrollLeft" @touchend="setLeft" class="canpei_top_right">
-					<view class="car_box" :style="'width:'+width+'rpx'">
-						<block v-for="(item,index) in Data.detailArray" :key="index">
-							<view class="car_list">
-								<view class="item">
-									<text>{{item.modelName}}</text>
-									<view class="close" @tap="delCar(item.modelId,index)">
-										<i class="iconclose iconfont"></i>
-									</view>
-								</view>
-							</view>
-						</block>
-						<view class="car_list">
-							<view :class="max==4||nodata?'add opc':'add'" @tap="addCar">
-								<view class="add_icon">
-									<i class="iconadd iconfont"></i>
-								</view>
-								<view class="add_title">
-									添加车型
-								</view>
-								<view class="add_message">
-									(最多可添加4项)
-								</view>
-							</view>
+			</block>
+			<block>
+				<view class="canpei_top">
+					<view class="canpei_top_left" @tap="">
+						<!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
+						<view class="canpei_top_left_title">
+							<!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
+							参数配置
 						</view>
 					</view>
-				</scroll-view>
-			</view>
-			<scroll-view scroll-y class="canpei_bot" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
-				<block v-if="Data.detailArray.length==0">
-					<view class="canpei_bot_none"></view>
-				</block>
-				<block v-else>
-					<view class="canpei_bot_left">
-						<block v-for="(item,index) in dataList" :key="index">
-							<view class="canpei_list_left">
-								<view class="canpei_head" :id="'id_'+index">
-									<view class="canpei_head_left">
-										{{item.name}}
-									</view>
-									<view class="flex-1"></view>
-									<view class="canpei_head_right" style="margin-right:20px">
-										●标配 ○选配 -无
-									</view>
-								</view>
-								<block v-if="item.detail.length>0">
-									<block v-for="(it,inds) in item.detail[0]" :key="inds">
-										<block v-if="it.key != '本地最低价' && showOrhide||(!showOrhide&&difData[it.key])">
-                                            <!--  :class="['left_item',difData[it.key]&&Data.detailArray.length>1?'yellow':'']" -->
-											<view :class="['left_item', it.key === '官方报价' ? 'h76px' : '']">
-												{{it.key}}
-											</view>
-										</block>
-									</block>
-								</block>
-							</view>
-						</block>
-					</view>
-					<view class="canpei_box_right_con">
-						<scroll-view scroll-x class="canpei_box_right" @scroll="getX" @touchend="setLeft" :scroll-left="scrollLeft">
-							<block v-for="(item1,index) in dataList" :key="index">
-								<view class="canpei_head_right"></view>
-								<view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
-									<block v-for="(item2,idx) in item1.detail" :key="idx">
-										<view class="right_list">
-											<block v-for="(d,i) in item2" :key="i">
-												<!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
-												<block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
-													<view :class="['right_list_item' , d.key === '官方报价' ? 'h76px' : '']">
-                                                        <!-- :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']" -->
-                                                        <!--  :class="[difData[d.key] ? 'origin' : '']" -->
-                                                        <view>{{d.value}}</view>
-														<view v-if="d.key === '官方报价'">
-															<view class="zdj_box">
-																<view class="zdj" @tap.stop="toYuYue(Data.detailArray[idx].serialGorupId)">预约试驾</view>
-															</view>
-														</view>
-													</view>
-												</block>
-											</block>
+					<scroll-view scroll-x @scroll="getX" :scroll-left="scrollLeft" @touchend="setLeft" class="canpei_top_right">
+						<view class="car_box" :style="'width:'+width+'rpx'">
+							<block v-for="(item,index) in Data.detailArray" :key="index">
+								<view class="car_list">
+									<view class="item">
+										<text>{{item.modelName}}</text>
+										<view class="close" @tap="delCar(item.modelId,index)">
+											<i class="iconclose iconfont"></i>
 										</view>
-									</block>
-									<view class="right_list">
-										<block v-for="(d,i) in item.detail[0]" :key="i">
-											<block v-if="showOrhide||(!showOrhide&&difData[d.key])">
-												<view class="right_list_item"></view>
-											</block>
-										</block>
 									</view>
 								</view>
 							</block>
-						</scroll-view>
-					</view>
-				</block>
-			</scroll-view>
-		</block>
-		<!-- 导航弹窗s -->
-		<block v-if="showNav">
-			<view class="nav_tc" @tap="showNav=!showNav">
-				<scroll-view scroll-y class="tc_win" @tap.stop>
-					<view class="tc_win_box">
-						<block v-for="(item,index) in dataList" :key="index">
-							<view class="nav_list" @tap.stop="toView(index)">
-								{{item.name}}
+							<view class="car_list">
+								<view :class="max==4||nodata?'add opc':'add'" @tap="addCar">
+									<view class="add_icon">
+										<i class="iconadd iconfont"></i>
+									</view>
+									<view class="add_title">
+										添加车型
+									</view>
+									<view class="add_message">
+										(最多可添加4项)
+									</view>
+								</view>
 							</view>
-						</block>
-					</view>
+						</view>
+					</scroll-view>
+				</view>
+				<scroll-view scroll-y class="canpei_bot" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
+					<block v-if="Data.detailArray.length==0">
+						<view class="canpei_bot_none"></view>
+					</block>
+					<block v-else>
+						<view class="canpei_bot_left">
+							<block v-for="(item,index) in dataList" :key="index">
+								<view class="canpei_list_left">
+									<view class="canpei_head" :id="'id_'+index">
+										<view class="canpei_head_left">
+											{{item.name}}
+										</view>
+										<view class="flex-1"></view>
+										<view class="canpei_head_right" style="margin-right:20px">
+											●标配 ○选配 -无
+										</view>
+									</view>
+									<block v-if="item.detail.length>0">
+										<block v-for="(it,inds) in item.detail[0]" :key="inds">
+											<block v-if="it.key != '本地最低价' && showOrhide||(!showOrhide&&difData[it.key])">
+												<!--  :class="['left_item',difData[it.key]&&Data.detailArray.length>1?'yellow':'']" -->
+												<view :class="['left_item', it.key === '官方报价' ? 'h76px' : '']">
+													{{it.key}}
+												</view>
+											</block>
+										</block>
+									</block>
+								</view>
+							</block>
+						</view>
+						<view class="canpei_box_right_con">
+							<scroll-view scroll-x class="canpei_box_right" @scroll="getX" @touchend="setLeft" :scroll-left="scrollLeft">
+								<block v-for="(item1,index) in dataList" :key="index">
+									<view class="canpei_head_right"></view>
+									<view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
+										<block v-for="(item2,idx) in item1.detail" :key="idx">
+											<view class="right_list">
+												<block v-for="(d,i) in item2" :key="i">
+													<!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
+													<block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
+														<view :class="['right_list_item' , d.key === '官方报价' ? 'h76px' : '']">
+															<!-- :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']" -->
+															<!--  :class="[difData[d.key] ? 'origin' : '']" -->
+															<view>{{d.value}}</view>
+															<view v-if="d.key === '官方报价'">
+																<view class="zdj_box">
+																	<view class="zdj" @tap.stop="toYuYue(Data.detailArray[idx].serialGorupId)">预约试驾</view>
+																</view>
+															</view>
+														</view>
+													</block>
+												</block>
+											</view>
+										</block>
+										<view class="right_list">
+											<block v-for="(d,i) in item.detail[0]" :key="i">
+												<block v-if="showOrhide||(!showOrhide&&difData[d.key])">
+													<view class="right_list_item"></view>
+												</block>
+											</block>
+										</view>
+									</view>
+								</block>
+							</scroll-view>
+						</view>
+					</block>
 				</scroll-view>
-			</view>
-		</block>
-		<!-- 导航弹窗e -->
+			</block>
+			<!-- 导航弹窗s -->
+			<block v-if="showNav">
+				<view class="nav_tc" @tap="showNav=!showNav">
+					<scroll-view scroll-y class="tc_win" @tap.stop>
+						<view class="tc_win_box">
+							<block v-for="(item,index) in dataList" :key="index">
+								<view class="nav_list" @tap.stop="toView(index)">
+									{{item.name}}
+								</view>
+							</block>
+						</view>
+					</scroll-view>
+				</view>
+			</block>
+			<!-- 导航弹窗e -->
+		</view>
+		<view v-else class="no-canpei">
+			<image mode="WidthFix" src="../static/images/canpei_noData.png" />
+			<view class="text">暂时没有参配信息</view>
+		</view>
 	</view>
 </template>
 <script>
@@ -392,7 +398,7 @@
 			.icon {
 				width: 100%;
 				text-align: center;
-				margin-top: 12rpx;
+				margin-top: 4rpx;
 
 				.iconfont {
 					font-size: 30rpx;
@@ -427,7 +433,7 @@
 
 			.tc_win {
 				width: 560rpx;
-				height: calc(100% - 240rpx);
+				// height: calc(100% - 240rpx);
 				background: #fff;
 				box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.3);
 				padding-bottom: 20rpx;
@@ -781,5 +787,17 @@
         .h76px {
             height: 152rpx !important;
         }
+	}
+	.no-canpei {
+		text-align: center;
+		margin-top: 240rpx;
+		image {
+			width: 670rpx;
+			height: 324rpx;
+		}
+		.text {
+			font-size: 28rpx;
+			color: #999999;
+		}
 	}
 </style>
