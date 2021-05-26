@@ -309,7 +309,7 @@ const COUNTDOWN = 60
         vertical-align: middle;
 	}
     .content {
-        padding: 32rpx 32rpx 10rpx;
+        padding: 32rpx 32rpx 34rpx;
         box-sizing: border-box;
         .getPhoneBtn {
             background-color: transparent;
