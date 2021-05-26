@@ -9,7 +9,8 @@
 	export default {
 		data() {
 			return {
-        src:'',
+        src:domain.getAPI('webUrl')
+				// src:'http://192.168.16.53:8080/',
 			};
 		},
     mounted(){
@@ -20,11 +21,11 @@
 			
 			let _data = decodeURIComponent(curParam.data)
 			if(_data!='undefined'){
-				this.src = domain.getAPI('webUrl') + `vr360.html?data=${_data}`
+				this.src = this.src + `vr360.html?data=${_data}`
 				return;
 			}
 			if(curParam.sid){
-				this.src = domain.getAPI('webUrl') + `vr360.html?sid=${curParam.sid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}`
+				this.src = this.src + `vr360.html?sid=${curParam.sid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}`
 				return;
 			}
 			console.log('参数缺失')
