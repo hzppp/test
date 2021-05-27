@@ -128,8 +128,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
            console.log('options :>> ', options);
             this.serialId = options.serialId || ""
             if(options.cityId) {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
                 this.$set(this.currentCity,'id',options.cityId)
-                this.$set(this.currentCity,'name',options.cityName)
+                this.$set(this.currentCity,'name',decodeURI(options.cityName))
+                this.$set(this.currentCity,'provinceId',cityData.proId )
             }else {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData

@@ -2,7 +2,7 @@
     <view>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
-        <image mode="widthFix" src="http://img.pcauto.com.cn/images/upload/upc/tx/auto5/2102/02/c16/252303537_1612261476705.png" />
+        <image mode="widthFix" src="../static/images/yuyue_banner.png" />
         <view class="content">
             <view class="title">预约试驾</view>
             <view class="list models">
@@ -53,6 +53,8 @@
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
+import login from '@/units/login'
+
 let app = getApp()
 
 
@@ -114,8 +116,11 @@ const COUNTDOWN = 60
             console.log('options :>> ', options);
             this.serialId = options.serialId || ""
             if(options.cityId) {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'provinceId',cityData.proId )
                 this.$set(this.currentCity,'id',options.cityId)
-                this.$set(this.currentCity,'name',options.cityName)
+                this.$set(this.currentCity,'name',decodeURI(options.cityName))
             }else {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
