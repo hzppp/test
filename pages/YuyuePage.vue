@@ -114,6 +114,8 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             console.log('options :>> ', options);
+            await login.checkLogin()
+            this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
                 await distance.getLocation()
@@ -131,6 +133,13 @@ const COUNTDOWN = 60
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+            getStoragePhone() {
+				let phone = uni.getStorageSync('userPhone');
+                if(phone) {
+                    this.phoneNum = phone
+                    this.getPhoneBtn = true
+                }
+            },
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
@@ -140,6 +149,7 @@ const COUNTDOWN = 60
                         })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
+                            uni.setStorageSync('userPhone', data.phoneNumber)
                             this.phoneNum = data.phoneNumber						
 					    }
                     } catch (error) {

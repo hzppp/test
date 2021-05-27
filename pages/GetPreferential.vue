@@ -72,6 +72,8 @@
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
+import login from '@/units/login'
+
 let app = getApp()
 
 /* *
@@ -125,7 +127,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.checkInfo()
         },
        async onLoad(options) {
-           console.log('options :>> ', options);
+            console.log('options :>> ', options);
+            await login.checkLogin()
+            this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
                 await distance.getLocation()
@@ -143,6 +147,13 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+            getStoragePhone() {
+				let phone = uni.getStorageSync('userPhone');
+                if(phone) {
+                    this.phoneNum = phone
+                    this.getPhoneBtn = true
+                }
+            },
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
@@ -153,6 +164,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
+                            uni.setStorageSync('userPhone', data.phoneNumber)
                             this.phoneNum = data.phoneNumber						
 					    }
                     } catch (error) {
