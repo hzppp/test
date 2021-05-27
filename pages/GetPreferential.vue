@@ -113,17 +113,31 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isNoData:false,
             }
         },
+        watch: {
+            currentCity(n) {
+                this.reqDealersList(n.id)  
+            },
+            currentRegion(n) {
+                this.reqDealersList(this.currentCity.id,n.id)  
+            }
+        },
         onShow() {
             this.checkInfo()
         },
        async onLoad(options) {
+           console.log('options :>> ', options);
             this.serialId = options.serialId || ""
+            if(options.cityId) {
+                this.$set(this.currentCity,'id',options.cityId)
+                this.$set(this.currentCity,'name',options.cityName)
+            }else {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'id',cityData.cityId )
+                this.$set(this.currentCity,'name',cityData.city )
+                this.$set(this.currentCity,'provinceId',cityData.proId )
+            }
             this.reqSerialDetail(options.serialId)
-            await distance.getLocation()
-            const cityData = app.globalData.currentLocation.selectedCityData
-            this.$set(this.currentCity,'id',cityData.cityId )
-            this.$set(this.currentCity,'name',cityData.city )
-            this.$set(this.currentCity,'provinceId',cityData.proId )
         },
         methods: {
             async getPhoneNumber(e) {
@@ -227,10 +241,6 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //检测信息是否齐全
             checkInfo() {
-                console.log('this.currentDealer.id :>> ', this.currentDealer.id);
-                console.log('this.currentCity.id  :>> ', this.currentCity.id );
-                console.log('this.codeNum :>> ', this.codeNum);
-                console.log('this.phoneNum :>> ', this.phoneNum);
                 if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
                     this.isAllSelect = true
                     console.log('true :>> ', true);
@@ -300,6 +310,36 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title:res.msg,
                             icon:"none"
                         })
+                    }
+                } catch (error) {
+                    console.error(error)
+                }finally {
+                    uni.hideLoading()
+                }
+            },
+            //获取经销商列表
+            async reqDealersList(cityId,districtId) {
+                try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    if(!districtId) {
+                        const {code,data} = await api.fetchDealersList({cityId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }else {
+                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
                     }
                 } catch (error) {
                     console.error(error)

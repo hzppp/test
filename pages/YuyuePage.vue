@@ -101,7 +101,10 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
-                console.log('n :>> ', n);
+                this.reqDealersList(n.id)  
+            },
+            currentRegion(n) {
+                this.reqDealersList(this.currentCity.id,n.id)  
             }
         },
         onShow() {
@@ -112,7 +115,7 @@ const COUNTDOWN = 60
             this.serialId = options.serialId || ""
             if(options.cityId) {
                 this.$set(this.currentCity,'id',options.cityId)
-                this.$set(this.currentCity,'name',cityData.cityName)
+                this.$set(this.currentCity,'name',options.cityName)
             }else {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
@@ -159,18 +162,7 @@ const COUNTDOWN = 60
             cleanRegion() {
                 this.currentRegion = {}
             },
-            //获取经销商列表
-            async reqDealersList(cityId,districtId) {
-                try {
-                    const {code,data} = await api.fetchDealersList({cityId,districtId})
-                    console.log('data :>> ', data);
-                    if(code === 1) {
-                        this.dealersList = data
-                    }
-                } catch (error) {
-                    console.error(error)
-                }
-            },
+
             //获取车系详情
             async reqSerialDetail(sgId) {
                 try {
@@ -300,6 +292,37 @@ const COUNTDOWN = 60
                     url: "/pages/ChooseSerial?pages=YuyuePage"
                 })
             },
+            //获取经销商列表
+            async reqDealersList(cityId,districtId) {
+                try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    if(!districtId) {
+                        const {code,data} = await api.fetchDealersList({cityId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }else {
+                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }
+                } catch (error) {
+                    console.error(error)
+                }finally {
+                    uni.hideLoading()
+                }
+            },
+
             cityPickerChange: function(e) {
                 console.log('this.cityList[e.target.value].id :>> ', this.cityList[e.target.value].id);
                 this.currentRegion = {}

@@ -66,6 +66,7 @@ export default {
         },
         //预约试驾
         goYuyue(){
+            wx.aldstat.sendEvent('预约试驾点击')
             uni.navigateTo({
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
