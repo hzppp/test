@@ -1,6 +1,7 @@
 import domain from '@/configs/interface';
 import request from "@/units/request.js"
 import toast from '@/units/showToast.js';
+import api from '@/public/api/index'
 
 let app = getApp()
 export default {
@@ -26,7 +27,7 @@ export default {
 					resolve(false)
 				},
 				complete: () => {
-					
+
 				}
 			})
         })
@@ -50,9 +51,9 @@ export default {
         uni.setStorageSync('haveUserInfoAuth', false)
         app.globalData.wxUserInfo = null
         uni.setStorageSync('wxUserInfo', null)
-        if (app.globalData.loginJson) {
-            return app.globalData.loginJson
-        }
+        // if (app.globalData.loginJson) {
+        //     return app.globalData.loginJson
+        // }
         // let isSession = this.getSessionKey()
         let _data = {}
         let data1 = await this.uniLogin()//获取jscode
@@ -93,5 +94,40 @@ export default {
             }
         }
         return data;
+    },
+    async checkLogin() {
+        let isSession = await this.checkSession()
+        console.log('isSession', isSession)
+        if (isSession) {
+            let {code, data} = await api.getUser()
+            console.log('ttttttt123', data)
+            if (code == 1 && data) {
+                app.globalData.haveUserInfoAuth = !!data.wxName
+                uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+                app.globalData.wxUserInfo = data
+                uni.setStorageSync('wxUserInfo', data)
+                uni.setStorageSync('userPhone', data.mobile)
+            } else if (code == -4) {
+                await this.login()
+                let {code, data} = await api.getUser()
+                if (code == 1 && data) {
+                    app.globalData.haveUserInfoAuth = !!data.wxName
+                    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+                    app.globalData.wxUserInfo = data
+                    uni.setStorageSync('wxUserInfo', data)
+                }
+            }
+            console.log('ttt1',app.globalData.haveUserInfoAuth)
+        } else {
+            await this.login()
+            let {code, data} = await api.getUser()
+            if (code == 1 && data) {
+                app.globalData.haveUserInfoAuth = !!data.wxName
+                uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+                app.globalData.wxUserInfo = data
+                uni.setStorageSync('wxUserInfo', data)
+                console.log('ttt2',app.globalData.haveUserInfoAuth)
+            }
+        }
     }
 }

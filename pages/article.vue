@@ -29,7 +29,7 @@
 			</view>
 		</getFormidbox>
     <testDrive></testDrive>
-		<view class="share-btn">
+		<view :class="!isIpx ? 'share-btn' : 'share-btn ipx'">
 			<button open-type="share" plain="true" hover-class="none"></button>分享给好友
 		</view>
 	</view>
@@ -61,11 +61,28 @@
 				title: "",
 				publishTime: "",
 				content: '',
-				pictureUrl: ''
+				pictureUrl: '',
+        isIpx: false
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+      let that = this;
+      uni.getSystemInfo({
+        success: function (res) {
+          console.log('getSystemInfo', res)
+          let model = ['X', 'XR', 'XS', '11', '12', '13', '14', '15'];
+          model.some(item => {
+            //适配iphoneX以上的底部，给tabbar一定高度的padding-bottom
+            console.log('res.model',res.model)
+            if (res.model.indexOf(item) != -1 && res.model.indexOf('iPhone') != -1) {
+              that.isIpx = true;
+              return true
+            }
+          })
+          console.log('that.isIpx',that.isIpx)
+        }
+      });
       uni.showLoading({
         title: '正在加载...'
       })
@@ -194,6 +211,9 @@
 			width: 100%;
 			height: 100%;
 		}
+    &.ipx {
+      bottom: 40rpx;
+    }
 	}
 
 	.content_zb {

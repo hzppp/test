@@ -11,7 +11,6 @@
 
 <script>
 import login from '@/units/login'
-import api from '@/public/api/index'
 import distance from '@/units/distance'
 
 let app = getApp()
@@ -42,39 +41,7 @@ export default {
       app.globalData.salesId = options.salesId
     }
 
-    let isSession = await login.checkSession()
-    console.log('isSession', isSession)
-    if (isSession) {
-      let {code, data} = await api.getUser()
-      console.log('ttttttt123', data)
-      if (code == 1 && data) {
-        app.globalData.haveUserInfoAuth = !!data.wxName
-        uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-        app.globalData.wxUserInfo = data
-        uni.setStorageSync('wxUserInfo', data)
-        uni.setStorageSync('userPhone', data.mobile)
-      } else if (code == -4) {
-        await login.login()
-        let {code, data} = await api.getUser()
-        if (code == 1 && data) {
-          app.globalData.haveUserInfoAuth = !!data.wxName
-          uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-          app.globalData.wxUserInfo = data
-          uni.setStorageSync('wxUserInfo', data)
-        }
-      }
-      console.log('ttt1',app.globalData.haveUserInfoAuth)
-    } else {
-      await login.login()
-      let {code, data} = await api.getUser()
-      if (code == 1 && data) {
-        app.globalData.haveUserInfoAuth = !!data.wxName
-        uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-        app.globalData.wxUserInfo = data
-        uni.setStorageSync('wxUserInfo', data)
-        console.log('ttt2',app.globalData.haveUserInfoAuth)
-      }
-    }
+    await login.checkLogin()
 
     let cs = ''
     let url = '/pages/index'
