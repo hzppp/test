@@ -41,7 +41,7 @@
             </view>
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
-                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}" :disabled=!isAllSelect>立即预约</button>
+                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即预约</button>
             </view>
         </view>
     </view>
@@ -104,6 +104,9 @@ const COUNTDOWN = 60
                 console.log('n :>> ', n);
             }
         },
+        onShow() {
+            this.checkInfo()
+        },
         async onLoad(options) {
             console.log('options :>> ', options);
             this.serialId = options.serialId || ""
@@ -147,7 +150,7 @@ const COUNTDOWN = 60
 			},
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity) {
+                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
                     this.isAllSelect = true
                 }else {
                     this.isAllSelect = false
@@ -212,6 +215,10 @@ const COUNTDOWN = 60
 
             //立即预约
             async yuYue() {
+                if(!this.currentDealer.id) return uni.showToast({
+                    title:"请先选择经销商",
+                    icon:"none"
+                })
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
@@ -221,7 +228,12 @@ const COUNTDOWN = 60
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
+            
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })
                     const res = await api.submitClue({
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
@@ -244,6 +256,8 @@ const COUNTDOWN = 60
                     }
                 } catch (error) {
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
             //经销商点击，判断提示

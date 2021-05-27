@@ -113,11 +113,10 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isNoData:false,
             }
         },
+        onShow() {
+            this.checkInfo()
+        },
        async onLoad(options) {
-            uni.showLoading({
-                title: '正在加载...',
-                mask:true
-			})
             this.serialId = options.serialId || ""
             this.reqSerialDetail(options.serialId)
             await distance.getLocation()
@@ -131,6 +130,10 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 				let {detail} = e
 				if (detail.iv) {
                     try {
+                        uni.showLoading({
+                            title: '正在加载...',
+                            mask:true
+                        })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
                             this.phoneNum = data.phoneNumber						
@@ -141,6 +144,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title:"手机授权失败"
                         })
                         this.isFocus = true
+                    }finally {
+                        uni.hideLoading()
                     }
 				}else {
                     this.isFocus = true
@@ -150,6 +155,10 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //车系详情
             async reqSerialDetail(sgId) {
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1 ) {
                         this.serialData = data
@@ -218,10 +227,16 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity) {
+                console.log('this.currentDealer.id :>> ', this.currentDealer.id);
+                console.log('this.currentCity.id  :>> ', this.currentCity.id );
+                console.log('this.codeNum :>> ', this.codeNum);
+                console.log('this.phoneNum :>> ', this.phoneNum);
+                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
                     this.isAllSelect = true
+                    console.log('true :>> ', true);
                 }else {
                     this.isAllSelect = false
+                    console.log('false :>> ', false);
                 }
             },
             //选择城市
@@ -255,7 +270,15 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
+                if(!this.currentDealer.id) return uni.showToast({
+                    title:"请先选择经销商",
+                    icon:"none"
+                })
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })                    
                     const res = await api.submitClue({
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
@@ -280,6 +303,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     }
                 } catch (error) {
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
             cityPickerChange: function(e) {
