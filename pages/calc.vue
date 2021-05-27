@@ -215,7 +215,7 @@
 											<view class="section-bd ">{{item.optionValue[item.index]}}</view>
 									</block>
 									<block v-else>
-										<view class="section-bd section-picker">0</view>
+										<view class="section-bd ">0</view>
 									</block>
 								</block>
 								<block v-else>
