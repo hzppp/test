@@ -2,7 +2,7 @@
     <view>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
-        <image mode="widthFix" src="http://img.pcauto.com.cn/images/upload/upc/tx/auto5/2102/02/c16/252303537_1612261476705.png" />
+        <image mode="widthFix" src="../static/images/yuyue_banner.png" />
         <view class="content">
             <view class="title">预约试驾</view>
             <view class="list models">
@@ -18,6 +18,7 @@
             <view class="list models">
                 <view class="list-title">地区</view>
                 <view class="select" @tap="goChooseRegion">{{currentRegion.name}}</view>
+                <i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
                 <view class="arrow"></view>
             </view>
             <view class="list models">
@@ -40,7 +41,7 @@
             </view>
             <view class="btn-area">
                 <view class="tit">提交后经销商会尽快与您联系</view>
-                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}" :disabled=!isAllSelect>立即预约</button>
+                <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即预约</button>
             </view>
         </view>
     </view>
@@ -52,6 +53,8 @@
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
+import login from '@/units/login'
+
 let app = getApp()
 
 
@@ -100,15 +103,26 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
-                console.log('n :>> ', n);
+                this.reqDealersList(n.id)  
+            },
+            currentRegion(n) {
+                this.reqDealersList(this.currentCity.id,n.id)  
             }
+        },
+        onShow() {
+            this.checkInfo()
         },
         async onLoad(options) {
             console.log('options :>> ', options);
+            await login.checkLogin(api)
+            this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'provinceId',cityData.proId )
                 this.$set(this.currentCity,'id',options.cityId)
-                this.$set(this.currentCity,'name',cityData.cityName)
+                this.$set(this.currentCity,'name',decodeURI(options.cityName))
             }else {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
@@ -119,6 +133,13 @@ const COUNTDOWN = 60
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+            getStoragePhone() {
+				let phone = uni.getStorageSync('userPhone');
+                if(phone) {
+                    this.phoneNum = phone
+                    this.getPhoneBtn = true
+                }
+            },
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
@@ -128,6 +149,7 @@ const COUNTDOWN = 60
                         })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
+                            uni.setStorageSync('userPhone', data.phoneNumber)
                             this.phoneNum = data.phoneNumber						
 					    }
                     } catch (error) {
@@ -146,24 +168,16 @@ const COUNTDOWN = 60
 			},
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity) {
+                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
                     this.isAllSelect = true
                 }else {
                     this.isAllSelect = false
                 }
             },
-            //获取经销商列表
-            async reqDealersList(cityId,districtId) {
-                try {
-                    const {code,data} = await api.fetchDealersList({cityId,districtId})
-                    console.log('data :>> ', data);
-                    if(code === 1) {
-                        this.dealersList = data
-                    }
-                } catch (error) {
-                    console.error(error)
-                }
+            cleanRegion() {
+                this.currentRegion = {}
             },
+
             //获取车系详情
             async reqSerialDetail(sgId) {
                 try {
@@ -208,6 +222,10 @@ const COUNTDOWN = 60
 
             //立即预约
             async yuYue() {
+                if(!this.currentDealer.id) return uni.showToast({
+                    title:"请先选择经销商",
+                    icon:"none"
+                })
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
@@ -217,7 +235,12 @@ const COUNTDOWN = 60
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
+            
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })
                     const res = await api.submitClue({
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
@@ -240,6 +263,8 @@ const COUNTDOWN = 60
                     }
                 } catch (error) {
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
             //经销商点击，判断提示
@@ -282,6 +307,37 @@ const COUNTDOWN = 60
                     url: "/pages/ChooseSerial?pages=YuyuePage"
                 })
             },
+            //获取经销商列表
+            async reqDealersList(cityId,districtId) {
+                try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    if(!districtId) {
+                        const {code,data} = await api.fetchDealersList({cityId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }else {
+                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }
+                } catch (error) {
+                    console.error(error)
+                }finally {
+                    uni.hideLoading()
+                }
+            },
+
             cityPickerChange: function(e) {
                 console.log('this.cityList[e.target.value].id :>> ', this.cityList[e.target.value].id);
                 this.currentRegion = {}
@@ -356,6 +412,15 @@ const COUNTDOWN = 60
                 transform: rotate(45deg);
                 border-top: 2rpx solid #999999;
                 border-right: 2rpx solid #999999;
+            }
+            .clean-btn {
+                width: 40rpx;
+                height: 40rpx;
+                background-image: url("../static/images/close_btn.png");
+                background-color: #999999;
+                border-radius: 50%;
+                background-size: cover;
+                margin-right: 20rpx;
             }
         }
         .btn-area {

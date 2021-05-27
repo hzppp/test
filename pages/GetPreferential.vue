@@ -72,6 +72,8 @@
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
+import login from '@/units/login'
+
 let app = getApp()
 
 /* *
@@ -113,26 +115,56 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isNoData:false,
             }
         },
+        watch: {
+            currentCity(n) {
+                this.reqDealersList(n.id)  
+            },
+            currentRegion(n) {
+                this.reqDealersList(this.currentCity.id,n.id)  
+            }
+        },
+        onShow() {
+            this.checkInfo()
+        },
        async onLoad(options) {
-            uni.showLoading({
-                title: '正在加载...',
-                mask:true
-			})
+            console.log('options :>> ', options);
+            await login.checkLogin(api)
+            this.getStoragePhone()
             this.serialId = options.serialId || ""
+            if(options.cityId) {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'id',options.cityId)
+                this.$set(this.currentCity,'name',decodeURI(options.cityName))
+                this.$set(this.currentCity,'provinceId',cityData.proId )
+            }else {
+                await distance.getLocation()
+                const cityData = app.globalData.currentLocation.selectedCityData
+                this.$set(this.currentCity,'id',cityData.cityId )
+                this.$set(this.currentCity,'name',cityData.city )
+                this.$set(this.currentCity,'provinceId',cityData.proId )
+            }
             this.reqSerialDetail(options.serialId)
-            await distance.getLocation()
-            const cityData = app.globalData.currentLocation.selectedCityData
-            this.$set(this.currentCity,'id',cityData.cityId )
-            this.$set(this.currentCity,'name',cityData.city )
-            this.$set(this.currentCity,'provinceId',cityData.proId )
         },
         methods: {
+            getStoragePhone() {
+				let phone = uni.getStorageSync('userPhone');
+                if(phone) {
+                    this.phoneNum = phone
+                    this.getPhoneBtn = true
+                }
+            },
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
                     try {
+                        uni.showLoading({
+                            title: '正在加载...',
+                            mask:true
+                        })
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
+                            uni.setStorageSync('userPhone', data.phoneNumber)
                             this.phoneNum = data.phoneNumber						
 					    }
                     } catch (error) {
@@ -141,6 +173,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title:"手机授权失败"
                         })
                         this.isFocus = true
+                    }finally {
+                        uni.hideLoading()
                     }
 				}else {
                     this.isFocus = true
@@ -150,6 +184,10 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //车系详情
             async reqSerialDetail(sgId) {
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1 ) {
                         this.serialData = data
@@ -218,10 +256,12 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity) {
+                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
                     this.isAllSelect = true
+                    console.log('true :>> ', true);
                 }else {
                     this.isAllSelect = false
+                    console.log('false :>> ', false);
                 }
             },
             //选择城市
@@ -255,7 +295,15 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
+                if(!this.currentDealer.id) return uni.showToast({
+                    title:"请先选择经销商",
+                    icon:"none"
+                })
                 try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+                    })                    
                     const res = await api.submitClue({
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
@@ -280,6 +328,38 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     }
                 } catch (error) {
                     console.error(error)
+                }finally {
+                    uni.hideLoading()
+                }
+            },
+            //获取经销商列表
+            async reqDealersList(cityId,districtId) {
+                try {
+                    uni.showLoading({
+                        title: '正在加载...',
+                        mask:true
+			        })
+                    if(!districtId) {
+                        const {code,data} = await api.fetchDealersList({cityId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }else {
+                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        if(code === 1 && data.length) {
+                            this.dealersList = data
+                            this.currentDealer = data[0]
+                        }else {
+                            this.currentDealer = {}
+                        }
+                    }
+                } catch (error) {
+                    console.error(error)
+                }finally {
+                    uni.hideLoading()
                 }
             },
             cityPickerChange: function(e) {

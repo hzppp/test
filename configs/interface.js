@@ -5,16 +5,12 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.TEST;
- 
+
 // 正式域名
 var DOMAIN_R = {
 	csbHost:"https://price.pcauto.com.cn",//基础信息
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
-	magearHost:"https://magear.pcauto.com.cn",
 	host:"https://pocket.pcauto.com.cn",
-	panorama:"https://panorama.pcauto.com.cn",//vr看车图片
-	//panorama:"http://t-panorama.pcauto.com.cn",
-	UPCHost:"https://upc.pcauto.com.cn",
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' //云展厅
@@ -24,15 +20,11 @@ var DOMAIN_R = {
 var DOMAIN_T = {
 	csbHost:"https://testprice.pcauto.com.cn",//基础信息
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
-	magearHost:"https://magear.pcauto.com.cn",
 	host:"https://testpocket2.pcauto.com.cn",
-	// panorama:"https://panorama.pcauto.com.cn",//vr看车图片
-	panorama:"https://panorama.pcauto.com.cn",
-	UPCHost:"https://upc.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
 	// changan:"https://devqd-changan.pcauto.com.cn",
-	mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
+	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
 }
 
@@ -58,8 +50,6 @@ const config = {
 		getIpAreaCoord: `${DOMAIN.whoisHost}/ipAreaCoordJson.jsp`,
 		//
 		getAreaByRegion: `${DOMAIN.host}/api/audi/base/getAreaByRegion`,
-		//
-		getRegionIpArea: `${DOMAIN.magearHost}/x-7200/price.pcauto.com.cn/interface/cms/region_ipArea.jsp`,
 		// 活动
 		getactivity: `${DOMAIN.changan}/api/xcx/activity/list`,
 		//我的活动列表
@@ -88,16 +78,12 @@ const config = {
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
 		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
-		// getPanosInfo2 获取vr看车图片
-		getPanosInfo2: `${DOMAIN.panorama}/intf/getAllApprInfo.jsp`,
 		// vehicleOupons 车型展厅，获取优惠券
 		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
 		// 获取附近经销商
 		getDealers: `${DOMAIN.csbHost}/interface/iphone/get_dealers_by_sgid_rid.jsp`,
 		// /interface/sales/get_sales_list.jsp
 		getSalesList: `${DOMAIN.host}/interface/sales/get_sales_list.jsp`,
-		// 获取车型
-		getModelListBySerialId: `${DOMAIN.magearHost}/s/pcauto/price/v1/getModelListBySerialId.xsp`,
 		//
 		getpreClue: `${DOMAIN.host}/api/audi/xcx/preClue`,
 		// 提交formid
@@ -113,16 +99,12 @@ const config = {
 		detailedMessage: `${DOMAIN.host}/api/audi/xcx/detailedMessage`,
 		// 车驾信息认证
 		Carapprove: `${DOMAIN.host}/api/audi/xcx/approve`,
-		// 上传到 UPC
-		uploadPhoto: `${DOMAIN.UPCHost}/upload_quick.jsp?application=autopocket`,
 		// 获取文章列表
 		getArticleList: `${DOMAIN.changan}/api/xcx/article/list`,
 		// 点赞
 		like: `${DOMAIN.host}/api/audi/xcx/carFriend/like`,
 		// 获取文章内容
 		getArticleContent: `${DOMAIN.changan}/api/xcx/article/detail`,
-		// 上传图片到upc
-		uploadUPC: `${DOMAIN.UPCHost}/upload_quick.jsp?referer=https://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
 		// 获取签到数据
 		getsignIn: `${DOMAIN.host}/api/audi/xcx/signIn`,
 		// 签到

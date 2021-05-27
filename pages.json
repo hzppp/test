@@ -15,7 +15,7 @@
         "navigationBarTitleText": "云车展",
         "enablePullDownRefresh": false,
         "navigationStyle": "custom"
-	
+
       }
     },
     {
@@ -60,14 +60,6 @@
     },
     {
       "path": "pages/article",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/confirm",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false,
@@ -241,7 +233,7 @@
 			          "navigationBarTitleText": "",
 			          "enablePullDownRefresh": false
 			      }
-			
+
 			  },
     {
             "path" : "pages/ChooseRegion",
@@ -250,7 +242,7 @@
                 "navigationBarTitleText": "选择地区",
                 "enablePullDownRefresh": false
             }
-    
+
     }
   ],
   "tabBar": {
