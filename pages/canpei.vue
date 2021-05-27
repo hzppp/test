@@ -99,7 +99,7 @@
 														<view :class="['right_list_item' , d.key === '官方报价' ? 'h76px' : '']">
 															<!-- :class="[(d.key === '官方报价' || d.key === '上市时间') ? 'origin' : '']" -->
 															<!--  :class="[difData[d.key] ? 'origin' : '']" -->
-															<view>{{d.value}}</view>
+															<text>{{d.value}}</text>
 															<view v-if="d.key === '官方报价'">
 																<view class="zdj_box">
 																	<view class="zdj" @tap.stop="toYuYue(Data.detailArray[idx].serialGorupId)">预约试驾</view>
