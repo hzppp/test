@@ -36,14 +36,18 @@
 					{{title.name}}
 				</view>
 				<view class="vs-detail">
-					<view class="left-a" v-if="modelEquipA.length > 0 &&　powerErank4ModelA.modelName">
-						<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
-							{{a.name}}
+					<view class="l-r-content">
+						<view class="left-a" v-if="modelEquipA.length > 0 &&　powerErank4ModelA.modelName">
+							<view class="l-tit" v-for="(a,ai) in modelEquipA[index].filter((v,i) => i < 6)" :key="ai">
+								{{a.name}}
+							</view>
 						</view>
 					</view>
-					<view class="right-b" v-if="modelEquipB.length > 0 && powerErank4ModelB.modelName">
-						<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
-							{{b.name}}
+					<view class="l-r-content">
+						<view class="right-b" v-if="modelEquipB.length > 0 && powerErank4ModelB.modelName">
+							<view class="r-tit" v-for="(b,bi) in modelEquipB[index].filter((v,i) => i < 6)" :key="bi">
+								{{b.name}}
+							</view>
 						</view>
 					</view>
 				</view>
@@ -311,13 +315,15 @@
 				color: #333333;
 				margin: 40rpx 0 20rpx;
 			}
+			.l-r-content {
+				width: 50%;
+			}
 			.vs-detail {
 				display: flex;
 				justify-content: space-between;
 				.left-a {
 					display: flex;
 					flex-wrap: wrap;
-                    width: 50%;
 					.l-tit {
 						background-color: #FFF2EC;
 						flex-wrap: nowrap;
@@ -333,8 +339,6 @@
 				.right-b {
 					display: flex;
 					flex-wrap: wrap;
-                    width: 50%;
-					justify-content: flex-end;
 					.r-tit {
 						background-color: #E6F3FF;
 						flex-wrap: nowrap;
