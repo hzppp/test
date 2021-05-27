@@ -1,6 +1,6 @@
 <template>
   <view class="welfareActivity">
-    <testDrive :aldEventName="'报名列表预约试驾'"></testDrive>
+    <testDrive :aldEventName="'活动列表预约试驾'"></testDrive>
     <viewTabBar :current="3"></viewTabBar>
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
