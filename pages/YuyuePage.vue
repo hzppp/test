@@ -18,6 +18,7 @@
             <view class="list models">
                 <view class="list-title">地区</view>
                 <view class="select" @tap="goChooseRegion">{{currentRegion.name}}</view>
+                <i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
                 <view class="arrow"></view>
             </view>
             <view class="list models">
@@ -151,6 +152,9 @@ const COUNTDOWN = 60
                 }else {
                     this.isAllSelect = false
                 }
+            },
+            cleanRegion() {
+                this.currentRegion = {}
             },
             //获取经销商列表
             async reqDealersList(cityId,districtId) {
@@ -356,6 +360,15 @@ const COUNTDOWN = 60
                 transform: rotate(45deg);
                 border-top: 2rpx solid #999999;
                 border-right: 2rpx solid #999999;
+            }
+            .clean-btn {
+                width: 40rpx;
+                height: 40rpx;
+                background-image: url("../static/images/close_btn.png");
+                background-color: #999999;
+                border-radius: 50%;
+                background-size: cover;
+                margin-right: 20rpx;
             }
         }
         .btn-area {
