@@ -128,7 +128,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         },
        async onLoad(options) {
             console.log('options :>> ', options);
-            await login.checkLogin()
+            await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
