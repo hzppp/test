@@ -59,7 +59,6 @@
 	import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
 	import testDrive from '@/components/testDrive/testDrive'
-	// import chooseImg from '@/units/chooseImg'
 	// import getUserInfo from '@/units/getUserInfo'
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import pageTop from '@/components/pageTop/pageTop'
@@ -135,18 +134,18 @@
 			// this.qdIndex = index
 			// this.signInList = data.data
 			// this.signInList
- 
+
 			// console.log('getsignIn', data)
 		},
 		methods: {
 			tocard() {
-				wx.aldstat.sendEvent('我的优惠券点击') 
+				wx.aldstat.sendEvent('我的优惠券点击')
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
 			},
 			toactivity(){
-				wx.aldstat.sendEvent('我的活动点击') 
+				wx.aldstat.sendEvent('我的活动点击')
 				uni.navigateTo({
 					url: '/pages/myActivity'
 				})

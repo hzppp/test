@@ -1,7 +1,6 @@
 import domain from '@/configs/interface';
 import request from "@/units/request.js"
 import toast from '@/units/showToast.js';
-import api from '@/public/api/index'
 
 let app = getApp()
 export default {
@@ -95,9 +94,9 @@ export default {
         }
         return data;
     },
-    async checkLogin() {
+    async checkLogin(api) {
         let isSession = await this.checkSession()
-        console.log('isSession', isSession)
+        console.log('isSession', isSession,api)
         if (isSession) {
             let {code, data} = await api.getUser()
             console.log('ttttttt123', data)

@@ -41,19 +41,6 @@ module.exports = {
         })
         return data
     },
-    getRegionIpArea: async (cityCode) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getRegionIpArea'),
-            data: {
-                m: "getCityById",
-                encode: "utf8",
-                cityCode: cityCode
-            }
-        })
-        return data
-    },
     // 活动
     getactivity: async (regionId, size = 3, pageNum = 1) => {
         let {
@@ -292,20 +279,6 @@ module.exports = {
             }
         }
     },
-    // getPanosInfo2 获取vr看车图片
-    getPanosInfo2: async (sgId, bId = 2) => {
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getPanosInfo2'),
-            data: {
-                type: 3,
-                bId: bId,
-                sgId: sgId
-            }
-        })
-        return data
-    },
     // 手机号解密
     decryptPhone: async (encryptedData, iv) => {
         const isSession = await login.checkSession()
@@ -367,20 +340,6 @@ module.exports = {
         })
         return data
     },
-    // 获取车型
-    getModelListBySerialId: async (id) => {
-        // magearHost
-        let {
-            data
-        } = await request({
-            url: domain.getAPI('getModelListBySerialId'),
-            data: {
-                v: 4,
-                serialId: id
-            }
-        })
-        return data
-    },
     getpreClue: async (cs) => {
         let {
             data
@@ -437,16 +396,6 @@ module.exports = {
         }
         return data
     },
-    // 获取上传upc 的参数
-    // uploadUPC:async (url) =>{
-    //     let {data} = await wx.uploadFile({
-    //         url: `https://upc.pcauto.com.cn/upload_quick.jsp?referer=http://play10.pcauto.com.cn/&application=autopocket&keepSrc=yes&readExif=no`,
-    //         filePath: url,
-    //         name: 'file',
-    //         method:"POST"
-    //     })
-    //     return data
-    // },
     // 上传驾驶证
     uploadLicencePic: async (url) => {
         let {
@@ -487,44 +436,6 @@ module.exports = {
         })
         return data
     },
-    //上传到 UPC
-    uploadPhoto: async (data, tempFilePath) => {
-        const {
-            dataSign,
-            sessionKey,
-            curTime
-        } = data.data
-        // let {
-        // 	data1
-        // } = await uni.uploadFile({
-        // 	url: domain.getAPI('uploadPhoto'),
-        // 	filePath: tempFilePath,
-        // 	name: 'fileData',
-        // 	header: {
-        // 		dataSign,
-        // 		sessionKey,
-        // 		curTime
-        // 	}
-        // })
-        return new Promise((resolve, reject) => {
-            uni.uploadFile({
-                url: domain.getAPI('uploadPhoto'),
-                filePath: tempFilePath,
-                name: 'fileData',
-                header: {
-                    dataSign,
-                    sessionKey,
-                    curTime
-                },
-                success: (res) => {
-                    resolve(res)
-                },
-                fail: () => {
-                    reject();
-                }
-            })
-        })
-    },
     // 获取文章列表
     getArticleList: async (d) => {
         let {
@@ -560,29 +471,6 @@ module.exports = {
             }
         })
         return data
-    },
-    // 上传图片到upc
-    uploadUPC: async (data) => {
-        // return await uni.uploadFile({
-        // 	url: domain.getAPI('uploadUPC'),
-        // 	filePath: data,
-        // 	name: 'file',
-        // 	method: "POST"
-        // })
-        return new Promise((resolve, reject) => {
-            uni.uploadFile({
-                url: domain.getAPI('uploadUPC'),
-                filePath: data,
-                name: 'file',
-                method: "POST",
-                success: (res) => {
-                    resolve(res)
-                },
-                fail: () => {
-                    reject();
-                }
-            })
-        })
     },
     // 获取签到数据
     getsignIn: async () => {
