@@ -114,7 +114,7 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             console.log('options :>> ', options);
-            await login.checkLogin()
+            await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
