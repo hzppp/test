@@ -4,7 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
+
+const CUR_ENV = ENV.RELEASE;
 
 // 正式域名
 var DOMAIN_R = {
