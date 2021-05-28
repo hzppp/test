@@ -190,6 +190,8 @@ const config = {
 		fetchCouponDetail: `${DOMAIN.changan}/api/xcx/coupon/detail`,
 		// 车系列表
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
+		// 底部陪配置
+		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 	},
