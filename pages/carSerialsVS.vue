@@ -16,12 +16,12 @@
         <view class="configuration">
             <view class="title">配置对比</view>
             <view class="models-wrap">
-                <view class="car-model" @tap="changModel(leftSerial.serialId,1)">
+                <view class="car-model" @tap="changModel(leftSerial.serialId,1,powerErank4ModelA.modelId)">
                     <view class="dec" v-if="powerErank4ModelA.modelName">{{powerErank4ModelA.modelName}}</view>
                      <view class="arrow" v-if="powerErank4ModelA.modelName"></view>
                      <view v-else>暂无该车系车型</view>
                 </view>
-                <view class="car-model" @tap="changModel(rightSerial.serialId,2)">
+                <view class="car-model" @tap="changModel(rightSerial.serialId,2,powerErank4ModelB.modelId)">
                     <view class="dec" v-if="powerErank4ModelB.modelName">{{powerErank4ModelB.modelName}}</view>
                     <view class="arrow" v-if="powerErank4ModelB.modelName"></view>
                     <view v-else>暂无该车系车型</view>
@@ -213,9 +213,9 @@
                 })
             },
             //切换车型 
-            changModel(id,sort) {
+            changModel(id,sort,modelId) {
                 uni.navigateTo({
-					url: `/pages/ChooseModels?pages=vs&serialId=${id}&sort=mid${sort}&single=true`
+					url: `/pages/ChooseModels?pages=vs&serialId=${id}&sort=mid${sort}&single=true&modelId=${modelId}`
 				})
             },
 			//获取文字对比数据
