@@ -124,7 +124,7 @@
 				<view :class="['section', 'section-dark', needToSpendExpand ? 'cancel-sction' : '']">
 					<block v-for="(item,idx) in need_item" :key="idx">
 						<block v-if="idx== 0">
-							<view class="section-item section-title needPrice-item" @tap="closeprice(1)">
+							<view class="section-item section-title height148 needPrice-item" @tap="closeprice(1)">
 								<view class="section-hd">
                                     <view class="tit_title">必要花费</view>
                                     <view class="tit_text">购置税,交强险等</view>
@@ -175,7 +175,7 @@
 				<view :class="['section', 'section-dark', commercialInsuranceExpand ? 'cancel-sction' : '']">
 					<block v-for="(item ,idx) in baoxian_item" :key="idx">
 						<block v-if="idx== 0">
-							<view class="section-item section-title needPrice-item" @tap="closeprice(2)">
+							<view class="section-item section-title height148 needPrice-item" @tap="closeprice(2)">
 								<view class="section-hd">
                                     <view class="tit_title">{{item.name}}</view>
                                     <view class="tit_text">车辆损失险、盗抢险、责任险等</view>
@@ -301,8 +301,8 @@
 				changed: "",
 				carData: {},
 				drive:true,//预约试驾
-                needToSpendExpand:false, //必要花费展开 默认展开
-                commercialInsuranceExpand:false, //商业保险展开 默认展开
+                needToSpendExpand:true, //必要花费展开 默认不展开
+                commercialInsuranceExpand:true, //商业保险展开 默认不展开
                 ratioArray: [
                     {
                         title:'0%',
@@ -1329,7 +1329,7 @@
 		padding: 0;
 		background-color: #fff;
         &.cancel-sction {
-            height: 101rpx;
+            height: 148rpx;
             overflow: hidden;
         }
 	}
@@ -1456,6 +1456,7 @@
 		min-width: 120rpx;
 		font-size: 28rpx;
 		color: #333;
+        padding: 10rpx 0;
         .tit_title {
             font-weight: bold;
             font-size: 30rpx;
@@ -1463,6 +1464,7 @@
 		.tit_text {
             font-size: 24rpx;
             color: #999999;
+            margin-top: 5rpx;
         }
 	}
 	.section-title{
@@ -1679,7 +1681,7 @@
 		margin-top: 20rpx;
 	}
     .arrow {
-        width: 20rpx;
+        width: 15rpx;
         height: 20rpx;
         background-image: url("../static/images/right_arrow.png");
         background-size: auto 100%;
@@ -1687,5 +1689,8 @@
         &.to_down {
             transform: rotate(90deg);
         }
+    }
+    .height148 {
+        height: 148rpx;
     }
 </style>
