@@ -35,7 +35,7 @@
         </view>
       </view>
       <view class="hotAct">
-        <view class="hotTab">
+        <view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
           热销车型
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
@@ -107,6 +107,7 @@ export default {
       liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
+      fontLoaded: false,
     }
   },
   computed: {
@@ -210,6 +211,41 @@ export default {
       return res.code == 1 && res.data ? res.data : []
     })
     this.sgList = [...sgList]
+    if (0&&wx.canIUse('loadFontFace')) {
+      let _this = this
+      console.log("支持自定义字体");
+
+      uni.loadFontFace({
+
+        family: 'Ping Fang',
+
+        source: 'url("https://image.tiaozaoj.com/PingFang-SC-Regular.ttf")',
+
+        success(res) {
+          _this.fontLoaded = true
+          console.log("字体加载成功") //  loaded
+
+        },
+
+        fail(res) {
+
+          console.log("字体加载失败") //  error
+
+        },
+
+        complete(res) {
+
+          console.log("字体加载完成1");
+
+        }
+
+      });
+
+    } else {
+
+      console.log('不支持自定义字体')
+
+    }
   },
   onUnload() {
   },
@@ -566,9 +602,9 @@ export default {
     }
   }
   .hotAct {
-    margin-top: 30rpx;
+    margin-top: 40rpx;
     .hotTab {
-      font-size: 40rpx;
+      font-size: 34rpx;
       font-weight: bold;
       margin-bottom: 10rpx
     }
