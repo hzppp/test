@@ -33,7 +33,7 @@ name: "testDrive",
   data() {
     return {
       x: 400,
-      y: 515,
+      y: 465,
       x1: 0,
       x2: 375,
       y1: 0,
@@ -75,8 +75,6 @@ name: "testDrive",
 
 <style scoped lang="less">
 .btn {
-  position: fixed;
-  z-index: 999;
   //right: 10rpx;
   //bottom: 308rpx;
   width: 100rpx;
@@ -91,7 +89,7 @@ name: "testDrive",
   width: 100%;
   height: 100%;
   pointer-events: none; //设置area元素不可点击，则事件便会下移至页面下层元素
-z-index: 999;
+  z-index: 9999;
 
 .movableView {
   pointer-events: auto; //可以点击
