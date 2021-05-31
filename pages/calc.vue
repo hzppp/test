@@ -59,7 +59,7 @@
 					<view class="hd-price">
 						<view class="title">全款总价（元）</view>
 						<view class="price">{{isLoans?loantotalStr:totalPrice}}</view>
-						<view v-if="isLoans" class="hint">比全款多{{priceGap}}</view>
+						<!-- <view v-if="isLoans" class="hint">比全款多{{priceGap}}</view> -->
 					</view>
 				</view>
 				</view>
@@ -99,6 +99,9 @@
 									<view class="title">比例</view>
 									<view class="loans-row" >
 										<text  v-for="(item,idx) in ratio" :key='idx' :data-idx="idx"  @tap='checkRatio' class="option_item" :class="{'act':idx==ratioIdx}" >{{item.title}}</text>
+                                        <picker class="option_item" @tap="DownPaymenChangeClick"  @change="DownPaymenChange" :range-key="'title'" :value="index" :range="ratioArray">
+                                            <text :class="{'act':ratioIdx === 3}" class="option_item">{{ratioIdx == 3 ? ratioArray[DownPaymentindex].title : '其他'}}</text>
+                                        </picker>
 									</view>
 								</view>
 								
@@ -118,10 +121,10 @@
 				</view>
 				<!-- 贷款.e -->
 				<!-- 必要花费.s -->
-				<view class="section section-dark">
+				<view :class="['section', 'section-dark', needToSpendExpand ? 'cancel-sction' : '']">
 					<block v-for="(item,idx) in need_item" :key="idx">
 						<block v-if="idx== 0">
-							<view class="section-item section-title needPrice-item">
+							<view class="section-item section-title needPrice-item" @tap="closeprice(1)">
 								<view class="section-hd">必要花费</view>
 								<view class="section-bd">
 									<text class="section-bd-text">{{needPrice}}</text>
@@ -165,10 +168,10 @@
 				<!-- 必要花费.e -->
 
 				<!-- 商业险.s -->
-				<view class="section section-light">
+				<view :class="['section', 'section-dark', commercialInsuranceExpand ? 'cancel-sction' : '']">
 					<block v-for="(item ,idx) in baoxian_item" :key="idx">
 						<block v-if="idx== 0">
-							<view class="section-item section-title needPrice-item">
+							<view class="section-item section-title needPrice-item" @tap="closeprice(2)">
 								<view class="section-hd">{{item.name}}</view>
 								<view class="section-bd">
 									<text class="section-bd-text">{{surPrice}}</text>
@@ -238,8 +241,8 @@
 					</block>
 					<view class="hint">此结果仅供参考，实际费用以当地为准</view>
 				</view>
+
 				<view class="foot">
-					
 					<view class="btn" @click="goDrive">
 						预约试驾
 					</view>
@@ -290,6 +293,55 @@
 				changed: "",
 				carData: {},
 				drive:true,//预约试驾
+                needToSpendExpand:false, //必要花费展开 默认展开
+                commercialInsuranceExpand:false, //商业保险展开 默认展开
+                ratioArray: [
+                    {
+                        title:'0%',
+                        count:0
+                    },
+                    {
+                        title:'10%',
+                        count:10
+                    },
+                    {
+                        title:'20%',
+                        count:20
+                    },
+                    {
+                        title:'30%',
+                        count:30
+                    },
+                    {
+                        title:'40%',
+                        count:40
+                    },
+                    {
+                        title:'50%',
+                        count:50
+                    },
+                    {
+                        title:'60%',
+                        count:60
+                    },
+                    {
+                        title:'70%',
+                        count:70
+                    },
+                    {
+                        title:'80%',
+                        count:80
+                    },
+                    {
+                        title:'90%',
+                        count:80
+                    },
+                    {
+                        title:'100%',
+                        count:100
+                    },
+                ],
+                DownPaymentindex: 0,
 				model: {
 					title: '', //车型名字
 					id: '', //车型id
@@ -413,23 +465,14 @@
 
 				],
 				ratio:[{
-					title:'15%',
-					count:15
-				},{
-					title:'20%',
-					count:20
+					title:'0',
+					count:0
 				},{
 					title:'30%',
 					count:30
 				},{
-					title:'40%',
-					count:40
-				},{
 					title:'50%',
 					count:50
-				},{
-					title:'60%',
-					count:60
 				}],
 				monthly:[{
 					title:'12期',
@@ -442,6 +485,10 @@
 				},{
 					title:'36期',
 					rate:6.75,
+					monthly:36
+				},{
+					title:'48期',
+					rate:6.93,
 					monthly:36
 				},{
 					title:'60期',
@@ -528,6 +575,19 @@
 			// mta.Page.init();
 		},
 		methods: {
+            DownPaymenChangeClick() {
+                this.ratioIdx = 3
+                let mIndex = this.monthlyIdx
+                let rCount = this.ratioArray[this.DownPaymentindex].count
+                this.defaultLoans(mIndex,rCount)
+            },
+            //
+            DownPaymenChange(e) {
+                this.DownPaymentindex = e.target.value
+                let mIndex = this.monthlyIdx
+                let rCount = this.ratioArray[e.target.value].count
+				this.defaultLoans(mIndex,rCount)
+            },
 			//选择车型
 			modelSelect: function(e) {
 				// console.log(e);
@@ -717,7 +777,7 @@
 				// 计数默认贷款
 				// let mIndex = this.monthlyIdx
 				// let rIndex = this.ratioIdx
-				this.defaultLoans(this.monthlyIdx,this.ratioIdx)
+				this.defaultLoans(this.monthlyIdx,this.ratio[this.ratioIdx].count)
 			},
 			//编辑事件
 			//聚焦改变3位数字为完整数字
@@ -991,10 +1051,10 @@
 					})
 				}
 			},
-			defaultLoans(mIndex,rIndex){
+			defaultLoans(mIndex,rcount){
 				// let mIndex = this.monthlyIdx
 				// let rIndex = this.ratioIdx
-				let shoufu = this.totalPriceNum * this.ratio[rIndex].count/100
+				let shoufu = this.totalPriceNum * rcount/100
 				let loan = Math.round((this.totalPriceNum - shoufu)/10000)*10000;
 				let loanMonthRate = this.monthly[mIndex].rate / 100 /12;      //月利率
 				let loanMonths = this.monthly[mIndex].monthly;    //贷款总月数
@@ -1010,13 +1070,13 @@
 				let rIndex = e.currentTarget.dataset.idx
 				let mIndex = this.monthlyIdx
 				this.ratioIdx = rIndex
-				this.defaultLoans(mIndex,rIndex)
+				this.defaultLoans(mIndex,this.ratio[rIndex].count)
 			},
 			checkMonthly(e){
 				let mIndex = e.currentTarget.dataset.idx
 				let rIndex =  this.ratioIdx
 				this.monthlyIdx = mIndex
-				this.defaultLoans(mIndex,rIndex)
+				this.defaultLoans(mIndex,this.ratio[rIndex].count)
 				
 			},
 			getPages(){
@@ -1050,13 +1110,25 @@
 					
 				}
 				
-			}
+			},
+            //控制必要花费和商业保险的展开 1:必要花费 2:商业保险
+            closeprice(sort) {
+                if(sort === 1) {
+                    this.needToSpendExpand = !this.needToSpendExpand
+                }else if(sort === 2) {
+                    this.commercialInsuranceExpand = !this.commercialInsuranceExpand
+                }
+            }
 		}
 	}
 </script>
 
 <style lang="less">
 	@import (reference) '@/static/less/public.less';
+.calc {
+    height: 100%;
+    padding-bottom: 250rpx;
+}
 .pageTop-zw{
     height: 128rpx;
 	background-color: #3a3a3a;
@@ -1244,6 +1316,10 @@
 		// border-bottom: 40rpx solid #F0F0F5;
 		padding: 0;
 		background-color: #fff;
+        &.cancel-sction {
+            height: 101rpx;
+            overflow: hidden;
+        }
 	}
 	.section_first{
 		border-radius:30rpx 30rpx 0 0;
