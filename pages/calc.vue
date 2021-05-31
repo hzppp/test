@@ -297,7 +297,7 @@
                 commercialInsuranceExpand:false, //商业保险展开 默认展开
                 ratioArray: [
                     {
-                        title:'0%',
+                        title:'0',
                         count:0
                     },
                     {
@@ -1076,7 +1076,11 @@
 				let mIndex = e.currentTarget.dataset.idx
 				let rIndex =  this.ratioIdx
 				this.monthlyIdx = mIndex
-				this.defaultLoans(mIndex,this.ratio[rIndex].count)
+                if(this.ratioIdx === 3) {
+                    this.defaultLoans(mIndex,this.ratioArray[this.DownPaymentindex].count)
+                }else {
+                    this.defaultLoans(mIndex,this.ratio[rIndex].count)
+                }
 				
 			},
 			getPages(){
