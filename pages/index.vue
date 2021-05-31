@@ -236,7 +236,7 @@ export default {
       }).then(res => {
         return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
       })
-	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanbanner.png';
+	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/650x500.png';
     },
     // 请求省份和城市的级联列表
     async reqProvinceCityList () {
@@ -418,9 +418,9 @@ export default {
       })
     },
     goActDetail(id) {
-      // uni.navigateTo({
-      //   url: `/pages/activity?id=${id}`
-      // })
+      uni.navigateTo({
+        url: '/pages/article?articleId=8831'
+      })
     },
     goLookCar(item) {
       wx.aldstat.sendEvent('热销车型点击')

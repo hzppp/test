@@ -1,7 +1,7 @@
 //环境配置
 var ENV = {
-	RELEASE: 0, //正式环境
-	TEST: 1, //测试环境
+	RELEASE: 0, //正式环境 wxd434b3b0015614a7
+	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
 
