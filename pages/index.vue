@@ -570,11 +570,11 @@ export default {
     margin-top: 40rpx;
     .hotTab {
       font-size: 34rpx;
-      font-weight: bold;
-      margin-bottom: 10rpx
+      // font-weight: bold;
+      margin-bottom: 10rpx;
     }
     .actItem {
-      margin: 30rpx 0;
+      margin: 15rpx 0  30rpx 0;
       background: #fff;
       position: relative;
     }
@@ -591,7 +591,7 @@ export default {
           width: 210rpx;
           height: 140rpx;
           border-radius: 20rpx;
-          margin: 30rpx 0 16rpx 0;
+          margin: 10rpx 0 26rpx 0;
         }
 
         .title {
