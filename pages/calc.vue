@@ -125,10 +125,14 @@
 					<block v-for="(item,idx) in need_item" :key="idx">
 						<block v-if="idx== 0">
 							<view class="section-item section-title needPrice-item" @tap="closeprice(1)">
-								<view class="section-hd">必要花费</view>
+								<view class="section-hd">
+                                    <view class="tit_title">必要花费</view>
+                                    <view class="tit_text">购置税,交强险等</view>
+                                </view>
 								<view class="section-bd">
 									<text class="section-bd-text">{{needPrice}}</text>
 								</view>
+                                <view :class="['arrow',needToSpendExpand ? '' : 'to_down']"></view>
 							</view>
 						</block>
 						<block v-else>
@@ -172,10 +176,14 @@
 					<block v-for="(item ,idx) in baoxian_item" :key="idx">
 						<block v-if="idx== 0">
 							<view class="section-item section-title needPrice-item" @tap="closeprice(2)">
-								<view class="section-hd">{{item.name}}</view>
+								<view class="section-hd">
+                                    <view class="tit_title">{{item.name}}</view>
+                                    <view class="tit_text">车辆损失险、盗抢险、责任险等</view>
+                                </view>
 								<view class="section-bd">
 									<text class="section-bd-text">{{surPrice}}</text>
 								</view>
+                                <view :class="['arrow',commercialInsuranceExpand ? '' : 'to_down']"></view>
 							</view>
 						</block>
 						<block v-else>
@@ -239,8 +247,8 @@
 							</view>
 						</block>
 					</block>
-					<view class="hint">此结果仅供参考，实际费用以当地为准</view>
 				</view>
+                <view class="hint">此结果仅供参考，实际费用以当地为准</view>
 
 				<view class="foot">
 					<view class="btn" @click="goDrive">
@@ -297,7 +305,7 @@
                 commercialInsuranceExpand:false, //商业保险展开 默认展开
                 ratioArray: [
                     {
-                        title:'0',
+                        title:'0%',
                         count:0
                     },
                     {
@@ -465,7 +473,7 @@
 
 				],
 				ratio:[{
-					title:'0',
+					title:'0%',
 					count:0
 				},{
 					title:'30%',
@@ -1232,7 +1240,7 @@
 		padding: 0;
 	}
 	.box{
-		background-color: #3a3a3a;
+		// background-color: #3a3a3a;
 	}
 	.box-hd {
 		background: #3A3A3A;
@@ -1448,7 +1456,14 @@
 		min-width: 120rpx;
 		font-size: 28rpx;
 		color: #333;
-		
+        .tit_title {
+            font-weight: bold;
+            font-size: 30rpx;
+        }
+		.tit_text {
+            font-size: 24rpx;
+            color: #999999;
+        }
 	}
 	.section-title{
 		font-weight: bold;
@@ -1642,7 +1657,7 @@
 		line-height: 100rpx;
 		font-size: 24rpx;
 		color: #999;
-		
+		background: #ffffff;
 	}
 	.foot{
 		height: 148rpx;
@@ -1663,4 +1678,14 @@
 		font-size: 32rpx;
 		margin-top: 20rpx;
 	}
+    .arrow {
+        width: 20rpx;
+        height: 20rpx;
+        background-image: url("../static/images/right_arrow.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        &.to_down {
+            transform: rotate(90deg);
+        }
+    }
 </style>
