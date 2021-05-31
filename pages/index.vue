@@ -518,7 +518,7 @@ export default {
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
-  font-family: PingFang SC;
+  // font-family: PingFang SC;
   color: #3C4650;
 }
 .ovh {
