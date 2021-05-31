@@ -1,10 +1,11 @@
 //环境配置
 var ENV = {
-	RELEASE: 0, //正式环境
-	TEST: 1, //测试环境
+	RELEASE: 0, //正式环境 wxd434b3b0015614a7
+	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
+
+const CUR_ENV = ENV.RELEASE;
 
 // 正式域名
 var DOMAIN_R = {
@@ -189,6 +190,8 @@ const config = {
 		fetchCouponDetail: `${DOMAIN.changan}/api/xcx/coupon/detail`,
 		// 车系列表
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
+		// 底部陪配置
+		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 	},

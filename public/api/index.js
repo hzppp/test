@@ -846,4 +846,15 @@ module.exports = {
         })
         return data
     },
+	
+	getLivePage: async() => {
+	    let {data} = await request({
+	        url:domain.getAPI('setLivePage'),
+	        method: "GET",
+	    })
+	    return data
+	},
+	
+	
+	
 }

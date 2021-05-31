@@ -36,6 +36,11 @@
 					<view class="p1">我的活动</view>
 					<view class="right isApprove"></view>
 				</view>
+				<view class="line"></view>
+				<view class="box-list list3" @tap="tomyvideo">
+					<view class="p1">新媒体营销查询</view>
+					<view class="right isApprove"></view>
+				</view>
 				<!-- <view class="box-list list4">
 					<navigator version="trial" class="activity-btn" target='miniProgram' app-id='wx1c5c0ec0757002c2'
 						path='pages/index' hover-class="" redirect></navigator>
@@ -148,6 +153,11 @@
 				wx.aldstat.sendEvent('我的活动点击')
 				uni.navigateTo({
 					url: '/pages/myActivity'
+				})
+			},
+			tomyvideo(){
+				uni.navigateTo({
+					url: '/pages/myvideo'
 				})
 			}
 		}
