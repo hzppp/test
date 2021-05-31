@@ -47,7 +47,7 @@
 				console.log("支持自定义字体");
 				uni.loadFontFace({
 					global: true,
-					family: 'font-test',
+					family: 'Ping Fang',
 					source: 'url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/font/ChangAnunitype-Regular.TTF")',
 					success(res) {
 						_this.fontLoaded = true
@@ -78,7 +78,7 @@
 <style lang="less">
 	/*每个页面公共css */
 	body {
-		font-family: font-test;
+		font-family: Ping Fang;
 	}
 
 	// @font-face {
@@ -86,7 +86,7 @@
 	//   src: url("~@/static/font/ChangAnunitype-Regular.TTF") format("truetype");
 	// }
 	.autoFont {
-		font-family: font-test;
+		font-family: Ping Fang;
 	}
 
 	.container {

@@ -211,41 +211,6 @@ export default {
       return res.code == 1 && res.data ? res.data : []
     })
     this.sgList = [...sgList]
-    if (0&&wx.canIUse('loadFontFace')) {
-      let _this = this
-      console.log("支持自定义字体");
-
-      uni.loadFontFace({
-
-        family: 'Ping Fang',
-
-        source: 'url("https://image.tiaozaoj.com/PingFang-SC-Regular.ttf")',
-
-        success(res) {
-          _this.fontLoaded = true
-          console.log("字体加载成功") //  loaded
-
-        },
-
-        fail(res) {
-
-          console.log("字体加载失败") //  error
-
-        },
-
-        complete(res) {
-
-          console.log("字体加载完成1");
-
-        }
-
-      });
-
-    } else {
-
-      console.log('不支持自定义字体')
-
-    }
   },
   onUnload() {
   },
