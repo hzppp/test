@@ -15,7 +15,7 @@
         <!-- 单选 -->
 		<view v-else>
             <view  class="item-list" v-for="(item,index) in modelsList" :key="index" @tap="goSingle(item)">
-                <view class="model-name">{{item.name}}</view>
+                <view :class="['model-name', item.pcModelId == modelId ? 'orange' : '']">{{item.name}}</view>
             </view>
 		</view>
 	</view>
@@ -36,11 +36,13 @@
                 single:false, // 是否是单选
                 type: "",
                 sort: "",
+                modelId:'', //车型id
 			}
 		},
 		methods: {
             onLoad(options) {
                 console.log('options :>> ', options);
+                this.modelId = options.modelId || ''
                 this.single = options.single || false
                 this.type = options.type || ""
                 this.serialId = options.serialId || ""
@@ -59,6 +61,7 @@
                     const {code,data} = await api.fetchModelsList({sgId})
                     if(code === 1) {
                         this.modelsList = data
+                        console.log('data :>> ', data);
                     }
                 } catch (error) {
                     console.error(error)
@@ -147,6 +150,9 @@
             font-size: 28rpx;
             // color: #333333;
             margin-left: 32rpx;
+            &.orange {
+                color: #fa8845;
+            }
         }
 	}
 	.btn {
