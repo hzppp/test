@@ -26,11 +26,6 @@
 					icon_a: '/static/images/tab1_icon_c.png', //选中图片
 					path: "index", //页面路径
 				}, {
-					text: '直播',
-					icon: '/static/images/tab2_icon.png',
-					icon_a: '/static/images/tab2_icon_c.png',
-					path: "live",
-				}, {
 					text: '云展厅',
 					icon: '/static/images/tab3_icon.png',
 					icon_a: '/static/images/tab3_icon_c.png',
@@ -118,6 +113,32 @@
 						path: "mypage",
 					}];
 				}else{
+					this.list =[{
+					text: '首页',
+					icon: '/static/images/tab1_icon.png', //未选中图标
+					icon_a: '/static/images/tab1_icon_c.png', //选中图片
+					path: "index", //页面路径
+				}, {
+					text: '直播',
+					icon: '/static/images/tab2_icon.png',
+					icon_a: '/static/images/tab2_icon_c.png',
+					path: "live",
+				}, {
+					text: '云展厅',
+					icon: '/static/images/tab3_icon.png',
+					icon_a: '/static/images/tab3_icon_c.png',
+					path: 'exhibition',
+				}, {
+					text: '活动',
+					icon: '/static/images/tab4_icon.png',
+					icon_a: '/static/images/tab4_icon_c.png',
+					path: "welfareActivity",
+				}, {
+					text: '我的',
+					icon: '/static/images/tab5_icon.png',
+					icon_a: '/static/images/tab5_icon_c.png',
+					path: "mypage",
+				}]
 					  this.currentk = this.current
 				}
 
