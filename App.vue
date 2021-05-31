@@ -54,6 +54,16 @@
 
 <style lang="less">
 	/*每个页面公共css */
+  body {
+    font-family: Ping Fang
+  }
+  @font-face {
+    font-family: ChangAnunitype;
+    src: url("~@/static/font/ChangAnunitype-Regular.TTF") format("truetype");
+  }
+  .autoFont {
+    font-family: Ping Fang;
+  }
 	.container {
 	  height: 100%;
 	  display: flex;
