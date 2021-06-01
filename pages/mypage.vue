@@ -105,7 +105,11 @@
 		},
 
 		async onShow() {
-
+			let phone = uni.getStorageSync('userPhone');
+			if(phone) {
+			    // this.photo = phone
+			    this.photo=phone.substr(0,4)+'****'+phone.substr(8,phone.length);
+			}
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
@@ -124,11 +128,6 @@
 			*/
 		},
 		async onLoad(options) {
-			let phone = uni.getStorageSync('userPhone');
-			if(phone) {
-			    // this.photo = phone
-			    this.photo=phone.substr(0,4)+'****'+phone.substr(8,phone.length);
-			}
 			// await login.login()
 			// console.log(app.globalData)
 			// if (app.globalData && app.globalData.pocketUserInfo && app.globalData.pocketUserInfo.userId) {
