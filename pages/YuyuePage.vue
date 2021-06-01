@@ -39,22 +39,24 @@
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
-            <view class="btn-area">
+            <view class="btn-area" >
                 <view class="tit">提交后经销商会尽快与您联系</view>
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即预约</button>
             </view>
         </view>
+		<pyBoomV></pyBoomV>
     </view>
+	
     <view v-if="!serialData.id && isNoData" class="no-data">暂无数据</view>
-    </view>
+	</view>
 </template>
-
+ 
 <script>
 import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
 import login from '@/units/login'
-
+import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 let app = getApp()
 
 
@@ -64,7 +66,7 @@ let app = getApp()
 const COUNTDOWN = 60
 
     export default {
-        components:{pop},
+        components:{pop,pyBoomV},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -391,7 +393,7 @@ const COUNTDOWN = 60
         vertical-align: middle;
 	}
     .content {
-        padding: 32rpx 32rpx 34rpx;
+        padding: 32rpx 32rpx 10rpx;
         box-sizing: border-box;
         .getPhoneBtn {
             background-color: transparent;

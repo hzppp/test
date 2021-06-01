@@ -222,7 +222,14 @@
 				"navigationBarTitleText": "我的视频",
 				"enablePullDownRefresh": false
 			}
-		}
+		},
+		{
+			"path": "pages/changanPy",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"enablePullDownRefresh": false
+			}
+         }
 	],
 	"tabBar": {
 		"custom": true,
