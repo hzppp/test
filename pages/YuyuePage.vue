@@ -117,6 +117,9 @@ const COUNTDOWN = 60
             await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
+			if(this.serialId == ""){
+				this.reqSerialScreenList();
+			}
             if(options.cityId) {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
@@ -133,6 +136,19 @@ const COUNTDOWN = 60
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+			// 获取车型信息
+			async reqSerialScreenList() {
+			    try {
+			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
+			        if(code === 1) {
+			          this.serialId = data[0].pcSerialGroupId
+					  console.log(this.serialId,data[0])
+					  this.reqSerialDetail(this.serialId )
+			        }
+			    } catch (error) {
+			        console.error(error)
+			    }
+			},
             getStoragePhone() {
 				let phone = uni.getStorageSync('userPhone');
                 if(phone) {
@@ -180,6 +196,9 @@ const COUNTDOWN = 60
 
             //获取车系详情
             async reqSerialDetail(sgId) {
+				if(!sgId){
+				  return
+				}
                 try {
                     uni.showLoading({
                         title: '正在加载...',

@@ -237,7 +237,7 @@ export default {
       }).then(res => {
         return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
       })
-	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/650x500.png';
+	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
     },
     // 请求省份和城市的级联列表
     async reqProvinceCityList () {
@@ -420,7 +420,7 @@ export default {
     },
     goActDetail(id) {
       uni.navigateTo({
-        url: '/pages/article?articleId=8831'
+        url: '/pages/activity?id=50'
       })
     },
     goLookCar(item) {
@@ -567,7 +567,7 @@ export default {
     }
   }
   .hotAct {
-    margin-top: 40rpx;
+    margin-top: 30rpx;
     .hotTab {
       font-size: 34rpx;
       // font-weight: bold;
@@ -589,9 +589,9 @@ export default {
         margin-right: 16rpx;
         .img {
           width: 210rpx;
-          height: 140rpx;
+          height: 120rpx;
           border-radius: 20rpx;
-          margin: 10rpx 0 26rpx 0;
+          margin: 10rpx 0 -5rpx 0;
         }
 
         .title {

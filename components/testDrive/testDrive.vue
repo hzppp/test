@@ -52,7 +52,7 @@ name: "testDrive",
         wx.aldstat.sendEvent(this.aldEventName)
       }
       uni.navigateTo({
-        url: `/pages/ChooseSerial?type=yuyue`
+         url: `/pages/YuyuePage`
       })
     },
     onChange(e) {
