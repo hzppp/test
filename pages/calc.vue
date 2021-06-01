@@ -503,7 +503,7 @@
 					rate:6.93,
 					monthly:60
 				}],
-				ratioIdx:2,
+				ratioIdx:1,
 				monthlyIdx:2,
 				isLoans:false,//是否贷款
 				shoufu:0,//首付金额

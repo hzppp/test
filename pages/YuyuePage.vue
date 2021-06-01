@@ -85,6 +85,8 @@ const COUNTDOWN = 60
                 isAllSelect: false, //信息是否已经全部完成
 
                 serialId:'', //参数车系id
+				
+				show:false,
 
                 serialData: {},// 车系详情
                 
@@ -110,13 +112,21 @@ const COUNTDOWN = 60
             }
         },
         onShow() {
+			if(this.show && this.serialId){
+				 this.reqSerialDetail(this.serialId)
+				 this.show = false
+			}
+			 // console.log('22222options :>> ', this.serialId);
             this.checkInfo()
         },
         async onLoad(options) {
-            console.log('options :>> ', options);
+            // console.log('111111options :>> ', options);
             await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
+			if(this.serialId == ""){
+				this.reqSerialScreenList();
+			}
             if(options.cityId) {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
@@ -133,6 +143,19 @@ const COUNTDOWN = 60
             this.reqSerialDetail(options.serialId)
         },
         methods: {
+			// 获取车型信息
+			async reqSerialScreenList() {
+			    try {
+			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
+			        if(code === 1) {
+			          this.serialId = data[0].pcSerialGroupId
+					  console.log(this.serialId,data[0])
+					  this.reqSerialDetail(this.serialId )
+			        }
+			    } catch (error) {
+			        console.error(error)
+			    }
+			},
             getStoragePhone() {
 				let phone = uni.getStorageSync('userPhone');
                 if(phone) {
@@ -180,6 +203,9 @@ const COUNTDOWN = 60
 
             //获取车系详情
             async reqSerialDetail(sgId) {
+				if(!sgId){
+				  return
+				}
                 try {
                     uni.showLoading({
                         title: '正在加载...',
@@ -304,7 +330,7 @@ const COUNTDOWN = 60
             //选择车系
             goChooseSerial() {
                 uni.navigateTo({
-                    url: "/pages/ChooseSerial?pages=YuyuePage"
+                    url: "/pages/ChooseSerial?type=yuyue"
                 })
             },
             //获取经销商列表

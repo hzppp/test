@@ -211,41 +211,6 @@ export default {
       return res.code == 1 && res.data ? res.data : []
     })
     this.sgList = [...sgList]
-    if (0&&wx.canIUse('loadFontFace')) {
-      let _this = this
-      console.log("支持自定义字体");
-
-      uni.loadFontFace({
-
-        family: 'Ping Fang',
-
-        source: 'url("https://image.tiaozaoj.com/PingFang-SC-Regular.ttf")',
-
-        success(res) {
-          _this.fontLoaded = true
-          console.log("字体加载成功") //  loaded
-
-        },
-
-        fail(res) {
-
-          console.log("字体加载失败") //  error
-
-        },
-
-        complete(res) {
-
-          console.log("字体加载完成1");
-
-        }
-
-      });
-
-    } else {
-
-      console.log('不支持自定义字体')
-
-    }
   },
   onUnload() {
   },
@@ -272,7 +237,7 @@ export default {
       }).then(res => {
         return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
       })
-	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/650x500.png';
+	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
     },
     // 请求省份和城市的级联列表
     async reqProvinceCityList () {
@@ -455,7 +420,7 @@ export default {
     },
     goActDetail(id) {
       uni.navigateTo({
-        url: '/pages/article?articleId=8831'
+        url: '/pages/activity?id=50'
       })
     },
     goLookCar(item) {
@@ -518,7 +483,7 @@ export default {
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
-  font-family: PingFang SC;
+  // font-family: PingFang SC;
   color: #3C4650;
 }
 .ovh {
@@ -602,14 +567,14 @@ export default {
     }
   }
   .hotAct {
-    margin-top: 40rpx;
+    margin-top: 30rpx;
     .hotTab {
       font-size: 34rpx;
-      font-weight: bold;
-      margin-bottom: 10rpx
+      // font-weight: bold;
+      margin-bottom: 10rpx;
     }
     .actItem {
-      margin: 30rpx 0;
+      margin: 15rpx 0  30rpx 0;
       background: #fff;
       position: relative;
     }
@@ -624,9 +589,9 @@ export default {
         margin-right: 16rpx;
         .img {
           width: 210rpx;
-          height: 140rpx;
+          height: 120rpx;
           border-radius: 20rpx;
-          margin: 30rpx 0 16rpx 0;
+          margin: 10rpx 0 -5rpx 0;
         }
 
         .title {
