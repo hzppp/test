@@ -10,6 +10,7 @@
 </template>
 
 <script>
+const app = getApp()
 export default {
 name: "testDrive",
   props: {
@@ -32,8 +33,8 @@ name: "testDrive",
   },
   data() {
     return {
-      x: 400,
-      y: 465,
+      x: 0,
+      y: 0,
       x1: 0,
       x2: 375,
       y1: 0,
@@ -61,14 +62,21 @@ name: "testDrive",
       }
     },
     onTouchend() {
+      if(!this.move.x && !this.move.y) return
       this.x = this.move.x;
       this.y = this.move.y;
       setTimeout(() => {
         if (this.move.x < this.x2 / 2) this.x = this.x1;
         else this.x = this.x2;
         console.log(this.x, this.y)
+        // app.globalData.testDriveX = this.x
+        // app.globalData.testDriveY = this.y
       }, 100)
-    },
+    }
+  },
+  created() {
+    this.x = app.globalData.testDriveX
+    this.y = app.globalData.testDriveY
   }
 }
 </script>

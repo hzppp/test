@@ -9,6 +9,8 @@
 			host: "https://testpocket.pcauto.com.cn",
 			panorama: "https://panorama.pcauto.com.cn", //vr看车图片
 			//panorama:"http://t-panorama.pcauto.com.cn",
+      testDriveX: 400,
+      testDriveY: 465,
 			currentLocation: { //当前位置
 				wxPosition: { // 微信定位的坐标位置
 					wsq: true,
@@ -80,7 +82,7 @@
 	body {
 		font-family: Ping Fang;
 	}
- 
+
 	// @font-face {
 	//   font-family: ChangAnunitype;
 	//   src: url("~@/static/font/ChangAnunitype-Regular.TTF") format("truetype");
