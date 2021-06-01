@@ -473,7 +473,7 @@
 		text-align: center;
 		height: 40rpx;
 		line-height: 40rpx;
-		background: #4CD964;
+		// background: #4CD964;
 		margin-bottom: 10rpx;
 	}
 	

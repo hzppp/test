@@ -15,7 +15,7 @@
 						</view>
 					</view> -->
 					<view class="banner">
-						<image class="bg" :src="item.cover"></image>
+						<image class="bg" :src="item.cover" mode="aspectFill"></image>
 						<!-- <view class="play"></view>
  -->
 						<view class="icon1 iconB" v-if="item.status == 1">

@@ -69,7 +69,7 @@
               <view class="icon1" v-if="item.status == 3"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
             </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
-            <image class="img banner" :src="item.picUrl" lazy-load></image>
+            <image class="img banner" :src="item.picUrl" lazy-load  mode="aspectFill"></image>
             <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
 <!--              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>-->
