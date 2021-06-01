@@ -345,7 +345,7 @@
 						height: 36rpx;
 						line-height: 36rpx;
 						color: #56A3F1;
-						margin: 4rpx;
+						margin: 8rpx 4rpx;
 						padding: 2rpx 4rpx;
 						border-radius: 10rpx;
 						font-size: 22rpx;
