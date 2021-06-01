@@ -85,6 +85,8 @@ const COUNTDOWN = 60
                 isAllSelect: false, //信息是否已经全部完成
 
                 serialId:'', //参数车系id
+				
+				show:false,
 
                 serialData: {},// 车系详情
                 
@@ -110,10 +112,15 @@ const COUNTDOWN = 60
             }
         },
         onShow() {
+			if(this.show && this.serialId){
+				 this.reqSerialDetail(this.serialId)
+				 this.show = false
+			}
+			 // console.log('22222options :>> ', this.serialId);
             this.checkInfo()
         },
         async onLoad(options) {
-            console.log('options :>> ', options);
+            // console.log('111111options :>> ', options);
             await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
@@ -323,7 +330,7 @@ const COUNTDOWN = 60
             //选择车系
             goChooseSerial() {
                 uni.navigateTo({
-                    url: "/pages/ChooseSerial?pages=YuyuePage"
+                    url: "/pages/ChooseSerial?type=yuyue"
                 })
             },
             //获取经销商列表

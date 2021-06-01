@@ -31,8 +31,8 @@ import api from '@/public/api/index'
             }
         },
         onLoad(options) {
-            console.log('options :>> ', options);
-            console.log('options.pages :>> ', options.pages);
+            // console.log('options :>> ', options);
+            // console.log('options.pages :>> ', options.pages);
             this.pages = options.pages || ""
             this.noun = options.noun || ""
             this.vs = options.vs || ""
@@ -59,16 +59,28 @@ import api from '@/public/api/index'
                     return  uni.navigateTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
+					 return
                 }else if(this.type === "yuyue") {
-                    return  uni.redirectTo({
-                        url:`/pages/YuyuePage?serialId=${id}`
-                    })
+     //                return  uni.redirectTo({
+     //                    url:`/pages/YuyuePage?serialId=${id}`
+     //                })
+					// console.log('asdasdsadas')
+					let pages = getCurrentPages();  //获取所有页面栈实例列表
+					let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+					prevPage.$vm.serialId = id;   //修改上一页data里面的searchVal参数值为1211
+					prevPage.$vm.show  = true; 
+					uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+					    delta: 1
+					});
+					 return
+					
                 }
                 if(this.pages) {
                     this.$store.commit('changModel',id)
                     return  uni.redirectTo({
                         url:`/pages/${this.pages}?serialId=${id}`
                     })
+					 return
                 }
                 if(this.noun) {
                     if(this.noun === "left") {
