@@ -21,7 +21,7 @@
 		            path+=`&salesId=${app.globalData.salesId}`
 		        }
 		        // let imageUrl = 'https://www1.pcauto.com.cn/zt/yqdzhzq/xcxshare/compare.jpg'
-				let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/xcxshare.png'
+				let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/share.jpeg'
 		        return {
 		            title: title,
 		            path: path,
