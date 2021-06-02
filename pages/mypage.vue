@@ -108,7 +108,7 @@
 			let phone = uni.getStorageSync('userPhone');
 			if(phone) {
 			    // this.photo = phone
-			    this.photo=phone.substr(0,4)+'****'+phone.substr(8,phone.length);
+			    this.photo=phone.substr(0,3)+'****'+phone.substr(7,phone.length);
 			}
 			// this.qiandao()
 			// await api.getPocketUserInfo()
