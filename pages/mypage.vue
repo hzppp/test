@@ -13,7 +13,14 @@
 							<view class="name">
 								<open-data type="userNickName"></open-data>
 							</view>
+							<view v-if="photo" class="phoneV" >
+								<image class="phoneVicon" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
+								<view class="phonetitle">{{photo}}</view>
+								
+							</view>
+						     
 						</view>
+					
 					</view>
 
 					<view class="head">
@@ -92,12 +99,17 @@
 				// user: false,
 				// userId: null,
 				isshowUpload: false,
-				fail: false
+				fail: false,
+				photo:null
 			}
 		},
 
 		async onShow() {
-
+			let phone = uni.getStorageSync('userPhone');
+			if(phone) {
+			    // this.photo = phone
+			    this.photo=phone.substr(0,3)+'****'+phone.substr(7,phone.length);
+			}
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
