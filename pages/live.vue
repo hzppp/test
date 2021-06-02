@@ -4,7 +4,7 @@
 		
 		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" :isShowBackBtn="'false'"></pageTopCity>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx;">    点击跳转太平洋汽车网+小程序观看直播</view>
+		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;">    点击跳转太平洋汽车网+小程序观看直播</view>
 		<block v-if="nothing">
 			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
 				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">

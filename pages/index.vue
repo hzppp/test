@@ -487,6 +487,7 @@ export default {
   color: #3C4650;
 }
 .ovh {
+ color: #3C4650 !important;
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
 }
 .shadow {
