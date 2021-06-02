@@ -26,49 +26,49 @@ export default {
       title: '转盘抽奖',
       blocks: [],
       prizes: [
-        { title: '1元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '100元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '0.5元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '2元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '10元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '50元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '50元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
-        { title: '50元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
               src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
