@@ -5,7 +5,9 @@
     <view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></view>
     <!-- #endif -->
     <!-- #ifndef APP-PLUS -->
-    <cover-view class="lucky-wheel-btn" @click="toPlay"></cover-view>
+<!--    <cover-view class="lucky-wheel-btn" @click="toPlay"></cover-view>-->
+<!--    <image class="lucky-wheel-btn" @click="toPlay" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image>-->
+    <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
     <!-- #endif -->
     <div class="lucky-imgs">
       <div v-for="(block, index) in blocks" :key="index">
@@ -188,7 +190,8 @@
   .lucky-box {
     position: relative;
     overflow: hidden;
-    margin: 140rpx auto 0;
+    margin: 0 auto;
+    top: 326rpx;
   }
   .lucky-box canvas {
     position: absolute;
@@ -196,14 +199,15 @@
   }
   .lucky-wheel-btn {
     position: absolute;
+    z-index: 9999;
     left: 50%;
     top: 50%;
-    width: 212rpx;
+    width: 211rpx;
     height: 240rpx;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center 100%;
-    background-size: cover;
+    /*background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center no-repeat;*/
+    background-size: 100%;
   }
   .lucky-imgs {
     width: 0;
