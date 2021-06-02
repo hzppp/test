@@ -32,8 +32,8 @@
 </template>
 
 <script>
-  import { changeUnits, resolveImage } from './utils.js'
-  import { LuckyWheel } from '../lucky-canvas'
+  import { changeUnits, resolveImage } from '@/lottory/utils.js'
+  import { LuckyWheel } from '@/lottory/lucky-canvas'
   export default {
     name: 'lucky-wheel',
     data () {

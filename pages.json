@@ -222,6 +222,14 @@
 				"navigationBarTitleText": "我的视频",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/lottoryPage",
+			"style": {
+				"navigationBarTitleText": "转盘抽奖",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {
