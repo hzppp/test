@@ -1,5 +1,16 @@
 <template>
   <view class="index">
+    <LuckyWheel
+        ref="luckyWheel"
+        width="520rpx"
+        height="520rpx"
+        :blocks="blocks"
+        :prizes="prizes"
+        :buttons="buttons"
+        :defaultStyle="defaultStyle"
+        @start="startCallBack"
+        @end="endCallBack"
+    />
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
@@ -90,10 +101,10 @@ import shouquan from '@/units/shouquan'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
 import pageTopCity from '@/components/pageTopCity/pageTopCity'
-
+import LuckyWheel from 'uni-luck-draw/lucky-wheel'
 let app = getApp()
 export default {
-  components: {viewTabBar: tabBar, testDrive,pageTopCity},
+  components: {viewTabBar: tabBar, testDrive,pageTopCity, LuckyWheel},
   mixins: [shouquan],
   data() {
     return {
@@ -108,6 +119,61 @@ export default {
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
       fontLoaded: false,
+      blocks: [],
+      prizes: [
+        { title: '1元红包', background: '#f9e3bb', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '100元红包', background: '#f8d384', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '0.5元红包', background: '#f9e3bb', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '2元红包', background: '#f8d384', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '10元红包', background: '#f9e3bb', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#f8d384', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#f8d384', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#f8d384', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+      ],
+      defaultStyle: {
+        fontColor: '#d64737',
+        fontSize: '14px',
+      },
     }
   },
   computed: {
@@ -228,6 +294,23 @@ export default {
     }
   },
   methods: {
+    // 点击抽奖按钮触发回调
+    startCallBack () {
+      // 先开始旋转
+      this.$refs.luckyWheel.play()
+      // 使用定时器来模拟请求接口
+      setTimeout(() => {
+        // 3s后得到中奖索引
+        let index = Math.random() * 6 >> 0
+        // 缓慢停止游戏
+        this.$refs.luckyWheel.stop(index)
+      }, 3000)
+    },
+    // 抽奖结束触发回调
+    endCallBack (prize) {
+      // 奖品详情
+      console.log(prize)
+    },
     async getPageData() {
       const cityId = this.crtCityItem.id
       const cityCode = this.crtCityItem.code
