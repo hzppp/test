@@ -88,6 +88,9 @@
 			} finally {
 				uni.hideLoading()
 			}
+			
+			// 访问活动 记录活动访问次数
+			api.fetchActivityVisit({'activityId': this.activityId})
 		},
 		onHide () {
 			if (app.Interval) {
