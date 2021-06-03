@@ -845,6 +845,9 @@ module.exports = {
             url:domain.getAPI('fetchActivityVisit'),
             method: "POST",
             data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
         })
         return data
     },

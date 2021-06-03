@@ -123,39 +123,22 @@ export default {
 		return [provinceIndex, cityIndex]
     }
   },
-  async onShow() {
-	try {
-		uni.showLoading({
-			title: '正在加载...'
-		})
-		this.resetjson()
-		// api.getUser()
-		await distance.getLocation()
-		let currentLocation = app.globalData.currentLocation
-		if (currentLocation) {
-			await this.reqProvinceCityList()
-			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-			if (crtLocationProvinceItem) {
-				const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-				this.crtProvinceItem = crtLocationProvinceItem
-				this.cityList = this.crtProvinceItem.cities
-				this.crtCityItem = crtLocationCityItem
-			}
-			// 精选活动
-			await this.getactivity()
-			// 福利列表
-			// this.getWelfare()
-		}		
-	} catch (err) {
-		console.error(err)
-	} finally {
-		uni.hideLoading()
-	}
-  },
-  onHide() {
-	this.resetjson()
-  },
   async onLoad() {
+	uni.showLoading({
+		title: '正在加载...'
+	})
+	await this.init()
+	uni.hideLoading()
+  },
+  async onPullDownRefresh () {
+	  uni.showLoading({
+	  	title: '正在加载...'
+	  })
+		await this.init()
+	  setTimeout(() => {
+		  uni.hideLoading()
+		  uni.stopPullDownRefresh()
+	  }, 300)
   },
   onShareAppMessage() {
     let title = '长安云车展：活动优惠都在这里！'
@@ -174,6 +157,31 @@ export default {
 	  this.getactivity()
   },
   methods: {
+	// 初始化
+	async init () {
+		try {
+			this.resetjson()
+			// api.getUser()
+			await distance.getLocation()
+			let currentLocation = app.globalData.currentLocation
+			if (currentLocation) {
+				await this.reqProvinceCityList()
+				const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+				if (crtLocationProvinceItem) {
+					const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+					this.crtProvinceItem = crtLocationProvinceItem
+					this.cityList = this.crtProvinceItem.cities
+					this.crtCityItem = crtLocationCityItem
+				}
+				// 精选活动
+				await this.getactivity()
+				// 福利列表
+				// this.getWelfare()
+			}		
+		} catch (err) {
+			console.error(err)
+		}
+	},
     formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
     },
