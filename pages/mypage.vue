@@ -34,6 +34,7 @@
 				</block>
 			</view>
 			<view class="box">
+				<image :src="imageData.picUrl" class="imagev" @tap="goImageDetail"></image>
 				<view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>
@@ -75,7 +76,7 @@
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import pageTop from '@/components/pageTop/pageTop'
 	import tabBar from '@/components/tabBar/tabBar'
-  import toast from '@/units/showToast'
+    import toast from '@/units/showToast'
 
   let app = getApp()
 	export default {
@@ -100,7 +101,8 @@
 				// userId: null,
 				isshowUpload: false,
 				fail: false,
-				photo:null
+				photo:null,
+				imageData:[]
 			}
 		},
 
@@ -110,6 +112,15 @@
 			    // this.photo = phone
 			    this.photo=phone.substr(0,3)+'****'+phone.substr(7,phone.length);
 			}
+			let sgList = await api.getBannerByPosition({'positionType':'1'});
+			
+			if(sgList){
+				let data = sgList.data
+				console.log(data);
+				this.imageData = data[0]
+			}
+			
+			
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
@@ -153,6 +164,9 @@
 			// this.signInList
 
 			// console.log('getsignIn', data)
+			
+			
+			
 		},
 		methods: {
 			tocard() {
@@ -171,6 +185,22 @@
 				uni.navigateTo({
 					url: '/pages/myvideo'
 				})
+			},
+			goImageDetail(){
+				if(this.imageData){
+					if(this.imageData.type == 1){
+						// H5
+					    let url = this.imageData.url
+						uni.navigateTo({
+							url: `/pages/webview?webURL=${url}`
+						})
+					}else{
+						let id = this.imageData.originalId
+						uni.navigateTo({
+							url: `/pages/activity?id=${id}`
+						})
+					}
+				}
 			}
 		}
 	}
@@ -353,5 +383,10 @@
 			height: 186rpx;
 			// .arc(684rpx,186rpx);
 		}
+	}
+	.imagev{
+		width: 686rpx;
+		height: 200rpx;
+		border-radius: 10rpx;
 	}
 </style>

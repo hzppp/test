@@ -855,6 +855,13 @@ module.exports = {
 	    return data
 	},
 	
-	
+	getBannerByPosition:async(para) =>{
+		let {data} = await request({
+		    url:domain.getAPI('getBannerByPosition'),
+		    method: "GET",
+			data:para,
+		})
+		return data
+	}
 	
 }

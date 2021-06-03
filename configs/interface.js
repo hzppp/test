@@ -23,7 +23,8 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
+	// changan:"https://tccar.pcauto.com.cn",
+	changan:'https://devqd-changan.pcauto.com.cn/',
 	// changan:"https://devqd-changan.pcauto.com.cn",
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
@@ -192,6 +193,8 @@ const config = {
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 底部陪配置
 		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
+		// 获取广告
+		getBannerByPosition:`${DOMAIN.changan}/api/xcx/ad/getByPositionType`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 	},
