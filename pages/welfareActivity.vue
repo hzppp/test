@@ -49,7 +49,9 @@
 					  </view>
 				  </view>
 				  <view class="right-area">
-					  <view class="tag">{{item.startTime | statusFilter(item.endTime)}}</view>
+					  <view class="tag before" v-show="statusFilter(item.startTime, item.endTime) == 'before'">即将开始</view>
+					  <view class="tag during" v-show="statusFilter(item.startTime, item.endTime) == 'during'">进行中</view>
+					  <view class="tag after" v-show="statusFilter(item.startTime, item.endTime) == 'after'">已结束</view>
 				  </view>
 			  </view>
             </view>
@@ -181,6 +183,21 @@ export default {
 		} catch (err) {
 			console.error(err)
 		}
+	},
+	// 状态过滤器
+	statusFilter (startTime, endTime) {
+		startTime = new Date(startTime.replace(/-/g, '/')).getTime()
+		endTime = new Date(endTime.replace(/-/g, '/')).getTime()
+		let crtTime = new Date().getTime()
+		let status = ''
+		if (crtTime < startTime) {
+			status = 'before'
+		} else if (crtTime > endTime) {
+			status = 'after'
+		} else {
+			status = 'during'
+		}
+		return status
 	},
     formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
@@ -347,21 +364,6 @@ export default {
 	  dateFilter (date) {
 		  return date.split(' ')[0]
 	  },
-	  // 状态过滤器
-	  statusFilter (startTime, endTime) {
-		startTime = new Date(startTime.replace(/-/g, '/')).getTime()
-		endTime = new Date(endTime.replace(/-/g, '/')).getTime()
-		let crtTime = new Date().getTime()
-		let status = ''
-		if (crtTime < startTime) {
-			status = '即将开始'
-		} else if (crtTime > endTime) {
-			status = '已结束'
-		} else {
-			status = '进行中'
-		}
-		return status
-	  }
   }
 }
 </script>
