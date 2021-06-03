@@ -9,6 +9,7 @@
 			host: "https://testpocket.pcauto.com.cn",
 			panorama: "https://panorama.pcauto.com.cn", //vr看车图片
 			//panorama:"http://t-panorama.pcauto.com.cn",
+      isRotating: false, //抽奖转盘是否旋转中
       testDriveX: 400,
       testDriveY: 465,
 			currentLocation: { //当前位置

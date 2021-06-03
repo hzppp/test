@@ -238,6 +238,20 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/lottoryRecord",
+			"style": {
+				"navigationBarTitleText": "中奖记录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/inviteRecord",
+			"style": {
+				"navigationBarTitleText": "邀请记录",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"tabBar": {

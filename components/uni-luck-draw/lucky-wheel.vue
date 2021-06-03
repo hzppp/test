@@ -36,6 +36,7 @@
 <script>
   import { changeUnits, resolveImage } from '@/lottory/utils.js'
   import { LuckyWheel } from '@/lottory/lucky-canvas'
+  const app = getApp()
   export default {
     name: 'lucky-wheel',
     data () {
@@ -171,6 +172,15 @@
         })
       },
       toPlay (e) {
+        console.log('app.globalData.isRotating',app.globalData.isRotating)
+        if(app.globalData.isRotating) {
+          uni.showToast({
+            title:"正在抽奖，请勿频繁操作",
+            icon:"none"
+          })
+          return;
+        }
+        app.globalData.isRotating = true
         this.$lucky.startCallback()
       },
       init () {
