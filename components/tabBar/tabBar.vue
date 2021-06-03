@@ -1,13 +1,13 @@
 <template>
-	<cover-view class="tabbar" :style="{'padding-bottom': paddingBottomHeight + 'rpx'}">
-		<cover-view class="tabbar-item" :class="index == num   && 'mainMenu'" v-for="(item, index) in list" :key="index"
+	<view class="tabbar" :style="{'padding-bottom': paddingBottomHeight + 'rpx'}">
+		<view class="tabbar-item" :class="index == num   && 'mainMenu'" v-for="(item, index) in list" :key="index"
 			@click="tabbarChange(item.path)">
-			<cover-image class="item-img" :src="item.icon_a" v-if="currentk == index"></cover-image>
-			<cover-image class="item-img" :src="item.icon" v-else></cover-image>
-			<cover-view class="item-name" :class="{'tabbarActive': currentk == index}" v-if="item.text">{{item.text}}
-			</cover-view>
-		</cover-view>
-	</cover-view>
+			<image class="item-img" :src="item.icon_a" v-if="currentk == index"></image>
+			<image class="item-img" :src="item.icon" v-else></image>
+			<view class="item-name" :class="{'tabbarActive': currentk == index}" v-if="item.text">{{item.text}}
+			</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -85,7 +85,7 @@
 				if (data && data.isHidden == 1) {
 					console.log(123123)
 					this.num = -1;
-				
+
 					if(this.current > 2){
 					  this.currentk = this.current  - 1
 					}else{
