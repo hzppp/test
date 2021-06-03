@@ -229,7 +229,15 @@
 				"navigationBarTitleText": "隐私政策",
 				"enablePullDownRefresh": false
 			}
-         }
+         },
+		 {
+		 	"path": "pages/lbActivity",
+		 	"style": {
+		 		"navigationBarTitleText": "活动详情",
+		 		"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+		 	}
+		  }
 	],
 	"tabBar": {
 		"custom": true,
