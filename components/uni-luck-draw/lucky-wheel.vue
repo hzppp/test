@@ -199,7 +199,7 @@
   }
   .lucky-wheel-btn {
     position: absolute;
-    z-index: 9999;
+    z-index: 999;
     left: 50%;
     top: 50%;
     width: 211rpx;

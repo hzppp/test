@@ -1,13 +1,13 @@
 <template>
-  <cover-view :class="'pageTop ' + btnys">
+  <view :class="'pageTop ' + btnys">
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
-    <view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
-      <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
+    <cover-view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
+      <cover-view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
         <slot></slot>
-        <view class="pageTop-text" :style="'color:' + titleys ">{{title}}</view>
-      </view>
-    </view>
-  </cover-view>
+        <cover-view class="pageTop-text" :style="'color:' + titleys ">{{title}}</cover-view>
+      </cover-view>
+    </cover-view>
+  </view>
 </template>
 
 <script>
@@ -53,7 +53,7 @@ export default {
   top: 0;
   background: #fff;
   overflow: hidden;
-  z-index: 666;
+  z-index: 1000;
 }
 .pageTop-back-btn{
   width: 26rpx;
