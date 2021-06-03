@@ -203,7 +203,7 @@
     left: 50%;
     top: 50%;
     width: 211rpx;
-    height: 240rpx;
+    height: 219rpx;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     /*background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center no-repeat;*/

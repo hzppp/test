@@ -24,9 +24,42 @@
         <view class="inviteRecord">
           <view class="title">邀请记录</view>
           <view class="item">
-            <view>头像</view><view>名称</view><view>2021-05-20 12:35 加入</view>
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
           </view>
-          <view class="nodata">
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="item">
+            <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+          </view>
+          <view class="nodata" v-if="false">
             您还没有邀请记录哦！快去邀请好友参与吧~
           </view>
           <view class="more">
@@ -53,49 +86,49 @@ export default {
         { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
         { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
           imgs:[
             {
-              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
             }
           ] },
       ],
@@ -169,7 +202,7 @@ export default {
     }
   }
   .list {
-    padding: 0 32rpx;
+    padding: 0 32rpx 20rpx;
     background: #000052;
     .invite {
       margin: 0 auto;
@@ -192,15 +225,26 @@ export default {
         line-height: 112rpx;
         background: #1806a3;
         margin-bottom: 20rpx;
+        box-sizing: border-box;
+        padding: 20rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         &>view {
           display: inline-block;
         }
-        .img {
+        .imgView {
           width: 72rpx;
           height: 72rpx;
+          .img {
+            width: 100%;
+            height: 100%;
+          }
         }
         .name {
           font-size: 30rpx;
+          width: 250rpx;
+          overflow: hidden; text-overflow:ellipsis; white-space: nowrap;
         }
         .time {
           font-size: 24rpx;
@@ -210,7 +254,9 @@ export default {
         background: #1806a3;
       }
       .more {
-
+        color: #6b87cf;
+        text-align: center;
+        font-size: 24rpx;
       }
     }
   }

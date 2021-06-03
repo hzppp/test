@@ -1,5 +1,5 @@
 <template>
-  <view :class="'pageTop ' + btnys">
+  <cover-view :class="'pageTop ' + btnys">
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
     <view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
       <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
@@ -7,7 +7,7 @@
         <view class="pageTop-text" :style="'color:' + titleys ">{{title}}</view>
       </view>
     </view>
-  </view>
+  </cover-view>
 </template>
 
 <script>
