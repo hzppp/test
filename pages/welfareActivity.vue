@@ -39,6 +39,19 @@
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
+			  <view class="desc">
+				  <view class="left-area">
+					  <view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view>
+					  <view class="info">
+						<view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
+						<view v-show="!item.duibaUrl && item.visitCount && item.clueCount" class="line"></view>
+						<view v-show="!item.duibaUrl && item.clueCount"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+					  </view>
+				  </view>
+				  <view class="right-area">
+					  <view class="tag">{{item.startTime | statusFilter(item.endTime)}}</view>
+				  </view>
+			  </view>
             </view>
           </block>
         </view>
@@ -312,6 +325,35 @@ export default {
 		  console.error(err)
 		}
 	},
+  },
+  filters: {
+	  // 数字过滤器
+	  numFilter (num) {
+		  if (num > 100000) {
+			return '10万+'  
+		  } else {
+			  return num
+		  }
+	  },
+	  // 日期过滤器
+	  dateFilter (date) {
+		  return date.split(' ')[0]
+	  },
+	  // 状态过滤器
+	  statusFilter (startTime, endTime) {
+		startTime = new Date(startTime.replace(/-/g, '/')).getTime()
+		endTime = new Date(endTime.replace(/-/g, '/')).getTime()
+		let crtTime = new Date().getTime()
+		let status = ''
+		if (crtTime < startTime) {
+			status = '即将开始'
+		} else if (crtTime > endTime) {
+			status = '已结束'
+		} else {
+			status = '进行中'
+		}
+		return status
+	  }
   }
 }
 </script>
