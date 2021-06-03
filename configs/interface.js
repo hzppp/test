@@ -192,6 +192,8 @@ const config = {
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 底部陪配置
 		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
+		// 访问活动 记录活动访问次数
+		fetchActivityVisit: `${DOMAIN.changan}/api/xcx/activity/visit`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 	},
