@@ -222,6 +222,21 @@
 				"navigationBarTitleText": "我的视频",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/changanPy",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/lottoryPage",
+			"style": {
+				"navigationBarTitleText": "转盘抽奖",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {
@@ -231,11 +246,11 @@
 		"backgroundColor": "#fff",
 		"borderStyle": "black",
 		"list": [{
-				"pagePath": "pages/index",
-				"text": "首页",
-				"iconPath": "static/images/tab1_icon.png",
-				"selectedIconPath": "static/images/tab1_icon_c.png"
-			},
+			"pagePath": "pages/index",
+			"text": "首页",
+			"iconPath": "static/images/tab1_icon.png",
+			"selectedIconPath": "static/images/tab1_icon_c.png"
+		},
 			{
 				"pagePath": "pages/live",
 				"text": "直播",

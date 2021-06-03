@@ -35,7 +35,7 @@
         </view>
       </view>
       <view class="hotAct">
-        <view class="hotTab">
+        <view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
           热销车型
         </view>
         <scroll-view scroll-x show-scrollbar class="hotCar">
@@ -69,7 +69,7 @@
               <view class="icon1" v-if="item.status == 3"><image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}</view>
             </view>
 <!--            <view class="icon1 status_1">{{item.contentType}}{{item.status}}</view>-->
-            <image class="img banner" :src="item.picUrl" lazy-load></image>
+            <image class="img banner" :src="item.picUrl" lazy-load  mode="aspectFill"></image>
             <view class="info shadow">
               <!--type 当为活动类型时,1购车福利,2车主福利,3线下活动 4试驾活动-->
 <!--              <view class="icon2" v-if="item.type">{{item.type | actType}}</view>-->
@@ -90,7 +90,6 @@ import shouquan from '@/units/shouquan'
 import testDrive from '@/components/testDrive/testDrive'
 import distance from '@/units/distance'
 import pageTopCity from '@/components/pageTopCity/pageTopCity'
-
 let app = getApp()
 export default {
   components: {viewTabBar: tabBar, testDrive,pageTopCity},
@@ -107,6 +106,62 @@ export default {
       liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png','https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'],
       pageData:{bannerActivity:{},list:[]},
       testUrl:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
+      fontLoaded: false,
+      blocks: [],
+      prizes: [
+        { title: '1元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '100元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '0.5元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '2元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '10元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+        { title: '50元红包', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
+          imgs:[
+            {
+              src:'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_thx.png',width:'100%',height: '100%',top:'1rpx'
+            }
+          ] },
+      ],
+      defaultStyle: {
+        fontColor: '#d64737',
+        fontSize: '14px',
+      },
     }
   },
   computed: {
@@ -219,7 +274,7 @@ export default {
     if (app.globalData.salesId) {
       path += `&salesId=${app.globalData.salesId}`
     }
-    let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210125/audi/xcx/img/xcxshare.png'
+    let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/share.jpeg'
     return {
       title: title,
       path: path,
@@ -236,7 +291,7 @@ export default {
       }).then(res => {
         return res.code == 1 ? res.data : {bannerActivity:{},list:[]}
       })
-	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/650x500.png';
+	  this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
     },
     // 请求省份和城市的级联列表
     async reqProvinceCityList () {
@@ -419,7 +474,7 @@ export default {
     },
     goActDetail(id) {
       uni.navigateTo({
-        url: '/pages/article?articleId=8831'
+        url: '/pages/activity?id=50'
       })
     },
     goLookCar(item) {
@@ -482,10 +537,11 @@ export default {
 .index {
   padding-top: 16rpx;
   overflow-x: hidden;
-  font-family: PingFang SC;
+  // font-family: PingFang SC;
   color: #3C4650;
 }
 .ovh {
+ color: #3C4650 !important;
   overflow: hidden; text-overflow:ellipsis; white-space: nowrap;max-width: 620rpx;
 }
 .shadow {
@@ -568,12 +624,12 @@ export default {
   .hotAct {
     margin-top: 30rpx;
     .hotTab {
-      font-size: 40rpx;
-      font-weight: bold;
-      margin-bottom: 10rpx
+      font-size: 34rpx;
+      // font-weight: bold;
+      margin-bottom: 10rpx;
     }
     .actItem {
-      margin: 30rpx 0;
+      margin: 15rpx 0  30rpx 0;
       background: #fff;
       position: relative;
     }
@@ -588,9 +644,9 @@ export default {
         margin-right: 16rpx;
         .img {
           width: 210rpx;
-          height: 140rpx;
+          height: 120rpx;
           border-radius: 20rpx;
-          margin: 30rpx 0 16rpx 0;
+          margin: 10rpx 0 -5rpx 0;
         }
 
         .title {

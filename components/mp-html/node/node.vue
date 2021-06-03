@@ -353,7 +353,7 @@ export default {
 }
 
 ._code {
-  font-family: monospace;
+  /* font-family: monospace; */
 }
 
 ._del {

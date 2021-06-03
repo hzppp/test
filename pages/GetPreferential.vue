@@ -63,7 +63,9 @@
                 <button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
             </view>
         </view>
+		<pyBoomV></pyBoomV>
         </view>
+		
         <view v-if="isNoData && !serialData.id" class="no-data">暂无数据</view>
     </view>
 </template>
@@ -73,7 +75,7 @@ import api from '@/public/api/index'
 import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
 import login from '@/units/login'
-
+import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 let app = getApp()
 
 /* *
@@ -83,7 +85,7 @@ const COUNTDOWN = 60
 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
     export default {
-        components: {pop},
+        components: {pop,pyBoomV},
         data() {
             return {
                 phoneNum: '', //手机号码
