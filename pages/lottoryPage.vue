@@ -1,6 +1,5 @@
 <template>
   <view>
-    <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"></pageTopCity>
     <view class="content">
       <view class="luckyWheel">
         <view class="lottoryList">
@@ -68,16 +67,17 @@
         </view>
       </view>
     </view>
+    <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"></pageTopCommon>
   </view>
 </template>
 <!--lottory_bg.png-->
 <script>
 import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
-import pageTopCity from '@/components/pageTopCity/pageTopCity'
+import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 
 export default {
   name: "lottoryPage",
-  components: {LuckyWheel,pageTopCity},
+  components: {LuckyWheel,pageTopCommon},
   data() {
     return {
       title: '转盘抽奖',
