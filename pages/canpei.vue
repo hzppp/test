@@ -191,7 +191,7 @@
 			uni.showLoading({
 				title: "加载中"
 			})
-            console.log('options111111111 :>> ', options);
+            console.log('options.mids :>> ', options.mids);
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
 			this.max = options.max || 0;
