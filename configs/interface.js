@@ -195,6 +195,8 @@ const config = {
 		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
 		// 获取广告
 		getBannerByPosition:`${DOMAIN.changan}/api/xcx/ad/getByPositionType`,
+		// 获取抽奖信息
+		getFission:'${DOMAIN.changan}/api/xcx/lottery/fission',
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 	},

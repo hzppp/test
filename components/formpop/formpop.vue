@@ -58,7 +58,8 @@
 					<view :class="'sms-code-btn' + (from == 'lbactivity' ? 'Red':'')" @tap="getSmsCodeClick">
 						{{smsCodeText}}</view>
 				</view>
-				<view class="btn" @tap="submit">提交</view>
+				<view class="btn" @tap="submit"  v-if="from == 'lbactivity'">提交去抽奖</view>
+				<view class="btn" @tap="submit"  v-else>提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
 				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 				<view class="pyview" @tap="doPy">
@@ -311,7 +312,7 @@
 					source = 1
 					sourceId = lydx.id
 				} else if (ly = 'lbactivity') {
-					source = 1
+					source = 5
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
 					source = 2
@@ -356,6 +357,7 @@
 					areaId: this.crtDistrictItem.id,
 					provinceId: this.crtProvinceItem.id,
 					smsCode: this.smsCode,
+					sourceUserId:this.currentObj.sourceUserId
 				})
 				let popname
 				if (data.code == 1) { //成功留资

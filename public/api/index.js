@@ -862,6 +862,15 @@ module.exports = {
 			data:para,
 		})
 		return data
+	},
+	
+	getFission:async(para) =>{
+		let {data} = await request({
+		    url:domain.getAPI('getFission'),
+		    method: "GET",
+			data:para,
+		})
+		return data
 	}
 	
 }

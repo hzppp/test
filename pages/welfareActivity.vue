@@ -203,16 +203,26 @@ export default {
     },
     toActivityPage(item) {
 		wx.aldstat.sendEvent('活动点击')
-      if (item.duibaUrl) {
-        uni.navigateTo({
-          url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
-        })
-      } else {
-        let url = '/pages/activity?id=' + item.id
-        uni.navigateTo({
-          url
-        })
-      }
+		
+	  if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+		  let url = '/pages/lbActivity?id=' + item.id
+		  uni.navigateTo({
+		    url
+		  })
+	  }else{
+		if (item.duibaUrl) {
+		  uni.navigateTo({
+		    url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+		  })
+		} else {
+		  let url = '/pages/activity?id=' + item.id
+		  uni.navigateTo({
+		    url
+		  })
+		}  
+	  }	
+		
+
     },
     resetjson() {
       this.getWelfarePageNumber = 1

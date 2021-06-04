@@ -44,15 +44,18 @@
 				artDownDate: [],
 				activityId: '',
 				content: "",
+				sourceUserId:''
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			this.sourceUserId = options.sourceUserId
 			await login.checkLogin(api)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
+			// this.getFission()
 			try {
 				uni.showLoading({
 					title: '正在加载...'
@@ -67,7 +70,10 @@
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
-				this.content = data				
+				this.content = data		
+				if(this.sourceUserId){
+					this.content.sourceUserId = this.sourceUserId
+				}
 			} catch (err) {
 				console.error(err)
 			} finally {
@@ -99,6 +105,12 @@
 			}
 		},
 		methods: {
+		 async getFission() {
+			 console.log(123123123)
+			 let {data}=  await api.getFission()
+			 console.log(data)
+			},
+			
 			formShow() {
 				wx.aldstat.sendEvent('报名活动')
 				this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
