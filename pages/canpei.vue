@@ -3,8 +3,8 @@
 	<view>
 		<view class='canpei uni' v-if="max > 0">
 			<!-- 车型对比计数器 S -->
-			<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
-			<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
+			<!-- <count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count> -->
+			<!-- <count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count> -->
 			<back-home></back-home>
 			<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
 				<view class="icon">
@@ -191,7 +191,7 @@
 			uni.showLoading({
 				title: "加载中"
 			})
-            console.log('options.mids :>> ', options.mids);
+            console.log('options111111111 :>> ', options);
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
 			this.max = options.max || 0;
@@ -212,20 +212,11 @@
 			};
 			this.addData()
 		},
-		onShareAppMessage() {
-			// if (this.navigateBack == '1') { //参数配置
-			// 	return {
-			// 		title: this.data.sidName + '参数配置',
-			// 		desc: '点击查看',
-			// 		path: '/pages_car/canpei/canpei?navigateBack=1&max=4&serialId=' + this.serialId + '&ids=' + this.mids
-			// 	}
-			// } else if (this.navigateBack == '2') { //车型对比
-			// 	return {
-			// 		title: '车型参数配置对比',
-			// 		desc: '点击查看',
-			// 		path: '/pages_car/canpei/canpei?navigateBack=2&compare=true&ids=' + this.mids
-			// 	}
-			// }
+		onShareAppMessage() { //分享
+            let title = '参数配置'
+            let desc = '点击查看'
+            let path = `pages/canpei?navigateBack=1&compare=true&mids=${this.mids}&serialId=${this.serialId}`
+            return {title,desc,path}
 		},
 		methods: {
 			// addGlobalSelectCar(ids) {
