@@ -275,19 +275,6 @@
 						list: []
 					}
 				})
-				
-				// this.pageData.banners =  this.pageData.banners.concat(this.pageData.banners)
-			    this.pageData.banners =   [{
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-                }, {
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-                },, {
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-                }];
-			
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
 			// 请求省份和城市的级联列表
