@@ -31,31 +31,29 @@
 		created() {
 			var macInfo = uni.getSystemInfoSync();
 			this.screenWidth = macInfo.screenWidth;
-		},
-		ready(){
-			this.setswiper()
-		},
-		methods: {
-			setswiper(){
 			// 计算swiper样式
 			this.swiperList.forEach((item, index) => {
 				this.itemStyle.push(this.getStyle(index))
 			})
-			console.log('大大大时' + JSON.stringify(this.swiperList))	
-			},
+		},
+		methods: {
 			getStyle(e) {
 				if (e > this.swiperList.length / 2) {
 					var right = this.swiperList.length - e
+					console.log(this.swiperList.length + '===' + right + '===' + e )
 					return {
-						transform: 'scale(' + (1 - right / 10) + ') translate(-' + (right * 9) + '%,0px)',
+						transform: 'scale(' + (1 - right / 9) + ') translate(-' + (right * 9) + '%,0px)',
 						zIndex: 9999 - right,
-						opacity: 0.8 / right
+					    opacity: right > 1 ? (0):(0.8 / right)
+						// dispaly: right > 1 ? none:block
 					}
 				} else {
+					console.log(this.swiperList.length + '#===' + right + '===' + e )
 					return {
-						transform: 'scale(' + (1 - e / 10) + ') translate(' + (e * 9) + '%,0px)',
+						transform: 'scale(' + (1 - e / 9) + ') translate(' + (e * 9) + '%,0px)',
 						zIndex: 9999 - e,
-						opacity: 0.8 / e
+						opacity: e > 1 ?(0):(0.8 / e)
+						// dispaly: e > 1 ? none:block
 					}
 				}
 			},
@@ -83,7 +81,7 @@
 <style lang="scss">
 	.swiperPanel {
 		margin: 20rpx 0;
-		height: 344rpx;
+		height: 500rpx;
 		width: 100%;
 		overflow: hidden;
 		position: relative;
@@ -95,16 +93,17 @@
 			top: 0;
 			left: 0;
 			transition: all .5s;
-
+             // background: #007AFF;
 			.children {
 				height: 100%;
-				width: 580rpx;
+				width: 670rpx;
 				margin: 2rpx auto;
+				// background: #4CD964;
 
 				.pic {
 					height: 100%;
 					width: 100%;
-					border-radius: 20px;
+					border-radius: 10px;
 					// box-shadow: 0 0 10px #333;
 				}
 			}

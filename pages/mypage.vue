@@ -34,7 +34,7 @@
 				</block>
 			</view>
 			<view class="box">
-				<image :src="imageData.picUrl" class="imagev" @tap="goImageDetail"></image>
+				<image  v-if="imageData.picUrl" :src="imageData.picUrl" class="imagev" @tap="goImageDetail"></image>
 				<view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>

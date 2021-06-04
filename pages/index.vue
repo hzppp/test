@@ -11,9 +11,10 @@
 		</pageTopCity>
 		<viewTabBar :current="0"></viewTabBar>
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
+		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+		
 		<view class="content">
 			
-			<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 			
 			
 		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
@@ -274,6 +275,28 @@
 						list: []
 					}
 				})
+				
+				// this.pageData.banners =  this.pageData.banners.concat(this.pageData.banners)
+			    this.pageData.banners =   [{
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                }, {
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
+                },{
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                },{
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                },{
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                },{
+                    type: 'image',
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                }];
+			
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
 			// 请求省份和城市的级联列表
@@ -548,7 +571,7 @@
 
 	.content {
 		padding: 0 32rpx 150rpx;
-
+		
 		.bannerTop {
 			width: 100%;
 			height: 500rpx;
