@@ -44,7 +44,8 @@
 					return {
 						transform: 'scale(' + (1 - right / 9) + ') translate(-' + (right * 9) + '%,0px)',
 						zIndex: 9999 - right,
-					    opacity: right > 1 ? (0):(0.8 / right)
+						opacity: 0.8 / right
+					    // opacity: right > 1 ? (0):(0.8 / right)
 						// dispaly: right > 1 ? none:block
 					}
 				} else {
@@ -52,7 +53,8 @@
 					return {
 						transform: 'scale(' + (1 - e / 9) + ') translate(' + (e * 9) + '%,0px)',
 						zIndex: 9999 - e,
-						opacity: e > 1 ?(0):(0.8 / e)
+						opacity: 0.8 / e
+						// opacity: e > 1 ?(0):(0.8 / e)
 						// dispaly: e > 1 ? none:block
 					}
 				}
@@ -67,6 +69,8 @@
 					// 向左滑动
 					var last = [newList.pop()]
 					newList = last.concat(newList)
+					console.log(e)
+					console.log(JSON.stringify(newList))
 				} else {
 					// 向右滑动
 					newList.push(newList[0])
@@ -80,11 +84,12 @@
 
 <style lang="scss">
 	.swiperPanel {
-		margin: 20rpx 0;
+		margin: 0rpx 0;
 		height: 500rpx;
 		width: 100%;
 		overflow: hidden;
 		position: relative;
+		// background: #007AFF;
 
 		.swiperItem {
 			height: 100%;

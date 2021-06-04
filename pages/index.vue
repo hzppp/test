@@ -283,18 +283,9 @@
                 }, {
                     type: 'image',
                     picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-                },{
+                },, {
                     type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-                },{
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-                },{
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-                },{
-                    type: 'image',
-                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+                    picUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
                 }];
 			
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
@@ -551,7 +542,7 @@
 	}
 
 	.index {
-		padding-top: 16rpx;
+		// padding-top: 16rpx;
 		overflow-x: hidden;
 		// font-family: PingFang SC;
 		color: #3C4650;
