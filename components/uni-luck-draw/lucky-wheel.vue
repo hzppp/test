@@ -34,8 +34,8 @@
 </template>
 
 <script>
-  import { changeUnits, resolveImage } from '@/lottory/utils.js'
-  import { LuckyWheel } from '@/lottory/lucky-canvas'
+  import { changeUnits, resolveImage } from '@/lottery/utils.js'
+  import { LuckyWheel } from '@/lottery/lucky-canvas'
   const app = getApp()
   export default {
     name: 'lucky-wheel',

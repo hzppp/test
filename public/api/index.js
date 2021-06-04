@@ -866,9 +866,9 @@ module.exports = {
 	    })
 	    return data
 	},
-    getLottoryRecordList: async() => {
+    getlotteryRecordList: async() => {
         let {data} = await request({
-            url:domain.getAPI('lottoryRecordList'),
+            url:domain.getAPI('lotteryRecordList'),
             method: "GET",
         })
         return data
@@ -876,6 +876,14 @@ module.exports = {
     getInviteRecordList: async(para) => {
         let {data} = await request({
             url:domain.getAPI('inviteRecordList'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+    getLotteryActInfo: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryActInfo'),
             method: "GET",
             data:para
         })

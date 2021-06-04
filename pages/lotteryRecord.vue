@@ -17,7 +17,7 @@
         <view class="textK">你现在还没有中奖记录哦~</view>
         <view class="textK">看去参与抽奖吧~</view>
       </view>
-      <button class="goLottory" @tap="goLottory">去抽奖</button>
+      <button class="golottery" @tap="golottery">去抽奖</button>
     </block>
   </view>
 </template>
@@ -26,7 +26,7 @@
 import api from '@/public/api/index'
 import login from '@/units/login'
 export default {
-name: "lottoryRecord",
+name: "lotteryRecord",
   data() {
     return {
       dataList: []
@@ -36,13 +36,13 @@ name: "lottoryRecord",
     goDetail() {
       //
     },
-    goLottory() {
+    golottery() {
       uni.navigateBack()
     },
   },
   async onLoad() {
     await login.checkLogin(api)
-    this.dataList = await api.getLottoryRecordList({}).then(res => {
+    this.dataList = await api.getlotteryRecordList({}).then(res => {
       console.log('rrrrrr',res)
       return res.code == 1 && res.data ? res.data.rows : []
     })
@@ -62,7 +62,7 @@ name: "lottoryRecord",
     box-sizing: border-box;
     .item{
       background: url("token: 3ec22bf4-3f87-4c15-9333-c5a05ce4e234");
-      .setbg(686rpx,214rpx,'lottory_record_icon.png');
+      .setbg(686rpx,214rpx,'lottery_record_icon.png');
       position: relative;
       width: 100%;
       height: 214rpx;
@@ -110,7 +110,7 @@ name: "lottoryRecord",
     height: 40rpx;
   }
 }
-.goLottory {
+.golottery {
   width: 460rpx;
   height: 88rpx;
   background: #FA8845;

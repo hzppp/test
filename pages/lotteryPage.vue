@@ -3,10 +3,10 @@
     <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"></pageTopCommon>
     <view class="content">
       <view class="luckyWheel">
-        <view class="lottoryList">
+        <view class="lotteryList">
           <view class="item">1分钟前 用户XX抽中888元购车代金券</view>
         </view>
-        <view class="lottoryRecord" @tap="goLottoryRecord"></view>
+        <view class="lotteryRecord" @tap="golotteryRecord"></view>
         <LuckyWheel
             ref="luckyWheel"
             width="520rpx"
@@ -56,12 +56,42 @@
         </view>
       </view>
     </view>
-    <view v-if="false">
-      <view>恭喜你获得</view>
+    <view class="lotteryDialog" v-if="!showDialogL">
+      <view class="dialogContainer">
+        <block v-if="true">
+          <view class="tTitle titleQ">恭喜您获得</view>
+          <view class="tBody gotPrize">
+            <view class="amountBox"><view class="iconK">￥</view><view class="amount">18888</view></view>
+            <view class="time">有效期至：2021-05-01</view>
+            <view class="lotteryType" v-if="!1">
+              <view>购车</view>
+              <view>代金券</view>
+            </view>
+            <view class="lotteryType long" v-else>
+              <view>基础保</view>
+              <view>养代金券</view>
+            </view>
+          </view>
+          <view class="tFoot">
+            <button class="left">查看中奖记录</button>
+            <button class="right">继续抽奖</button>
+          </view>
+        </block>
+        <block v-else>
+          <view class="tTitle titleQ">您与奖品檫肩而过</view>
+          <view class="tBody">
+            <view class="funnyIcon"></view>
+            <view class="thxA">谢谢参与~</view>
+          </view>
+          <view class="tFoot">
+            <button class="right btn1">继续抽奖</button>
+          </view>
+        </block>
+      </view>
     </view>
   </view>
 </template>
-<!--lottory_bg.png-->
+<!--lottery_bg.png-->
 <script>
 import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
 import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
@@ -69,13 +99,15 @@ const app = getApp()
 import api from '@/public/api/index'
 import login from '@/units/login'
 export default {
-  name: "lottoryPage",
+  name: "lotteryPage",
   components: {LuckyWheel,pageTopCommon},
   data() {
     return {
       inviteRecordList: [],
+      lotteryActInfo: [],
       title: '转盘抽奖',
       blocks: [],
+      showDialogL: false,
       prizes: [
         { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
           imgs:[
@@ -132,13 +164,27 @@ export default {
       },
     }
   },
-  async onLoad() {
+  async onLoad(options) {
     const {activityId=1} = options
     await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
-      console.log('rrrrr123',res)
       return res.code == 1 ? res.rows : []
+    })
+    this.lotteryActInfo =  await api.getLotteryActInfo({activityId}).then(res => {
+      if(res.code == 1) {
+        return res.data || {prizeList:[],winnerRecords:[]}
+      }else {
+        uni.showToast({
+          title:res.msg,
+          icon:"none"
+        })
+        // setTimeout(()=> {
+        //   uni.reLaunch({
+        //     url:"/pages/authorization"
+        //   })
+        // },1500)
+      }
     })
   },
   methods: {
@@ -158,10 +204,11 @@ export default {
     endCallBack (prize) {
       // 奖品详情
       app.globalData.isRotating = false;
+      this.showDialogL = true;
       console.log(prize)
     },
-    goLottoryRecord() {
-      let url = '/pages/lottoryRecord';
+    golotteryRecord() {
+      let url = '/pages/lotteryRecord';
       uni.navigateTo({
         url
       })
@@ -178,14 +225,36 @@ export default {
 
 <style scoped lang="less">
 @import '@/static/less/public.less';
+.titleQ {
+  position: relative;
+  &::before {
+    content: '';
+    border-top: 1rpx solid #fda2a2;
+    width: 60rpx;
+    position: absolute;
+    left: -88rpx;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  &::after {
+    content: '';
+    border-top: 1rpx solid #fda2a2;
+    width: 60rpx;
+    position: absolute;
+    right: -88rpx;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 .container {
   padding-bottom: 40rpx;
   background: #000052;
+  position: relative;
   .content {
     .luckyWheel {
       position: relative;
       .setbg(750rpx, 1130rpx, 'lottory_bg.png');
-      .lottoryList {
+      .lotteryList {
         position: absolute;
         left: 16rpx;
         top: 16rpx;
@@ -198,7 +267,7 @@ export default {
         border-radius: 28rpx;
         max-width: 530rpx;
       }
-      .lottoryRecord {
+      .lotteryRecord {
         position: absolute;
         right: 0;
         top: 16rpx;
@@ -334,6 +403,119 @@ export default {
     }
     .mbt14 {
       margin-bottom: 14rpx;
+    }
+  }
+  .lotteryDialog {
+    position: fixed;
+    z-index: 9999;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0,0,0,.3);
+    .dialogContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      .setbg(560rpx,570rpx,'lottery_dialog_bg.png');
+      .tTitle {
+        position: absolute;
+        top: 130rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: 32rpx;
+      }
+      .tBody {
+        position: absolute;
+        left: 40rpx;
+        top: 216rpx;
+        width: 480rpx;
+        color: #fff;
+        &.gotPrize {
+          .setbg(480rpx,164rpx,'coupon_icon.png');
+        }
+        .funnyIcon {
+          position: absolute;
+          .setbg(112rpx,112rpx,'funny_icon.png');
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          width: 112rpx;
+        }
+        .thxA {
+          position: absolute;
+          top: 130rpx;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        .amountBox {
+          font-size: 32rpx;
+          line-height: 44rpx;
+          color: #ed2c2c;
+          font-weight: 700;
+          height: 72rpx;
+
+          position: absolute;
+          top: 40rpx;
+          left: 40rpx;
+          .iconK {
+            display: inline-block;
+          }
+          .amount {
+            display: inline-block;
+            font-size: 50rpx;
+          }
+        }
+        .time {
+          position: absolute;
+          left: 40rpx;
+          bottom: 40rpx;
+          color: #AB6C2C;
+          font-size: 20rpx;
+
+        }
+        .lotteryType {
+          font-size: 28rpx;
+          color: #AB6C2C;
+          position: absolute;
+          top: 50rpx;
+          right: 30rpx;
+          text-align: center;
+          &.long {
+            right: 12rpx;
+          }
+        }
+      }
+      .tFoot {
+        button {
+          position: absolute;
+          bottom: 30rpx;
+          border-radius: 40rpx;
+          font-size: 32rpx;
+          height: 80rpx;
+          width: 238rpx;
+          font-weight: 700;
+          &.left {
+            left: 30rpx;
+            background: transparent;
+            border: 1px solid #FFF4CC;
+            box-sizing: border-box;
+            color: #FFF4CC;
+          }
+          &.right {
+            right: 30rpx;
+            border: #FFF4CC 1px;
+            background: linear-gradient(-90deg, #FFDF6C, #FFF4CC);
+            color: #ED2C2C;
+          }
+          &.btn1 {
+            width: 420rpx;
+            height: 80rpx;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+      }
     }
   }
 }

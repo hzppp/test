@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 
 // 正式域名
 var DOMAIN_R = {
@@ -197,9 +197,12 @@ const config = {
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
 		// 中奖记录list
-		lottoryRecordList: `${DOMAIN.changan}/api/xcx/lottery/record/page`,
+		lotteryRecordList: `${DOMAIN.changan}/api/xcx/lottery/record/page`,
 		// 中奖记录list
 		inviteRecordList: `${DOMAIN.changan}/api/xcx/clue/invite/list`,
+		// 抽奖活动信息
+		// lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/fission`,
+		lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/lottery`,
 	},
 	getAPI(key) {
 		let url;
