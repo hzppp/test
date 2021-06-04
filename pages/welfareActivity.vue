@@ -289,6 +289,8 @@ export default {
 				typeText = '线下活动'
 			  } else if (type == 4) {
 				typeText = '试驾活动'
+			  } else if (type == 5) {
+				typeText = '裂变活动'
 			  }
 			  obj.typeText = typeText
 			}
