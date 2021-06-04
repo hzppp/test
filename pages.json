@@ -219,7 +219,7 @@
 		{
 			"path": "pages/myvideo",
 			"style": {
-				"navigationBarTitleText": "我的视频",
+				"navigationBarTitleText": "新媒体营销查询",
 				"enablePullDownRefresh": false
 			}
 		},
