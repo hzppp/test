@@ -82,7 +82,14 @@
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
-				this.content = data				
+				this.content = data			
+			    if(data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity'){
+					uni.reLaunch({
+						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
+					})
+				}	
+					
+					
 			} catch (err) {
 				console.error(err)
 			} finally {

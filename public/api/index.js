@@ -877,7 +877,7 @@ module.exports = {
 	
 	getFission:async(para) =>{
 		let {data} = await request({
-		    url:domain.getAPI('getFission'),
+		    url:domain.getAPI('lotteryActInfo'),
 		    method: "GET",
 			data:para,
 		})

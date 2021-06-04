@@ -364,11 +364,11 @@
 					if (ly = 'lbactivity') {
 						//跳转抽奖
 						this.popName = 'lbactivity'
-						console.log('跳转抽奖')
+						uni.navigateTo({
+							url:'pages/lotteryPage?activityId=' + lydx.id
+						})
 						return
 					}
-
-
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
 					} else {
@@ -379,7 +379,9 @@
 					if (ly = 'lbactivity') {
 						//跳转抽奖
 					    this.popName = 'lbactivity'
-						console.log('出错了之前留过资跳转抽奖')
+						uni.navigateTo({
+							url:'/pages/lotteryPage?activityId=' + lydx.id
+						})
 						return
 					}
 
