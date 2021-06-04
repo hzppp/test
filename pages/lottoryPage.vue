@@ -37,7 +37,7 @@
           <view class="nodata" v-else>
             您还没有邀请记录哦！快去邀请好友参与吧~
           </view>
-          <view class="more" v-if="4>3" @tap="goInviteRecord" v-if="inviteRecordList&&inviteRecordList.length>3">
+          <view class="more" @tap="goInviteRecord" v-if="inviteRecordList&&inviteRecordList.length>3">
             查看更多 >
           </view>
         </view>
@@ -135,6 +135,7 @@ export default {
   async onLoad() {
     const {activityId=1} = options
     await login.checkLogin(api)
+    //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
       console.log('rrrrr123',res)
       return res.code == 1 ? res.rows : []
