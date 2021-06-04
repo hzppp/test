@@ -1,33 +1,25 @@
 <template>
-	<view v-if="isShow" class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
-    <canvas id="lucky-grid" canvas-id="lucky-grid" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"></canvas>
+  <view v-if="isShow" class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
+    <canvas id="lucky-wheel" canvas-id="lucky-wheel" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"></canvas>
     <!-- #ifdef APP-PLUS -->
-    <view v-if="btnShow">
-      <view class="lucky-grid-btn" v-for="(btn, index) in btns" :key="index" @click="toPlay(btn)" :style="{
-        top: btn.top + 'px',
-        left: btn.left + 'px',
-        width: btn.width + 'px',
-        height: btn.height + 'px',
-      }"></view>
-    </view>
+    <view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></view>
     <!-- #endif -->
     <!-- #ifndef APP-PLUS -->
-    <view v-if="btnShow">
-      <cover-view class="lucky-grid-btn" v-for="(btn, index) in btns" :key="index" @click="toPlay(btn)" :style="{
-        top: btn.top + 'px',
-        left: btn.left + 'px',
-        width: btn.width + 'px',
-        height: btn.height + 'px',
-      }"></cover-view>
-    </view>
+<!--    <cover-view class="lucky-wheel-btn" @click="toPlay"></cover-view>-->
+<!--    <image class="lucky-wheel-btn" @click="toPlay" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image>-->
+    <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
     <!-- #endif -->
+    <div class="lucky-imgs">
+      <div v-for="(block, index) in blocks" :key="index">
+        <div v-if="block.imgs">
+          <image v-for="(img, i) in block.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'blocks', index, i)"></image>
+        </div>
+      </div>
+    </div>
     <div class="lucky-imgs">
       <div v-for="(prize, index) in prizes" :key="index">
         <div v-if="prize.imgs">
-          <div v-for="(img, i) in prize.imgs" :key="i">
-            <image :src="img.src" @load="e => imgBindload(e, 'prizes', index, i)"></image>
-            <image :src="img.activeSrc" @load="e => imgBindloadActive(e, 'prizes', index, i)"></image>
-          </div>
+          <image v-for="(img, i) in prize.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'prizes', index, i)"></image>
         </div>
       </div>
     </div>
@@ -38,28 +30,24 @@
         </div>
       </div>
     </div>
-    <div class="lucky-imgs">
-      <span v-if="button && button.imgs">
-        <image v-for="(img, i) in button.imgs" :key="i" :src="img.src" @load="e => imgBindloadBtn(e, 'button', i)"></image>
-      </span>
-    </div>
   </view>
 </template>
 
 <script>
-  import { changeUnits, resolveImage } from './utils.js'
-  import { LuckyGrid } from '../lucky-canvas'
+  import { changeUnits, resolveImage } from '@/lottery/utils.js'
+  import { LuckyWheel } from '@/lottery/lucky-canvas'
+  const app = getApp()
   export default {
-    name: 'lucky-grid',
+    name: 'lucky-wheel',
     data () {
       return {
         isShow: false,
         boxWidth: 100,
         boxHeight: 100,
+        btnWidth: 0,
+        btnHeight: 0,
         dpr: 1,
         transformStyle: '',
-        btns: [],
-        btnShow: false,
       }
     },
     props: {
@@ -70,14 +58,6 @@
       height: {
         type: String,
         default: '600rpx'
-      },
-      cols: {
-        type: [String, Number],
-        default: 3,
-      },
-      rows: {
-        type: [String, Number],
-        default: 3,
       },
       blocks: {
         type: Array,
@@ -91,10 +71,6 @@
         type: Array,
         default: () => []
       },
-      button: {
-        type: Object,
-        default: undefined
-      },
       defaultConfig: {
         type: Object,
         default: () => {
@@ -107,23 +83,11 @@
           return {}
         }
       },
-      activeStyle: {
-        type: Object,
-        default: () => {
-          return {}
-        }
-      }
     },
     mounted () {
       this.initLucky()
     },
     watch: {
-      cols (newData) {
-        this.$lucky && (this.$lucky.cols = newData)
-      },
-      rows (newData) {
-        this.$lucky && (this.$lucky.rows = newData)
-      },
       blocks (newData) {
         this.$lucky && (this.$lucky.blocks = newData)
       },
@@ -133,30 +97,16 @@
       buttons (newData) {
         this.$lucky && (this.$lucky.buttons = newData)
       },
-      button (newData) {
-        this.$lucky && (this.$lucky.button = newData)
-      },
       defaultStyle (newData) {
         this.$lucky && (this.$lucky.defaultStyle = newData)
       },
       defaultConfig (newData) {
         this.$lucky && (this.$lucky.defaultConfig = newData)
       },
-      activeStyle (newData) {
-        this.$lucky && (this.$lucky.activeStyle = newData)
-      },
     },
     methods: {
       async imgBindload (res, name, index, i) {
         const img = this[name][index].imgs[i]
-        resolveImage(res, img)
-      },
-      async imgBindloadActive (res, name, index, i) {
-        const img = this[name][index].imgs[i]
-        resolveImage(res, img, 'activeSrc', '$activeResolve')
-      },
-      async imgBindloadBtn (res, name, i) {
-        const img = this[name].imgs[i]
         resolveImage(res, img)
       },
       initLucky () {
@@ -168,12 +118,14 @@
           ${-compute(this.boxWidth * dpr)}%, ${-compute(this.boxHeight * dpr)}%
         )`
         this.isShow = true
-        this.$nextTick(() => this.draw())
+        this.$nextTick(() => {
+          this.draw()
+        })
       },
       draw () {
         const _this = this
-        const ctx = this.ctx = uni.createCanvasContext('lucky-grid', this)
-        const $lucky = this.$lucky = new LuckyGrid({
+        const ctx = this.ctx = uni.createCanvasContext('lucky-wheel', this)
+        const $lucky = this.$lucky = new LuckyWheel({
           // #ifdef H5 || APP-PLUS
           flag: 'UNI-H5',
           // #endif
@@ -192,21 +144,22 @@
           setInterval: setInterval,
           clearInterval: clearInterval,
           unitFunc: (num, unit) => changeUnits(num + unit),
-          afterDraw: function () {
-            ctx.draw()
+          beforeInit: function () {
+            const Radius = Math.min(this.config.width, this.config.height) / 2
+            console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
+            ctx.translate(-Radius, -Radius)
           },
           afterInit: function () {
-            [..._this.$props.buttons, _this.$props.button].forEach((btn, index) => {
-              if (!btn) return
-              const [left, top, width, height] = this.getGeometricProperty([
-                btn.x,
-                btn.y,
-                btn.col || 1,
-                btn.row || 1
-              ])
-              _this.btns[index] = { top, left, width, height }
-            })
+            // 动态设置按钮
+            _this.btnWidth = this.maxBtnRadius * 2
+            _this.btnHeight = this.maxBtnRadius * 2
             _this.$forceUpdate()
+          },
+          beforeDraw: function () {
+            ctx.translate(this.Radius, this.Radius)
+          },
+          afterDraw: function () {
+            ctx.draw()
           },
         }, {
           ...this.$props,
@@ -217,10 +170,18 @@
             this.$emit('end', ...rest)
           },
         })
-        this.btnShow = true
       },
-      toPlay (btn) {
-        this.$lucky.startCallback(btn)
+      toPlay (e) {
+        console.log('app.globalData.isRotating',app.globalData.isRotating)
+        if(app.globalData.isRotating) {
+          uni.showToast({
+            title:"正在抽奖，请勿频繁操作",
+            icon:"none"
+          })
+          return;
+        }
+        app.globalData.isRotating = true
+        this.$lucky.startCallback()
       },
       init () {
         this.$lucky.init({})
@@ -239,15 +200,24 @@
   .lucky-box {
     position: relative;
     overflow: hidden;
+    margin: 0 auto;
+    top: 326rpx;
   }
   .lucky-box canvas {
     position: absolute;
     pointer-events: none;
   }
-  .lucky-grid-btn {
+  .lucky-wheel-btn {
     position: absolute;
-    background: rgba(0, 0, 0, 0);
-    border-radius: 0;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    width: 211rpx;
+    height: 219rpx;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    /*background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center no-repeat;*/
+    background-size: 100%;
   }
   .lucky-imgs {
     width: 0;

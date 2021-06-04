@@ -39,6 +39,21 @@
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
+			  <view class="desc">
+				  <view class="left-area">
+					  <view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view>
+					  <view class="info">
+						<view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
+						<view v-show="!item.duibaUrl && item.visitCount && item.clueCount" class="line"></view>
+						<view v-show="!item.duibaUrl && item.clueCount"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+					  </view>
+				  </view>
+				  <view class="right-area">
+					  <view class="tag before" v-show="statusFilter(item.startTime, item.endTime) == 'before'">即将开始</view>
+					  <view class="tag during" v-show="statusFilter(item.startTime, item.endTime) == 'during'">进行中</view>
+					  <view class="tag after" v-show="statusFilter(item.startTime, item.endTime) == 'after'">已结束</view>
+				  </view>
+			  </view>
             </view>
           </block>
         </view>
@@ -110,39 +125,22 @@ export default {
 		return [provinceIndex, cityIndex]
     }
   },
-  async onShow() {
-	try {
-		uni.showLoading({
-			title: '正在加载...'
-		})
-		this.resetjson()
-		// api.getUser()
-		await distance.getLocation()
-		let currentLocation = app.globalData.currentLocation
-		if (currentLocation) {
-			await this.reqProvinceCityList()
-			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-			if (crtLocationProvinceItem) {
-				const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-				this.crtProvinceItem = crtLocationProvinceItem
-				this.cityList = this.crtProvinceItem.cities
-				this.crtCityItem = crtLocationCityItem
-			}
-			// 精选活动
-			await this.getactivity()
-			// 福利列表
-			// this.getWelfare()
-		}		
-	} catch (err) {
-		console.error(err)
-	} finally {
-		uni.hideLoading()
-	}
-  },
-  onHide() {
-	this.resetjson()
-  },
   async onLoad() {
+	uni.showLoading({
+		title: '正在加载...'
+	})
+	await this.init()
+	uni.hideLoading()
+  },
+  async onPullDownRefresh () {
+	  uni.showLoading({
+	  	title: '正在加载...'
+	  })
+		await this.init()
+	  setTimeout(() => {
+		  uni.hideLoading()
+		  uni.stopPullDownRefresh()
+	  }, 300)
   },
   onShareAppMessage() {
     let title = '长安云车展：活动优惠都在这里！'
@@ -161,6 +159,46 @@ export default {
 	  this.getactivity()
   },
   methods: {
+	// 初始化
+	async init () {
+		try {
+			this.resetjson()
+			// api.getUser()
+			await distance.getLocation()
+			let currentLocation = app.globalData.currentLocation
+			if (currentLocation) {
+				await this.reqProvinceCityList()
+				const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+				if (crtLocationProvinceItem) {
+					const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+					this.crtProvinceItem = crtLocationProvinceItem
+					this.cityList = this.crtProvinceItem.cities
+					this.crtCityItem = crtLocationCityItem
+				}
+				// 精选活动
+				await this.getactivity()
+				// 福利列表
+				// this.getWelfare()
+			}		
+		} catch (err) {
+			console.error(err)
+		}
+	},
+	// 状态过滤器
+	statusFilter (startTime, endTime) {
+		startTime = new Date(startTime.replace(/-/g, '/')).getTime()
+		endTime = new Date(endTime.replace(/-/g, '/')).getTime()
+		let crtTime = new Date().getTime()
+		let status = ''
+		if (crtTime < startTime) {
+			status = 'before'
+		} else if (crtTime > endTime) {
+			status = 'after'
+		} else {
+			status = 'during'
+		}
+		return status
+	},
     formShow(name, from = "", obj = {}, title = "报名活动") {
       this.$refs.formpop.formShow(name, from, obj, title)
     },
@@ -261,6 +299,8 @@ export default {
 				typeText = '线下活动'
 			  } else if (type == 4) {
 				typeText = '试驾活动'
+			  } else if (type == 5) {
+				typeText = '裂变活动'
 			  }
 			  obj.typeText = typeText
 			}
@@ -322,6 +362,20 @@ export default {
 		  console.error(err)
 		}
 	},
+  },
+  filters: {
+	  // 数字过滤器
+	  numFilter (num) {
+		  if (num > 100000) {
+			return '10万+'  
+		  } else {
+			  return num
+		  }
+	  },
+	  // 日期过滤器
+	  dateFilter (date) {
+		  return date.split(' ')[0]
+	  },
   }
 }
 </script>

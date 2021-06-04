@@ -30,6 +30,7 @@
 				color: #333333;
 				max-width: 164rpx;
 				height: 40rpx;
+				line-height: 40rpx;
 				.ellipsis;
 			}
 			.icon {
@@ -83,7 +84,7 @@
 .activity-list{
 	.pic-text {
 		position: relative;
-		margin-bottom: 30rpx;
+		margin-bottom: 40rpx;
 		image{
 			width: 686rpx;
 			height: 360rpx;
@@ -113,12 +114,65 @@
 			}
 		}
 		.text{
+			margin-top: 10rpx;
 			.db(middle);
-			.seth(90rpx,32rpx,#333);
+			color: #333;
 			font-weight: bold;
 			box-sizing: border-box;
 			.ellipsis;
 			max-width: 100%;
+		}
+		.desc {
+			display: flex;
+			margin-top: 10rpx;
+			.left-area {
+				flex: 1;
+				.date {
+					font-size: 24rpx;
+					color: #AFB3B6;
+				}
+				.info {
+					display: flex;
+					align-items: center;
+					margin-top: 10rpx;
+					font-size: 24rpx;
+					color: #AFB3B6;
+					.num {
+						color: #FA8845;
+					}
+					.line {
+						margin: 0 20rpx;
+						width: 1rpx;
+						height: 24rpx;
+						background-color: #AFB3B6;
+					}
+				}
+			}
+			.right-area {
+				.tag {
+					width: 80rpx;
+					height: 36rpx;
+					text-align: center;
+					line-height: 36rpx;
+					border: 2rpx solid #FA8845;
+					border-radius: 4rpx;
+					font-size: 20rpx;
+					color: #FA8845;
+					box-sizing: border-box;
+					&.before {
+						border-color: #3C4650;
+						color: #3C4650;
+					}
+					&.during {
+						border-color: #FA8845;
+						color: #FA8845;
+					}
+					&.after {
+						border-color: #AFB3B6;
+						color: #AFB3B6;
+					}
+				}
+			}
 		}
 	}
 }

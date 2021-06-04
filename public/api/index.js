@@ -839,6 +839,18 @@ module.exports = {
         })
         return data
     },
+    // 访问活动 记录活动访问次数
+    fetchActivityVisit: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('fetchActivityVisit'),
+            method: "POST",
+            data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+        })
+        return data
+    },
     getSgList: async() => {
         let {data} = await request({
             url:domain.getAPI('getSgList'),
@@ -846,15 +858,14 @@ module.exports = {
         })
         return data
     },
-	
+
 	getLivePage: async() => {
 	    let {data} = await request({
 	        url:domain.getAPI('setLivePage'),
 	        method: "GET",
 	    })
 	    return data
-	},
-	
+	},	
 	getBannerByPosition:async(para) =>{
 		let {data} = await request({
 		    url:domain.getAPI('getBannerByPosition'),
@@ -871,6 +882,28 @@ module.exports = {
 			data:para,
 		})
 		return data
-	}
-	
+	},
+    getlotteryRecordList: async() => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryRecordList'),
+            method: "GET",
+        })
+        return data
+    },
+    getInviteRecordList: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('inviteRecordList'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+    getLotteryActInfo: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryActInfo'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
 }

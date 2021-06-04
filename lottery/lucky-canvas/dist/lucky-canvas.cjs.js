@@ -1371,16 +1371,6 @@ var LuckyWheel = /** @class */ (function (_super) {
         this.prizeDeg = 360 / this.prizes.length;
         this.prizeRadian = getAngle(this.prizeDeg);
         var start = getAngle(-90 + this.rotateDeg + _defaultConfig.offsetDegree);
-        // 计算文字横坐标
-        var getFontX = function (line) {
-            return _this.getOffsetX(ctx.measureText(line).width);
-        };
-        // 计算文字纵坐标
-        var getFontY = function (font, height, lineIndex) {
-            // 优先使用字体行高, 要么使用默认行高, 其次使用字体大小, 否则使用默认字体大小
-            var lineHeight = font.lineHeight || _defaultStyle.lineHeight || font.fontSize || _defaultStyle.fontSize;
-            return _this.getHeight(font.top, height) + (lineIndex + 1) * _this.getLength(lineHeight);
-        };
         ctx.save();
         // 绘制prizes奖品区域
         this.prizes.forEach(function (prize, prizeIndex) {
@@ -1446,51 +1436,6 @@ var LuckyWheel = /** @class */ (function (_super) {
             ctx.translate(-x, -y);
         });
         ctx.restore();
-        // 绘制按钮
-        this.buttons.forEach(function (btn, btnIndex) {
-            var radius = _this.getHeight(btn.radius);
-            // 绘制背景颜色
-            _this.maxBtnRadius = Math.max(_this.maxBtnRadius, radius);
-            if (hasBackground(btn.background)) {
-                ctx.beginPath();
-                ctx.fillStyle = btn.background;
-                ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
-                ctx.fill();
-            }
-            // 绘制指针
-            if (btn.pointer && hasBackground(btn.background)) {
-                ctx.beginPath();
-                ctx.fillStyle = btn.background;
-                ctx.moveTo(-radius, 0);
-                ctx.lineTo(radius, 0);
-                ctx.lineTo(0, -radius * 2);
-                ctx.closePath();
-                ctx.fill();
-            }
-            // 绘制按钮图片
-            btn.imgs && btn.imgs.forEach(function (imgInfo, imgIndex) {
-                if (!_this.btnImgs[btnIndex])
-                    return;
-                var btnImg = _this.btnImgs[btnIndex][imgIndex];
-                if (!btnImg)
-                    return;
-                var _a = _this.computedWidthAndHeight(btnImg, imgInfo, radius * 2, radius * 2), trueWidth = _a[0], trueHeight = _a[1];
-                var _b = [_this.getOffsetX(trueWidth), _this.getHeight(imgInfo.top, radius)], xAxis = _b[0], yAxis = _b[1];
-                _this.drawImage(btnImg, xAxis, yAxis, trueWidth, trueHeight);
-            });
-            // 绘制按钮文字
-            btn.fonts && btn.fonts.forEach(function (font) {
-                var fontColor = font.fontColor || _defaultStyle.fontColor;
-                var fontWeight = font.fontWeight || _defaultStyle.fontWeight;
-                var fontSize = _this.getLength(font.fontSize || _defaultStyle.fontSize);
-                var fontStyle = font.fontStyle || _defaultStyle.fontStyle;
-                ctx.fillStyle = fontColor;
-                ctx.font = fontWeight + " " + (fontSize >> 0) + "px " + fontStyle;
-                String(font.text).split('\n').forEach(function (line, lineIndex) {
-                    ctx.fillText(line, getFontX(line), getFontY(font, radius, lineIndex));
-                });
-            });
-        });
         // 触发绘制后回调
         (_b = config.afterDraw) === null || _b === void 0 ? void 0 : _b.call(this, ctx);
     };

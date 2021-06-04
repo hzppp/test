@@ -39,8 +39,9 @@
 			"path": "pages/welfareActivity",
 			"style": {
 				"navigationBarTitleText": "活动",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom",
+				"backgroundTextStyle": "light"
 			}
 		},
 		{
@@ -214,7 +215,6 @@
 				"navigationBarTitleText": "选择地区",
 				"enablePullDownRefresh": false
 			}
-
 		},
 		{
 			"path": "pages/myvideo",
@@ -237,7 +237,29 @@
 		 		"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 		 	}
-		  }
+		},
+		{
+			"path": "pages/lotteryPage",
+			"style": {
+				"navigationBarTitleText": "转盘抽奖",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/lotteryRecord",
+			"style": {
+				"navigationBarTitleText": "中奖记录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/inviteRecord",
+			"style": {
+				"navigationBarTitleText": "邀请记录",
+				"enablePullDownRefresh": false
+			}
+		}
 	],
 	"tabBar": {
 		"custom": true,
@@ -246,11 +268,11 @@
 		"backgroundColor": "#fff",
 		"borderStyle": "black",
 		"list": [{
-				"pagePath": "pages/index",
-				"text": "首页",
-				"iconPath": "static/images/tab1_icon.png",
-				"selectedIconPath": "static/images/tab1_icon_c.png"
-			},
+			"pagePath": "pages/index",
+			"text": "首页",
+			"iconPath": "static/images/tab1_icon.png",
+			"selectedIconPath": "static/images/tab1_icon_c.png"
+		},
 			{
 				"pagePath": "pages/live",
 				"text": "直播",

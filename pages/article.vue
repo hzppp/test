@@ -30,7 +30,7 @@
 		</getFormidbox>
     <testDrive></testDrive>
 		<view :class="!isIpx ? 'share-btn' : 'share-btn ipx'">
-			<button open-type="share" plain="true" hover-class="none"></button>分享给好友
+			<button open-type="share" plain="true" hover-class="none">分享给好友</button>
 		</view>
 	</view>
 </template>
@@ -204,16 +204,19 @@
 		left: 0;
 		bottom: 0;
 		.seth(100rpx, 32rpx, #fff);
-		background: #ce1330;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+		background: #fff;
 
 		button {
 			.pa(0, 0);
 			width: 100%;
-			height: 100%;
+      color: #fff;
+      background: #ce1330;
 		}
-    &.ipx {
-      bottom: 40rpx;
-    }
+    //&.ipx {
+    //  bottom: 40rpx;
+    //}
 	}
 
 	.content_zb {

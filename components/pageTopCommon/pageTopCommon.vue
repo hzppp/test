@@ -1,12 +1,12 @@
 <template>
   <view :class="'pageTop ' + btnys">
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
-    <view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
-      <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
-        <slot></slot>
-        <view class="pageTop-text" :style="'color:' + titleys ">{{title}}</view>
-      </view>
-    </view>
+    <cover-view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
+      <cover-view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
+        <cover-image class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></cover-image>
+        <cover-view class="pageTop-text" :style="'color:' + titleys ">{{title}}</cover-view>
+      </cover-view>
+    </cover-view>
   </view>
 </template>
 
@@ -32,7 +32,11 @@ export default {
     this.$emit('getTopNavHeigth',this.height)
   },
   methods:{
-
+    topIndexPage() {
+      uni.reLaunch({
+        url:"/pages/authorization"
+      })
+    }
   }
 }
 </script>
@@ -80,7 +84,7 @@ export default {
   transform: translate(0%,-50%);
 }
 .pageTop-home{
-  .setIcon(36rpx,38rpx,388rpx,41rpx);
+  //.setIcon(36rpx,38rpx,388rpx,41rpx);
   .pa(101rpx,50%);
   transform: translate(0%,-50%);
 }

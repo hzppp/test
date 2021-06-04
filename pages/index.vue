@@ -12,11 +12,7 @@
 		<viewTabBar :current="0"></viewTabBar>
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
-		
 		<view class="content">
-			
-			
-			
 		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
 				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
 		<!-- 	<view class="linkCont" v-if="false">
