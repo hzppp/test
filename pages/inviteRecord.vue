@@ -1,14 +1,8 @@
 <template>
   <view class="inviteRecord">
     <block>
-      <view class="item">
-        <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
-      </view>
-      <view class="item">
-        <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
-      </view>
-      <view class="item">
-        <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+      <view class="item" v-for="(item,index) in dataList" :key="index">
+        <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{ item.wxName }}</view><view class="time">{{item.joinTime}} 加入</view>
       </view>
     </block>
     <view class="nomore">没有更多了~</view>
@@ -16,8 +10,23 @@
 </template>
 
 <script>
+import api from '@/public/api/index'
+import login from '@/units/login'
 export default {
-name: "inviteRecord"
+name: "inviteRecord",
+  data() {
+    return {
+      dataList: []
+    }
+  },
+  async onLoad(options) {
+    const {activityId=1} = options
+    await login.checkLogin(api)
+    this.dataList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
+      console.log('rrrrr123',res)
+      return res.code == 1 ? res.rows : []
+    })
+  }
 }
 </script>
 

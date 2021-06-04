@@ -23,7 +23,7 @@
         <button open-type="share" class="invite"></button>
         <view class="inviteRecord">
           <view class="title titleK">邀请记录</view>
-          <block>
+          <block v-if="inviteRecordList&&inviteRecordList.length">
             <view class="item">
               <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
             </view>
@@ -34,10 +34,10 @@
               <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
             </view>
           </block>
-          <view class="nodata" v-if="true">
+          <view class="nodata" v-else>
             您还没有邀请记录哦！快去邀请好友参与吧~
           </view>
-          <view class="more" v-if="4>3" @tap="goInviteRecord">
+          <view class="more" v-if="4>3" @tap="goInviteRecord" v-if="inviteRecordList&&inviteRecordList.length>3">
             查看更多 >
           </view>
         </view>
@@ -66,11 +66,14 @@
 import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
 import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 const app = getApp()
+import api from '@/public/api/index'
+import login from '@/units/login'
 export default {
   name: "lottoryPage",
   components: {LuckyWheel,pageTopCommon},
   data() {
     return {
+      inviteRecordList: [],
       title: '转盘抽奖',
       blocks: [],
       prizes: [
@@ -128,6 +131,14 @@ export default {
         fontSize: '14px',
       },
     }
+  },
+  async onLoad() {
+    const {activityId=1} = options
+    await login.checkLogin(api)
+    this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
+      console.log('rrrrr123',res)
+      return res.code == 1 ? res.rows : []
+    })
   },
   methods: {
     // 点击抽奖按钮触发回调

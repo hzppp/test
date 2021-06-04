@@ -1,36 +1,12 @@
 <template>
   <view>
-    <view class="container" v-if="false">
+    <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
-        <view class="item">
-          <view class="code">中奖单号：LB873586545</view>
-          <view class="title">18888元购车代金券</view>
-          <view class="time">使用截止时间：2021-05-31</view>
-          <view class="detail">查看详情 ></view>
-        </view>
-        <view class="item">
-          <view class="code">中奖单号：LB873586545</view>
-          <view class="title">18888元购车代金券</view>
-          <view class="time">使用截止时间：2021-05-31</view>
-          <view class="detail">查看详情 ></view>
-        </view>
-        <view class="item">
-          <view class="code">中奖单号：LB873586545</view>
-          <view class="title">18888元购车代金券</view>
-          <view class="time">使用截止时间：2021-05-31</view>
-          <view class="detail">查看详情 ></view>
-        </view>
-        <view class="item">
-          <view class="code">中奖单号：LB873586545</view>
-          <view class="title">18888元购车代金券</view>
-          <view class="time">使用截止时间：2021-05-31</view>
-          <view class="detail">查看详情 ></view>
-        </view>
-        <view class="item">
-          <view class="code">中奖单号：LB873586545</view>
-          <view class="title">18888元购车代金券</view>
-          <view class="time">使用截止时间：2021-05-31</view>
-          <view class="detail">查看详情 ></view>
+        <view class="item" v-for="(item,index) in dataList" :key="index">
+          <view class="code">中奖单号：{{ item.id }}</view>
+          <view class="title">{{ item.prizeName }}</view>
+          <view class="time">使用截止时间：{{item.endDate}}</view>
+          <view class="detail" @tap="goDetail">查看详情 ></view>
         </view>
       </view>
     </view>
@@ -47,12 +23,29 @@
 </template>
 
 <script>
+import api from '@/public/api/index'
+import login from '@/units/login'
 export default {
 name: "lottoryRecord",
+  data() {
+    return {
+      dataList: []
+    }
+  },
   methods:{
+    goDetail() {
+      //
+    },
     goLottory() {
       uni.navigateBack()
     },
+  },
+  async onLoad() {
+    await login.checkLogin(api)
+    this.dataList = await api.getLottoryRecordList({}).then(res => {
+      console.log('rrrrrr',res)
+      return res.code == 1 && res.data ? res.data.rows : []
+    })
   }
 }
 </script>
@@ -68,7 +61,8 @@ name: "lottoryRecord",
     width: 686rpx;
     box-sizing: border-box;
     .item{
-      background: #fff;
+      background: url("token: 3ec22bf4-3f87-4c15-9333-c5a05ce4e234");
+      .setbg(686rpx,214rpx,'lottory_record_icon.png');
       position: relative;
       width: 100%;
       height: 214rpx;

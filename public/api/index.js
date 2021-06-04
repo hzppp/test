@@ -858,7 +858,7 @@ module.exports = {
         })
         return data
     },
-	
+
 	getLivePage: async() => {
 	    let {data} = await request({
 	        url:domain.getAPI('setLivePage'),
@@ -866,7 +866,19 @@ module.exports = {
 	    })
 	    return data
 	},
-	
-	
-	
+    getLottoryRecordList: async() => {
+        let {data} = await request({
+            url:domain.getAPI('lottoryRecordList'),
+            method: "GET",
+        })
+        return data
+    },
+    getInviteRecordList: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('inviteRecordList'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
 }

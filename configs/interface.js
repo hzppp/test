@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 
 // 正式域名
 var DOMAIN_R = {
@@ -196,6 +196,10 @@ const config = {
 		fetchActivityVisit: `${DOMAIN.changan}/api/xcx/activity/visit`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
+		// 中奖记录list
+		lottoryRecordList: `${DOMAIN.changan}/api/xcx/lottery/record/page`,
+		// 中奖记录list
+		inviteRecordList: `${DOMAIN.changan}/api/xcx/clue/invite/list`,
 	},
 	getAPI(key) {
 		let url;
