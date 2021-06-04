@@ -286,13 +286,18 @@ const COUNTDOWN = 60
                     }else {
                         return uni.showToast({
                             title:res.msg,
-                            icon:"none"
+                            icon:"none",
+							duration:2000
+							
                         })
                     }
                 } catch (error) {
                     console.error(error)
                 }finally {
-                    uni.hideLoading()
+					setTimeout(() => {
+						uni.hideLoading()
+					}, 2000)
+                    
                 }
             },
             //经销商点击，判断提示
