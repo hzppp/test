@@ -6,7 +6,7 @@
           <view class="code">中奖单号：{{ item.id }}</view>
           <view class="title">{{ item.prizeName }}</view>
           <view class="time">使用截止时间：{{item.endDate}}</view>
-          <view class="detail" @tap="goDetail">查看详情 ></view>
+          <view class="detail" @tap="goDetail(item.id)">查看详情 ></view>
         </view>
       </view>
     </view>
@@ -33,17 +33,24 @@ name: "lotteryRecord",
     }
   },
   methods:{
-    goDetail() {
+    goDetail(id) {
       //
+      uni.navigateTo({
+        url: `/pages/lotteryDetail?id=${id}`
+      })
     },
     golottery() {
       uni.navigateBack()
     },
   },
   async onLoad() {
+    uni.showLoading({
+      title: '正在加载...'
+    })
     await login.checkLogin(api)
     this.dataList = await api.getlotteryRecordList({}).then(res => {
       console.log('rrrrrr',res)
+      uni.hideLoading()
       return res.code == 1 && res.data ? res.data.rows : []
     })
   }

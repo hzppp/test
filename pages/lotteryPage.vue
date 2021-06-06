@@ -4,7 +4,9 @@
     <view class="content">
       <view class="luckyWheel">
         <view class="lotteryList">
-          <view class="item">1分钟前 用户XX抽中888元购车代金券</view>
+          <swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true" :circular="true" :duration="500" :interval="2000" :autoplay="true">
+            <swiper-item v-for="(item,index) in lotteryActInfo.winnerRecords" :key="index"><view class="item">{{item}}</view></swiper-item>
+          </swiper>
         </view>
         <view class="lotteryRecord" @tap="golotteryRecord"></view>
         <LuckyWheel
@@ -17,7 +19,7 @@
             @start="startCallBack"
             @end="endCallBack"
         />
-        <view class="choiceTime">您还有<view class="times">1</view>次抽奖机会</view>
+        <view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
       </view>
       <view class="list">
         <button open-type="share" class="invite"></button>
@@ -56,9 +58,9 @@
         </view>
       </view>
     </view>
-    <view class="lotteryDialog" v-if="!showDialogL">
+    <view class="lotteryDialog" v-if="showDialogL">
       <view class="dialogContainer">
-        <block v-if="true">
+        <block v-if="!true">
           <view class="tTitle titleQ">恭喜您获得</view>
           <view class="tBody gotPrize">
             <view class="amountBox"><view class="iconK">￥</view><view class="amount">18888</view></view>
@@ -73,8 +75,8 @@
             </view>
           </view>
           <view class="tFoot">
-            <button class="left">查看中奖记录</button>
-            <button class="right">继续抽奖</button>
+            <button class="left" @tap="goLotteryDeatail">查看详情</button>
+            <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
         <block v-else>
@@ -84,9 +86,10 @@
             <view class="thxA">谢谢参与~</view>
           </view>
           <view class="tFoot">
-            <button class="right btn1">继续抽奖</button>
+            <button class="right btn1" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
+        <button class="closeBtn" @tap="closeDialog"></button>
       </view>
     </view>
   </view>
@@ -104,68 +107,22 @@ export default {
   data() {
     return {
       inviteRecordList: [],
-      lotteryActInfo: [],
+      lotteryActInfo: {},
       title: '转盘抽奖',
       blocks: [],
       showDialogL: false,
-      prizes: [
-        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_18888.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-        { title: '', background: '#f4fcff', fonts: [{ text: '', top: '18%' }],
-          imgs:[
-            {
-              src:'../../static/images/prize_0.png',width:'100%',height: '100%',top:'1rpx'
-            }
-          ] },
-      ],
+      prizes: [],
       defaultStyle: {
         fontColor: '#d64737',
         fontSize: '14px',
       },
+      activityId: '',
+      lotteryRes: {}
     }
   },
   async onLoad(options) {
-    const {activityId=1} = options
+    const {activityId=0} = options
+    this.activityId = activityId
     await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
@@ -186,19 +143,67 @@ export default {
         // },1500)
       }
     })
+    if(!this.lotteryActInfo.isApply) {
+      //跳到留资页
+    }
+    this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach(item => {
+      this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
+        imgs:[
+          {
+            src:`../../static/images/prize_${item.id}.png`,width:'100%',height: '100%',top:'1rpx'
+          }
+        ] })
+    })
+  },
+  onShareAppMessage() {return {
+      title: '长安抽奖活动',
+      path: '', //抽奖页面?activityId=0&userId=0
+      imageUrl: ''
+    }
   },
   methods: {
     // 点击抽奖按钮触发回调
-    startCallBack () {
+    async startCallBack () {
+      if(!this.lotteryActInfo.chanceCount) {
+        // chanceCount
+        uni.showToast({
+          title:'您的机会已经用完啦~',
+          icon:"none"
+        })
+        app.globalData.isRotating = false;
+        return
+      }
       // 先开始旋转
       this.$refs.luckyWheel.play()
-      // 使用定时器来模拟请求接口
-      setTimeout(() => {
-        // 3s后得到中奖索引
-        let index = Math.random() * 6 >> 0
-        // 缓慢停止游戏
-        this.$refs.luckyWheel.stop(index)
-      }, 3000)
+      this.lotteryRes = await api.handleStartLottery({activityId:this.activityId}).then(res => {
+        console.log('tttttt',res)
+        if(res.code !=0 ) {
+          uni.showToast({
+            title:res.msg,
+            icon:"none"
+          })
+        }else {
+          let index = this.matchIndex(res.data.id) //中奖索引
+          console.log('中奖索引',index)
+          // 缓慢停止游戏
+          setTimeout(() => {
+            // 缓慢停止游戏
+            this.$refs.luckyWheel.stop(index)
+          }, 3000)
+          return res.data
+        }
+      })
+
+    },
+    matchIndex(id) {
+      let res;
+      this.lotteryActInfo.prizeList.some((item,index) => {
+        if(item.id == id){
+          res = index
+          return true
+        }
+      })
+      return res;
     },
     // 抽奖结束触发回调
     endCallBack (prize) {
@@ -206,6 +211,15 @@ export default {
       app.globalData.isRotating = false;
       this.showDialogL = true;
       console.log(prize)
+    },
+    closeDialog() {
+      this.showDialogL = false;
+    },
+    goLotteryDeatail(id) {
+      let url = `/pages/lotteryDetail?id=${id}`;
+      uni.navigateTo({
+        url
+      })
     },
     golotteryRecord() {
       let url = '/pages/lotteryRecord';
@@ -260,12 +274,14 @@ export default {
         top: 16rpx;
         font-size: 24rpx;
         line-height: 56rpx;
-        background: rgba(0,0,0,.3);
         color: #fff;
         text-align: center;
         padding: 0 20rpx;
-        border-radius: 28rpx;
         max-width: 530rpx;
+        .item {
+          background: rgba(0,0,0,.3);
+          border-radius: 28rpx;
+        }
       }
       .lotteryRecord {
         position: absolute;
@@ -515,6 +531,13 @@ export default {
             transform: translateX(-50%);
           }
         }
+      }
+      .closeBtn {
+        position: absolute;
+        bottom: -80rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        .setbg(64rpx,64rpx,'lottory_close_btn.png');
       }
     }
   }

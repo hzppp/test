@@ -206,8 +206,12 @@ const config = {
 		// 中奖记录list
 		inviteRecordList: `${DOMAIN.changan}/api/xcx/clue/invite/list`,
 		// 抽奖活动信息
-		// lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/fission`,
-		lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/lottery`,
+		lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/fission`,
+		// lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/lottery`,
+		// 抽奖
+		startLottery: `${DOMAIN.changan}/api/xcx/lottery/start`,
+		// 奖励详情
+		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`
 	},
 	getAPI(key) {
 		let url;

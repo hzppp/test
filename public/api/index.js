@@ -865,7 +865,7 @@ module.exports = {
 	        method: "GET",
 	    })
 	    return data
-	},	
+	},
 	getBannerByPosition:async(para) =>{
 		let {data} = await request({
 		    url:domain.getAPI('getBannerByPosition'),
@@ -874,7 +874,7 @@ module.exports = {
 		})
 		return data
 	},
-	
+
 	getFission:async(para) =>{
 		let {data} = await request({
 		    url:domain.getAPI('lotteryActInfo'),
@@ -901,6 +901,22 @@ module.exports = {
     getLotteryActInfo: async(para) => {
         let {data} = await request({
             url:domain.getAPI('lotteryActInfo'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+    handleStartLottery: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('startLottery'),
+            method: "POST",
+            data:para
+        })
+        return data
+    },
+    getLotteryDetail: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryDetail'),
             method: "GET",
             data:para
         })
