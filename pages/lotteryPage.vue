@@ -18,6 +18,7 @@
             :defaultStyle="defaultStyle"
             @start="startCallBack"
             @end="endCallBack"
+            v-if="!showDialogL"
         />
         <view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
       </view>
@@ -33,7 +34,7 @@
           <view class="nodata" v-else>
             您还没有邀请记录哦！快去邀请好友参与吧~
           </view>
-          <view class="more" @tap="goInviteRecord" v-if="inviteRecordList&&inviteRecordList.length>3">
+          <view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
             查看更多 >
           </view>
         </view>
@@ -52,7 +53,7 @@
         </view>
       </view>
     </view>
-    <view class="lotteryDialog" v-if="showDialogL">
+    <view class="lotteryDialog" v-if="showDialogL" @touchmove.stop.prevent="moveHandle">
       <view class="dialogContainer">
         <block v-if="lotteryRes.id>1&&lotteryRes.price">
           <view class="tTitle titleQ">恭喜您获得</view>
@@ -102,10 +103,11 @@ export default {
   data() {
     return {
       inviteRecordList: [],
+      inviteRecordCount: 0,
       lotteryActInfo: {},
       title: '转盘抽奖',
       blocks: [],
-      showDialogL: false,
+      showDialogL: !false,
       prizes: [],
       defaultStyle: {
         fontColor: '#d64737',
@@ -124,6 +126,7 @@ export default {
     await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
+      this.inviteRecordCount = res.total || 0
       return res.code == 1 ? res.rows : []
     })
     this.lotteryActInfo =  await api.getLotteryActInfo({activityId}).then(res => {
@@ -168,6 +171,9 @@ export default {
     }
   },
   methods: {
+    moveHandle() {
+
+    },
     // 点击抽奖按钮触发回调
     async startCallBack () {
       if(!this.lotteryActInfo.chanceCount) {
@@ -180,7 +186,6 @@ export default {
         return
       }
       // 先开始旋转
-      this.$refs.luckyWheel.play()
       this.lotteryRes = await api.handleStartLottery({activityId:this.activityId}).then(res => {
         console.log('tttttt',res)
         if(res.code !=1 ) {
@@ -189,6 +194,7 @@ export default {
             icon:"none"
           })
         }else {
+          this.$refs.luckyWheel.play()
           let index = this.matchIndex(res.data.id) //中奖索引
           console.log('中奖索引',index)
           // 缓慢停止游戏
