@@ -58,7 +58,7 @@
           <view class="tTitle titleQ">恭喜您获得</view>
           <view class="tBody gotPrize">
             <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
-            <view class="time">有效期至：{{lotteryRes.endDate || '-'}}</view>
+            <view class="time">有效期至：{{lotteryRes.endTime || '-'}}</view>
             <view class="lotteryType" v-if="lotteryRes.id !=2 ">
               <view>购车</view>
               <view>代金券</view>
