@@ -3,7 +3,7 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index">
-          <view class="code">中奖单号：{{ item.id }}</view>
+          <view class="code">中奖单号：{{ item.winningCode }}</view>
           <view class="title">{{ item.prizeName }}</view>
           <view class="time">使用截止时间：{{item.endDate}}</view>
           <view class="detail" @tap="goDetail(item.id)">查看详情 ></view>
@@ -15,7 +15,7 @@
       <view class="none-icon"></view>
       <view class="none-text">
         <view class="textK">你现在还没有中奖记录哦~</view>
-        <view class="textK">看去参与抽奖吧~</view>
+        <view class="textK">快去参与抽奖吧~</view>
       </view>
       <button class="golottery" @tap="golottery">去抽奖</button>
     </block>

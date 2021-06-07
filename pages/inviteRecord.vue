@@ -22,7 +22,7 @@ name: "inviteRecord",
   async onLoad(options) {
     const {activityId=1} = options
     await login.checkLogin(api)
-    this.dataList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
+    this.dataList = await api.getInviteRecordList({pageNo:1,pageSize:999,activityId}).then(res => {
       console.log('rrrrr123',res)
       return res.code == 1 ? res.rows : []
     })
@@ -35,7 +35,7 @@ name: "inviteRecord",
   color: #fff;
   padding: 40rpx 20rpx 30rpx;
   background: #183aba;
-  height: 100vh;
+  min-height: 100vh;
   .title {
     text-align: center;
     font-size: 32rpx;
