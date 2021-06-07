@@ -28,7 +28,7 @@
           <view class="title titleK">邀请记录</view>
           <block v-if="inviteRecordList&&inviteRecordList.length">
             <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
-              <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{item.wxName}}</view><view class="time">{{item.joinTime}} 加入</view>
+              <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{'M.K'||item.wxName}}</view><view class="time">{{item.joinTime}} 加入</view>
             </view>
           </block>
           <view class="nodata" v-else>
@@ -238,7 +238,7 @@ export default {
       })
     },
     goInviteRecord() {
-      let url = '/pages/inviteRecord';
+      let url = `/pages/inviteRecord?activityId=${this.activityId}`;
       uni.navigateTo({
         url
       })
@@ -375,11 +375,12 @@ export default {
             .img {
               width: 100%;
               height: 100%;
+              border-radius: 50%;
             }
           }
           .name {
             font-size: 30rpx;
-            width: 258rpx;
+            width: 232rpx;
             overflow: hidden; text-overflow:ellipsis; white-space: nowrap;
           }
           .time {
