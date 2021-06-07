@@ -48,7 +48,7 @@
 					// console.log(this.swiperList.length + '===' + right + '===' + e)
 					return {
 						transform: 'scale(' + (1 - right / 9) + ') translate(-' + (right * 9) + '%,0px)',
-						zIndex: 9999 - right,
+						zIndex: 999 - right,
 						// opacity: 0.8 / right
 						opacity: right > 1 ? (0):(0.8 / right)
 						// dispaly: right > 1 ? none:block
@@ -57,7 +57,7 @@
 					// console.log(this.swiperList.length + '#===' + right + '===' + e)
 					return {
 						transform: 'scale(' + (1 - e / 9) + ') translate(' + (e * 9) + '%,0px)',
-						zIndex: 9999 - e,
+						zIndex: 999 - e,
 						// opacity: 0.8 / e
 						opacity: e > 1 ?(0):(0.8 / e)
 						// dispaly: e > 1 ? none:block

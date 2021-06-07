@@ -40,11 +40,12 @@
 					<view class="right isApprove"></view>
 				</view>
 				<view class="line"></view>
-				<view class="box-list list4" @tap="toactivity">
+				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
 					<view class="right isApprove"></view>
 				</view>
-				<view class="box-list list4" @tap="toactivity">
+				<view class="line"></view>
+				<view class="box-list list4" @tap="toMylotteryRecord">
 					<view class="p1">我的中奖记录</view>
 					<view class="right isApprove"></view>
 				</view>
@@ -186,6 +187,11 @@
 				uni.navigateTo({
 					url: '/pages/myActivity'
 				})
+			},
+			toMylotteryRecord(){
+			   uni.navigateTo({
+			   	url:'/pages/lotteryRecord'
+			   })	
 			},
 			tomyvideo(){
 				uni.navigateTo({
