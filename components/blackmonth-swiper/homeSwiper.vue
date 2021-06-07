@@ -1,11 +1,12 @@
 <template>
 	<view>
-		<view class="swiperPanel" @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove">
+		<!-- @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove" -->
+		<view class="swiperPanel" @touchstart="startMove" @touchend="endMove">
 			<view class="swiperItem" v-for="(item, index) in swiperList" :key="index"
 				:style="{transform: itemStyle[index].transform, zIndex: itemStyle[index].zIndex, opacity: itemStyle[index].opacity}"
 				@tap="touch(item)">
 				<view class="children">
-					<image class="pic" :src="item.picUrl"></image>
+					<image class="pic" :src="item.picUrl" lazy-load="true"></image>
 				</view>
 			</view>
 		</view>
@@ -48,8 +49,8 @@
 					return {
 						transform: 'scale(' + (1 - right / 9) + ') translate(-' + (right * 9) + '%,0px)',
 						zIndex: 9999 - right,
-						opacity: 0.8 / right
-						// opacity: right > 1 ? (0):(0.8 / right)
+						// opacity: 0.8 / right
+						opacity: right > 1 ? (0):(0.8 / right)
 						// dispaly: right > 1 ? none:block
 					}
 				} else {
@@ -57,8 +58,8 @@
 					return {
 						transform: 'scale(' + (1 - e / 9) + ') translate(' + (e * 9) + '%,0px)',
 						zIndex: 9999 - e,
-						opacity: 0.8 / e
-						// opacity: e > 1 ?(0):(0.8 / e)
+						// opacity: 0.8 / e
+						opacity: e > 1 ?(0):(0.8 / e)
 						// dispaly: e > 1 ? none:block
 					}
 				}
@@ -88,9 +89,16 @@
 			startMove(e) {
 				this.slideNote.x = e.changedTouches[0] ? e.changedTouches[0].pageX : 0;
 				this.slideNote.y = e.changedTouches[0] ? e.changedTouches[0].pageY : 0;
+				// console.log(this.slideNote.x)
 			},
 			endMove(e) {
 				var newList = JSON.parse(JSON.stringify(this.itemStyle))
+				// console.log(e.changedTouches[0].pageX )
+				// console.log(e.changedTouches[0].pageX - this.slideNote.x)
+				if(Math.abs(e.changedTouches[0].pageX - this.slideNote.x) < 5){
+					return
+				}
+				
 				if ((e.changedTouches[0].pageX - this.slideNote.x) < 0) {
 					// 向左滑动
 					var last = [newList.pop()]
@@ -108,21 +116,22 @@
 			touch(item) {
 				console.log(JSON.stringify(item))
 				let type = item.contentType;
-				let  id = item.contentId
+				let  contentId = item.contentId
 				let  status = item.status
+				let  id = item.id
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
 						wx.aldstat.sendEvent('精选资讯点击')
 						uni.navigateTo({
-							url: `/pages/article?articleId=${id}`
+							url: `/pages/article?articleId=${contentId}`
 						})
 						break;
 					}
 					case 2: {
 						wx.aldstat.sendEvent('精选活动点击')
 						uni.navigateTo({
-							url: `/pages/activity?id=${id}`
+							url: `/pages/activity?id=${contentId}`
 						})
 						break;
 					}
@@ -131,22 +140,22 @@
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${contentId}`
 								})
 								break;
 							}
 							case 1: {
-								this.goMP(id, 'verticalLive', sourceId)
+								this.goMP(id, 'verticalLive', contentId)
 								break;
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${contentId}`
 								})
 								break;
 							}
 							case 3: {
-								this.goMP(id, 'verticalPlayback', sourceId)
+								this.goMP(id, 'verticalPlayback', contentId)
 								break;
 							}
 						}
