@@ -33,8 +33,8 @@
 					<view class="p9" style="font-size: 28rpx;margin-top:25rpx;">登录开启长安云车展精彩之旅</view>
 				</block>
 			</view>
+			<image  v-if="imageData.picUrl" :src="imageData.picUrl" class="imagev" @tap="goImageDetail" mode="aspectFill"></image>
 			<view class="box">
-				<image  v-if="imageData.picUrl" :src="imageData.picUrl" class="imagev" @tap="goImageDetail"></image>
 				<view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>
@@ -385,8 +385,10 @@
 		}
 	}
 	.imagev{
+		margin:0 32rpx 30rpx;
 		width: 686rpx;
 		height: 200rpx;
 		border-radius: 10rpx;
+		// margin-bottom: 38rpx;
 	}
 </style>
