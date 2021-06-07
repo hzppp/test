@@ -1,4 +1,4 @@
-<template>
+<template> 
     <view>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
