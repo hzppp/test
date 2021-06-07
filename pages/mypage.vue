@@ -44,6 +44,10 @@
 					<view class="p1">我的活动</view>
 					<view class="right isApprove"></view>
 				</view>
+				<view class="box-list list4" @tap="toactivity">
+					<view class="p1">我的中奖记录</view>
+					<view class="right isApprove"></view>
+				</view>
 				<view class="line"></view>
 				<view class="box-list list3" @tap="tomyvideo">
 					<view class="p1">新媒体营销查询</view>

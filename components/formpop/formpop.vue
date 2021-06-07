@@ -365,7 +365,7 @@
 						//跳转抽奖
 						this.popName = 'lbactivity'
 						uni.navigateTo({
-							url:'pages/lotteryPage?activityId=' + lydx.id
+							url:'/pages/lotteryPage?activityId=' + lydx.id
 						})
 						return
 					}
