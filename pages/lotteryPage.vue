@@ -26,14 +26,8 @@
         <view class="inviteRecord">
           <view class="title titleK">邀请记录</view>
           <block v-if="inviteRecordList&&inviteRecordList.length">
-            <view class="item">
-              <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
-            </view>
-            <view class="item">
-              <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
-            </view>
-            <view class="item">
-              <view class="imgView"><image class="img" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image></view><view class="name">名称</view><view class="time">2021-05-20 12:35 加入</view>
+            <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
+              <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{item.wxName}}</view><view class="time">{{item.joinTime}} 加入</view>
             </view>
           </block>
           <view class="nodata" v-else>
@@ -60,22 +54,23 @@
     </view>
     <view class="lotteryDialog" v-if="showDialogL">
       <view class="dialogContainer">
-        <block v-if="!true">
+        <block v-if="lotteryRes.id>1&&lotteryRes.price">
           <view class="tTitle titleQ">恭喜您获得</view>
           <view class="tBody gotPrize">
-            <view class="amountBox"><view class="iconK">￥</view><view class="amount">18888</view></view>
-            <view class="time">有效期至：2021-05-01</view>
-            <view class="lotteryType" v-if="!1">
+            <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
+            <view class="time">有效期至：{{lotteryRes.endDate || '-'}}</view>
+            <view class="lotteryType" v-if="lotteryRes.id !=2 ">
               <view>购车</view>
               <view>代金券</view>
             </view>
-            <view class="lotteryType long" v-else>
-              <view>基础保</view>
-              <view>养代金券</view>
+            <view class="lotteryType" v-else>
+<!--            <view class="lotteryType long" v-else>-->
+              <view>保养</view>
+              <view>代金券</view>
             </view>
           </view>
           <view class="tFoot">
-            <button class="left" @tap="goLotteryDeatail">查看详情</button>
+            <button class="left" @tap="goLotteryDeatail(lotteryRes.lotteryId)">查看详情</button>
             <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
@@ -121,6 +116,9 @@ export default {
     }
   },
   async onLoad(options) {
+    uni.showLoading({
+      title: '正在加载...'
+    })
     const {activityId=0} = options
     this.activityId = activityId
     await login.checkLogin(api)
@@ -146,13 +144,16 @@ export default {
     if(!this.lotteryActInfo.isApply) {
       //跳到留资页
     }
-    this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach(item => {
+    this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
       this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
         imgs:[
           {
             src:`../../static/images/prize_${item.id}.png`,width:'100%',height: '100%',top:'1rpx'
           }
         ] })
+      if(index == this.lotteryActInfo.prizeList.length-1) {
+        uni.hideLoading()
+      }
     })
   },
   onShareAppMessage() {return {
@@ -177,7 +178,7 @@ export default {
       this.$refs.luckyWheel.play()
       this.lotteryRes = await api.handleStartLottery({activityId:this.activityId}).then(res => {
         console.log('tttttt',res)
-        if(res.code !=0 ) {
+        if(res.code !=1 ) {
           uni.showToast({
             title:res.msg,
             icon:"none"
@@ -210,6 +211,7 @@ export default {
       // 奖品详情
       app.globalData.isRotating = false;
       this.showDialogL = true;
+      this.lotteryActInfo.chanceCount--;
       console.log(prize)
     },
     closeDialog() {

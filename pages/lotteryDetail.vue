@@ -2,7 +2,7 @@
   <view class="bg">
     <view class="container" v-if="detailInfo.winningCode">
       <view class="headerT">
-        <view class="lId">中奖单号：{[detailInfo.winningCode]}</view>
+        <view class="lId">中奖单号：{{detailInfo.winningCode}}</view>
         <view class="headerInfo">
           <view class="lDetail">
             <view class="prizeName">{{detailInfo.prizeName}}</view>
@@ -29,7 +29,7 @@
         </view>
       </view>
     </view>
-    <view v-else>暂无数据</view>
+    <view v-else style="text-align: center;margin-top: 20rpx;">暂无数据</view>
   </view>
 </template>
 
@@ -47,8 +47,12 @@ export default {
     const {id=0} = options
     console.log('id',id)
     if(id) {
+      uni.showLoading({
+        title: '正在加载...'
+      })
       this.detailInfo = await api.getLotteryDetail({id}).then(res => {
         console.log('rrrres',res)
+        uni.hideLoading()
         if(res.code == 1) {
           return res.data || {}
         }else {
