@@ -53,7 +53,7 @@
         </view>
       </view>
     </view>
-    <view class="lotteryDialog" v-if="showDialogL" @touchmove.stop.prevent="moveHandle">
+    <view class="lotteryDialog" v-if="showDialogL" @touchmove.stop.prevent>
       <view class="dialogContainer">
         <block v-if="lotteryRes.id>1&&lotteryRes.price">
           <view class="tTitle titleQ">恭喜您获得</view>
@@ -107,7 +107,7 @@ export default {
       lotteryActInfo: {},
       title: '转盘抽奖',
       blocks: [],
-      showDialogL: !false,
+      showDialogL: false,
       prizes: [],
       defaultStyle: {
         fontColor: '#d64737',
@@ -171,9 +171,6 @@ export default {
     }
   },
   methods: {
-    moveHandle() {
-
-    },
     // 点击抽奖按钮触发回调
     async startCallBack () {
       if(!this.lotteryActInfo.chanceCount) {
