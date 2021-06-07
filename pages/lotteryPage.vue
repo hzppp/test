@@ -156,9 +156,14 @@ export default {
       }
     })
   },
-  onShareAppMessage() {return {
+  onShareAppMessage() {
+
+    const wxUserInfo = uni.getStorageSync('wxUserInfo')
+    const url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
+    console.log('ui',url)
+    return {
       title: '长安抽奖活动',
-      path: '', //抽奖页面?activityId=0&userId=0
+      path: url, //抽奖页面?activityId=0&userId=0
       imageUrl: ''
     }
   },
