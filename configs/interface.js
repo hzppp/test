@@ -196,7 +196,7 @@ const config = {
 		// 获取广告
 		getBannerByPosition:`${DOMAIN.changan}/api/xcx/ad/getByPositionType`,
 		// 获取抽奖信息
-		getFission:'${DOMAIN.changan}/api/xcx/lottery/fission',
+		getFission:`${DOMAIN.changan}/api/xcx/lottery/fission`,
 		// 访问活动 记录活动访问次数
 		fetchActivityVisit: `${DOMAIN.changan}/api/xcx/activity/visit`,
 		// 云展厅地址
