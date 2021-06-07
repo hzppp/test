@@ -5,7 +5,7 @@
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
-		<view class="date">
+		<view class="date" v-if="content">
 			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
@@ -64,6 +64,12 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			if(options.tolbActivity){
+				uni.reLaunch({
+					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
+				})
+				return
+			}
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
