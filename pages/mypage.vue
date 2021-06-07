@@ -113,11 +113,13 @@
 			    this.photo=phone.substr(0,3)+'****'+phone.substr(7,phone.length);
 			}
 			let sgList = await api.getBannerByPosition({'positionType':'1'});
-			
+
 			if(sgList){
 				let data = sgList.data
 				console.log(data);
-				this.imageData = data[0]
+				if(data){
+				 this.imageData = data[0]	
+				}
 			}
 			
 			
