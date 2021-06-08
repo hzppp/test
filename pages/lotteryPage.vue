@@ -62,15 +62,15 @@
           <view class="tBody gotPrize">
             <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
             <view class="time">有效期至：{{lotteryRes.endTime || '-'}}</view>
-            <view class="lotteryType" v-if="lotteryRes.id !=2 ">
-              <view>购车</view>
-              <view>代金券</view>
+            <view class="lotteryType">
+              <view>{{lotteryRes.kind.substr(0,2)}}</view>
+              <view>{{lotteryRes.kind.substr(2,5)}}</view>
             </view>
-            <view class="lotteryType" v-else>
-<!--            <view class="lotteryType long" v-else>-->
-              <view>保养</view>
-              <view>代金券</view>
-            </view>
+<!--            <view class="lotteryType" v-else>-->
+<!--&lt;!&ndash;            <view class="lotteryType long" v-else>&ndash;&gt;-->
+<!--              <view>保养</view>-->
+<!--              <view>代金券</view>-->
+<!--            </view>-->
           </view>
           <view class="tFoot">
             <button class="left" @tap="goLotteryDeatail(lotteryRes.lotteryId)">查看详情</button>
@@ -81,7 +81,7 @@
           <view class="tTitle titleQ">您与奖品檫肩而过</view>
           <view class="tBody">
             <view class="funnyIcon"></view>
-            <view class="thxA">谢谢参与~</view>
+            <view class="thxA">谢谢惠顾~</view>
           </view>
           <view class="tFoot">
             <button class="right btn1" @tap="closeDialog">继续抽奖</button>
@@ -165,7 +165,7 @@ export default {
       //跳到留资页
     }
     // `../../static/images/prize_${item.id}.png`
-    this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.kind-b.kind)
+    this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.prizeCode-b.prizeCode)
     this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
       this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
         imgs:[
@@ -307,7 +307,6 @@ export default {
 }
 
 .container {
-  padding-bottom: 40rpx;
   background: #000052;
   position: relative;
   .content {
@@ -488,7 +487,6 @@ export default {
           }
         }
       }
-      margin-bottom: 20rpx;
     }
     .mbt14 {
       margin-bottom: 14rpx;
