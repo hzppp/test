@@ -3,7 +3,7 @@
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
     <cover-view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
       <cover-view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
-        <cover-image class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></cover-image>
+        <cover-image v-if="homeBtn" class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></cover-image>
         <cover-view class="pageTop-text" :style="'color:' + titleys ">{{title}}</cover-view>
       </cover-view>
     </cover-view>
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  props:["background","btnys","titleys","title","isstoppageback"],
+  props:["background","btnys","titleys","title","isstoppageback","homeBtn"],
   data() {
     return {
       height:0,

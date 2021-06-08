@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"></pageTopCommon>
+    <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title" :homeBtn="true"></pageTopCommon>
     <view class="content">
       <view class="luckyWheel">
         <view class="lotteryList">
@@ -147,6 +147,7 @@ export default {
     if(!this.lotteryActInfo.isApply) {
       //跳到留资页
     }
+    this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.kind-b.kind)
     this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
       this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
         imgs:[
