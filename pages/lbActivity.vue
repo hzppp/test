@@ -92,15 +92,15 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = `pages/authorization?to=lbActivity&id=${this.content.id}`
-			if (app.globalData.salesId) {
-				path += `&salesId=${app.globalData.salesId}`
-			}
-			api.shareActivity(this.content.id).then(res => {
-				console.log(res)
-				if (res.data > 0) {
-					this.content.shareStatus = 1
-				}
-			})
+			// if (app.globalData.salesId) {
+			// 	path += `&salesId=${app.globalData.salesId}`
+			// }
+			// api.shareActivity(this.content.id).then(res => {
+			// 	console.log(res)
+			// 	if (res.data > 0) {
+			// 		this.content.shareStatus = 1
+			// 	}
+			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
 			return {
 				title: title,
