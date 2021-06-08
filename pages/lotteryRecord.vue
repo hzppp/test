@@ -60,7 +60,7 @@ name: "lotteryRecord",
 <style scoped lang="less">
 @import '@/static/less/public.less';
 .container {
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
   padding: 30rpx;
   background: #f6f7f8;
