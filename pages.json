@@ -22,7 +22,7 @@
 			"path": "pages/live",
 			"style": {
 				"navigationBarTitleText": "直播",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},

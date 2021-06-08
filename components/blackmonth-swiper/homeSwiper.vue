@@ -29,7 +29,7 @@
 				},
 				screenWidth: 0,
 				itemStyle: [],
-				longlock: false,
+				longlock: true,
 				timeOutEvent: 0
 			};
 		},
@@ -89,7 +89,11 @@
 			startMove(e) {
 				this.slideNote.x = e.changedTouches[0] ? e.changedTouches[0].pageX : 0;
 				this.slideNote.y = e.changedTouches[0] ? e.changedTouches[0].pageY : 0;
-				// console.log(this.slideNote.x)
+				clearTimeout(this.timeOutEvent);
+				this.longlock = false;
+				this.timeOutEvent = setTimeout(() => {
+					this.longlock = true; // 长按后将longlock设置为true
+				}, 1000); //这里设置定时
 			},
 			endMove(e) {
 				var newList = JSON.parse(JSON.stringify(this.itemStyle))
@@ -111,6 +115,16 @@
 					newList.splice(0, 1)
 				}
 				this.itemStyle = newList
+			},
+			
+			moveRight(){
+				if(this.longlock){
+				var newList = JSON.parse(JSON.stringify(this.itemStyle))
+				var last = [newList.pop()]
+				newList = last.concat(newList)
+				this.itemStyle = newList	
+				}
+				
 			},
 
 			touch(item) {

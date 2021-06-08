@@ -10,7 +10,7 @@
 	            <view class="return" @tap="navigateBack"></view>
 	            <view class="toIndex" @tap="topIndexPage"></view>
 	        </view> -->
-		<page-top ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title"></page-top>
+		<page-top ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" :noShowHouse = "true"></page-top>
 		<view class="scroll">
 			<scroll-view class="scroll-view"  @scrolltolower="getList"  scroll-y scroll-with-animation>
 				<view class="coupon" v-if="couponList.length > 0">

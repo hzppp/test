@@ -1,12 +1,14 @@
 <template>
-	
+
 	<view>
-		
-		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" :isShowBackBtn="'false'"></pageTopCity>
+
+		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title"
+			:isShowBackBtn="'false'"></pageTopCity>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;">    点击跳转太平洋汽车网+小程序观看直播</view>
+		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;"> 点击跳转太平洋汽车网+小程序观看直播
+		</view>
 		<block v-if="nothing">
-			<scroll-view scroll-y lower-threshold="200" @scrolltolower="getList" class="live-list">
+			<scroll-view scroll-y lower-threshold="200"  class="live-list">
 				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
 					<!-- <view class="top">
 						<image class="avator" :src="item.headPic"></image>
@@ -83,13 +85,28 @@
 		},
 		// mixins: [],
 		onLoad() {
-			// this.getList()
+			this.getList()
 		},
-		onShow() {
+		async onPullDownRefresh() {
+			
+			uni.showLoading({
+				title: '正在加载...'
+			})
 			this.pageNum = 1
 			this.hasNext = true
 			// this.liveList = []
 			this.getList()
+			setTimeout(() => {
+					  uni.hideLoading()
+					  uni.stopPullDownRefresh()
+			}, 300)
+			
+		},
+		async onReachBottom(){
+			this.getList()
+		},
+		onShow() {
+
 		},
 		filters: {
 			formatStatus(status) {
@@ -110,6 +127,7 @@
 		methods: {
 			/* 获取列表 */
 			async getList() {
+				// console.log(this.hasNext)
 				if (!this.hasNext) {
 					return false;
 				}
@@ -119,17 +137,18 @@
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				})
-			
+
 				data.rows.forEach((item, index) => {
 					item.startTime = item.startTime.substring(0, 16)
 				})
-				if(this.pageNum == 1){
-					this.liveList =data.rows
-				}else{
-				this.liveList = [...this.liveList, ...data.rows]	
+				if (this.pageNum == 1) {
+					this.liveList = data.rows
+				} else {
+					this.liveList = [...this.liveList, ...data.rows]
 				}
 				if (data.hasNext) {
 					this.pageNum++
+					this.hasNext = true
 				} else {
 					this.hasNext = false
 				}
@@ -142,7 +161,7 @@
 			},
 
 			toLiveDet(item) {
-				wx.aldstat.sendEvent('直播点击') 
+				wx.aldstat.sendEvent('直播点击')
 				if (item.status == 2 || item.status == 0) {
 					/* 直播预告 */
 					uni.navigateTo({

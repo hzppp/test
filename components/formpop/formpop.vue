@@ -346,7 +346,7 @@
 					this.showToast('请输入验证码')
 					return false
 				}
-				let data = await api.submitClue({
+				let pam = {
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -357,11 +357,18 @@
 					areaId: this.crtDistrictItem.id,
 					provinceId: this.crtProvinceItem.id,
 					smsCode: this.smsCode,
-					sourceUserId:this.currentObj.sourceUserId
-				})
+					
+				}
+				console.log(this.currentObj.sourceUserId)
+				if(this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj.sourceUserId != 0){
+					pam.sourceUserId =  this.currentObj.sourceUserId
+				}
+				
+				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
-					if (ly = 'lbactivity') {
+				console.log(ly + data)
+					if (ly == 'lbactivity') {
 						//跳转抽奖
 						this.popName = 'lbactivity'
 						uni.navigateTo({
@@ -376,7 +383,7 @@
 					}
 					this.popName = popname
 				} else if (data.code == 2) { //重复留资
-					if (ly = 'lbactivity') {
+					if (ly == 'lbactivity') {
 						//跳转抽奖
 					    this.popName = 'lbactivity'
 						uni.navigateTo({
