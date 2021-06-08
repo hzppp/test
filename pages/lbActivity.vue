@@ -11,7 +11,7 @@
 
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
+			<view class="type-c" v-if="actiDone">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else>
@@ -45,7 +45,8 @@
 				activityId: '',
 				content: "",
 				sourceUserId: '',
-				soureDone:false
+				soureDone:false,
+				actiDone:false
 			}
 		},
 		mixins: [shouquan],
@@ -112,10 +113,15 @@
 			async getFission() {
 				console.log(1)
 				let {
-					data
+					data,code
 				} = await api.getFission({
 					activityId: this.activityId
 				})
+				if(code == 10){
+					// 活动以下架
+					console.log('活动已经结束')
+					this.actiDone =  true
+				}else{
 				if (data) {
 					let isApply = data.isApply
 					if (isApply == 1) {
@@ -123,6 +129,7 @@
 							url: '/pages/lotteryPage?activityId=' + this.activityId
 						})
 					}
+				}	
 				}
 				this.soureDone = true
 
