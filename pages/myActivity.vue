@@ -8,7 +8,7 @@
 				<view class="activity-list" v-if="activityList.length > 0">
 					<block v-for="(item,index) in activityList" :key="index">
 						<view class="pic-text" @tap="toActivityPage(item.id)">
-							<image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
+							<image mode="aspectFill" :src="item.picUrl" lazy-load="true"></image>
 							<view class="activity-label-text">
 								<view :class="'label '+ item.typeClass">
 									{{item.typeText}}
