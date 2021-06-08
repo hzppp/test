@@ -12,10 +12,10 @@
       </view>
       <view class="bodyT">
         <view class="info">
-          <view class="item"><view class="babelT">使用手机号：</view>
+          <view class="item"><view class="babelT">报名电话：</view>
             {{ detailInfo.mobile }}</view>
-          <view class="item"><view class="babelT">中奖时间：</view>{{detailInfo.createTime}}</view>
-          <view class="item"><view class="babelT">兑奖期限：</view>{{detailInfo.endDate}}</view>
+          <view class="item"><view class="babelT">中奖时间：</view>{{detailInfo.createTime | formatTimeMins}}</view>
+          <view class="item"><view class="babelT">兑奖期限：</view>{{detailInfo.endDate | formatTimeMins}}</view>
         </view>
         <view class="tips">
           <view class="title">
@@ -29,7 +29,6 @@
         </view>
       </view>
     </view>
-    <view v-else style="text-align: center;margin-top: 20rpx;">暂无数据</view>
   </view>
 </template>
 
@@ -43,6 +42,11 @@ export default {
       detailInfo: {}
     }
   },
+  filters: {
+    formatTimeMins(time) {
+      return time ? time.substr(0,time.length-3) : time;
+    },
+  },
   async onLoad(options) {
     const {id=0} = options
     console.log('id',id)
@@ -52,7 +56,9 @@ export default {
       })
       this.detailInfo = await api.getLotteryDetail({id}).then(res => {
         console.log('rrrres',res)
-        uni.hideLoading()
+        setTimeout(() => {
+          uni.hideLoading()
+        },300)
         if(res.code == 1) {
           return res.data || {}
         }else {

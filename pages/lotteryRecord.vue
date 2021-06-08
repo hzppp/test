@@ -5,7 +5,7 @@
         <view class="item" v-for="(item,index) in dataList" :key="index">
           <view class="code">中奖单号：{{ item.winningCode }}</view>
           <view class="title">{{ item.prizeName }}</view>
-          <view class="time">使用截止时间：{{item.endDate}}</view>
+          <view class="time">使用截止时间：{{item.endDate | formatTimeMins}}</view>
           <view class="detail" @tap="goDetail(item.id)">查看详情 ></view>
         </view>
       </view>
@@ -31,6 +31,11 @@ name: "lotteryRecord",
     return {
       dataList: []
     }
+  },
+  filters: {
+    formatTimeMins(time) {
+      return time ? time.substr(0,time.length-3) : time;
+    },
   },
   methods:{
     goDetail(id) {

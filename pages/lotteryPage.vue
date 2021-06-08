@@ -5,7 +5,7 @@
       <view class="luckyWheel">
         <view class="lotteryList">
           <swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true" :circular="true" :duration="500" :interval="2000" :autoplay="true">
-            <swiper-item v-for="(item,index) in lotteryActInfo.winnerRecords" :key="index"><view class="item">{{item}}</view></swiper-item>
+            <swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords" :key="index"><view class="item">{{item}}</view></swiper-item>
           </swiper>
         </view>
         <view class="lotteryRecord" @tap="golotteryRecord"></view>
@@ -42,13 +42,16 @@
       <view class="tips">
         <view class="contentBody">
           <view class="title titleK">活动规则</view>
-          <view class="contentTips">
-            <view class="mbt14">1.兑奖期限：2021年6月30日24时前，过期作废。</view>
-            <view class="mbt14">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
-            <view class="mbt14">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
-            <view class="mbt14">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>
-            <view>*本次活动解释权归长安乘用车营销事业部所有</view>
-          </view>
+          <scroll-view scroll-y="true" class="contentTips">
+            <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
+            <view class="mbt14">1.报名成功即可获得1次抽奖机会，每邀请1名好友助力拼车成功，可增加1次抽奖机会。</view>
+            <view class="mbt14">2.每人每天最多可抽奖10次，奖品数量有限，先到先得。</view>
+            <view class="mbt14">3.购车、售后服务代金券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
+            <view class="mbt14">4.购车客户电话号码和活动报名电话号码需保持一致，否则将导致奖券无法使用。</view>
+            <view class="mbt14">5.如果用户存在违规行为（包括但不限于作弊、刷中奖、洗钱、恶意套现），将取消用户活动资格。</view>
+            <view class="mbt14">**本次活动解释权归长安乘用车营销事业部所有</view>
+            <view>温馨提示：6月10日-17日已报名参加“幸运大转盘”活动的用户，可参与长安汽车官方直播间6月18日“幸运锦鲤”抽奖活动，至高抽取18888元购车代金券。</view>
+          </scroll-view>
         </view>
       </view>
     </view>
@@ -116,13 +119,18 @@ export default {
       lotteryRes: {}
     }
   },
+  onShow() {
+    app.globalData.isRotating = false;
+  },
   async onLoad(options) {
+    this.showDialogL = false;
+
+    this.prizes = []
     uni.showLoading({
       title: '正在加载...'
     })
     const {activityId=0} = options
     this.activityId = activityId
-
     await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
@@ -132,21 +140,31 @@ export default {
     this.lotteryActInfo =  await api.getLotteryActInfo({activityId}).then(res => {
       if(res.code == 1) {
         return res.data || {prizeList:[],winnerRecords:[]}
-      }else {
+      }else if(res.code ==10){
         uni.showToast({
           title:res.msg,
           icon:"none"
         })
+        app.globalData.isRotating = false;
+        return;
         // setTimeout(()=> {
         //   uni.reLaunch({
         //     url:"/pages/authorization"
         //   })
         // },1500)
+      }else if(res.code == 0){
+        uni.showToast({
+          title:'本次抽奖异常，已保留抽奖机会，请稍后再试',
+          icon:"none"
+        })
+        app.globalData.isRotating = false;
+        return;
       }
     })
     if(!this.lotteryActInfo.isApply) {
       //跳到留资页
     }
+    // `../../static/images/prize_${item.id}.png`
     this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.kind-b.kind)
     this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
       this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
@@ -182,18 +200,21 @@ export default {
           title:'您的机会已经用完啦~',
           icon:"none"
         })
+        console.log('点击抽奖按钮触发')
         app.globalData.isRotating = false;
         return
       }
       // 先开始旋转
       this.lotteryRes = await api.handleStartLottery({activityId:this.activityId}).then(res => {
         console.log('tttttt',res)
-        if(res.code !=1 ) {
+        if(res.code ==10 ) {
           uni.showToast({
             title:res.msg,
             icon:"none"
           })
-        }else {
+          app.globalData.isRotating = false;
+          return
+        }else if(res.code===1){
           this.$refs.luckyWheel.play()
           let index = this.matchIndex(res.data.id) //中奖索引
           console.log('中奖索引',index)
@@ -203,6 +224,13 @@ export default {
             this.$refs.luckyWheel.stop(index)
           }, 3000)
           return res.data
+        }else if(res.code == 0){
+          uni.showToast({
+            title:'本次抽奖异常，已保留抽奖机会，请稍后再试',
+            icon:"none"
+          })
+          app.globalData.isRotating = false;
+          return
         }
       })
 
@@ -220,6 +248,7 @@ export default {
     // 抽奖结束触发回调
     endCallBack (prize) {
       // 奖品详情
+      console.log('抽奖结束触发回调')
       app.globalData.isRotating = false;
       this.showDialogL = true;
       this.lotteryActInfo.chanceCount--;
@@ -229,10 +258,13 @@ export default {
       this.showDialogL = false;
     },
     goLotteryDeatail(id) {
-      let url = `/pages/lotteryDetail?id=${id}`;
-      uni.navigateTo({
-        url
-      })
+      this.closeDialog()
+      setTimeout(()=> {
+        let url = `/pages/lotteryDetail?id=${id}`;
+        uni.navigateTo({
+          url
+        })
+      },100)
     },
     golotteryRecord() {
       let url = '/pages/lotteryRecord';
@@ -273,6 +305,7 @@ export default {
     transform: translateY(-50%);
   }
 }
+
 .container {
   padding-bottom: 40rpx;
   background: #000052;
@@ -423,10 +456,36 @@ export default {
         background: #183aba;
         border-radius: 10rpx;
         .contentTips {
+          max-height: 170rpx;
+          width: 646rpx;
+          overflow: scroll;
           border-radius: 10rpx;
           background: #1806a3;
-          padding:30rpx 20rpx;
+          padding:30rpx 0 30rpx 20rpx;
           font-size: 28rpx;
+          /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+          ::-webkit-scrollbar
+          {
+            width: 16upx!important;
+            height: 16upx!important;
+            background-color: blue;
+          }
+
+          /*定义滚动条轨道 内阴影+圆角*/
+          ::-webkit-scrollbar-track
+          {
+            // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            background-color: #1806a3;
+          }
+
+          /*定义滑块 内阴影+圆角*/
+          ::-webkit-scrollbar-thumb
+          {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #F5F5F5;
+          }
         }
       }
       margin-bottom: 20rpx;
