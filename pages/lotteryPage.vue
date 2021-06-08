@@ -222,7 +222,7 @@ export default {
           setTimeout(() => {
             // 缓慢停止游戏
             this.$refs.luckyWheel.stop(index)
-          }, 3000)
+          }, 500)
           return res.data
         }else if(res.code == 0){
           uni.showToast({
