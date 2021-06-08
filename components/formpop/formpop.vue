@@ -253,6 +253,7 @@
 					detail
 				} = e
 				this.crtSerialItem = this.serialList[detail.value]
+			    this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
 			},
 			bindMultiPickerColumnChangeArea(e) {
 				let {
@@ -491,10 +492,8 @@
 				this.dealerList = []
 				this.crtDealerItem = {}
 				try {
-					const res = await api.fetchDealerListByCityId({
-						cityId,
-						districtId
-					})
+                    let pcSerialGroupId =this.crtSerialItem.pcSerialGroupId
+				    const res = await api.fetchDealerListByCityId({cityId, districtId,pcSerialGroupId})
 					if (res.code == 1) {
 						this.dealerList = res.data
 						if (this.dealerList && this.dealerList.length) {
