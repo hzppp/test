@@ -923,4 +923,58 @@ module.exports = {
         })
         return data
     },
+	// 获取服务器时间
+	fetchServerTime: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchServerTime'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
+	// 获取当日的红包雨活动
+	fetchRedPacketRainList: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('fetchRedPacketRainList'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+	// 获取红包金额
+	fetchRedPacketAmount: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchRedPacketAmount'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
+	// 获取开红包
+	fetchRedPacketOpen: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchRedPacketOpen'),
+	        method: "POST",
+	        data:para
+	    })
+	    return data
+	},
+	// 获取红包记录
+	fetchRedPacketRecord: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchRedPacketRecord'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
+	// 获取开红包状态
+	fetchRedPacketStatus: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchRedPacketStatus'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
 }

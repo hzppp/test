@@ -1,5 +1,6 @@
 <template>
-	 <view class="ser_home" v-if="showPackage" :style="{top: `${safeTopHeight}px`, height: `${bgHeight}px`,}">
+	 <view class="ser_home" v-if="showPackage" :style="{top: `${safeTopHeight}px`, height: `${bgHeight}px`,}"
+		@touchmove.stop="()=>{}">
 		 <view class="red-packet-wrap" id="red_packet" v-if="start">
 			<block v-if="aniStart">
 				<view class="time">剩余时间<view class="time-ico">{{countDown}}</view>秒</view>
@@ -45,12 +46,8 @@
  
  
 <script>
-	// 接口文档
-	// http://t-act.pcauto.com.cn/rpr/doc.html#/default/%E7%BA%A2%E5%8C%85%E7%9B%B8%E5%85%B3%E6%8E%A5%E5%8F%A3/statusUsingGET
-	import request from "@/units/request.js"
-	import toast from '@/units/showToast';
-	import domain from '@/configs/interface';
-	import {getRedPacketOpen} from '@/components/redPackageActivity/redPackageActivity.js';
+	import api from '@/public/api/index'
+	let app = getApp()
 	
 	export default {
 		props: ['showPackage','activityId','groupId','endTime'],
@@ -138,7 +135,7 @@
 				}, 300)
 			},
 			// 抢红包
-			qianghongbao(index,e) {
+			async qianghongbao(index,e) {
 				if(!this.start){return}
 				console.log(index,e)
 				this.liParams[index].state = 'paused'
@@ -146,10 +143,11 @@
 				uni.showLoading({
 					mask: true
 				})
-				let openId = this.$store.state.openId 
+				let openId = app.globalData.wxUserInfo.openId
 				let groupId = this.groupId
 				let activityId = this.activityId
-				getRedPacketOpen(activityId,openId,0).then(res => {
+				try {
+					const res = await api.fetchRedPacketOpen({activityId,openId,scene: 0})
 					console.log(res)
 					uni.hideLoading();
 					this.liParams[index].state = 'running'
@@ -165,7 +163,9 @@
 					}else{
 						this.type = 2
 					}
-				}).catch(err => {console.log(err)})
+				} catch (err) {
+					console.error(err)
+				}
 			},
 			// 关闭红包雨界面
 			closeRedPcakage(){
@@ -196,7 +196,7 @@
 		position: fixed;
 		left: 0;
 		top: 0;
-		z-index: 100;
+		z-index: 10000;
 		background-color: rgba(0,0,0,.8);
 		.btn{
 			width: 480rpx;
