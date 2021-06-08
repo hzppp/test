@@ -68,9 +68,13 @@
         width: 686rpx;
         height: 88rpx;
         line-height: 88rpx;
-        color: #ffffff;
+		font-size: 32rpx;
+        color:  #fa8943;
+		border-style:solid;
         border-radius: 88rpx;
-        background-color: #fa8943;
+		border-width: 2rpx;
+		border-color:  #fa8943;
+        // background-color: #fa8943;
         margin-bottom: 24rpx;
     }
     .bottom-btn-wrap {
@@ -84,6 +88,7 @@
             background-color: #f5f5f5;
             color: #333333;
             font-size: 32rpx;
+			
         }
     }
 }
