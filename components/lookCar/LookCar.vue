@@ -74,7 +74,7 @@
         border-radius: 88rpx;
 		border-width: 2rpx;
 		border-color:  #fa8943;
-        // background-color: #fa8943;
+        background-color: #fff;
         margin-bottom: 24rpx;
     }
     .bottom-btn-wrap {
