@@ -28,7 +28,7 @@
           <view class="title titleK">邀请记录</view>
           <block v-if="inviteRecordList&&inviteRecordList.length">
             <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
-              <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{'M.K'||item.wxName}}</view><view class="time">{{item.joinTime}} 加入</view>
+              <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{item.wxName}}</view><view class="time">{{item.joinTime}} 加入</view>
             </view>
           </block>
           <view class="nodata" v-else>
@@ -43,12 +43,11 @@
         <view class="contentBody">
           <view class="title titleK">活动规则</view>
           <view class="contentTips">
-            <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
-            <view class="mbt14">1.报名成功后即可获得1次抽奖机会，每邀请1名好友助力成功，可增加1次抽奖机会。</view>
-            <view class="mbt14">2.每人每天最多可抽奖10次，奖品数量有限，先到先得。</view>
-            <view class="mbt14">3.购车、售后代金券仅用于活动期间购买长安汽车旗下乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
-            <view class="mbt14">4.购车客户电话号码和报名电话号码需保持一致，否则将导致将无法使用。</view>
-            <view>*本次活动解释权归长安汽车乘用车所有</view>
+            <view class="mbt14">1.兑奖期限：2021年6月30日24时前，过期作废。</view>
+            <view class="mbt14">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
+            <view class="mbt14">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
+            <view class="mbt14">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>
+            <view>*本次活动解释权归长安乘用车营销事业部所有</view>
           </view>
         </view>
       </view>
@@ -123,6 +122,7 @@ export default {
     })
     const {activityId=0} = options
     this.activityId = activityId
+
     await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
@@ -159,15 +159,17 @@ export default {
       }
     })
   },
-  onShareAppMessage() {
-
+  async onShareAppMessage() {
+    let {
+      data = {}
+    } = await api.getActivityContent(this.activityId)
     const wxUserInfo = uni.getStorageSync('wxUserInfo')
     const url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
     console.log('ui',url)
     return {
-      title: '长安抽奖活动',
+      title: data.name,
       path: url, //抽奖页面?activityId=0&userId=0
-      imageUrl: ''
+      imageUrl: data.sharePic
     }
   },
   methods: {

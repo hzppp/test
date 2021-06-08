@@ -22,10 +22,10 @@
             使用须知：
           </view>
           <view class="infoItem">1.兑奖期限：2021年6月30日24时前，过期作废。</view>
-          <view class="infoItem">2.本券仅用于活动期间购买长安汽车旗下乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
-          <view class="infoItem">3.购车客户电话号码和报名电话号码需保持一致，否则将导致将无法使用。</view>
-          <view class="infoItem">4.购车出示本券，经服务中心销售人员验证有效后使用。</view>
-          <view class="infoItem">*本次活动解释权归长安汽车乘用车所有</view>
+          <view class="infoItem">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
+          <view class="infoItem">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
+          <view class="infoItem">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>
+          <view class="infoItem">*本次活动解释权归长安乘用车营销事业部所有</view>
         </view>
       </view>
     </view>
