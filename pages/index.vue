@@ -237,7 +237,9 @@
 			}
 			this.timeOutEvent = setInterval(() => {
 			  console.log('开始及时')
-			this.$refs.cmSwiper.moveRight()
+			if(this.pageData.banners&& this.pageData.banners.length> 0){
+			  this.$refs.cmSwiper.moveRight()
+			}
 			}, 4000); //这里设置定时
 			
 			

@@ -106,7 +106,7 @@
 						typeText = '试驾活动'
 						typeClass = ''
 					} else if (type == 5) {
-				       typeText = '裂变活动'
+				       typeText = '抽奖活动'
 					   typeClass = ''
 			        }else {
 						typeText = '线下活动'
