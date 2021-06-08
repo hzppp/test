@@ -127,7 +127,7 @@
 		methods: {
 			/* 获取列表 */
 			async getList() {
-				console.log(this.hasNext)
+				// console.log(this.hasNext)
 				if (!this.hasNext) {
 					return false;
 				}

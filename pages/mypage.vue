@@ -2,7 +2,7 @@
 	<view>
 
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
-		<page-top ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></page-top>
+		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
 			@tap="getWxUserInfoAuth"></button>
@@ -82,14 +82,14 @@
 	import testDrive from '@/components/testDrive/testDrive'
 	// import getUserInfo from '@/units/getUserInfo'
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	import pageTop from '@/components/pageTop/pageTop'
+	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import tabBar from '@/components/tabBar/tabBar'
 	import toast from '@/units/showToast'
 
 	let app = getApp()
 	export default {
 		components: {
-			'page-top': pageTop,
+			'pageTopCity': pageTopCity,
 			'viewTabBar': tabBar,
 			testDrive
 			// 'share-pop': shareSuccess
