@@ -18,7 +18,7 @@
             :defaultStyle="defaultStyle"
             @start="startCallBack"
             @end="endCallBack"
-            v-if="!showDialogL"
+            v-show="!showDialogL"
         />
         <view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
       </view>
@@ -55,6 +55,7 @@
         </view>
       </view>
     </view>
+    <view class="maskK" v-if="showMask" @touchmove.stop.prevent></view>
     <view class="lotteryDialog" v-if="showDialogL" @touchmove.stop.prevent>
       <view class="dialogContainer">
         <block v-if="lotteryRes.id>1&&lotteryRes.price">
@@ -116,13 +117,23 @@ export default {
         fontSize: '14px',
       },
       activityId: '',
-      lotteryRes: {}
+      lotteryRes: {},
+      isRotating: false,
+      showMask: false
     }
   },
   onShow() {
     app.globalData.isRotating = false;
   },
   async onLoad(options) {
+    const _this = this;
+    Object.defineProperty(app.globalData,'isRotating',{
+      set(newV) {
+        _this.showMask = newV
+      },
+      enumerable: true,
+      configurable: true
+    })
     this.showDialogL = false;
 
     this.prizes = []
@@ -283,7 +294,7 @@ export default {
         uni.navigateTo({
           url
         })
-      },100)
+      },200)
     },
     golotteryRecord() {
       let url = '/pages/lotteryRecord';
@@ -511,6 +522,12 @@ export default {
       margin-bottom: 14rpx;
     }
   }
+  .maskK {
+    position: fixed;
+    z-index: 9999;
+    height: 100vh;
+    width: 100%;
+  }
   .lotteryDialog {
     position: fixed;
     z-index: 9999;
@@ -522,7 +539,10 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
-      .setbg(560rpx,570rpx,'lottery_dialog_bg.png');
+      width: 560rpx;
+      height: 570rpx;
+      background: url('/static/images/lottery_dialog_bg.png') 0 0 no-repeat;
+      background-size: 100% 100%;
       .tTitle {
         position: absolute;
         top: 130rpx;
