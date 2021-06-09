@@ -384,14 +384,14 @@
 					}
 					this.popName = popname
 				} else if (data.code == 2) { //重复留资
-					if (ly == 'lbactivity') {
-						//跳转抽奖
-					    this.popName = 'lbactivity'
-						uni.navigateTo({
-							url:'/pages/lotteryPage?activityId=' + lydx.id
-						})
-						return
-					}
+					// if (ly == 'lbactivity') {
+					// 	//跳转抽奖
+					//     this.popName = 'lbactivity'
+					// 	uni.navigateTo({
+					// 		url:'/pages/lotteryPage?activityId=' + lydx.id
+					// 	})
+					// 	return
+					// }
 
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
