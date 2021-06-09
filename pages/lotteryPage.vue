@@ -340,6 +340,8 @@ export default {
   background: #000052;
   position: relative;
   .content {
+    overflow-x: hidden;
+    width: 100%;
     .luckyWheel {
       position: relative;
       .setbg(100%, 1130rpx, 'lottory_bg.png');
