@@ -5,9 +5,9 @@
 	        <view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
 	            <block v-if="isShowBackBtn">
 	                <view class="pageTop-back-btn" @tap="navigateBack"></view>
-	                <view class="pageTop-line"></view>
+	                <view class="pageTop-line" v-if="!noShowHouse"></view>
 	            </block>
-	            <view :class="'pageTop-home ' + (isShowBackBtn ? '':'pageTop-home-left')" @tap="topIndexPage"></view>
+	            <view :class="'pageTop-home ' + (isShowBackBtn ? '':'pageTop-home-left')" @tap="topIndexPage" v-if="!noShowHouse"></view>
 	            <view class="pageTop-text" :style="'color:' + titleys ">{{title}}</view>
 	        </view>
 	    </view>
@@ -16,13 +16,13 @@
 
 <script>
 	export default {
-		props:["background","btnys","titleys","title","isstoppageback"],
+		props:["background","btnys","titleys","title","isstoppageback","noShowHouse"],
 		data() {
 			return {
 				isShowBackBtn:false,
 				height:0,
 				jnHeight:0,
-				jnTop:0,
+				jnTop:0
 			};
 		},
 		async created(){

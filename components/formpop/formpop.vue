@@ -3,53 +3,67 @@
 		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
 				<view class="p1">{{title}}</view>
-				<view class="p2">为了给您提供更好的服务，请完善基础信息</view>
+
+				<view class="p2" v-if="from == 'lbactivity'">要提交报名信息才可以参与抽奖哦~</view>
+				<view class="p2" v-else>为了给您提供更好的服务，请完善基础信息</view>
 			</view>
 			<view class="content">
 				<block>
-					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector" :range="serialList" :range-key="'name'" 
-					:class="'input-view auto-input ' + (showSerialText == '请选择车系' ? 'placeholder':'')">
+					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
+						:range="serialList" :range-key="'name'"
+						:class="'input-view auto-input ' + (showSerialText == '请选择车系' ? 'placeholder':'')">
 						<view>{{showSerialText}}</view>
 					</picker>
 					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无车系')">
 						<view>暂无车系</view>
-					</view>	
+					</view>
 				</block>
-				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="[provinceList, cityList]"
-				 :range-key="'name'" :class="'input-view city-input ' + (showProvinceCityText == '请选择省市' ? 'placeholder':'')" :value="selectIndex">
+				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector"
+					:range="[provinceList, cityList]" :range-key="'name'"
+					:class="'input-view city-input ' + (showProvinceCityText == '请选择省市' ? 'placeholder':'')"
+					:value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
-				<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector" :range="districtList" :range-key="'name'" 
-				:class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
+				<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
+					:range="districtList" :range-key="'name'"
+					:class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
 				</picker>
 				<!-- 经销商 S -->
 				<block>
-					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList" :range-key="'name'"
-					 :class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
+					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList"
+						:range-key="'name'"
+						:class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
 						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 					</picker>
-					<view v-else class="input-view dealer-input jt-icon placeholder" @tap="showToast(!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商')">
+					<view v-else class="input-view dealer-input jt-icon placeholder"
+						@tap="showToast(!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商')">
 						<view>{{!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商'}}</view>
-					</view>					
+					</view>
 				</block>
 				<!-- 经销商 E -->
 				<view class="input-view mobile-input name-input">
-					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name" maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
+					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name"
+						maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
-				<view class="input-view mobile-input">
-					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码" placeholder-class="placeholder"
-					 @input="getValue('phone',$event)" maxlength="11"></input>
+				<view class="input-view mobile-input" style="margin-bottom: 0">
+					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
+						placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
 				</view>
+				<view class="lbactivityphoto" v-if="from == 'lbactivity'" style="margin-bottom: 24rpx">报名手机号需要跟购车手机号一致哦~~</view>
 				<view class="input-view mobile-input sms-code-input">
-					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码" placeholder-class="placeholder"></input>
-					<view class="sms-code-btn" @tap="getSmsCodeClick">{{smsCodeText}}</view>
+					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码"
+						placeholder-class="placeholder"></input>
+
+					<view :class="'sms-code-btn' + (from == 'lbactivity' ? 'Red':'')" @tap="getSmsCodeClick">
+						{{smsCodeText}}</view>
 				</view>
-				<view class="btn" @tap="submit">提交</view>
+				<view class="btn" @tap="submit"  v-if="from == 'lbactivity'">提交去抽奖</view>
+				<view class="btn" @tap="submit"  v-else>提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
 				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 				<view class="pyview" @tap="doPy">
-						<span class="title1">点击按钮即视为同意</span><span class="title2">《用户隐私协议》</span>
+					<span class="title1">点击按钮即视为同意</span><span class="title2">《用户隐私协议》</span>
 				</view>
 			</view>
 		</view>
@@ -133,28 +147,28 @@
 			}
 		},
 		computed: {
-			showSerialText () {
+			showSerialText() {
 				let text = '请选择车系'
 				if (this.crtSerialItem.id) {
 					text = this.crtSerialItem.name
 				}
-				return text 
+				return text
 			},
-			showProvinceCityText () {
+			showProvinceCityText() {
 				let text = '请选择省市'
 				if (this.crtProvinceItem.id && this.crtCityItem.id) {
 					text = this.crtProvinceItem.name + ' ' + this.crtCityItem.name
 				}
-				return text 
+				return text
 			},
-			showDistrictText () {
+			showDistrictText() {
 				let text = '请选择您的地区'
 				if (this.crtDistrictItem.id) {
 					text = this.crtDistrictItem.name
 				}
 				return text
 			},
-			selectIndex () {
+			selectIndex() {
 				let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
 				let cityIndex = -1
 				if (this.crtProvinceItem.cityList) {
@@ -164,7 +178,7 @@
 				cityIndex = cityIndex > -1 ? cityIndex : 0
 				return [provinceIndex, cityIndex]
 			},
-			selectDistrictIndex () {
+			selectDistrictIndex() {
 				let districtIndex = this.districtList.findIndex(item => item.id == this.crtDistrictItem.id)
 				districtIndex = districtIndex > -1 ? districtIndex : 0
 				return districtIndex
@@ -183,12 +197,12 @@
 				this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
 				this.getpreClue()
 			},
-			doPy(){
+			doPy() {
 				uni.navigateTo({
-					url:'/pages/changanPy'
+					url: '/pages/changanPy'
 				})
 			},
-			closeBtnClick () {
+			closeBtnClick() {
 				if (this.from == 'activity') {
 					wx.aldstat.sendEvent('报名活动留资退出')
 				}
@@ -198,25 +212,25 @@
 				this.isShowFormPop = false
 			},
 			// 获取验证码被点击
-			getSmsCodeClick () {
-				if(!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(this.phone)) {
+			getSmsCodeClick() {
+				if (!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(this.phone)) {
 					uni.showToast({
-					    title:"请输入正确的手机号码",
-					    icon:"none"
+						title: "请输入正确的手机号码",
+						icon: "none"
 					})
 					return
 				}
-				
+
 				if (this.smsCodeTime > 0) {
 					return
 				}
-				
+
 				this.smsCodeTime = 60
 				this.smsCodeText = this.smsCodeTime + 's'
 				this.reqCode()
 			},
 			// 验证码倒计时
-			smsCodeCD () {
+			smsCodeCD() {
 				this.smsCodeTimer = setTimeout(() => {
 					this.smsCodeTime--
 					this.smsCodeText = this.smsCodeTime + 's'
@@ -239,6 +253,7 @@
 					detail
 				} = e
 				this.crtSerialItem = this.serialList[detail.value]
+			    this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
 			},
 			bindMultiPickerColumnChangeArea(e) {
 				let {
@@ -250,7 +265,7 @@
 			bindMultiPickerChange(e) {
 				console.log(e)
 				let {
-				  detail
+					detail
 				} = e
 				this.crtProvinceItem = this.provinceList[detail.value[0]]
 				this.cityList = this.crtProvinceItem.cityList
@@ -260,7 +275,7 @@
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
-				  detail
+					detail
 				} = e
 				if (detail.column == 0) {
 					this.cityList = this.provinceList[detail.value].cityList
@@ -297,6 +312,9 @@
 				} else if (ly == 'activity') {
 					source = 1
 					sourceId = lydx.id
+				} else if (ly = 'lbactivity') {
+					source = 5
+					sourceId = lydx.id
 				} else if (ly == 'serial') {
 					source = 2
 					sourceId = this.crtSerialItem.id
@@ -329,7 +347,7 @@
 					this.showToast('请输入验证码')
 					return false
 				}
-				let data = await api.submitClue({
+				let pam = {
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -340,9 +358,25 @@
 					areaId: this.crtDistrictItem.id,
 					provinceId: this.crtProvinceItem.id,
 					smsCode: this.smsCode,
-				})
+
+				}
+				console.log(this.currentObj.sourceUserId)
+				if(this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj.sourceUserId != 0){
+					pam.sourceUserId =  this.currentObj.sourceUserId
+				}
+
+				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
+				console.log(ly + data)
+					if (ly == 'lbactivity') {
+						//跳转抽奖
+						this.popName = 'lbactivity'
+						uni.navigateTo({
+							url:'/pages/lotteryPage?activityId=' + lydx.id
+						})
+						return
+					}
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
 					} else {
@@ -350,6 +384,15 @@
 					}
 					this.popName = popname
 				} else if (data.code == 2) { //重复留资
+					// if (ly == 'lbactivity') {
+					// 	//跳转抽奖
+					//     this.popName = 'lbactivity'
+					// 	uni.navigateTo({
+					// 		url:'/pages/lotteryPage?activityId=' + lydx.id
+					// 	})
+					// 	return
+					// }
+
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
 					} else {
@@ -365,7 +408,7 @@
 						this.showToast(data.msg)
 					}
 				}
-				
+
 				console.log(data)
 			},
 			toMyPage() {
@@ -388,14 +431,16 @@
 			async getpreClue() {
 				// 手机号码
 				this.phone = uni.getStorageSync('userPhone');
-				
+
 				await distance.getLocation()
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+						'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
-						const crtLocationCityItem = crtLocationProvinceItem.cityList.find(item => item.name.replace('市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+						const crtLocationCityItem = crtLocationProvinceItem.cityList.find(item => item.name.replace(
+							'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
 						this.crtProvinceItem = crtLocationProvinceItem
 						this.cityList = this.crtProvinceItem.cityList
 						this.crtCityItem = crtLocationCityItem
@@ -406,22 +451,24 @@
 				this.isShowFormPop = true
 			},
 			// 发送验证码
-			async reqCode () {
+			async reqCode() {
 				try {
-					const res = await api.fetchCode({mobile: this.phone})
+					const res = await api.fetchCode({
+						mobile: this.phone
+					})
 					if (res.code == 1) {
 						this.showToast('发送验证码成功')
 						this.smsCodeCD()
 					} else {
 						this.showToast(res.msg)
 					}
-				} catch(err) {
+				} catch (err) {
 					this.showToast('发送验证码失败')
 					console.error(err)
 				}
 			},
 			// 根据城市id请求地区
-			async reqDistrictListByCityId (cityId) {
+			async reqDistrictListByCityId(cityId) {
 				this.districtList = [{
 					id: '',
 					name: '请选择您的地区',
@@ -429,7 +476,9 @@
 				}]
 				this.crtDistrictItem = {}
 				try {
-					const res = await api.fetchDistrictListByCityId({cityId})
+					const res = await api.fetchDistrictListByCityId({
+						cityId
+					})
 					if (res.code == 1) {
 						this.districtList.push(...res.data)
 					}
@@ -439,11 +488,12 @@
 				}
 			},
 			// 根据城市id请求经销商
-			async reqDealerListByCityId (cityId = '', districtId = '') {
+			async reqDealerListByCityId(cityId = '', districtId = '') {
 				this.dealerList = []
 				this.crtDealerItem = {}
 				try {
-					const res = await api.fetchDealerListByCityId({cityId, districtId})
+                    let pcSerialGroupId =this.crtSerialItem.pcSerialGroupId
+				    const res = await api.fetchDealerListByCityId({cityId, districtId,pcSerialGroupId})
 					if (res.code == 1) {
 						this.dealerList = res.data
 						if (this.dealerList && this.dealerList.length) {
@@ -469,21 +519,38 @@
 		margin-top: 20rpx;
 		line-height: 1;
 	}
-	.pyview{
+
+	.pyview {
 		text-align: center;
 		height: 40rpx;
 		line-height: 40rpx;
 		// background: #4CD964;
 		margin-bottom: 10rpx;
 	}
-	
-	.title1{
+
+	.title1 {
 		color: #101010;
 		font-size: 28rpx;
 	}
-	.title2{
+
+	.title2 {
 		color: #5A94E1;
 		font-size: 28rpx;
 	}
-	
+
+	.lbactivityphoto {
+		color: #F04040;
+		font-size: 24rpx;
+	}
+
+	.sms-code-btnRed {
+		position: absolute;
+		right: 10rpx;
+		top: 0;
+		bottom: 0;
+		z-index: 10;
+		margin: auto 0;
+		font-size: 24rpx;
+		color: #FA8845;
+	}
 </style>

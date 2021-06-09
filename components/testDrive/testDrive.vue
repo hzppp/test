@@ -85,10 +85,11 @@ name: "testDrive",
 .btn {
   //right: 10rpx;
   //bottom: 308rpx;
-  width: 100rpx;
-  height: 145rpx;
-  background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDrive.png");
+  width: 110rpx;
+  height: 116rpx;
+  background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDriveNew.png");
   background-size: cover;
+  // background: #007AFF;
 }
 .movableArea {
   position: fixed;

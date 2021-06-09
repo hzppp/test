@@ -7,11 +7,12 @@
 
 				<view class="activity-list" v-if="activityList.length > 0">
 					<block v-for="(item,index) in activityList" :key="index">
-						<view class="pic-text" @tap="toActivityPage(item.id)">
-							<image mode="widthFix" :src="item.picUrl" lazy-load="true"></image>
+						<view class="pic-text" @tap="toActivityPage(item)">
+							<image mode="aspectFill" :src="item.picUrl" lazy-load="true"></image>
 							<view class="activity-label-text">
-								<view :class="'label '+ item.typeClass">
-									{{item.typeText}}
+								<view class="label">
+								<image class="logo" src="../static/images/gift-logo.png" mode="aspectFit"></image>
+								  <view class="label-name">{{ item.typeText }}</view>
 								</view>
 								<view class="text">{{item.name}}</view>
 							</view>
@@ -60,11 +61,19 @@
 		},
 
 		methods: {
-			toActivityPage(id) {
-				let url = '/pages/activity?id=' + id
-				uni.navigateTo({
-					url
-				})
+			toActivityPage(item) {
+				if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+						  let url = '/pages/lbActivity?id=' + item.id
+						  uni.navigateTo({
+						    url
+						  })
+				}else{
+					let url = '/pages/activity?id=' + item.id
+					uni.navigateTo({
+						url
+					})
+				}
+				
 			},
 
 			// 获取活动列表
@@ -96,7 +105,10 @@
 					}else if (type == 4) {
 						typeText = '试驾活动'
 						typeClass = ''
-					} else {
+					} else if (type == 5) {
+				       typeText = '抽奖活动'
+					   typeClass = ''
+			        }else {
 						typeText = '线下活动'
 						typeClass = 'yellow-bg'
 					}
@@ -126,5 +138,9 @@
 			font-size: 20rpx;
 			    color: #fff;
 		}
+	}
+	.logo {
+		width: 29rpx;
+		height: 30rpx;
 	}
 </style>

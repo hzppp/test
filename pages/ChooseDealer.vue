@@ -21,12 +21,14 @@ import api from '@/public/api/index'
                 dealersList: [], //经销商列表
                 currentDealerId:"", //
                 isComplete: false,
+				serialId:''
             }
         },
         methods: {
             onLoad(options) {
                 console.log('options :>> ', options);
                 this.currentDealerId = options.dealersId
+				this.serialId = options.serialId
                 if(options.districtId != "undefined") {
                     this.reqDealersList(options.cityId,options.districtId)
                 }else {
@@ -36,11 +38,16 @@ import api from '@/public/api/index'
             //获取经销商列表
             async reqDealersList(cityId,districtId) {
                 try {
+					let pcSerialGroupId = this.serialId;
                     uni.showLoading({
                         title: '正在加载...',
                         mask:true
 			        })
-                    const {code,data} = await api.fetchDealersList({cityId,districtId})
+                    let pam = {cityId,districtId};
+                    if(pcSerialGroupId){
+                    	pam = {cityId,districtId,pcSerialGroupId};
+                    }
+                    const {code,data} = await api.fetchDealersList(pam)				
                     if(code === 1 && data.length) {
                         this.dealersList = data
                     }else {

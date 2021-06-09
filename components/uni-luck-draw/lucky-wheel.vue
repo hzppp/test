@@ -5,7 +5,9 @@
     <view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></view>
     <!-- #endif -->
     <!-- #ifndef APP-PLUS -->
-    <cover-view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></cover-view>
+<!--    <cover-view class="lucky-wheel-btn" @click="toPlay"></cover-view>-->
+<!--    <image class="lucky-wheel-btn" @click="toPlay" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image>-->
+    <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
     <!-- #endif -->
     <div class="lucky-imgs">
       <div v-for="(block, index) in blocks" :key="index">
@@ -144,6 +146,7 @@
           unitFunc: (num, unit) => changeUnits(num + unit),
           beforeInit: function () {
             const Radius = Math.min(this.config.width, this.config.height) / 2
+            console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
             ctx.translate(-Radius, -Radius)
           },
           afterInit: function () {
@@ -169,6 +172,15 @@
         })
       },
       toPlay (e) {
+        console.log('app.globalData.isRotating',app.globalData.isRotating)
+        if(app.globalData.isRotating) {
+          uni.showToast({
+            title:"正在抽奖，请勿频繁操作",
+            icon:"none"
+          })
+          return;
+        }
+        app.globalData.isRotating = true
         this.$lucky.startCallback()
       },
       init () {
@@ -188,6 +200,8 @@
   .lucky-box {
     position: relative;
     overflow: hidden;
+    margin: 0 auto;
+    top: 326rpx;
   }
   .lucky-box canvas {
     position: absolute;
@@ -195,11 +209,15 @@
   }
   .lucky-wheel-btn {
     position: absolute;
+    z-index: 999;
     left: 50%;
     top: 50%;
+    width: 211rpx;
+    height: 219rpx;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0);
     border-radius: 50%;
+    /*background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center no-repeat;*/
+    background-size: 100%;
   }
   .lucky-imgs {
     width: 0;

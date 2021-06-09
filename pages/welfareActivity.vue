@@ -39,6 +39,21 @@
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
+			  <!-- <view class="desc">
+				  <view class="left-area">
+					  <view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view>
+					  <view class="info">
+						<view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
+						<view v-show="!item.duibaUrl && item.visitCount && item.clueCount" class="line"></view>
+						<view v-show="!item.duibaUrl && item.clueCount"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+					  </view>
+				  </view>
+				  <view class="right-area">
+					  <view class="tag before" v-show="statusFilter(item.startTime, item.endTime) == 'before'">即将开始</view>
+					  <view class="tag during" v-show="statusFilter(item.startTime, item.endTime) == 'during'">进行中</view>
+					  <view class="tag after" v-show="statusFilter(item.startTime, item.endTime) == 'after'">已结束</view>
+				  </view>
+			  </view> -->
             </view>
           </block>
         </view>
@@ -203,16 +218,26 @@ export default {
     },
     toActivityPage(item) {
 		wx.aldstat.sendEvent('活动点击')
-      if (item.duibaUrl) {
-        uni.navigateTo({
-          url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
-        })
-      } else {
-        let url = '/pages/activity?id=' + item.id
-        uni.navigateTo({
-          url
-        })
-      }
+		
+	  if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+		  let url = '/pages/lbActivity?id=' + item.id
+		  uni.navigateTo({
+		    url
+		  })
+	  }else{
+		if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
+		  uni.navigateTo({
+		    url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+		  })
+		} else {
+		  let url = '/pages/activity?id=' + item.id
+		  uni.navigateTo({
+		    url
+		  })
+		}  
+	  }	
+		
+
     },
     resetjson() {
       this.getWelfarePageNumber = 1
@@ -251,6 +276,8 @@ export default {
 				typeText = '线下活动'
 			  } else if (type == 4) {
 				typeText = '试驾活动'
+			  } else if (type == 5) {
+				typeText = '抽奖活动'
 			  }
 			  obj.typeText = typeText
 			}

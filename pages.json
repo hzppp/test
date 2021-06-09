@@ -22,7 +22,7 @@
 			"path": "pages/live",
 			"style": {
 				"navigationBarTitleText": "直播",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -214,7 +214,6 @@
 				"navigationBarTitleText": "选择地区",
 				"enablePullDownRefresh": false
 			}
-
 		},
 		{
 			"path": "pages/myvideo",
@@ -229,7 +228,44 @@
 				"navigationBarTitleText": "隐私政策",
 				"enablePullDownRefresh": false
 			}
-         }
+         },
+		 {
+		 	"path": "pages/lbActivity",
+		 	"style": {
+		 		"navigationBarTitleText": "活动详情",
+		 		"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+		 	}
+		},
+		{
+			"path": "pages/lotteryPage",
+			"style": {
+				"navigationBarTitleText": "转盘抽奖",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/lotteryRecord",
+			"style": {
+				"navigationBarTitleText": "中奖记录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/inviteRecord",
+			"style": {
+				"navigationBarTitleText": "邀请记录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/lotteryDetail",
+			"style": {
+				"navigationBarTitleText": "奖品详情",
+				"enablePullDownRefresh": false
+			}
+		}
 	],
 	"tabBar": {
 		"custom": true,

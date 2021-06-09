@@ -854,7 +854,61 @@ module.exports = {
 	    })
 	    return data
 	},
-	
-	
-	
+	getBannerByPosition:async(para) =>{
+		let {data} = await request({
+		    url:domain.getAPI('getBannerByPosition'),
+		    method: "GET",
+			data:para,
+		})
+		return data
+	},
+
+	getFission:async(para) =>{
+		let URL = domain.getAPI('getFission');
+		let {data} = await request({
+		    url:URL,
+		    method: "GET",
+			data:para,
+		})
+		return data
+	},
+    getlotteryRecordList: async() => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryRecordList'),
+            method: "GET",
+        })
+        return data
+    },
+    getInviteRecordList: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('inviteRecordList'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+    getLotteryActInfo: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryActInfo'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
+    handleStartLottery: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('startLottery'),
+            method: "POST",
+            data:para
+        })
+        return data
+    },
+    getLotteryDetail: async(para) => {
+        let {data} = await request({
+            url:domain.getAPI('lotteryDetail'),
+            method: "GET",
+            data:para
+        })
+        return data
+    },
 }

@@ -2,10 +2,11 @@
 	<view>
 
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
-		<page-top ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></page-top>
+		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 
-		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN" @tap="getWxUserInfoAuth"></button>
-		<view  class="top-wrap">
+		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
+			@tap="getWxUserInfoAuth"></button>
+		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
 					<view class="info">
@@ -13,14 +14,15 @@
 							<view class="name">
 								<open-data type="userNickName"></open-data>
 							</view>
-							<view v-if="photo" class="phoneV" >
-								<image class="phoneVicon" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
+							<view v-if="photo" class="phoneV">
+								<image class="phoneVicon"
+									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
 								<view class="phonetitle">{{photo}}</view>
-								
+
 							</view>
-						     
+
 						</view>
-					
+
 					</view>
 
 					<view class="head">
@@ -33,14 +35,20 @@
 					<view class="p9" style="font-size: 28rpx;margin-top:25rpx;">登录开启长安云车展精彩之旅</view>
 				</block>
 			</view>
+
 			<view class="box">
 				<view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>
 				</view>
 				<view class="line"></view>
-				<view class="box-list list4" @tap="toactivity">
+				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
+					<view class="right isApprove"></view>
+				</view>
+				<view class="line"></view>
+				<view class="box-list list4" @tap="toMylotteryRecord">
+					<view class="p1">我的中奖记录</view>
 					<view class="right isApprove"></view>
 				</view>
 				<view class="line"></view>
@@ -56,11 +64,12 @@
 
 				</view> -->
 			</view>
+				<image  v-if="imageData.picUrl" :src="imageData.picUrl" class="imagev" @tap="goImageDetail" mode="aspectFill"></image>
 		</view>
 		<!-- <view class="banner_bot">
 			<image src=""></image>
 		</view> -->
-		<testDrive aldEventName = '我的页面预约试驾'></testDrive>
+		<testDrive aldEventName='我的页面预约试驾'></testDrive>
 		<viewTabBar :current="4"></viewTabBar>
 
 	</view>
@@ -73,15 +82,15 @@
 	import testDrive from '@/components/testDrive/testDrive'
 	// import getUserInfo from '@/units/getUserInfo'
 	// import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	import pageTop from '@/components/pageTop/pageTop'
+	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import tabBar from '@/components/tabBar/tabBar'
-  import toast from '@/units/showToast'
+	import toast from '@/units/showToast'
 
-  let app = getApp()
+	let app = getApp()
 	export default {
 		components: {
-			'page-top': pageTop,
-			'viewTabBar':tabBar,
+			'pageTopCity': pageTopCity,
+			'viewTabBar': tabBar,
 			testDrive
 			// 'share-pop': shareSuccess
 		},
@@ -100,16 +109,30 @@
 				// userId: null,
 				isshowUpload: false,
 				fail: false,
-				photo:null
+				photo: null,
+				imageData: []
 			}
 		},
 
 		async onShow() {
 			let phone = uni.getStorageSync('userPhone');
-			if(phone) {
-			    // this.photo = phone
-			    this.photo=phone.substr(0,3)+'****'+phone.substr(7,phone.length);
+			if (phone) {
+				// this.photo = phone
+				this.photo = phone.substr(0, 3) + '****' + phone.substr(7, phone.length);
 			}
+			let sgList = await api.getBannerByPosition({
+				'positionType': '1'
+			});
+
+			if (sgList) {
+				let data = sgList.data
+				console.log(data);
+				if (data) {
+					this.imageData = data[0]
+				}
+			}
+
+
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
@@ -153,6 +176,9 @@
 			// this.signInList
 
 			// console.log('getsignIn', data)
+
+
+
 		},
 		methods: {
 			tocard() {
@@ -161,16 +187,38 @@
 					url: '/pages/myCoupon'
 				})
 			},
-			toactivity(){
+			toactivity() {
 				wx.aldstat.sendEvent('我的活动点击')
 				uni.navigateTo({
 					url: '/pages/myActivity'
 				})
 			},
-			tomyvideo(){
+			toMylotteryRecord() {
+				uni.navigateTo({
+					url: '/pages/lotteryRecord'
+				})
+			},
+			tomyvideo() {
 				uni.navigateTo({
 					url: '/pages/myvideo'
 				})
+			},
+			goImageDetail() {
+				wx.aldstat.sendEvent('我的页面广告图')
+				if (this.imageData) {
+					if (this.imageData.type == 1) {
+						// H5
+						let url = this.imageData.url
+						uni.navigateTo({
+							url: `/pages/webview?webURL=${url}`
+						})
+					} else {
+						let id = this.imageData.originalId
+						uni.navigateTo({
+							url: `/pages/activity?id=${id}`
+						})
+					}
+				}
 			}
 		}
 	}
@@ -178,16 +226,19 @@
 
 <style lang="less">
 	@import '@/static/less/mypage.less';
-	.top-wrap{
+
+	.top-wrap {
 		background: linear-gradient(-20deg, #f6f7f8 0%, #e1eaf4 100%);
 	}
+
 	.top {
 		position: relative;
 		padding: 45rpx 61rpx 66rpx;
 		overflow: hidden;
-		    // display: flex;
-		    // justify-content: space-between;
-		    // align-items: center;
+
+		// display: flex;
+		// justify-content: space-between;
+		// align-items: center;
 		.name {
 			.ellipsis;
 			width: 350rpx;
@@ -208,7 +259,8 @@
 	}
 
 	.head {
-		float:right;
+		float: right;
+
 		image {
 			.arc(120rpx);
 		}
@@ -227,6 +279,7 @@
 		&:after {
 			display: none;
 		}
+
 		border-radius: 32rpx;
 	}
 
@@ -342,16 +395,26 @@
 		line-height: 28rpx;
 		border-radius: 14rpx;
 	}
-	.banner_bot{
+
+	.banner_bot {
 		width: 684rpx;
 		height: 186rpx;
-		margin:0 auto;
+		margin: 0 auto;
 		background-color: #3F536E;
 		border-radius: 20rpx;
-		image{
+
+		image {
 			width: 684rpx;
 			height: 186rpx;
 			// .arc(684rpx,186rpx);
 		}
+	}
+
+	.imagev {
+		margin: 0 32rpx 30rpx;
+		width: 686rpx;
+		height: 200rpx;
+		border-radius: 10rpx;
+		// margin-bottom: 38rpx;
 	}
 </style>

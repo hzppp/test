@@ -24,6 +24,9 @@
             <button class="yuyue-btn" @tap="goYuyue">
                 预约试驾
             </button>
+			<button class="yuyue-btn1" @tap="goXundijia">
+			    获取实时底价
+			</button>
         </view>
 
 	</view>
@@ -71,6 +74,12 @@ export default {
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
         },
+		goXundijia(){
+			wx.aldstat.sendEvent('车系页获取实时底价点击')
+			uni.navigateTo({
+				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
+			})
+		},
         async reqModelsList(sgId) {
             try {
                 const {code,data} = await api.fetchModelsList({sgId})
@@ -129,14 +138,30 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+		// background-color: #007AFF;
         .yuyue-btn {
-            width: 686rpx;
+            width: 330rpx;
             height: 88rpx;
             border-radius: 88rpx;
             line-height: 88rpx;
+			margin-left: 32rpx;
+			margin-right: 26rpx;
+			font-size: 32rpx;
             color: #ffffff;
             background-color: #FA8845;
         }
+		.yuyue-btn1 {
+			width: 330rpx;
+			height: 88rpx;
+			border-radius: 88rpx;
+			line-height: 88rpx;
+			font-size: 32rpx;
+			color: #fa8943;
+			background-color: #ffffff;
+			border-style:solid;
+			border-width: 2rpx;
+			border-color:  #fa8943;
+		}
     }
 }
 </style>

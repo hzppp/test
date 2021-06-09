@@ -24,6 +24,7 @@ var DOMAIN_T = {
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
+	// changan:'https://devqd-changan.pcauto.com.cn/',
 	// changan:"https://devqd-changan.pcauto.com.cn",
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
@@ -192,8 +193,25 @@ const config = {
 		getSgList: `${DOMAIN.changan}/api/xcx/serialGroup/simple/list`,
 		// 底部陪配置
 		setLivePage: `${DOMAIN.changan}/api/xcx/livestream/visibility`,
+		// 获取广告
+		getBannerByPosition:`${DOMAIN.changan}/api/xcx/ad/getByPositionType`,
+		// 获取抽奖信息
+		getFission:`${DOMAIN.changan}/api/xcx/lottery/fission`,
+		// 访问活动 记录活动访问次数
+		fetchActivityVisit: `${DOMAIN.changan}/api/xcx/activity/visit`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
+		// 中奖记录list
+		lotteryRecordList: `${DOMAIN.changan}/api/xcx/lottery/record/page`,
+		// 中奖记录list
+		inviteRecordList: `${DOMAIN.changan}/api/xcx/clue/invite/list`,
+		// 抽奖活动信息
+		lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/fission`,
+		// lotteryActInfo: `${DOMAIN.changan}/api/xcx/lottery/lottery`,
+		// 抽奖
+		startLottery: `${DOMAIN.changan}/api/xcx/lottery/start`,
+		// 奖励详情
+		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`
 	},
 	getAPI(key) {
 		let url;

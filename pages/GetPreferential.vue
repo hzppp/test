@@ -123,7 +123,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             currentRegion(n) {
                 this.reqDealersList(this.currentCity.id,n.id)  
-            }
+            },
+			serialId(n){
+			 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
+			}
+
         },
         onShow() {
             this.checkInfo()
@@ -212,7 +216,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-					url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
+				  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`
 				})
             },
             //切换车系
@@ -224,10 +228,14 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //获取经销商列表
             async reqDealersList(cityId) {
                 try {
-                    const {code,data} = await api.fetchDealersList({cityId})
-                    if(code === 1) {
-                        this.dealersList = data
-                    }
+				    console.log(2111111111 + cityId)
+				   if(cityId){
+					let pcSerialGroupId = this.serialId;
+					 const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
+					 if(code === 1) {
+					     this.dealersList = data
+					  }    
+				   }
                 } catch (error) {
                     console.error(error)
                 }
@@ -337,12 +345,17 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //获取经销商列表
             async reqDealersList(cityId,districtId) {
                 try {
+					console.log(1111111111 + cityId)
+					if(!cityId){
+					   return
+					}
+					let pcSerialGroupId = this.serialId;
                     uni.showLoading({
                         title: '正在加载...',
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealersList({cityId})
+                        const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
                             this.currentDealer = data[0]
@@ -350,7 +363,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
                             this.currentDealer = data[0]

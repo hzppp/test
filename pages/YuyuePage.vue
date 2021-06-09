@@ -1,4 +1,4 @@
-<template>
+<template> 
     <view>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
@@ -111,7 +111,11 @@ const COUNTDOWN = 60
             },
             currentRegion(n) {
                 this.reqDealersList(this.currentCity.id,n.id)  
-            }
+            },
+			serialId(n){
+				 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
+			}			
+
         },
         onShow() {
 			if(this.show && this.serialId){
@@ -310,7 +314,7 @@ const COUNTDOWN = 60
                 }
                 // /this.currentCity.id
                 uni.navigateTo({
-                    url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
+                  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`
                 })
             },
             //选择城市
@@ -343,12 +347,13 @@ const COUNTDOWN = 60
             //获取经销商列表
             async reqDealersList(cityId,districtId) {
                 try {
+					let pcSerialGroupId = this.serialId;
                     uni.showLoading({
                         title: '正在加载...',
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealersList({cityId})
+                        const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
                             this.currentDealer = data[0]
@@ -356,7 +361,7 @@ const COUNTDOWN = 60
                             this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealersList({cityId,districtId})
+                        const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
                             this.currentDealer = data[0]

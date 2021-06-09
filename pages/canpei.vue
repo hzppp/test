@@ -3,8 +3,8 @@
 	<view>
 		<view class='canpei uni' v-if="max > 0">
 			<!-- 车型对比计数器 S -->
-			<count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count>
-			<count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count>
+			<!-- <count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count> -->
+			<!-- <count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count> -->
 			<back-home></back-home>
 			<view :class="['nav_btn',showNav?'nav_btn_act':'']" @tap="showNav = !showNav" v-if="Data.detailArray.length>0">
 				<view class="icon">
@@ -20,48 +20,23 @@
 				</view>
 			</block>
 			<block>
-				<view class="canpei_top">
-					<view class="canpei_top_left" @tap="">
-						<!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
-						<view class="canpei_top_left_title">
-							<!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
-							参数配置
-						</view>
-					</view>
-					<scroll-view scroll-x @scroll="getX" :scroll-left="scrollLeft" @touchend="setLeft" class="canpei_top_right">
-						<view class="car_box" :style="'width:'+width+'rpx'">
-							<block v-for="(item,index) in Data.detailArray" :key="index">
-								<view class="car_list">
-									<view class="item">
-										<text>{{item.modelName}}</text>
-										<view class="close" @tap="delCar(item.modelId,index)">
-											<i class="iconclose iconfont"></i>
-										</view>
-									</view>
-								</view>
-							</block>
-							<view class="car_list">
-								<view :class="max==4||nodata?'add opc':'add'" @tap="addCar">
-									<view class="add_icon">
-										<i class="iconadd iconfont"></i>
-									</view>
-									<view class="add_title">
-										添加车型
-									</view>
-									<view class="add_message">
-										(最多可添加4项)
-									</view>
-								</view>
-							</view>
-						</view>
-					</scroll-view>
-				</view>
 				<scroll-view scroll-y class="canpei_bot" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
 					<block v-if="Data.detailArray.length==0">
 						<view class="canpei_bot_none"></view>
 					</block>
 					<block v-else>
 						<view class="canpei_bot_left">
+                            <!-- 顶部左侧参数配置区域S -->
+                            <view class="canpei_top_left">
+                                <!-- <view :class="['icon',showOrhide?'':'icon_none']"></view> -->
+                                <view class="canpei_top_left_title" style="background-color:white">
+                                    <!-- {{showOrhide?'隐藏相同':'显示全部'}} -->
+                                    参数配置
+                                </view>
+                            </view>
+                            <!-- 顶部左侧参数配置区域E -->
+                            
+                            <!-- 对比内容区域左侧S -->
 							<block v-for="(item,index) in dataList" :key="index">
 								<view class="canpei_list_left">
 									<view class="canpei_head" :id="'id_'+index">
@@ -85,9 +60,40 @@
 									</block>
 								</view>
 							</block>
+                            <!-- 对比内容区域左侧E -->
 						</view>
 						<view class="canpei_box_right_con">
-							<scroll-view scroll-x class="canpei_box_right" @scroll="getX" @touchend="setLeft" :scroll-left="scrollLeft">
+							<scroll-view scroll-x class="canpei_box_right" :scroll-left="scrollLeft">
+                                <!-- 区域右侧车型名称区域S -->
+                                <block>
+                                    <view class="car_box" :style="'width:'+width+'rpx'">
+                                        <block v-for="(item,index) in Data.detailArray" :key="index">
+                                            <view class="car_list">
+                                                <view class="item">
+                                                    <text>{{item.modelName}}</text>
+                                                    <view class="close" @tap="delCar(item.modelId,index)">
+                                                        <i class="iconclose iconfont"></i>
+                                                    </view>
+                                                </view>
+                                            </view>
+                                        </block>
+                                        <view class="car_list">
+                                            <view :class="max==4||nodata?'add opc':'add'" @tap="addCar">
+                                                <view class="add_icon">
+                                                    <i class="iconadd iconfont"></i>
+                                                </view>
+                                                <view class="add_title">
+                                                    添加车型
+                                                </view>
+                                                <view class="add_message">
+                                                    (最多可添加4项)
+                                                </view>
+                                            </view>
+                                        </view>
+                                    </view>
+                                </block>
+                                <!-- 区域右侧车型名称区域E -->
+                                <!-- 区域右侧对比数据S -->
 								<block v-for="(item1,index) in dataList" :key="index">
 									<view class="canpei_head_right"></view>
 									<view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
@@ -119,6 +125,7 @@
 										</view>
 									</view>
 								</block>
+                                <!-- 区域右侧对比数据E -->
 							</scroll-view>
 						</view>
 					</block>
@@ -202,7 +209,6 @@
 			}
 			this.mids = mids;
 			console.log('mids :>> ', mids);
-			// this.addGlobalSelectCar(this.ids)
 			this.init()
 		},
 		onShow() {
@@ -219,26 +225,9 @@
             return {title,desc,path}
 		},
 		methods: {
-			// addGlobalSelectCar(ids) {
-			// 	var ret = {};
-			// 	if (ids.length > 0) {
-			// 		ids.forEach(function(id) {
-			// 			ret['id_' + id] = true;
-			// 		})
-			// 	}
-			// 	this.$store.state.selectCars = ret;
-			// },
 			async init() {
 				try {
 					let data = await this.getCarData(this.mids.join(","));
-					//只传车系Id不传mids进来，会导致carNum未被初始化
-					// if (JSON.stringify(this.$store.state.selectCars) == "{}" && this.mids.length == 0) {
-					// 	let carIds = [];
-					// 	data.detailArray.forEach((car) => {
-					// 		carIds.push(car.modelId);
-					// 	})
-					// 	this.addGlobalSelectCar(carIds);
-					// }
 					this.width += data.detailArray.length * 250;
 					console.log('data. :>> ', data.detailArray);
 					this.max = data.detailArray.length;
@@ -303,22 +292,12 @@
 				this.scrollID = "id_" + index
 				this.showNav = false
 			},
-			// 滚动scroll-view获取滚动距离
-			getX(e) {
-				this.Left = e.detail.scrollLeft
-			},
             //go预约试驾
             toYuYue(idx) {
                 uni.navigateTo({
                     url:"/pages/YuyuePage?serialId=" + idx
                 })
             },
-			// 设置scroll-view的值
-			setLeft(e) {
-				setTimeout(() => {
-					this.scrollLeft = this.Left
-				}, 200);
-			},
 			getCarData(ids) {
 				return new Promise((relove, resject) => {
 					try{
@@ -489,39 +468,6 @@
 			width: #fff;
 			border-bottom: 2rpx solid #D9D9D9;
 			@include flex_left_center;
-
-			.canpei_top_left {
-				width: 250rpx;
-				height: 170rpx;
-				@include flex_center_center;
-				flex-wrap: wrap;
-				align-content: center;
-
-				.icon {
-					background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/weixin/baojia/canpeibg.png) no-repeat;
-					background-size: cover;
-					width: 56rpx;
-					height: 44rpx;
-				}
-
-				.icon_none {
-					background-position: -60rpx 0;
-				}
-
-				.canpei_top_left_title {
-					width: 100%;
-					text-align: center;
-                    height: 162rpx;
-                    line-height: 162rpx;
-                    border: 2rpx solid #ddd;
-					color: #333333;
-					margin-top: 10rpx;
-					font-size: 26rpx;
-                    font-weight: 800;
-                    box-sizing: border-box;
-				}
-			}
-
 			.canpei_top_right {
 				height: 170rpx;
 				width: 500rpx;
@@ -535,14 +481,13 @@
 
 					.car_list {
 						width: 250rpx;
-						margin-top: 10rpx;
 						display: inline-block;
 						border: 2rpx solid #ddd;
 						padding: 5rpx 15rpx;
 						position: relative;
 						font-size: 24rpx !important;
                         height: 162rpx;
-                        box-sizing: border-box;
+                        // box-sizing: border-box;
 						.item {
 							@include flex_center_center;
 							height: 150rpx;
@@ -619,9 +564,9 @@
 		}
 
 		.canpei_bot {
-			height: calc(100% - 200rpx);
+			height: 100%;
 			width: 100%;
-			background: #eee;
+			// background: #eee;
 			@include flex_left_center;
 			position: relative;
 
@@ -791,4 +736,118 @@
 			color: #999999;
 		}
 	}
+    .canpei_top_left {
+    width: 250rpx;
+    @include flex_center_center;
+    flex-wrap: wrap;
+    align-content: center;
+
+    .icon {
+        background: url(https://magear.pcauto.com.cn/p/www1.pcauto.com.cn/weixin/baojia/canpeibg.png) no-repeat;
+        background-size: cover;
+        width: 56rpx;
+        height: 44rpx;
+    }
+
+    .icon_none {
+        background-position: -60rpx 0;
+    }
+
+    .canpei_top_left_title {
+        width: 100%;
+        text-align: center;
+        height: 162rpx;
+        line-height: 162rpx;
+        border: 2rpx solid #ddd;
+        color: #333333;
+        font-size: 26rpx;
+        font-weight: 800;
+        box-sizing: border-box;
+    }
+}
+    .car_box {
+        height: 100%;
+        min-width: 500rpx;
+        @include flex_left_center;
+
+        .car_list {
+            width: 250rpx;
+            display: inline-block;
+            border: 2rpx solid #ddd;
+            padding: 5rpx 15rpx;
+            position: relative;
+            font-size: 24rpx !important;
+            height: 162rpx;
+            box-sizing: border-box;
+            .item {
+                @include flex_center_center;
+                height: 150rpx;
+                width: 100%;
+
+                text {
+                    width: 100%;
+                    @include flex_center_center;
+                    color: #333333;
+                    font-size: 26rpx;
+                }
+
+                .close {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    height: 30rpx;
+                    width: 30rpx;
+                    border-top-left-radius: 10rpx;
+                    background: #808080;
+                    @include flex_center_center;
+
+                    .iconclose {
+                        font-size: 25rpx;
+                        color: #fff;
+                    }
+                }
+            }
+
+            .add {
+                width: 100%;
+                @include flex_center_center;
+                flex-wrap: wrap;
+                align-content: center;
+                height: 100%;
+                white-space: normal;
+
+                .add_icon {
+                    width: 100%;
+                    text-align: center;
+
+                    .iconfont {
+                        color: #333333;
+                        font-size: 35rpx;
+                        font-weight: bold;  
+                    }
+
+                    ;
+                }
+
+                .add_title {
+                    width: 100%;
+                    text-align: center;
+                    color: #333333;
+                    font-size: 26rpx;
+                }
+
+                .add_message {
+                    font-size: 24rpx;
+                    color: #aaa;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+
+            .opc {
+                opacity: 0.3;
+                pointer-events: none;
+            }
+        }
+    }
 </style>
