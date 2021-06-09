@@ -2,18 +2,18 @@
 	<view class="cars-page">
         <view class="image-wrap" v-if="serialData.videoUrl">
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
-            <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap>
+        <!-- <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap> -->
 
 
         <view class="image-wrap">
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
+            <i class="vr-icon" @tap="goVr"></i>
         </view>
 
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoUrl"></btnWrap>
+        <BtnWrap :ids="ids" :serialId="serialId"></BtnWrap>
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
@@ -80,6 +80,13 @@ export default {
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
 			})
 		},
+        //跳转VR
+        goVr(){
+            uni.navigateTo({
+                //                                     内饰id            车型id        车型id             城市名              城市id
+                // url:`/pages/vrInFrame/vrInFrame?sid=${vrInId}&serialId=${pcid}&pcid=${pcid}&cityName=${nowCity}&cityId=${nowCityId}``
+            })
+        },
         async reqModelsList(sgId) {
             try {
                 const {code,data} = await api.fetchModelsList({sgId})
@@ -115,15 +122,28 @@ export default {
         video {
             width: 100%;
         }
-        .video-icon {
+        // .video-icon {
+        //     position: absolute;
+        //     width: 120rpx;
+        //     height: 120rpx;
+        //     top: 50%;
+        //     left: 50%;
+        //     transform: translate(-50%,-50%);
+        //     background-image: url('../static/images/videoPlayBtn.png');
+        //     z-index: 2;
+        // }
+        .vr-icon {
             position: absolute;
-            width: 120rpx;
-            height: 120rpx;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            background-image: url('../static/images/videoPlayBtn.png');
-            z-index: 2;
+            top: 20rpx;
+            right: 20rpx;
+            width: 100rpx;
+            height: 100rpx;
+            line-height: 50rpx;
+            text-align: center;
+            border-radius: 50%;
+            background-image: url("../static/images/vr_btn.png");
+            background-size: cover;
+            
         }
     }
     .btn-wrap {
