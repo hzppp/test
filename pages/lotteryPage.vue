@@ -62,15 +62,15 @@
           <view class="tBody gotPrize">
             <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
             <view class="time">有效期至：{{lotteryRes.endTime || '-'}}</view>
-            <view class="lotteryType">
+            <view class="lotteryType" v-if="lotteryRes.kind.length==5">
               <view>{{lotteryRes.kind.substr(0,2)}}</view>
               <view>{{lotteryRes.kind.substr(2,5)}}</view>
             </view>
-<!--            <view class="lotteryType" v-else>-->
-<!--&lt;!&ndash;            <view class="lotteryType long" v-else>&ndash;&gt;-->
-<!--              <view>保养</view>-->
-<!--              <view>代金券</view>-->
-<!--            </view>-->
+            <view class="lotteryType long" v-else>
+<!--            <view class="lotteryType long" v-else>-->
+              <view>{{lotteryRes.kind.substr(0,3)}}</view>
+              <view>{{lotteryRes.kind.substr(3,7)}}</view>
+            </view>
           </view>
           <view class="tFoot">
             <button class="left" @tap="goLotteryDeatail(lotteryRes.lotteryId)">查看详情</button>
@@ -173,7 +173,7 @@ export default {
         icon:"none"
       })
       setTimeout(()=> {
-        uni.navigateTo({
+        uni.reLaunch({
           url
         })
       },1000)
