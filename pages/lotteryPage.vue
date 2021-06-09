@@ -146,7 +146,7 @@ export default {
           icon:"none"
         })
         app.globalData.isRotating = false;
-        return;
+        return {};
         // setTimeout(()=> {
         //   uni.reLaunch({
         //     url:"/pages/authorization"
@@ -158,25 +158,44 @@ export default {
           icon:"none"
         })
         app.globalData.isRotating = false;
-        return;
+        return {};
       }
+    }).finally(res => {
+      console.log('this.lotteryActInfo',this.lotteryActInfo)
     })
-    if(!this.lotteryActInfo.isApply) {
+    if(!(this.lotteryActInfo.isApply)) {
       //跳到留资页
+      console.log('this.lotteryActInfo.isApply',this.lotteryActInfo.isApply)
+      const wxUserInfo = uni.getStorageSync('wxUserInfo')
+      const url = `/pages/lbActivity?id=${this.activityId}`
+      uni.showToast({
+        title:'您暂未留资',
+        icon:"none"
+      })
+      setTimeout(()=> {
+        uni.navigateTo({
+          url
+        })
+      },1000)
+      return;
     }
     // `../../static/images/prize_${item.id}.png`
     this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.prizeCode-b.prizeCode)
-    this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
-      this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-        imgs:[
-          {
-            src:`../../static/images/prize_${item.prizeCode}.png`,width:'100%',height: '100%',top:'1rpx'
-          }
-        ] })
-      if(index == this.lotteryActInfo.prizeList.length-1) {
-        uni.hideLoading()
-      }
-    })
+    if(this.lotteryActInfo.prizeList.length){
+      this.lotteryActInfo.prizeList.forEach((item, index) => {
+        this.prizes.push({
+          title: '', background: '#c3ecff', fonts: [{text: '', top: '18%'}],
+          imgs: [
+            {
+              src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
+            }
+          ]
+        })
+        if (index == this.lotteryActInfo.prizeList.length - 1) {
+          uni.hideLoading()
+        }
+      })
+    }
   },
   async onShareAppMessage() {
     let {
@@ -312,7 +331,7 @@ export default {
   .content {
     .luckyWheel {
       position: relative;
-      .setbg(750rpx, 1130rpx, 'lottory_bg.png');
+      .setbg(100%, 1130rpx, 'lottory_bg.png');
       .lotteryList {
         position: absolute;
         left: 16rpx;
@@ -463,28 +482,28 @@ export default {
           padding:30rpx 0 30rpx 20rpx;
           font-size: 28rpx;
           /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-          ::-webkit-scrollbar
-          {
-            width: 16upx!important;
-            height: 16upx!important;
-            background-color: blue;
-          }
-
-          /*定义滚动条轨道 内阴影+圆角*/
-          ::-webkit-scrollbar-track
-          {
-            // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: 10px;
-            background-color: #1806a3;
-          }
-
-          /*定义滑块 内阴影+圆角*/
-          ::-webkit-scrollbar-thumb
-          {
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-            background-color: #F5F5F5;
-          }
+          //::-webkit-scrollbar
+          //{
+          //  width: 16upx!important;
+          //  height: 16upx!important;
+          //  background-color: blue;
+          //}
+          //
+          ///*定义滚动条轨道 内阴影+圆角*/
+          //::-webkit-scrollbar-track
+          //{
+          //  // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          //  border-radius: 10px;
+          //  background-color: #1806a3;
+          //}
+          //
+          ///*定义滑块 内阴影+圆角*/
+          //::-webkit-scrollbar-thumb
+          //{
+          //  border-radius: 10px;
+          //  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+          //  background-color: #F5F5F5;
+          //}
         }
       }
     }
