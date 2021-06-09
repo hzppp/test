@@ -204,6 +204,7 @@
 				})
 			},
 			goImageDetail() {
+				wx.aldstat.sendEvent('我的页面广告图')
 				if (this.imageData) {
 					if (this.imageData.type == 1) {
 						// H5

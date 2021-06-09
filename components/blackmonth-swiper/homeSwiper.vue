@@ -128,6 +128,7 @@
 			},
 
 			touch(item) {
+				wx.aldstat.sendEvent('首页Banner')
 				console.log(JSON.stringify(item))
 				let type = item.contentType;
 				let  contentId = item.contentId
