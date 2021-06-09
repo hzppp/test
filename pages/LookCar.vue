@@ -75,6 +75,7 @@ export default {
             })
         },
 		goXundijia(){
+			wx.aldstat.sendEvent('车系页获取实时底价点击')
 			uni.navigateTo({
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
 			})
