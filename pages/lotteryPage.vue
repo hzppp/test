@@ -170,7 +170,7 @@ export default {
       this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
         imgs:[
           {
-            src:`../../static/images/prize_${item.id}.png`,width:'100%',height: '100%',top:'1rpx'
+            src:`../../static/images/prize_${item.prizeCode}.png`,width:'100%',height: '100%',top:'1rpx'
           }
         ] })
       if(index == this.lotteryActInfo.prizeList.length-1) {

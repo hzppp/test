@@ -17,7 +17,7 @@
         <view class="textK">你现在还没有中奖记录哦~</view>
         <view class="textK">快去参与抽奖吧~</view>
       </view>
-      <button class="golottery" @tap="golottery">去抽奖</button>
+<!--      <button class="golottery" @tap="golottery">去抽奖</button>-->
     </block>
   </view>
 </template>
