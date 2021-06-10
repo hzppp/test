@@ -5,7 +5,7 @@
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
-		<view class="date" v-if="content">
+		<view class="date" v-if="content && !isActEnded">
 			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
@@ -60,6 +60,7 @@
 				artDownDate: [],
 				activityId: '',
 				content: "",
+        isActEnded: false
 			}
 		},
 		mixins: [shouquan],
@@ -88,14 +89,14 @@
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
-				this.content = data			
+				this.content = data
 			    if(data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity'){
 					uni.reLaunch({
 						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
 					})
-				}	
-					
-					
+				}
+
+
 			} catch (err) {
 				console.error(err)
 			} finally {
@@ -161,8 +162,8 @@
 						} = await api.decryptPhone(detail.encryptedData, detail.iv)
 						if (data && data.phoneNumber) {
 							uni.setStorageSync('userPhone', data.phoneNumber)
-							this.phone = data.phoneNumber						
-						}						
+							this.phone = data.phoneNumber
+						}
 					} catch (err) {
 						this.$toast('手机号码授权失败', 'none', 1500);
 						console.error(err)
@@ -174,6 +175,10 @@
 				let time = new Date().getTime()
 				endtime = new Date(endtime.replace(/-/g, '/')).getTime()
 				let j = endtime - time
+        if(j<=0) {
+          this.isActEnded = true;
+          return;
+        }
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
 				let hours = parseInt((j % (tt * 24)) / (tt))

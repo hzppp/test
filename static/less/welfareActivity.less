@@ -1,17 +1,17 @@
 @import (reference) 'public.less';
 .box{
-    padding: 0 32rpx 32rpx;
+	padding: 0 32rpx 32rpx;
 }
 .scroll-view{
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 .welfareActivity-top-banner-zw{
-    height: 20rpx;
+	height: 20rpx;
 }
 .welfareActivity-top-banner{
-    .setbg(686rpx,186rpx,'welfareActivity_top_banner.png');
-    margin: 0 auto 30rpx;
+	.setbg(686rpx,186rpx,'welfareActivity_top_banner.png');
+	margin: 0 auto 30rpx;
 }
 .city {
 	position: sticky;
@@ -30,6 +30,7 @@
 				color: #333333;
 				max-width: 164rpx;
 				height: 40rpx;
+				line-height: 40rpx;
 				.ellipsis;
 			}
 			.icon {
@@ -41,11 +42,11 @@
 	}
 }
 .box-tit{
-    font-weight: bold;
-    .seth(95rpx,40rpx,#333);
+	font-weight: bold;
+	.seth(95rpx,40rpx,#333);
 }
 .welfareActivity-none{
-    .setbg(100%,100%,'welfareActivity1.png');
+	.setbg(100%,100%,'welfareActivity1.png');
 	width: 100%;
 	height: 373rpx;
 	background-size: 670rpx 324rpx;
@@ -63,7 +64,7 @@
 
 }
 .activity-list-none{
-    .setbg(100%, 100%, 'welfareActivity2.png');
+	.setbg(100%, 100%, 'welfareActivity2.png');
 	margin-top: 300rpx;
 	width: 100%;
 	height: 373rpx;
@@ -83,7 +84,7 @@
 .activity-list{
 	.pic-text {
 		position: relative;
-		margin-bottom: 30rpx;
+		margin-bottom: 40rpx;
 		image{
 			width: 686rpx;
 			height: 360rpx;
@@ -113,12 +114,91 @@
 			}
 		}
 		.text{
+			margin-top: 10rpx;
 			.db(middle);
-			.seth(90rpx,32rpx,#333);
+			color: #333;
 			font-weight: bold;
 			box-sizing: border-box;
 			.ellipsis;
 			max-width: 100%;
+		}
+		.desc {
+			display: flex;
+			margin-top: 10rpx;
+			.left-area {
+				flex: 1;
+				.locationCot {
+					display: inline-block;
+					color: #AFB3B6;
+					font-size: 24rpx;
+					position: relative;
+					padding-left: 32rpx;
+					&::before {
+						content: '';
+						position: absolute;
+						left: 0;
+						top: 4rpx;
+						.setbg(20rpx,24rpx,'location_icon.png')
+					}
+					.cityName {
+						display: inline-block;
+					}
+					.line {
+						margin: 0 20rpx;
+						width: 1rpx;
+						height: 24rpx;
+						background-color: #AFB3B6;
+						display: inline-block;
+						vertical-align: middle;
+					}
+				}
+				.date {
+					display: inline-block;
+					font-size: 24rpx;
+					color: #AFB3B6;
+				}
+				.info {
+					display: flex;
+					align-items: center;
+					margin-top: 10rpx;
+					font-size: 24rpx;
+					color: #AFB3B6;
+					.num {
+						color: #FA8845;
+					}
+					.line {
+						margin: 0 20rpx;
+						width: 1rpx;
+						height: 24rpx;
+						background-color: #AFB3B6;
+					}
+				}
+			}
+			.right-area {
+				.tag {
+					width: 80rpx;
+					height: 36rpx;
+					text-align: center;
+					line-height: 36rpx;
+					border: 2rpx solid #FA8845;
+					border-radius: 4rpx;
+					font-size: 20rpx;
+					color: #FA8845;
+					box-sizing: border-box;
+					&.before {
+						border-color: #3C4650;
+						color: #3C4650;
+					}
+					&.during {
+						border-color: #FA8845;
+						color: #FA8845;
+					}
+					&.after {
+						border-color: #AFB3B6;
+						color: #AFB3B6;
+					}
+				}
+			}
 		}
 	}
 }
@@ -127,8 +207,8 @@
 	height: 100rpx;
 }
 .fix-sale{
-    .setIcon(90rpx,125rpx,0,41rpx);
-    position: fixed;
-    right: 32rpx;
-    bottom: 32rpx;
+	.setIcon(90rpx,125rpx,0,41rpx);
+	position: fixed;
+	right: 32rpx;
+	bottom: 32rpx;
 }
