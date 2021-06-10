@@ -6,7 +6,7 @@
 				:style="{transform: itemStyle[index].transform, zIndex: itemStyle[index].zIndex, opacity: itemStyle[index].opacity}"
 				@tap="touch(item)">
 				<view class="children">
-					<image class="pic" :src="item.picUrl" lazy-load="true"></image>
+					<image class="pic" :src="item.picUrl" lazy-load="true" mode="aspectFill"></image>
 				</view>
 			</view>
 		</view>
@@ -203,7 +203,7 @@
 <style lang="scss">
 	.swiperPanel {
 		margin: 0rpx 0;
-		height: 500rpx;
+		height: 970rpx;
 		width: 100%;
 		overflow: hidden;
 		position: relative;
