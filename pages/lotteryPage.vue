@@ -18,7 +18,7 @@
             :defaultStyle="defaultStyle"
             @start="startCallBack"
             @end="endCallBack"
-            v-if="!showDialogL"
+            :showDialogL = "showDialogL"
         />
         <view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
       </view>
@@ -73,7 +73,7 @@
             </view>
           </view>
           <view class="tFoot">
-            <button class="left" @tap="goLotteryDeatail(lotteryRes.lotteryId)">查看详情</button>
+            <button class="left" @tap="goLotteryDetail(lotteryRes.lotteryId)">查看详情</button>
             <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
@@ -163,6 +163,7 @@ export default {
     }).finally(res => {
       console.log('this.lotteryActInfo',this.lotteryActInfo)
     })
+    this.lotteryActInfo.winnerRecords.reverse()
     if(!(this.lotteryActInfo.isApply)) {
       //跳到留资页
       console.log('this.lotteryActInfo.isApply',this.lotteryActInfo.isApply)
@@ -276,7 +277,7 @@ export default {
     closeDialog() {
       this.showDialogL = false;
     },
-    goLotteryDeatail(id) {
+    goLotteryDetail(id) {
       this.closeDialog()
       setTimeout(()=> {
         let url = `/pages/lotteryDetail?id=${id}`;
@@ -329,6 +330,8 @@ export default {
   background: #000052;
   position: relative;
   .content {
+    overflow-x: hidden;
+    width: 100%;
     .luckyWheel {
       position: relative;
       .setbg(100%, 1130rpx, 'lottory_bg.png');
