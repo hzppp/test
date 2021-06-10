@@ -1,7 +1,7 @@
 <template>
 	<view class="cars-page">
         <view class="image-wrap" v-if="serialData.videoUrl">
-            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
+            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
