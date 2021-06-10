@@ -39,7 +39,7 @@
                 <view class="label-name">{{ item.typeText }}</view>
               </view>
               <view class="text">{{ item.name }}</view>
-			   <view class="desc">
+			   <!--<view class="desc">
 				  <view class="left-area">
 					  <view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view>
 					  <view class="info">
@@ -53,7 +53,7 @@
 					  <view class="tag during" v-show="statusFilter(item.startTime, item.endTime) == 'during'">进行中</view>
 					  <view class="tag after" v-show="statusFilter(item.startTime, item.endTime) == 'after'">已结束</view>
 				  </view>
-			  </view>
+			  </view>-->
             </view>
           </block>
         </view>
