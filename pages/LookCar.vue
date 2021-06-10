@@ -5,15 +5,15 @@
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap>
+        <!-- <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap> -->
 
-
+<!-- 
         <view class="image-wrap">
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
-        </view>
+        </view> -->
 
         <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId" v-if="!serialData.videoUrl"></btnWrap>
+        <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
