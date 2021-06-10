@@ -7,10 +7,11 @@
         <!-- 按钮 -->
         <!-- <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap> -->
 
-<!-- 
+
         <view class="image-wrap">
+			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
-        </view> -->
+        </view>
 
         <!-- 按钮 -->
         <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
@@ -36,7 +37,7 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
-
+import domain from '@/configs/interface';
 
 export default {
     components: {btnWrap},
@@ -74,6 +75,16 @@ export default {
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
         },
+		// vr 图库
+		toVR(){
+		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId
+		let path = '/pages/webview?webURL=' + encodeURIComponent(url1)
+		
+		console.log(path)
+		uni.navigateTo({
+		  url: path,
+		})	
+		},
 		goXundijia(){
 			wx.aldstat.sendEvent('车系页获取实时底价点击')
 			uni.navigateTo({
@@ -126,6 +137,15 @@ export default {
             z-index: 2;
         }
     }
+	.vsIcon{
+		position: absolute;
+		width: 100rpx !important;
+		height: 100rpx !important;
+		top: 20rpx;
+		right: 20rpx;
+		
+		box-sizing: border-box;
+	}
     .btn-wrap {
         position: fixed;
         width: 100%;

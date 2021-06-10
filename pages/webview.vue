@@ -13,6 +13,7 @@
 			}
 		},
 		async onLoad(options) {
+			console.log(options.webURL)
 			this.getURL(options)
 		},
 		methods: {

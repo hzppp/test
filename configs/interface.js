@@ -211,7 +211,9 @@ const config = {
 		// 抽奖
 		startLottery: `${DOMAIN.changan}/api/xcx/lottery/start`,
 		// 奖励详情
-		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`
+		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`,
+		// 图库url
+		VRouter: `${DOMAIN.changan}/wap/#/outer`
 	},
 	getAPI(key) {
 		let url;
