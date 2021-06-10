@@ -39,7 +39,7 @@
 			"path": "pages/welfareActivity",
 			"style": {
 				"navigationBarTitleText": "活动",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},

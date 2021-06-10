@@ -13,7 +13,7 @@
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
-		<view class="serial-list">
+		<view class="serial-list" v-if = "content.coverSerialGroup">
 			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index" @tap="seeCarBtnClick(serialGroupItem)">
 				<view class="name">{{serialGroupItem.name}}</view>
 				<button class="see-car-btn">3D看车 ></button>
