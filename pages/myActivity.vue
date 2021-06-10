@@ -16,6 +16,21 @@
 								</view>
 								<view class="text">{{item.name}}</view>
 							</view>
+              <view class="desc">
+                <view class="left-area">
+                  <view><view class="locationCot" v-if="item.type!==3"><view class="cityName">{{item.city}}</view><view class="line"></view></view><view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view></view>
+                  <view class="info">
+                    <view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
+                    <view v-show="item.visitCount && item.clueCount" class="line"></view>
+                    <view v-show="item.clueCount"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+                  </view>
+                </view>
+                <view class="right-area">
+                  <view class="tag before" v-show="statusFilter(item.startTime, item.endTime) == 'before'">即将开始</view>
+                  <view class="tag during" v-show="statusFilter(item.startTime, item.endTime) == 'during'">进行中</view>
+                  <view class="tag after" v-show="statusFilter(item.startTime, item.endTime) == 'after'">已结束</view>
+                </view>
+              </view>
 						</view>
 					</block>
 				</view>
@@ -53,6 +68,20 @@
 				],
 			}
 		},
+  filters: {
+    // 数字过滤器
+    numFilter (num) {
+      if (num > 100000) {
+        return '10万+'
+      } else {
+        return num
+      }
+    },
+    // 日期过滤器
+    dateFilter (date) {
+      return date.split(' ')[0]
+    },
+  },
 		async onShow() {
 
 		},
@@ -61,21 +90,90 @@
 		},
 
 		methods: {
-			toActivityPage(item) {
-				if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
-						  let url = '/pages/lbActivity?id=' + item.id
-						  uni.navigateTo({
-						    url
-						  })
-				}else{
-					let url = '/pages/activity?id=' + item.id
-					uni.navigateTo({
-						url
-					})
-				}
-				
-			},
-
+      // 状态过滤器
+      statusFilter (startTime, endTime) {
+        startTime = new Date(startTime.replace(/-/g, '/')).getTime()
+        endTime = new Date(endTime.replace(/-/g, '/')).getTime()
+        let crtTime = new Date().getTime()
+        let status = ''
+        if (crtTime < startTime) {
+          status = 'before'
+        } else if (crtTime > endTime) {
+          status = 'after'
+        } else {
+          status = 'during'
+        }
+        return status
+      },
+      toActivityPage(item) {
+        wx.aldstat.sendEvent('活动点击')
+        console.log('item.redirectType',item)
+        if(new Date().getTime() - new Date(item.endTime).getTime() >= 0) {
+          uni.showToast({
+            title: "活动结束啦",
+            icon: "none"
+          })
+          return
+        }
+        //0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
+        switch(item.redirectType) {
+          case 0: {
+            if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+              let url = '/pages/lbActivity?id=' + item.id
+              uni.navigateTo({
+                url
+              })
+            }else{
+              let url = '/pages/activity?id=' + item.id
+              uni.navigateTo({
+                url
+              })
+            }
+            break;
+          }
+          case 1: {
+            if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
+              uni.navigateTo({
+                url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+              })
+            }
+            break;
+          }
+          case 2: {
+            uni.navigateToMiniProgram({
+              appId: item.appId,
+              path: item.miniUrl,
+              success: res => {
+                // 打开成功
+                console.log("打开成功", res);
+              },
+              fail: err => {
+                console.log("打开失败", err);
+                uni.showToast({
+                  title: "跳转小程序失败",
+                  icon: "none"
+                })
+              },
+              envVersion: 'trial'
+            });
+            break;
+          }
+          default: {
+            if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+              let url = '/pages/lbActivity?id=' + item.id
+              uni.navigateTo({
+                url
+              })
+            }else{
+              let url = '/pages/activity?id=' + item.id
+              uni.navigateTo({
+                url
+              })
+            }
+            break;
+          }
+        }
+      },
 			// 获取活动列表
 			async getList() {
 				if (!this.hasNext) {
@@ -133,7 +231,6 @@
 
 	.activity-list .pic-text {
 		margin-top: 15rpx;
-		box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.10);
 		.label{
 			font-size: 20rpx;
 			    color: #fff;

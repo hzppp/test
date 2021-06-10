@@ -5,7 +5,7 @@
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
-		<view class="date" v-if="content && !isActEnded">
+		<view class="date" v-if="content && isActStart">
 			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
@@ -60,7 +60,8 @@
 				artDownDate: [],
 				activityId: '',
 				content: "",
-        isActEnded: false
+        isActEnded: false,
+        isActStart: false,
 			}
 		},
 		mixins: [shouquan],
@@ -85,7 +86,8 @@
 					data={}
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-				app.Interval = setInterval(() => {
+        this.isActStart = (new Date().getTime() - new Date(data.startTime).getTime() > 0)
+            app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');

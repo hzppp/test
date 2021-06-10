@@ -307,8 +307,6 @@ export default {
           break;
         }
       }
-
-
     },
     resetjson() {
       this.getWelfarePageNumber = 1
