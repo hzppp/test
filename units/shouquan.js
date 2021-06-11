@@ -24,7 +24,10 @@ export default {
         },
         getWxUserInfoAuth(e) {
             console.log('getWxUserInfoAuth', e)
-            wx.getUserProfile({
+
+			// #ifdef MP-WEIXIN
+            console.log('#ifdef MP-WEIXIN')
+            uni.getUserProfile({
                 desc: '完善信息',
                 success: async (res) => {
                     let info = res
@@ -56,8 +59,8 @@ export default {
                                 let {data,code} = sRes
                                 if(code == 1) {
                                     uni.setStorageSync('haveUserInfoAuth',true)
-                                    app.globalData.haveUserInfoAuth = true
-                                    this.haveUserInfoAuth = true
+                                    app.globalData.haveUserInfoAuth = !!sRes.wxName
+                                    this.haveUserInfoAuth = !!sRes.wxName
                                     uni.setStorageSync('wxUserInfo',data)
                                     app.globalData.wxUserInfo = data
                                 }
@@ -75,6 +78,7 @@ export default {
                     app.globalData.wxUserInfo = null
                 }
             })
-        }
+            // #endif
+		}
     }
 }

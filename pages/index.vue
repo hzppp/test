@@ -2,22 +2,24 @@
 	<view class="index">
 		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title">
 			<view class="city">
-				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
-					mode="multiSelector" :range="[provinceList, cityList]" range-key="name" class="select-city">
+				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex" mode="multiSelector"
+				 :range="[provinceList, cityList]" range-key="name" class="select-city">
 					<view class="cityName">{{ selectCity || indexCity.name }}</view>
 					<image src="../static/images/arrowBottom.png" class="img"></image>
 				</picker>
 			</view>
 		</pageTopCity>
-		<viewTabBar :current="0"></viewTabBar>
+    <!--  #ifndef MP-TOUTIAO  -->
+    <viewTabBar :current="0"></viewTabBar>
+    <!--  #endif  -->
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
-		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners" v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 		<view class="content">
-		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
+			<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
 				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
-		<!-- 	<view class="linkCont" v-if="false">
+			<!-- 	<view class="linkCont" v-if="false">
 				<view class="linkContL"> -->
-<!-- 					<view class="article linkItem" @tap="goArtList">
+			<!-- 					<view class="article linkItem" @tap="goArtList">
 						<view class="title">发现</view>
 						<view class="info">探索更多精彩</view>
 						<image class="img" lazy-load
@@ -62,8 +64,7 @@
 				<view class="hotTab">
 					精选
 				</view>
-				<view v-for="(item,index) in pageData.list" :key="index" class="actItem"
-					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
+				<view v-for="(item,index) in pageData.list" :key="index" class="actItem" @tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
 					<view :class="item.contentType == 3 ? 'playType':''">
 						<!--contentType 1文章资讯，2活动，3直播-->
 						<!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -139,7 +140,7 @@
 				testUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
 
 				fontLoaded: false,
-				timeOutEvent:''
+				timeOutEvent: ''
 			}
 		},
 		computed: {
@@ -164,56 +165,64 @@
 		filters: {
 			actType(type) {
 				switch (type) {
-					case 1: {
-						return '购车福利'
-						break;
-					}
-					case 2: {
-						return '车主福利'
-						break;
-					}
-					case 3: {
-						return '线下活动'
-						break;
-					}
-					case 4: {
-						return '试驾活动'
-						break;
-					}
+					case 1:
+						{
+							return '购车福利'
+							break;
+						}
+					case 2:
+						{
+							return '车主福利'
+							break;
+						}
+					case 3:
+						{
+							return '线下活动'
+							break;
+						}
+					case 4:
+						{
+							return '试驾活动'
+							break;
+						}
 				}
 			},
 			formatType(type) {
 				// <!--contentType 1文章资讯，2活动，3直播-->
 				// <!--status 当为直播类型时 1直播中  2预告  3回放-->
 				switch (type) {
-					case 1: {
-						return '资讯'
-						break;
-					}
-					case 2: {
-						return '活动'
-						break;
-					}
+					case 1:
+						{
+							return '资讯'
+							break;
+						}
+					case 2:
+						{
+							return '活动'
+							break;
+						}
 				}
 			},
 			formatStatus(status) {
 				// <!--contentType 1文章资讯，2活动，3直播-->
 				// <!--status 当为直播类型时 1直播中  2预告  3回放-->
 				switch (status) {
-					case 1: {
-						return '直播中'
-						break;
-					}
-					case 3: {
-						return '回放'
-						break;
-					}
+					case 1:
+						{
+							return '直播中'
+							break;
+						}
+					case 3:
+						{
+							return '回放'
+							break;
+						}
 				}
 			},
 
 		},
 		onHide() {
-			clearTimeout(this.timeOutEvent); 
+			clearTimeout(this.timeOutEvent);
 		},
 		async onShow(options) {
 			await distance.getLocation()
@@ -237,14 +246,22 @@
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
 			}
+			console.log('tttthis', this)
 			this.timeOutEvent = setInterval(() => {
-			  console.log('开始及时')
-			if(this.pageData.banners&& this.pageData.banners.length> 0){
-			  this.$refs.cmSwiper.moveRight()
-			}
+				console.log('开始及时')
+				if (this.pageData.banners && this.pageData.banners.length > 0) {
+					// #ifdef MP-TOUTIAO
+          console.log('this.$children',this.$children,this)
+					this.$children[2].moveRight()
+					// #endif
+					// #ifndef MP-TOUTIAO
+					this.$refs.cmSwiper.moveRight()
+					// #endif
+
+				}
 			}, 4000); //这里设置定时
-			
-			
+
+
 		},
 		watch: {
 			indexCity: function(newVal) {
@@ -256,7 +273,7 @@
 				console.log('sssssssss', res)
 				return res.code == 1 && res.data ? res.data : []
 			})
-			this.sgList = [...sgList]	
+			this.sgList = [...sgList]
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -397,46 +414,53 @@
 				//status:1直播中，2预告，3回放
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
-					case 1: {
-						wx.aldstat.sendEvent('精选资讯点击')
-						uni.navigateTo({
-							url: `/pages/article?articleId=${id}`
-						})
-						break;
-					}
-					case 2: {
-						wx.aldstat.sendEvent('精选活动点击')
-						uni.navigateTo({
-							url: `/pages/activity?id=${id}`
-						})
-						break;
-					}
-					case 3: {
-						wx.aldstat.sendEvent('精选直播点击')
-						switch (status) {
-							case 0: {
-								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
-								})
-								break;
-							}
-							case 1: {
-								this.goMP(id, 'verticalLive', sourceId)
-								break;
-							}
-							case 2: {
-								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
-								})
-								break;
-							}
-							case 3: {
-								this.goMP(id, 'verticalPlayback', sourceId)
-								break;
-							}
+					case 1:
+						{
+							wx.aldstat.sendEvent('精选资讯点击')
+							uni.navigateTo({
+								url: `/pages/article?articleId=${id}`
+							})
+							break;
 						}
-						break;
-					}
+					case 2:
+						{
+							wx.aldstat.sendEvent('精选活动点击')
+							uni.navigateTo({
+								url: `/pages/activity?id=${id}`
+							})
+							break;
+						}
+					case 3:
+						{
+							wx.aldstat.sendEvent('精选直播点击')
+							switch (status) {
+								case 0:
+									{
+										uni.navigateTo({
+											url: `/pages/liveDetail?liveId=${id}`
+										})
+										break;
+									}
+								case 1:
+									{
+										this.goMP(id, 'verticalLive', sourceId)
+										break;
+									}
+								case 2:
+									{
+										uni.navigateTo({
+											url: `/pages/liveDetail?liveId=${id}`
+										})
+										break;
+									}
+								case 3:
+									{
+										this.goMP(id, 'verticalPlayback', sourceId)
+										break;
+									}
+							}
+							break;
+						}
 				}
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
@@ -558,7 +582,8 @@
 	}
 
 	.content {
-		padding: 0 32rpx 150rpx;		
+		padding: 0 32rpx 150rpx;
+
 		.bannerTop {
 			width: 100%;
 			height: 500rpx;

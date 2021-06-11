@@ -4,8 +4,10 @@
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 
+<!--    #ifdef MP-WEIXIN-->
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
 			@tap="getWxUserInfoAuth"></button>
+<!--  #endif  -->
 		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
@@ -70,8 +72,9 @@
 			<image src=""></image>
 		</view> -->
 		<testDrive aldEventName='我的页面预约试驾'></testDrive>
+<!--  #ifndef MP-TOUTIAO  -->
 		<viewTabBar :current="4"></viewTabBar>
-
+<!-- #endif -->
 	</view>
 </template>
 

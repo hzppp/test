@@ -119,7 +119,7 @@
 				})
 				if(code == 10){
 					// 活动以下架
-					console.log('活动已经结束')
+					console.log('活动已经结束',data,code)
 					this.actiDone =  true
 				}else{
 				if (data) {
@@ -129,7 +129,7 @@
 							url: '/pages/lotteryPage?activityId=' + this.activityId
 						})
 					}
-				}	
+				}
 				}
 				this.soureDone = true
 

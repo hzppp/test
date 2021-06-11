@@ -1,7 +1,9 @@
 <template>
   <view class="welfareActivity">
     <testDrive :aldEventName="'活动列表预约试驾'"></testDrive>
+    <!--  #ifndef MP-TOUTIAO  -->
     <viewTabBar :current="3"></viewTabBar>
+    <!--  #endif  -->
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"

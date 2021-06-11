@@ -286,6 +286,12 @@
 				"selectedIconPath": "static/images/tab2_icon_c.png"
 			},
 			{
+				"pagePath": "pages/exhibition",
+				"text": "云展厅",
+				"iconPath": "static/images/tab3_icon.png",
+				"selectedIconPath": "static/images/tab3_icon_c.png"
+			},
+			{
 				"pagePath": "pages/welfareActivity",
 				"text": "活动",
 				"iconPath": "static/images/tab4_icon.png",

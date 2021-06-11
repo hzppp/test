@@ -128,5 +128,9 @@ export default {
                 console.log('ttt2',app.globalData.haveUserInfoAuth)
             }
         }
+		// #ifdef MP-TOUTIAO
+		app.globalData.haveUserInfoAuth = true;
+        console.log('tttttttttttiao true')
+		// #endif
     }
 }

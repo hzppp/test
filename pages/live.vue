@@ -32,12 +32,12 @@
 						<!-- <view class="status blue" v-if="item.status==0 || item.status==2">
 						<view class="icon1"></view> {{item.startTime}}开始播放
 					</view>
-					
-					<view class="icon1 status yellow" v-if="item.status==1"> 
-		
+
+					<view class="icon1 status yellow" v-if="item.status==1">
+
 					</view>
 					<view class="icon1  status green" v-if="item.status==3">
-		
+
 					</view> -->
 					</view>
 					<view class="title">
@@ -53,7 +53,9 @@
 				<view class="none-text">暂无数据</view>
 			</view>
 		</block>
-		<viewTabBar :current="1"></viewTabBar>
+    <!--  #ifndef MP-TOUTIAO  -->
+    <viewTabBar :current="1"></viewTabBar>
+    <!--  #endif  -->
 	</view>
 </template>
 
@@ -88,7 +90,7 @@
 			this.getList()
 		},
 		async onPullDownRefresh() {
-			
+
 			uni.showLoading({
 				title: '正在加载...'
 			})
@@ -100,7 +102,7 @@
 					  uni.hideLoading()
 					  uni.stopPullDownRefresh()
 			}, 300)
-			
+
 		},
 		async onReachBottom(){
 			this.getList()
@@ -176,7 +178,7 @@
 						extraData: {},
 						envVersion: 'trial',
 						success(res) {
-							// 打开成功 
+							// 打开成功
 						}
 					})
 				} else if (item.status == 3) {
