@@ -99,8 +99,7 @@
 				this.content = data
 				if (data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity') {
 					uni.reLaunch({
-						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options
-							.sourceUserId
+						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
 					})
 				}
 

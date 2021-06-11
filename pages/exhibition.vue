@@ -42,10 +42,11 @@
 					cityCode = app.globalData.currentLocation.selectedCityData.cityId ? app.globalData.currentLocation.selectedCityData.cityId : 1000000262
 					name = app.globalData.currentLocation.selectedCityData.city ? app.globalData.currentLocation.selectedCityData.city : '重庆市'
 				}
+				let openId =  app.globalData.wxUserInfo.openId;
 				if(this.sid){
-					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&sid=' + this.sid
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&sid=' + this.sid + '&openId=' + openId
 				}else{
-					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&openId=' + openId
 				}
 				
 				console.log(this.webrul );

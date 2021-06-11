@@ -38,7 +38,7 @@
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
-
+let app = getApp()
 export default {
     components: {btnWrap},
     data() {
@@ -77,7 +77,9 @@ export default {
         },
 		// vr 图库
 		toVR(){
-		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId
+		let openId =  app.globalData.wxUserInfo.openId;	
+		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId +'&openId=' + openId
+		console.log(url1)
 		let path = '/pages/webview?webURL=' + encodeURIComponent(url1)
 		
 		console.log(path)
