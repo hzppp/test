@@ -108,7 +108,7 @@
       toActivityPage(item) {
         wx.aldstat.sendEvent('活动点击')
         console.log('item.redirectType',item)
-        if(new Date().getTime() - new Date(item.endTime).getTime() >= 0) {
+        if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
           uni.showToast({
             title: "活动结束啦",
             icon: "none"

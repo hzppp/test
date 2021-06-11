@@ -91,7 +91,7 @@
 					data = {}
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-				this.isActStart = (new Date().getTime() - new Date(data.startTime).getTime() > 0)
+				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g,"/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
