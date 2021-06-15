@@ -9,7 +9,7 @@
 
 
         <view class="image-wrap">
-			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR"></image>
+			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
         </view>
 
