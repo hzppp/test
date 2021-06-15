@@ -44,8 +44,8 @@
                <view><view class="locationCot" v-if="item.type==3"><view class="cityName">{{ selectCity || indexCity.name }}</view><view class="line"></view></view><view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view></view>
                <view class="info">
                <view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
-               <view v-show="item.visitCount && item.clueCount" class="line"></view>
-               <view v-show="item.clueCount"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+               <view v-show="item.visitCount && item.clueCount && item.redirectType==0" class="line"></view>
+               <view v-show="item.clueCount && item.redirectType==0"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
                </view>
              </view>
              <view class="right-area">
@@ -242,13 +242,13 @@ export default {
     toActivityPage(item) {
       wx.aldstat.sendEvent('活动点击')
       console.log('item.redirectType',item)
-      if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
-        uni.showToast({
-          title: "活动结束啦",
-          icon: "none"
-        })
-        return
-      }
+      // if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
+      //   uni.showToast({
+      //     title: "活动结束啦",
+      //     icon: "none"
+      //   })
+      //   return
+      // }
       //0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
       switch(item.redirectType) {
         case 0: {
@@ -420,7 +420,10 @@ export default {
     },
     // 日期过滤器
     dateFilter (date) {
-      return date.split(' ')[0]
+      if(!date) {
+        return date
+      }
+      return date.split(' ')[0].replace(/-/g,'.')
     },
   }
 }

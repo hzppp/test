@@ -5,11 +5,12 @@
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
-		<view class="date" v-if="content && isActStart">
+		<view class="date" v-if="content && isActStart && !isActEnded">
 			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
 				class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
+    <view class="date" v-if="isActEnded">活动已结束</view>
 
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
