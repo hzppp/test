@@ -266,6 +266,9 @@ export default {
           break;
         }
         case 1: {
+			api.fetchActivityVisit({
+				'activityId': item.id
+			})
           if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
             uni.navigateTo({
               url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
@@ -274,6 +277,9 @@ export default {
           break;
         }
         case 2: {
+			api.fetchActivityVisit({
+				'activityId': item.id
+			})
             uni.navigateToMiniProgram({
               appId: item.appId,
               path: item.miniUrl,

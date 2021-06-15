@@ -208,6 +208,9 @@
 				if (this.imageData) {
 					if (this.imageData.type == 1) {
 						// H5
+						api.fetchActivityVisit({
+							'activityId': this.imageData.originalId
+						})
 						let url = this.imageData.url
 						uni.navigateTo({
 							url: `/pages/webview?webURL=${url}`

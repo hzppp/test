@@ -98,12 +98,18 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
+				if(data.redirectType == 1 && data.duibaUrl && data.duibaUrl.substring(0, 4) == "http" ){
+				uni.reLaunch({
+				  url: `/pages/webview?webURL=${encodeURI(data.duibaUrl)}`,
+				})
+				}
 				if (data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity') {
 					uni.reLaunch({
 						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
 					})
 				}
-
+				
+				
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
