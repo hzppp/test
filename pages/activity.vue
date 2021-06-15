@@ -25,7 +25,7 @@
 		</view>
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
+			<view class="type-c" v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
@@ -214,6 +214,7 @@
 					ss = 0
 				}
 				let v = [this.add0(days), this.add0(hours), this.add0(minutes), ss]
+				console.log('vvvvvvv==' + v)
 				this.artDownDate = v
 			},
 			// +0

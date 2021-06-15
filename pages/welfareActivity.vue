@@ -242,13 +242,19 @@ export default {
     toActivityPage(item) {
       wx.aldstat.sendEvent('活动点击')
       console.log('item.redirectType',item)
-      // if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
-      //   uni.showToast({
-      //     title: "活动结束啦",
-      //     icon: "none"
-      //   })
-      //   return
-      // }
+	  // web 小程序  
+	  if((item.redirectType == 1 ||item.redirectType == 2) &&  !(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity')){
+		  api.fetchActivityVisit({
+		  	'activityId': item.id
+		  })
+		 if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
+		   uni.showToast({
+		     title: "活动结束啦",
+		     icon: "none"
+		   })
+		   return
+		 } 
+	  }
       //0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
       switch(item.redirectType) {
         case 0: {
@@ -266,9 +272,6 @@ export default {
           break;
         }
         case 1: {
-			api.fetchActivityVisit({
-				'activityId': item.id
-			})
           if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
             uni.navigateTo({
               url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
@@ -277,9 +280,6 @@ export default {
           break;
         }
         case 2: {
-			api.fetchActivityVisit({
-				'activityId': item.id
-			})
             uni.navigateToMiniProgram({
               appId: item.appId,
               path: item.miniUrl,
