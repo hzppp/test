@@ -1,11 +1,11 @@
 <template>
 <view>
-  <movable-area class="movableArea">
-    <movable-view class="movableView" :position="position" :x="x" :y="y" :direction="direction" :damping="damping" :inertia="true"
+  <view class="movableArea">
+    <view class="movableView" :position="position" :x="x" :y="y" :direction="direction" :damping="damping" :inertia="true"
                   @change="onChange" @touchend="onTouchend">
       <button class="btn" @tap="goTestDrive"></button>
-    </movable-view>
-  </movable-area>
+    </view>
+  </view>
 </view>
 </template>
 
@@ -93,16 +93,20 @@ name: "testDrive",
 }
 .movableArea {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 0rpx;
   width: 100%;
   height: 100%;
   pointer-events: none; //设置area元素不可点击，则事件便会下移至页面下层元素
   z-index: 9999;
+  // background: #4CD964;
 
 .movableView {
+	position: absolute;
+	// background: #007AFF;
   pointer-events: auto; //可以点击
   border-radius: 100%;
+  right: 0;
   width: 130rpx;
   height: 160rpx;
   box-sizing: border-box;

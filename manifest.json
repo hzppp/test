@@ -59,9 +59,9 @@
     "mp-weixin" : {
         "appid" : "wxb36fb5205e5afb36",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "es6" : false,
-            "postcss" : true,
+            "postcss" : false,
             "minified" : false
         },
         "usingComponents" : true,
@@ -78,7 +78,11 @@
         "usingComponents" : true
     },
     "mp-toutiao" : {
-        "usingComponents" : true
+        "usingComponents" : true,
+        "appid" : "ttd31ca5a14c2418e501",
+        "setting" : {
+            "minified" : true
+        }
     },
     "uniStatistics" : {
         "enable" : false
