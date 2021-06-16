@@ -71,7 +71,7 @@
 					data = {}
 				} = await api.getActivityContent(contentId);
 				let item = data
-				console.log('dadad' + JSON.stringify(item))
+				// console.log('dadad' + JSON.stringify(item))
 				switch(item.redirectType) {
 				  case 0: {
 				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
