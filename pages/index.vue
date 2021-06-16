@@ -12,6 +12,7 @@
 		<viewTabBar :current="0"></viewTabBar>
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
 		<view class="content">
 		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
 				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
@@ -538,11 +539,17 @@
 		}
 	}
 
+	.morenpic {
+		height: 970rpx;
+		width: 676rpx;
+		border-radius: 10px;
+		margin-left: 37rpx;
+	}
 	.index {
 		// padding-top: 16rpx;
 		overflow-x: hidden;
 		// font-family: PingFang SC;
-		color: #3C4650;
+		color: #3C4650;		
 	}
 
 	.ovh {
@@ -813,4 +820,7 @@
 			}
 		}
 	}
+	
+
+	
 </style>
