@@ -280,6 +280,13 @@ export default {
           break;
         }
         case 2: {
+			if(item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36'){
+				// 说明是自己的小程序
+				uni.navigateTo({
+				  url: item.miniUrl
+				})
+				return
+			}
             uni.navigateToMiniProgram({
               appId: item.appId,
               path: item.miniUrl,
