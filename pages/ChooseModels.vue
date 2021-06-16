@@ -50,9 +50,9 @@
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
                 if(options.mids) {
-                    this.canSelectLength = 4 - options.mids.split(",").length
+                    this.canSelectLength = 6 - options.mids.split(",").length
                 }else {
-                    this.canSelectLength = 4
+                    this.canSelectLength = 6
                 }
                 this.reqModelsList(options.serialId)
             },
