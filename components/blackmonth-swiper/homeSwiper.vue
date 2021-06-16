@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import api from '@/public/api/index'
 	export default {
 		props: {
 			swiperList: {
@@ -64,6 +65,79 @@
 					}
 				}
 			},
+			
+			async getActData(contentId){
+			    let {
+					data = {}
+				} = await api.getActivityContent(contentId);
+				let item = data
+				console.log('dadad' + JSON.stringify(item))
+				switch(item.redirectType) {
+				  case 0: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
+				  case 1: {
+				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
+				      uni.navigateTo({
+				        url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+				      })
+				    }
+				    break;
+				  }
+				  case 2: {
+					if(item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36'){
+						// 说明是自己的小程序
+						uni.navigateTo({
+						  url: item.miniUrl
+						})
+						return
+					}	
+				      uni.navigateToMiniProgram({
+				        appId: item.appId,
+				        path: item.miniUrl,
+				        success: res => {
+				          // 打开成功
+				          console.log("打开成功", res);
+				        },
+				        fail: err => {
+				          console.log("打开失败", err);
+				          uni.showToast({
+				            title: "跳转小程序失败",
+				            icon: "none"
+				          })
+				        },
+				        envVersion: 'trial'
+				      });
+				    break;
+				  }
+				  default: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
+				}
+			},
+			
 			touchstart(e) {
 				this.longlock = false; // 每次点击都设置为false
 				// 加背景颜色操作
@@ -144,10 +218,11 @@
 						break;
 					}
 					case 2: {
-						wx.aldstat.sendEvent('精选活动点击')
-						uni.navigateTo({
-							url: `/pages/activity?id=${contentId}`
-						})
+						this.getActData(contentId)
+						// wx.aldstat.sendEvent('精选活动点击')
+						// uni.navigateTo({
+						// 	url: `/pages/activity?id=${contentId}`
+						// })
 						break;
 					}
 					case 3: {
