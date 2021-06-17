@@ -230,7 +230,7 @@
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}
@@ -240,7 +240,7 @@
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}

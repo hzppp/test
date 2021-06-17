@@ -6,6 +6,7 @@ var ENV = {
 //当前环境 （上线前检查）！！！！
 
 const CUR_ENV = ENV.RELEASE;
+const version = 1001;
 
 // 正式域名
 var DOMAIN_R = {
@@ -41,6 +42,8 @@ const config = {
 	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
+	
+	version:version,
 
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
 

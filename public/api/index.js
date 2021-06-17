@@ -863,6 +863,9 @@ module.exports = {
 	    let {data} = await request({
 	        url:domain.getAPI('setLivePage'),
 	        method: "GET",
+			data:{
+				'version':domain.version
+			}
 	    })
 	    return data
 	},
