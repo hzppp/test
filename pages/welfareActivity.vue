@@ -301,7 +301,7 @@ export default {
                   icon: "none"
                 })
               },
-              envVersion: 'trial'
+              // envVersion: 'trial'
             });
           break;
         }

@@ -453,7 +453,7 @@
 					fail: err => {
 						console.log(err);
 					},
-					envVersion: 'trial'
+					// envVersion: 'trial'
 				});
 			},
 			goArtList() {
