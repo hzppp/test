@@ -11,10 +11,12 @@
         <view class="image-wrap">
 			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
+		    <!-- 按钮 -->
+		     <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
         </view>
 
-        <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
+      
+   
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
