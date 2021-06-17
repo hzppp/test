@@ -24,9 +24,9 @@
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
-                    {{currentDealer.name?currentDealer.name:""}}
+                    {{currentDealer.name?currentDealer.name:"暂无对应经销商"}}
                 </view>
-                <view class="arrow"></view>
+                <view class="arrow" v-show="currentDealer.name"></view>
             </view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
@@ -312,6 +312,9 @@ const COUNTDOWN = 60
                         icon:"none"
                     })
                 }
+				if(!this.currentDealer.name){
+					return
+				}
                 // /this.currentCity.id
                 uni.navigateTo({
                   url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`

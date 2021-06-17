@@ -53,9 +53,9 @@
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
-                    {{currentDealer.name? currentDealer.name : ''}}
+                    {{currentDealer.name? currentDealer.name : '暂无对应经销商'}}
                 </view>
-                <view class="arrow"></view>
+                <view v-show="currentDealer.name" class="arrow"></view>
             </view>
             <!-- 经销商E -->
             <view class="btn-area">
@@ -215,6 +215,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     })
                 }
                 // /this.currentCity.id
+				if(!this.currentDealer.name){
+					return
+				}
                 uni.navigateTo({
 				  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`
 				})
