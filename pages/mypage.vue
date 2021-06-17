@@ -56,6 +56,10 @@
 					<view class="p1">新媒体营销查询</view>
 					<view class="right isApprove"></view>
 				</view>
+				<view class="box-list list5" @tap="tomSuggestion">
+					<view class="p1">意见反馈</view>
+					<view class="right isApprove"></view>
+				</view>
 				<!-- <view class="box-list list4">
 					<navigator version="trial" class="activity-btn" target='miniProgram' app-id='wx1c5c0ec0757002c2'
 						path='pages/index' hover-class="" redirect></navigator>
@@ -201,6 +205,11 @@
 			tomyvideo() {
 				uni.navigateTo({
 					url: '/pages/myvideo'
+				})
+			},
+			tomSuggestion(){
+				uni.navigateTo({
+					url: '/pages/Suggestion'
 				})
 			},
 			goImageDetail() {

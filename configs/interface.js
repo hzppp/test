@@ -3,7 +3,7 @@ var ENV = {
 	RELEASE: 0, //正式环境 wxe6ffa5dceb3b003b
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
-//当前环境 （上线前检查）！！！！
+//当前环境 （上线前检查）！！！ 
 
 const CUR_ENV = ENV.TEST;
 
@@ -14,7 +14,8 @@ var DOMAIN_R = {
 	host:"https://pocket.pcauto.com.cn",
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	webUrl:'https://ccar.pcauto.com.cn/h5/' //云展厅
+	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
+	UPC:'https://upc.pcauto.com.cn/upload_quick.jsp?referer=http://play10.pconline.com.cn/'
 }
 
 //测试环境域名
@@ -27,7 +28,8 @@ var DOMAIN_T = {
 	// changan:'https://devqd-changan.pcauto.com.cn/',
 	// changan:"https://devqd-changan.pcauto.com.cn",
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
+	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+    UPC:'https://v62.pcauto.com.cn/upload_quick.jsp?referer=http://play10.pconline.com.cn/'
 }
 
 
