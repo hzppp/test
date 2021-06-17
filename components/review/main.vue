@@ -3,19 +3,10 @@
 		<view class="main__content">
 			<view class="main__content__title">{{ mainData.name }}</view>
 			<view class="main__content__bottom">
-				<view
-					class="item"
-					v-for="(item, index) in mainData.parData"
-					:key="index"
-				>
+				<view class="item" v-for="(item, index) in mainData.parData" :key="index">
 					<view class="item__title"
 						>{{ item.title }}
-						<view
-							class="title_tip"
-							v-if="item.title == 'OTA'"
-							@tap="tipShow = true"
-							>?</view
-						>
+						<view class="title_tip" v-if="item.title == 'OTA'" @tap="tipShow = true">?</view>
 					</view>
 					<view class="item__value">{{ item.value }}</view>
 				</view>
@@ -27,17 +18,9 @@
 				<view class="popup__close--btn" @tap="tipShow = false"></view>
 				<view class="popup__text">
 					<view class="text__title">OTA、SOTA、FOTA介绍</view>
-					<view class="text"
-						>OTA英文全称是Over-the-Air
-						Technology，即空中下载技术的意思。通过网络从远程服务器下载新的软件更新包对自身系统进行升级。</view
-					>
-					<view class="text"
-						>FOTA是英文Firmware Over the
-						Air的缩写，即固件空中升级。</view
-					>
-					<view class="text"
-						>SOTA是英文Software-over-the-air的缩写，即软件空中升级。</view
-					>
+					<view class="text">OTA英文全称是Over-the-Air Technology，即空中下载技术的意思。通过网络从远程服务器下载新的软件更新包对自身系统进行升级。</view>
+					<view class="text">FOTA是英文Firmware Over the Air的缩写，即固件空中升级。</view>
+					<view class="text">SOTA是英文Software-over-the-air的缩写，即软件空中升级。</view>
 				</view>
 			</view>
 		</view>

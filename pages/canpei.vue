@@ -12,15 +12,17 @@
             <!-- 主要参数 -->
             <Main :PropsMainData='mainData' /> 
             <!-- 基础参数 -->
-            <Base :PropsBaseData='baseData' />
+            <Base :PropsBaseData='baseData' @addHighlightedModelId='addHighlightedModelId' />
             <!-- 智能化参数 -->
-            <Smart />
+            <Smart :PropsSmartData='smartData' @addHighlightedModelId='addHighlightedModelId' />
             <!-- 动力表现参数 -->
-            <Power />
+            <Power :PropsPowerData='powerData' @addHighlightedModelId='addHighlightedModelId' />
             <!-- 外部配置参数 -->
-            <External />
+            <External :PropsExternalData='externalData' @addHighlightedModelId='addHighlightedModelId' />
             <!-- 内部配置参数 -->
-            <Internal />
+            <Internal :PropsInternalData='internalData' @addHighlightedModelId='addHighlightedModelId' />
+            <!-- 底线 -->
+            <view class="bottom__content"><view class="bottom__line"></view>我是有底线的<view class="bottom__line"></view></view>
         </view>
         <!-- 参配概述页 E -->
         <!-- 参数配置页 S -->
@@ -122,7 +124,7 @@
                                         <view class="canpei_head_right"></view>
                                         <view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item2,idx) in item1.detail" :key="idx">
-                                                <view class="right_list">
+                                                <view :class="['right_list', needHighlighted.includes(currentModelList[index]) ? 'highlighted' : '']">
                                                     <block v-for="(d,i) in item2" :key="i">
                                                         <!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
                                                         <block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
@@ -217,16 +219,28 @@
 				navigateBack: '-1',
                 tag: true,
                 tabWhich:1, // tab 选项
-
+                needHighlighted: [], //需要高亮的列-车型id列表
+                currentModelList: [], //当前每列的车型
                 mainData: {}, // 概述页的主要参数数据
                 baseData: {}, // 概述页的基础参数数据
+                smartData: [], // 概述页的智能参数数据
+                powerData: {}, // 概述页的动力参数数据
+                externalData: {}, // 概述页的外部参数数据
+                internalData: {}, // 概述页的内部参数数据
 			}
 		},
 		watch: {
 			"Data.detailArray"(val) {
 				this.max = val.length;
 				this.width = 280 + val.length * 250;
-			}
+			},
+            // needHighlighted(v) {
+            //     console.log('vvvvvvvvvvvv :>> ', v);
+            //     let mids = this.mids.concat(v)
+            //     this.mids = mids
+            //     this.init()
+            //     this.tabWhich = 2
+            // }
 		},
 		onUnload() {
 			this.$store.state.selectCars = {}
@@ -259,16 +273,31 @@
 		onShareAppMessage() { //分享
             let title = '参数配置'
             let desc = '点击查看'
-            let path = `pages/canpei?navigateBack=1&compare=true&mids=${this.mids}&serialId=${this.serialId}`
+            let path = `pages/canpei?navigateBack=1&compare=true&mids=${this.mids.join(",")}&serialId=${this.serialId}`
             return {title,desc,path}
 		},
 
 		methods: {
+            //添加选择的车型id - 高亮显示列
+            addHighlightedModelId(modelId) {
+                if(this.needHighlighted.includes(modelId)) {
+                    return
+                }else {
+                    this.needHighlighted.push(modelId)
+                }
+                let tempParam = [...new Set(this.mids.concat(this.needHighlighted))]
+                this.mids = tempParam 
+                console.log('this.needHighlighted :>> ', this.needHighlighted);
+                this.init()
+            },
 			async init() {
 				try {
 					let data = await this.getCarData(this.mids.join(","));
 					this.width += data.detailArray.length * 250;
 					console.log('data. :>> ', data.detailArray);
+                    data.detailArray.map( v => {
+                        this.currentModelList.push(v.modelId)
+                    })
 					this.max = data.detailArray.length;
 					this.Data = data;
 					this.sidName = data.detailArray[0].serialGorup;
@@ -387,8 +416,20 @@
 							},
 							success: res => {
                                 console.log('res1111 :>> ', res);
-                                this.mainData = res.data.mainParModule
-                                this.baseData = res.data.baseParModule
+                                this.mainData = res.data.mainParModule || {}
+                                this.baseData = res.data.baseParModule || {}
+                                this.powerData = res.data.dongliParModule || {}
+                                this.externalData = res.data.outerParModule || {}
+                                this.internalData = res.data.innerParModule || {}
+                                if(res.data.zngnParModule) {
+                                    this.smartData.push(res.data.zngnParModule)
+                                }
+                                if(res.data.znyjParModule) {
+                                    this.smartData.push(res.data.znyjParModule)
+                                }
+                                if(res.data.znzcParModule) {
+                                    this.smartData.push(res.data.znzcParModule)
+                                }
 							},
 							fail: err => {
 								this.$toast("网络异常")
@@ -414,12 +455,12 @@
         z-index: 9999;
         padding: 0 30rpx;
         box-sizing: border-box;
+        background-color: #fff;
         .config__tab {
             display: flex;
             height: 80rpx;
             color: #333333;
             font-size: 32rpx;
-            background-color: #fff;
             .config__tab__left {
                 position: relative;
                 margin-right: 44rpx;
@@ -456,6 +497,22 @@
         .review__main__title {
             text-align: center;
             background-color: green;
+        }
+        .bottom__content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40rpx 0;
+            font-size: 24rpx;
+            line-height: 24rpx;
+            color: #999999;
+            .bottom__line {
+                display: inline-block;
+                margin: 0 10rpx;
+                width: 40rpx;
+                height: 1rpx;
+                border-bottom: 1rpx solid #ECECEC;
+            }
         }
     }
 	.canpei {
@@ -781,11 +838,13 @@
 						.right_list {
 							width: calc(250rpx + 2rpx);
 							border-right: 2rpx solid #eee;
-
 							&:last-child {
 								width: 270rpx;
 								border: 0;
 							}
+                            &.highlighted {
+                                background-color: #e49;
+                            }
 
 							.right_list_item {
                                 display: flex;
