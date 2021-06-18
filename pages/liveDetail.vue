@@ -1,7 +1,7 @@
 <template>
 	<block v-if="liveObj">
 		<view class="live-detail">
-			<view class="pageTop-back-btn" @tap="navigateBack" :style="'top:' + height + 'px'"></view>
+			<view class="pageTop-back-btn" @tap="back" :style="'top:' + height + 'px'"></view>
 			<view class="banner">
 				<image :src="liveObj.cover"></image>
 			</view>
@@ -73,10 +73,10 @@
 			console.log('son==', this.height)
 		},
 		methods: {
-			navigateBack() {
+			back() {
 				if(this.share == 'share'){
-					uni.navigateTo({
-						 url:'/pages/index'
+					uni.reLaunch({
+						url:"/pages/authorization"
 					})
 				}else{
 				uni.navigateBack({
@@ -111,6 +111,7 @@
 		onLoad(options) {
 			this.id = options.liveId
 			this.share = options.share
+			console.log(options)
 			this.getLiveDetail()
 			// console.log('app.globalData.currentLocation:', app.globalData.currentLocation)
 		},

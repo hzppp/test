@@ -214,7 +214,7 @@
 					ss = 0
 				}
 				let v = [this.add0(days), this.add0(hours), this.add0(minutes), ss]
-				console.log('vvvvvvv==' + v)
+				// console.log('vvvvvvv==' + v)
 				this.artDownDate = v
 			},
 			// +0
