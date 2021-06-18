@@ -63,7 +63,7 @@
 					精选
 				</view>
 				<view v-for="(item,index) in pageData.list" :key="index" class="actItem"
-					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
+					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id)">
 					<view :class="item.contentType == 3 ? 'playType':''">
 						<!--contentType 1文章资讯，2活动，3直播-->
 						<!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -388,7 +388,7 @@
 					url: '/pages/exhibition'
 				})
 			},
-			handleLinkHot(type, id, status, sourceId) {
+			handleLinkHot(type, id, status, sourceId,liveSoureId) {
 				// type = 3
 				// id = 48965835
 				// status = 'verticalLive'
@@ -416,22 +416,22 @@
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${sourceId}`
 								})
 								break;
 							}
 							case 1: {
-								this.goMP(id, 'verticalLive', sourceId)
+								this.goMP(id, 'verticalLive', liveSoureId)
 								break;
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${sourceId}`
 								})
 								break;
 							}
 							case 3: {
-								this.goMP(id, 'verticalPlayback', sourceId)
+								this.goMP(id, 'verticalPlayback', liveSoureId)
 								break;
 							}
 						}

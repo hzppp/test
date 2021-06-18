@@ -57,6 +57,7 @@
 				title: '12312',
 				liveObj: null,
 				height: 0,
+				share:''
 			}
 		},
 		async created() {
@@ -73,9 +74,16 @@
 		},
 		methods: {
 			navigateBack() {
+				if(this.share == 'share'){
+					uni.navigateTo({
+						 url:'/pages/index'
+					})
+				}else{
 				uni.navigateBack({
 					delta: 1
-				})
+				})	
+				}
+				
 			},
 			async getLiveDetail() {
 				let {
@@ -96,11 +104,13 @@
 			}
 			return {
 				title: this.liveObj.title,
-				path: '/pages/liveDetail?liveId=' + this.id
+				path: '/pages/liveDetail?liveId=' + this.id + '&share=share',
+				imageUrl: this.liveObj.cover
 			}
 		},
 		onLoad(options) {
 			this.id = options.liveId
+			this.share = options.share
 			this.getLiveDetail()
 			// console.log('app.globalData.currentLocation:', app.globalData.currentLocation)
 		},
