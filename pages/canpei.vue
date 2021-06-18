@@ -94,7 +94,7 @@
                                     <block>
                                         <view class="car_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item,index) in Data.detailArray" :key="index">
-                                                <view class="car_list">
+                                                <view :class="['car_list', needHighlighted.includes(Data.detailArray[index].modelId)? 'highlighted' : '']">
                                                     <view class="item">
                                                         <text>{{item.modelName}}</text>
                                                         <view class="close" @tap="delCar(item.modelId,index)">
@@ -112,7 +112,7 @@
                                                         添加车型
                                                     </view>
                                                     <view class="add_message">
-                                                        (最多可添加4项)
+                                                        (最多可添加6项)
                                                     </view>
                                                 </view>
                                             </view>
@@ -124,7 +124,7 @@
                                         <view class="canpei_head_right"></view>
                                         <view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item2,idx) in item1.detail" :key="idx">
-                                                <view :class="['right_list', needHighlighted.includes(currentModelList[index]) ? 'highlighted' : '']">
+                                                <view class='right_list' :class="[needHighlighted.includes(Data.detailArray[idx].modelId)? 'highlighted' : '']">
                                                     <block v-for="(d,i) in item2" :key="i">
                                                         <!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
                                                         <block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
@@ -255,8 +255,7 @@
             this.tabWhich = options.tabWhich || 2;
 			let mids = options.mids || "";
 			if (mids) {
-				// mids = mids.split(",").slice(0, 4);
-				mids = mids.split(",");
+				mids = mids.split(",").slice(0, 6);
 			}
 			this.mids = mids;
 			this.init()
@@ -280,14 +279,16 @@
 		methods: {
             //添加选择的车型id - 高亮显示列
             addHighlightedModelId(modelId) {
-                if(this.needHighlighted.includes(modelId)) {
-                    return
-                }else {
-                    this.needHighlighted.push(modelId)
+                if(modelId.length > 1) {
+                    this.needHighlighted = []
+                    this.mids = []
                 }
+                modelId.map(v => {
+                    this.needHighlighted.push(String(v))
+                })
+                this.tabWhich = 2
                 let tempParam = [...new Set(this.mids.concat(this.needHighlighted))]
-                this.mids = tempParam 
-                console.log('this.needHighlighted :>> ', this.needHighlighted);
+                this.mids = tempParam.slice(0, 6)
                 this.init()
             },
 			async init() {
@@ -358,6 +359,7 @@
 			// 前往锚点位置
 			toView(index) {
 				this.scrollID = "id_" + index
+                console.log('this.scrollID :>> ', this.scrollID);
 				this.showNav = false
 			},
             //go预约试驾
@@ -516,9 +518,9 @@
         }
     }
 	.canpei {
-		// position: absolute;
-		// top: 0;
-		// left: 0;
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
         padding-top: 100rpx;
@@ -842,9 +844,6 @@
 								width: 270rpx;
 								border: 0;
 							}
-                            &.highlighted {
-                                background-color: #e49;
-                            }
 
 							.right_list_item {
                                 display: flex;
@@ -1026,5 +1025,8 @@
                 pointer-events: none;
             }
         }
+    }
+    .highlighted {
+        background-color: #ffeee4 ;
     }
 </style>
