@@ -6,7 +6,7 @@ var ENV = {
 //当前环境 （上线前检查）！！！！
 
 const CUR_ENV = ENV.RELEASE;
-const version = 1001;
+const version = 1002;
 
 // 正式域名
 var DOMAIN_R = {
@@ -26,7 +26,6 @@ var DOMAIN_T = {
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
 	// changan:'https://devqd-changan.pcauto.com.cn/',
-	// changan:"https://devqd-changan.pcauto.com.cn",
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
 }

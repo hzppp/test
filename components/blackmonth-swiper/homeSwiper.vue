@@ -2,7 +2,7 @@
 	<view>
 		<!-- @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove" -->
 		<view class="swiperPanel" @touchstart="startMove" @touchend="endMove">
-			<view class="swiperItem" v-for="(item, index) in swiperList" :key="index"
+			<view class="swiperItem" v-for="(item, index) in swiperList2" :key="index"
 				:style="{transform: itemStyle[index].transform, zIndex: itemStyle[index].zIndex, opacity: itemStyle[index].opacity}"
 				@tap="touch(item)">
 				<view class="children">
@@ -31,7 +31,8 @@
 				screenWidth: 0,
 				itemStyle: [],
 				longlock: true,
-				timeOutEvent: 0
+				timeOutEvent: 0,
+				swiperList2:[]
 			};
 		},
 		created() {
@@ -41,6 +42,8 @@
 			this.swiperList.forEach((item, index) => {
 				this.itemStyle.push(this.getStyle(index))
 			})
+			this.swiperList2 = this.swiperList
+			
 		},
 		methods: {
 			getStyle(e) {
