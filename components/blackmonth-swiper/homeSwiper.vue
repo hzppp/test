@@ -117,7 +117,7 @@
 				            icon: "none"
 				          })
 				        },
-				        envVersion: 'trial'
+				        // envVersion: 'trial'
 				      });
 				    break;
 				  }
@@ -230,7 +230,7 @@
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}
@@ -240,7 +240,7 @@
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}
@@ -255,7 +255,7 @@
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
 				const oUrl =
-					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${sourceId}&type=${type}&sourceId=${id}`
 				console.log('oUrl', oUrl)
 				uni.navigateToMiniProgram({
 					appId: 'wxa860d5a996074dbb',
@@ -267,7 +267,7 @@
 					fail: err => {
 						console.log(err);
 					},
-					envVersion: 'trial'
+					// envVersion: 'trial'
 				});
 			}
 
