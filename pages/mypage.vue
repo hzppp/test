@@ -18,7 +18,11 @@
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
 								<view class="phonetitle">{{photo}}</view>
-
+							</view>
+							<view class="phoneV">
+								<image class="scoreVicon"
+									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/score.png"></image>
+								<view class="scoretitle">{{score}}</view>
 							</view>
 
 						</view>
@@ -114,7 +118,8 @@
 				isshowUpload: false,
 				fail: false,
 				photo: null,
-				imageData: []
+				imageData: [],
+				score:''
 			}
 		},
 
@@ -135,6 +140,9 @@
 					this.imageData = data[0]
 				}
 			}
+			let scoreData = await api.getScore()
+			console.log('scoreData=' + scoreData)
+             this.score = scoreData.score
 
 
 			// this.qiandao()

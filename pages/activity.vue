@@ -10,7 +10,7 @@
 				class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
-    <view class="date" v-if="isActEnded">活动已结束</view>
+		<view class="date" v-if="isActEnded">活动已结束</view>
 
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
@@ -23,9 +23,16 @@
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
+		<!-- customAdList -->
+		<view v-for="(item) in customAdList" @tap="tapAcivity(item)">
+			<image class="cover" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
+		</view>
+
+
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-c" v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
+			<view class="type-c"
+				v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
@@ -92,24 +99,25 @@
 					data = {}
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g,"/")).getTime()) > 0)
+				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
-				if(data.redirectType == 1 && data.duibaUrl && data.duibaUrl.substring(0, 4) == "http" ){
-				uni.reLaunch({
-				  url: `/pages/webview?webURL=${encodeURI(data.duibaUrl)}`,
-				})
-				}
-				if (data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity') {
+				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
 					uni.reLaunch({
-						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
+						url: `/pages/webview?webURL=${encodeURI(data.h5Link)}`,
 					})
 				}
-				
-				
+				if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
+					uni.reLaunch({
+						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options
+							.sourceUserId
+					})
+				}
+
+
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
@@ -167,6 +175,90 @@
 					url: `/pages/vr360Frame/vr360Frame?sid=${serialGroupItem.pcSerialGroupId}&cityId=${cityId}&cityName=${cityName}`
 				})
 			},
+			tapAcivity(item) {
+				wx.aldstat.sendEvent('活动点击')
+				console.log('item.redirectType', item)
+				// web 小程序  
+				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.h5Link && item.h5Link ==
+						'changan://lbcjactivity')) {
+					api.fetchActivityVisit({
+						'activityId': item.activityId
+					})
+					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+						uni.showToast({
+							title: "活动结束啦",
+							icon: "none"
+						})
+						return
+					}
+				}
+				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
+				switch (item.redirectType) {
+					case 0: {
+						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+					case 1: {
+						if (item.h5Link && item.h5Link.substring(0, 4) == "http") {
+							uni.navigateTo({
+								url: `/pages/webview?webURL=${encodeURI(item.h5Link)}`,
+							})
+						}
+						break;
+					}
+					case 2: {
+						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							// 说明是自己的小程序
+							uni.navigateTo({
+								url: item.miniUrl
+							})
+							return
+						}
+						uni.navigateToMiniProgram({
+							appId: item.appId,
+							path: item.miniUrl,
+							success: res => {
+								// 打开成功
+								console.log("打开成功", res);
+							},
+							fail: err => {
+								console.log("打开失败", err);
+								uni.showToast({
+									title: "跳转小程序失败",
+									icon: "none"
+								})
+							},
+							// envVersion: 'trial'
+						});
+						break;
+					}
+					default: {
+						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+				}
+			},
+
 			async getPhoneNumber(e) {
 				console.log('eeeeee', e)
 				let {

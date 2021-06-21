@@ -926,4 +926,12 @@ module.exports = {
         })
         return data
     },
+	getScore: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('score'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
 }

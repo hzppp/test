@@ -46,7 +46,7 @@
 				</view>
 				<scroll-view scroll-x show-scrollbar class="hotCar">
 					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
-						<image :src="item.pcSerialGroupPic" class="img"></image>
+						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
 					</view>
 				</scroll-view>
@@ -253,11 +253,11 @@
 			}
 		},
 		async onLoad(options) {
-			let sgList = await api.getSgList().then(res => {
-				console.log('sssssssss', res)
-				return res.code == 1 && res.data ? res.data : []
-			})
-			this.sgList = [...sgList]	
+			// let sgList = await api.getSgList().then(res => {
+			// 	console.log('sssssssss', res)
+			// 	return res.code == 1 && res.data ? res.data : []
+			// })
+			// this.sgList = [...sgList]	
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -286,6 +286,7 @@
 						list: []
 					}
 				})
+			 this.sgList = this.pageData.heatSgList
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
 			// 请求省份和城市的级联列表

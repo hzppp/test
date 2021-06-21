@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 const version = 1002;
 
 // 正式域名
@@ -215,7 +215,11 @@ const config = {
 		// 奖励详情
 		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`,
 		// 图库url
-		VRouter: `${DOMAIN.changan}/wap/#/outer`
+		VRouter: `${DOMAIN.changan}/wap/#/outer`,
+		// 积分查询 
+		score: `${DOMAIN.changan}/api/xcx/user/score`,
+		
+		
 	},
 	getAPI(key) {
 		let url;
