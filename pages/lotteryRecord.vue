@@ -1,5 +1,6 @@
 <template>
   <view>
+	<userBand></userBand>
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index">
@@ -25,8 +26,10 @@
 <script>
 import api from '@/public/api/index'
 import login from '@/units/login'
+import userBand from '@/components/userBand/userBand'
 export default {
 name: "lotteryRecord",
+ components:{userBand},
   data() {
     return {
       dataList: []
@@ -52,7 +55,7 @@ name: "lotteryRecord",
     uni.showLoading({
       title: '正在加载...'
     })
-    await login.checkLogin(api)
+    // await login.checkLogin(api)
     this.dataList = await api.getlotteryRecordList({}).then(res => {
       console.log('rrrrrr',res)
       uni.hideLoading()

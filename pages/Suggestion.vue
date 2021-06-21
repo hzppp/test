@@ -30,9 +30,9 @@
 					content: "",
 					contact: ""
 				},
-				contentIcon: require("./icons/suggestion.png"),
-				contactIcon: require("./icons/contact.png"),
-				imgListIcon: require("./icons/image.png")
+				// contentIcon: require("./icons/suggestion.png"),
+				// contactIcon: require("./icons/contact.png"),
+				// imgListIcon: require("./icons/image.png")
 			}
 		},
 		methods: {

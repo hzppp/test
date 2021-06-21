@@ -1,5 +1,6 @@
 <template>
   <view class="inviteRecord">
+	 <userBand></userBand>
     <block>
       <view class="item" v-for="(item,index) in dataList" :key="index">
         <view class="imgView"><image class="img" :src="item.wxHead"></image></view><view class="name">{{ item.wxName }}</view><view class="time">{{item.joinTime}} 加入</view>
@@ -12,8 +13,10 @@
 <script>
 import api from '@/public/api/index'
 import login from '@/units/login'
+import userBand from '@/components/userBand/userBand'
 export default {
 name: "inviteRecord",
+ components:{userBand},
   data() {
     return {
       dataList: []
@@ -21,7 +24,7 @@ name: "inviteRecord",
   },
   async onLoad(options) {
     const {activityId=1} = options
-    await login.checkLogin(api)
+    // await login.checkLogin(api)
     this.dataList = await api.getInviteRecordList({pageNo:1,pageSize:999,activityId}).then(res => {
       console.log('rrrrr123',res)
       return res.code == 1 ? res.rows : []

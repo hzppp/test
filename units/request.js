@@ -64,10 +64,11 @@ export default function request(options = {}) {
 		uni.request({
 		    ...options,
 			success: (res) => {
+				// console.log('统一返回的接口数据',res)
 				resolve(res);
 			},
 			fail: (err) => {
-				toast('网络异常，请稍后再试！')
+				// toast('网络异常，请稍后再试！')
 				reject();
 			}
 		})

@@ -1,6 +1,6 @@
 <template>
 	<view>
-
+       <userBand></userBand>
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 
@@ -89,13 +89,14 @@
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import tabBar from '@/components/tabBar/tabBar'
 	import toast from '@/units/showToast'
-
+    import userBand from '@/components/userBand/userBand'
 	let app = getApp()
 	export default {
 		components: {
 			'pageTopCity': pageTopCity,
 			'viewTabBar': tabBar,
-			testDrive
+			testDrive,
+			userBand
 			// 'share-pop': shareSuccess
 		},
 		mixins: [shouquan],

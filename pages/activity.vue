@@ -1,5 +1,6 @@
 <template>
 	<view class="activity">
+		<userBand></userBand>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 		<share-pop ref="shareSuccess"></share-pop>
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
@@ -47,7 +48,7 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-
+    import userBand from '@/components/userBand/userBand'
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
@@ -58,7 +59,8 @@
 		components: {
 			'form-pop': formpop,
 			'page-top': pageTop,
-			'share-pop': shareSuccess
+			'share-pop': shareSuccess,
+			'userBand':userBand
 		},
 		data() {
 			return {

@@ -28,8 +28,13 @@
 		onLoad(options) {
 			this.sid  = options.sid;
 			uni.showLoading({
-				title: '正在加载...'
+				title: '正在加载...',
 			})
+			
+			setTimeout(() => {
+				uni.hideLoading()
+			}, 5000)
+
 			this.getcity()
 		},
 		methods: {
@@ -42,11 +47,14 @@
 					cityCode = app.globalData.currentLocation.selectedCityData.cityId ? app.globalData.currentLocation.selectedCityData.cityId : 1000000262
 					name = app.globalData.currentLocation.selectedCityData.city ? app.globalData.currentLocation.selectedCityData.city : '重庆市'
 				}
-				let openId =  app.globalData.wxUserInfo.openId;
 				if(this.sid){
-					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&sid=' + this.sid + '&openId=' + openId
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&sid=' + this.sid 
 				}else{
-					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name + '&openId=' + openId
+					this.webrul = this.webrul + '?cityId=' + cityCode + '&cityName=' + name 
+				}
+				if(app.globalData.wxUserInfo&&app.globalData.wxUserInfo.openId){
+					let openId =  app.globalData.wxUserInfo.openId;
+					this.webrul = this.webrul +  '&openId=' + openId
 				}
 				
 				console.log(this.webrul );

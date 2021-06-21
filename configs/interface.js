@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 const version = 1002;
 
 // 正式域名
@@ -24,8 +24,8 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
-	// changan:'https://devqd-changan.pcauto.com.cn/',
+	// changan:"https://tccar.pcauto.com.cn",
+	changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
 }
@@ -81,6 +81,7 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
+		//获取优惠券
 		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
 		// vehicleOupons 车型展厅，获取优惠券
 		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
@@ -215,7 +216,12 @@ const config = {
 		// 奖励详情
 		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`,
 		// 图库url
-		VRouter: `${DOMAIN.changan}/wap/#/outer`
+		VRouter: `${DOMAIN.changan}/wap/#/outer`,
+		// 注册
+		userBind: `${DOMAIN.changan}/api/xcx/user/bind`,
+		// 刷新token
+		refreshToken: `${DOMAIN.changan}/api/xcx/user/refreshToken`,
+	
 	},
 	getAPI(key) {
 		let url;

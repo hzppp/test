@@ -926,4 +926,21 @@ module.exports = {
         })
         return data
     },
+	
+	userBind: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('userBind'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
+	refreshToken: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('refreshToken'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	}
 }

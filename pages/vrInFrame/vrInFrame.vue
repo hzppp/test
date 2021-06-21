@@ -18,10 +18,12 @@
       let curObj = routes[routes.length - 1]
       let curRoute = curObj.route 
       let curParam = curObj.options
-	  let openId =  app.globalData.wxUserInfo.openId;
-      
-      this.src = this.src+ `vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}&openId=${openId}`
-    }
+      this.src = this.src+ `vrkrpano.html?sid=${curParam.sid}&serialId=${curParam.serialId}&pcid=${curParam.pcid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}`
+      if(app.globalData.wxUserInfo&&app.globalData.wxUserInfo.openId){
+      	let openId =  app.globalData.wxUserInfo.openId;
+      	this.src= this.src +  '&openId=' + openId
+      }
+	}
 	}
 </script>
 
