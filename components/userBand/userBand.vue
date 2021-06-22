@@ -3,9 +3,11 @@
         <view class="pop-content">
             <view class="title">温馨提示</view>
             <view class="text">请授权手机号注册长安会员</view>
-            <button class="btn" @tap="closeShow">暂不注册</button>
-			<button class="btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)" @tap.stop="stop" >立即注册</button>
-        </view>
+			<view class="btnV">
+            <button class="btn1" @tap="closeShow">暂不注册</button>
+			<button class="btn2" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)" @tap.stop="stop" >立即注册</button>
+            </view>
+		</view>
     </view>
 </template>
 
@@ -78,8 +80,8 @@ import api from '@/public/api/index.js'
 <style lang="scss">
 .a-pop-mask {
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color:rgba(0, 0, 0, .5);
     top: 0;
     left: 0;
@@ -87,14 +89,14 @@ import api from '@/public/api/index.js'
     touch-action: none;
     .pop-content {
         position: absolute;
-        width: 280px;
-        height: 261px;
+        width: 670rpx;
+        height: 346rpx;
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
         text-align: center;
         background-color: #ffffff;
-        padding: 30px;
+        // padding: 30px;
         border-radius: 5px;
         box-sizing: border-box;
         .success {
@@ -106,27 +108,45 @@ import api from '@/public/api/index.js'
         }
         .title {
             color: #333333;
-            line-height: 27px;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 10px 0;
+            font-size: 34rpx;
+            margin-top: 64rpx;
         }
         .text {
             font-size: 14px;
             line-height: 20px;
             color: #999999;
+			margin-top: 32rpx;
         }
-        .btn {
-            width: 180px;
-            height: 44px;
+		.btnV{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+        .btn1 {
+            width: 290rpx;
+            height: 88rpx;
             font-size: 16px;
-            line-height: 44px;
-            border-radius: 44px;
+            line-height: 88rpx;
+            border-radius: 44rpx;
             margin: 0 auto;
-            margin-top: 34px;
-            color: #ffffff;
-            background-color: #fa8943;
+            margin-top: 44rpx;
+            color: #FF9632;
+			border-style:solid;
+			border-width: 2rpx;
+			border-color:  #FF9632;
+            background-color: #ffffff;
         }
+		.btn2 {
+		   width: 290rpx;
+		   height: 88rpx;
+		   font-size: 16px;
+		   line-height: 88rpx;
+		   border-radius: 44rpx;
+		   margin: 0 auto;
+		   margin-top: 44rpx;
+		   color: #FFFFFF;
+		   background-color: #FF9632;
+		}
         .close {
             margin: 0 auto;
             margin-top: 60rpx;
