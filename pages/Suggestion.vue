@@ -42,6 +42,10 @@
 				imgListIcon: require("static/images/suggestion.png")
 			}
 		},
+		async onLoad() {
+			let data = await api.uploadUPC()
+			console.log('updata', data)
+		},
 		methods: {
 			chooseImage() {
 				if (this.data.imgList.length >= 5) {
@@ -74,70 +78,84 @@
 			submit() {
 				console.log(this.data.content.length)
 				this.uploadImage()
- 
+
 			},
 			uploadImage() {
-				if(this.data.content.length == 0 || this.data.content == ''){
+				if (this.data.content.length == 0 || this.data.content == '') {
 					this.$toast('请输入您遇到的问题')
 					return
 				}
-				var array= new Array()
 				uni.showLoading({
-					title:'提交中'
+					title: '提交中'
 				})
 				setTimeout(() => {
 					uni.hideLoading()
 				}, 8000)
+				 var array = new Array()
 				this.data.imgList.forEach((item, index) => {
-				   // console.log(item)
-				   uni.uploadFile({
-				   	url: domain.getAPI('uploadUPC'), 
-				   	filePath:item,
-					name: 'file',
-				   	formData: {
-				   		 'user': 'test'
-				   	},
-				   	success: (uploadFileRes) => {
-				   		// console.log(uploadFileRes.data);
-						let filedata = JSON.parse(uploadFileRes.data)
-						// console.log(filedata,uploadFileRes )
-				   		let url  = filedata.files[0].url
-						console.log('url==' + url)
-						array.push(url)
-						console.log('arraylength'+ array.length)
-						if(array.length == this.data.imgList.length){
-							// 说明上传完了
-							this.submin(array)
-						}
-					
-				   	},
-				   	fail: (error) => {
-				   		console.log(error)
-				   	}
-				   });
-				})			
-			},
-		
-	 async submin(array){
-			let pam = {'content':this.data.content,
-			          'pic1':array[0],
-					  'pic2':array[1],
-					  'pic3':array[2],
-					  'pic4':array[3]
-					  }
-			console.log('pam',pam)
-			let res = await api.submit(pam)
-			uni.hideLoading()
-			if(res.code == 1){
-				this.$toast('提交成功')
-				uni.navigateBack({
-					
+					this.upload(item,array)
 				})
-			}else{
-				this.$toast('提交失败')
+			},
+
+
+			async upload(item,array) {
+				let data = await api.uploadUPC()
+				// console.log('updata', data, data.publicUrl)
+				let pam = {
+					'key': data.key,
+					'policy': data.policy,
+					'OSSAccessKeyId': data.ossAccessKeyId,
+					'signature': data.signature,
+				}
+				uni.uploadFile({
+					url: data.hostUrl,
+					filePath: item,
+					name: 'file',
+					formData: pam,
+					success: (res) => {
+						 if (res.statusCode === 204) {
+						      let url = data.publicUrl
+						      console.log('url==' + url)
+						      array.unshift(url)
+						      // console.log('arraylength' + array.length)
+						      if (array.length == this.data.imgList.length) {
+						      	// 说明上传完了
+								// console.log(this.submin(),_self.submin())
+						      	this.submin(array)
+						      }
+						    }
+						
+
+					},
+					fail: (error) => {
+						console.log(error)
+					}
+				});
+
+			},
+
+			async submin(array) {
+				let pam = {
+					'content': this.data.content,
+					'pic1': array[0]?array[0]:'',
+					'pic2': array[1]?array[1]:'',
+					'pic3': array[2]?array[2]:'',
+					'pic4': array[3]?array[3]:'',
+					'pic5': array[4]?array[4]:''
+				}
+				console.log('pam', pam)
+				let res = await api.submit(pam)
+				uni.hideLoading()
+				if (res.code == 1) {
+					this.$toast('提交成功')
+					uni.navigateBack({
+
+					})
+				} else {
+					this.$toast('提交失败')
+				}
+				console.log('data', res)
 			}
-			console.log('data',res)
-		}
 
 
 		}

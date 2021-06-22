@@ -934,6 +934,14 @@ module.exports = {
 	    })
 	    return data
 	},
+	uploadUPC: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('uploadUPC'),
+	        method: "POST",
+	        data:para
+	    })
+	    return data
+	},
 	submit:async(para)=>{
 		let {data} = await request({
 		    url:domain.getAPI('submit'),
@@ -941,5 +949,5 @@ module.exports = {
 		    data:para
 		})
 		return data
-	}
+	},
 }

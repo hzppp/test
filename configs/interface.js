@@ -16,7 +16,7 @@ var DOMAIN_R = {
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
-	UPC:'https://upc.pcauto.com.cn'
+	UPC:'https://upc2.pc.com.cn'
 }
 
 //测试环境域名
@@ -29,7 +29,7 @@ var DOMAIN_T = {
 	changan:'https://devqd-changan.pcauto.com.cn/',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
-	UPC:'https://v62.pcauto.com.cn'
+	UPC:'https://qa-upc2.pc.com.cn'
 }
 
 
@@ -221,7 +221,7 @@ const config = {
 		// 积分查询 
 	    score: `${DOMAIN.changan}/api/xcx/user/score`,
 		// UPC
-		uploadUPC:`${DOMAIN.UPC}/upload_quick.jsp?application=certimg&referer=http://play10.pconline.com.cn/`,
+		uploadUPC:`${DOMAIN.UPC}/api/images/post?appCode=demo&token=admin123&passportId=489798471&clientIp=192.168.18.166&fileExt=jpg&bizType=pcncc`,
 		// submit
 		submit: `${DOMAIN.changan}/api/xcx/feedback/submit`,		
 	},
