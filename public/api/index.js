@@ -934,4 +934,12 @@ module.exports = {
 	    })
 	    return data
 	},
+	submit:async(para)=>{
+		let {data} = await request({
+		    url:domain.getAPI('submit'),
+		    method: "POST",
+		    data:para
+		})
+		return data
+	}
 }

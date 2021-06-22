@@ -15,7 +15,8 @@ var DOMAIN_R = {
 	host:"https://pocket.pcauto.com.cn",
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	webUrl:'https://ccar.pcauto.com.cn/h5/' //云展厅
+	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
+	UPC:'https://upc.pcauto.com.cn'
 }
 
 //测试环境域名
@@ -24,10 +25,11 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
-	// changan:'https://devqd-changan.pcauto.com.cn/',
+	// changan:"https://tccar.pcauto.com.cn",
+	changan:'https://devqd-changan.pcauto.com.cn/',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
+	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	UPC:'https://v62.pcauto.com.cn'
 }
 
 
@@ -217,9 +219,11 @@ const config = {
 		// 图库url
 		VRouter: `${DOMAIN.changan}/wap/#/outer`,
 		// 积分查询 
-		score: `${DOMAIN.changan}/api/xcx/user/score`,
-		
-		
+	    score: `${DOMAIN.changan}/api/xcx/user/score`,
+		// UPC
+		uploadUPC:`${DOMAIN.UPC}/upload_quick.jsp?application=certimg&referer=http://play10.pconline.com.cn/`,
+		// submit
+		submit: `${DOMAIN.changan}/api/xcx/feedback/submit`,		
 	},
 	getAPI(key) {
 		let url;

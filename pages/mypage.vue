@@ -19,7 +19,7 @@
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
 								<view class="phonetitle">{{photo}}</view>
 							</view>
-							<view class="phoneV">
+							<view v-if="score" class="phoneV">
 								<image class="scoreVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/score.png"></image>
 								<view class="scoretitle">{{score}}</view>
