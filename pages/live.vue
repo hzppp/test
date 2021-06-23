@@ -176,7 +176,7 @@
 						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' +
 							item.roomId + '&sourceId=' + item.id,
 						extraData: {},
-						envVersion: 'trial',
+						// envVersion: 'trial',
 						success(res) {
 							// 打开成功
 						}
@@ -188,7 +188,7 @@
 						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' +
 							item.playId + '&sourceId=' + item.id,
 						extraData: {},
-						envVersion: 'trial',
+						// envVersion: 'trial',
 						success(res) {
 							// 打开成功
 						}

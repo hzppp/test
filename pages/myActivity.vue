@@ -18,7 +18,7 @@
 							</view>
               <view class="desc">
                 <view class="left-area">
-                  <view><view class="locationCot" v-if="item.type!==3"><view class="cityName">{{item.city}}</view><view class="line"></view></view><view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view></view>
+                  <view><view class="locationCot" v-if="item.type==3"><view class="cityName">{{item.city}}</view><view class="line"></view></view><view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view></view>
                   <view class="info">
                     <view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
                     <view v-show="item.visitCount && item.clueCount" class="line"></view>
@@ -108,7 +108,7 @@
       toActivityPage(item) {
         wx.aldstat.sendEvent('活动点击')
         console.log('item.redirectType',item)
-        if(new Date().getTime() - new Date(item.endTime).getTime() >= 0) {
+        if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
           uni.showToast({
             title: "活动结束啦",
             icon: "none"
@@ -132,6 +132,9 @@
             break;
           }
           case 1: {
+			  api.fetchActivityVisit({
+			  	'activityId': item.id
+			  })
             if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
               uni.navigateTo({
                 url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
@@ -140,6 +143,9 @@
             break;
           }
           case 2: {
+			  api.fetchActivityVisit({
+			  	'activityId': item.id
+			  })
             uni.navigateToMiniProgram({
               appId: item.appId,
               path: item.miniUrl,
@@ -154,7 +160,7 @@
                   icon: "none"
                 })
               },
-              envVersion: 'trial'
+              // envVersion: 'trial'
             });
             break;
           }

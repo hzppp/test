@@ -1,37 +1,50 @@
 <template>
 	<view class="activity">
-<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-    <share-pop ref="shareSuccess"></share-pop>
+		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
+		<share-pop ref="shareSuccess"></share-pop>
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 		<form-pop ref="formpop"></form-pop>
 		<view class="title">{{content.name}}</view>
-		<view class="date" v-if="content && isActStart">
-			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view class="db">{{artDownDate[2]}}</view>分
+		<view class="date" v-if="content && isActStart && !isActEnded">
+			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
+				class="db">{{artDownDate[2]}}</view>分
 			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 		</view>
+		<view class="date" v-if="isActEnded">活动已结束</view>
 
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
-		<view class="serial-list" v-if = "content.coverSerialGroup">
-			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index" @tap="seeCarBtnClick(serialGroupItem)">
+		<view class="serial-list" v-if="content.coverSerialGroup">
+			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
+				@tap="seeCarBtnClick(serialGroupItem)">
 				<view class="name">{{serialGroupItem.name}}</view>
 				<button class="see-car-btn">3D看车 ></button>
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
+		<!-- customAdList -->
+		<view v-for="(item) in customAdList" @tap="tapAcivity(item)">
+			<image class="cover" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
+		</view>
+
+
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
+			<view class="type-c"
+				v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else-if="content.needApply == 1">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+					open-type="share" @click="shareBtnClick">分享好友</button>
+				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
+					v-if="!phone">报名活动</button>
 				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
 			</view>
 			<view class="type-b" v-else-if="content.needApply == 0">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+					open-type="share" @click="shareBtnClick">分享好友</button>
 			</view>
 		</view>
 	</view>
@@ -60,13 +73,13 @@
 				artDownDate: [],
 				activityId: '',
 				content: "",
-        isActEnded: false,
-        isActStart: false,
+				isActEnded: false,
+				isActStart: false,
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
-			if(options.tolbActivity){
+			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
 				})
@@ -83,29 +96,39 @@
 				// await login.login()
 				this.activityId = options.id
 				let {
-					data={}
+					data = {}
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
-        this.isActStart = (new Date().getTime() - new Date(data.startTime).getTime() > 0)
-            app.Interval = setInterval(() => {
+				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
+				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
-			    if(data.duibaUrl && data.duibaUrl == 'changan://lbcjactivity'){
+				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
 					uni.reLaunch({
-						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options.sourceUserId
+						url: `/pages/webview?webURL=${encodeURI(data.h5Link)}`,
+					})
+				}
+				if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
+					uni.reLaunch({
+						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options
+							.sourceUserId
 					})
 				}
 
 
+				// 访问活动 记录活动访问次数
+				api.fetchActivityVisit({
+					'activityId': this.activityId
+				})
 			} catch (err) {
 				console.error(err)
 			} finally {
 				uni.hideLoading()
 			}
 		},
-		onHide () {
+		onHide() {
 			if (app.Interval) {
 				clearInterval(app.Interval)
 			}
@@ -135,11 +158,11 @@
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 			},
 			// 分享按钮被点击
-			shareBtnClick () {
+			shareBtnClick() {
 				wx.aldstat.sendEvent('活动分享点击')
 			},
 			// 看车按钮被点击
-			seeCarBtnClick (serialGroupItem) {
+			seeCarBtnClick(serialGroupItem) {
 				wx.aldstat.sendEvent('3D看车点击')
 				const currentLocation = app.globalData.currentLocation
 				let cityId = '1000000262'
@@ -152,8 +175,92 @@
 					url: `/pages/vr360Frame/vr360Frame?sid=${serialGroupItem.pcSerialGroupId}&cityId=${cityId}&cityName=${cityName}`
 				})
 			},
+			tapAcivity(item) {
+				wx.aldstat.sendEvent('活动点击')
+				console.log('item.redirectType', item)
+				// web 小程序  
+				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.h5Link && item.h5Link ==
+						'changan://lbcjactivity')) {
+					api.fetchActivityVisit({
+						'activityId': item.activityId
+					})
+					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+						uni.showToast({
+							title: "活动结束啦",
+							icon: "none"
+						})
+						return
+					}
+				}
+				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
+				switch (item.redirectType) {
+					case 0: {
+						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+					case 1: {
+						if (item.h5Link && item.h5Link.substring(0, 4) == "http") {
+							uni.navigateTo({
+								url: `/pages/webview?webURL=${encodeURI(item.h5Link)}`,
+							})
+						}
+						break;
+					}
+					case 2: {
+						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							// 说明是自己的小程序
+							uni.navigateTo({
+								url: item.miniUrl
+							})
+							return
+						}
+						uni.navigateToMiniProgram({
+							appId: item.appId,
+							path: item.miniUrl,
+							success: res => {
+								// 打开成功
+								console.log("打开成功", res);
+							},
+							fail: err => {
+								console.log("打开失败", err);
+								uni.showToast({
+									title: "跳转小程序失败",
+									icon: "none"
+								})
+							},
+							// envVersion: 'trial'
+						});
+						break;
+					}
+					default: {
+						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.activityId
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+				}
+			},
+
 			async getPhoneNumber(e) {
-			  console.log('eeeeee',e)
+				console.log('eeeeee', e)
 				let {
 					detail = {}
 				} = e
@@ -177,10 +284,10 @@
 				let time = new Date().getTime()
 				endtime = new Date(endtime.replace(/-/g, '/')).getTime()
 				let j = endtime - time
-        if(j<=0) {
-          this.isActEnded = true;
-          return;
-        }
+				if (j <= 0) {
+					this.isActEnded = true;
+					return;
+				}
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
 				let hours = parseInt((j % (tt * 24)) / (tt))
@@ -199,6 +306,7 @@
 					ss = 0
 				}
 				let v = [this.add0(days), this.add0(hours), this.add0(minutes), ss]
+				// console.log('vvvvvvv==' + v)
 				this.artDownDate = v
 			},
 			// +0
@@ -211,6 +319,7 @@
 
 <style lang="less">
 	@import '@/static/less/public.less';
+
 	.title {
 		line-height: 65rpx;
 		padding: 30rpx 32rpx;
@@ -218,6 +327,7 @@
 		color: #333;
 		font-weight: bold;
 	}
+
 	.date {
 		height: 40rpx;
 		line-height: 40rpx;
@@ -237,14 +347,18 @@
 			border-radius: 4rpx;
 		}
 	}
+
 	.content {
 		font-size: 0;
 	}
+
 	.content-image {
 		width: 750rpx;
 	}
+
 	.serial-list {
 		margin: 40rpx 0;
+
 		.serial-item {
 			position: relative;
 			margin: 0 auto 30rpx;
@@ -252,6 +366,7 @@
 			height: 270rpx;
 			background-color: #DFE1E2;
 			border-radius: 20rpx;
+
 			.name {
 				position: absolute;
 				left: 30rpx;
@@ -260,6 +375,7 @@
 				font-weight: bold;
 				color: #333333;
 			}
+
 			.see-car-btn {
 				position: absolute;
 				bottom: 30rpx;
@@ -274,6 +390,7 @@
 				border-radius: 24rpx;
 				background-color: #333333;
 			}
+
 			.cover {
 				position: absolute;
 				right: 37rpx;
@@ -283,6 +400,7 @@
 			}
 		}
 	}
+
 	.fixys {
 		height: 100rpx;
 		font-size: 32rpx;
@@ -292,72 +410,84 @@
 		vertical-align: top;
 		display: inline-block;
 	}
+
 	.zw {
 		height: 104rpx;
 		padding-bottom: constant(safe-area-inset-bottom);
 		padding-bottom: env(safe-area-inset-bottom);
 	}
+
 	.operation-list {
-			position: fixed;
-			z-index: 1;
-			left: 0;
-			bottom: 0;
-			width: 100%;
-			height: 104rpx;
-			font-size: 32rpx;
-			font-weight: bold;
-			background-color: #ffffff;
-			padding-top: 20rpx;
-			padding-bottom: constant(safe-area-inset-bottom);
-			padding-bottom: env(safe-area-inset-bottom);
-			.share-btn, .enroll-btn, .over-btn {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-			.type-a {
-				display: flex;
-				justify-content: space-between;
-				padding: 0 32rpx;
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 104rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+		background-color: #ffffff;
+		padding-top: 20rpx;
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+
+		.share-btn,
+		.enroll-btn,
+		.over-btn {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.type-a {
+			display: flex;
+			justify-content: space-between;
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.share-btn {
+				width: 236rpx;
+				height: 88rpx;
+				color: #fa8845;
+				border: 2rpx solid #fa8845;
+				border-radius: 44rpx;
 				box-sizing: border-box;
-				.share-btn {
-					width: 236rpx;
-					height: 88rpx;
-					color: #fa8845;
-					border: 2rpx solid #fa8845;
-					border-radius: 44rpx;
-					box-sizing: border-box;
-					background-color: #FFFFFF;
-				}
-				.enroll-btn {
-					width: 420rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #fa8845;
-					border-radius: 44rpx;
-				}
+				background-color: #FFFFFF;
 			}
-			.type-b {
-				padding: 0 32rpx;
-				box-sizing: border-box;
-				.share-btn {
-					width: 686rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #fa8845;
-					border-radius: 44rpx;
-				}
-			}
-			.type-c {
-				padding: 0 32rpx;
-				box-sizing: border-box;
-				.over-btn {
-					width: 686rpx;
-					height: 88rpx;
-					color: #ffffff;
-					background-color: #cccccc;
-					border-radius: 44rpx;
-				}
+
+			.enroll-btn {
+				width: 420rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #fa8845;
+				border-radius: 44rpx;
 			}
 		}
+
+		.type-b {
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.share-btn {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #fa8845;
+				border-radius: 44rpx;
+			}
+		}
+
+		.type-c {
+			padding: 0 32rpx;
+			box-sizing: border-box;
+
+			.over-btn {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #cccccc;
+				border-radius: 44rpx;
+			}
+		}
+	}
 </style>

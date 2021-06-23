@@ -64,6 +64,7 @@ export default function request(options = {}) {
 		uni.request({
 		    ...options,
 			success: (res) => {
+				// console.log(res)
 				resolve(res);
 			},
 			fail: (err) => {

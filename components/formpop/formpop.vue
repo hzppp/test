@@ -36,9 +36,8 @@
 						:class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
 						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 					</picker>
-					<view v-else class="input-view dealer-input jt-icon placeholder"
-						@tap="showToast(!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商')">
-						<view>{{!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商'}}</view>
+					<view v-else class="input-view dealer-input  ">
+						<view>暂无对应经销商</view>
 					</view>
 				</block>
 				<!-- 经销商 E -->

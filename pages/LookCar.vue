@@ -9,12 +9,14 @@
 
 
         <view class="image-wrap">
-			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR"></image>
+			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
+		    <!-- 按钮 -->
+		     <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
         </view>
 
-        <!-- 按钮 -->
-        <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
+      
+   
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
@@ -38,7 +40,7 @@
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
-
+let app = getApp()
 export default {
     components: {btnWrap},
     data() {
@@ -77,7 +79,9 @@ export default {
         },
 		// vr 图库
 		toVR(){
-		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId
+		let openId =  app.globalData.wxUserInfo.openId;	
+		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId +'&openId=' + openId
+		console.log(url1)
 		let path = '/pages/webview?webURL=' + encodeURIComponent(url1)
 		
 		console.log(path)

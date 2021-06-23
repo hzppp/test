@@ -839,6 +839,18 @@ module.exports = {
         })
         return data
     },
+	// 访问活动 记录活动访问次数
+	fetchActivityVisit: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('fetchActivityVisit'),
+	        method: "POST",
+	        data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+	    })
+	    return data
+	},
     getSgList: async() => {
         let {data} = await request({
             url:domain.getAPI('getSgList'),
@@ -851,6 +863,9 @@ module.exports = {
 	    let {data} = await request({
 	        url:domain.getAPI('setLivePage'),
 	        method: "GET",
+			data:{
+				'version':domain.version
+			}
 	    })
 	    return data
 	},
@@ -911,4 +926,28 @@ module.exports = {
         })
         return data
     },
+	getScore: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('score'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	},
+	uploadUPC: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('uploadUPC'),
+	        method: "POST",
+	        data:para
+	    })
+	    return data
+	},
+	submit:async(para)=>{
+		let {data} = await request({
+		    url:domain.getAPI('submit'),
+		    method: "POST",
+		    data:para
+		})
+		return data
+	},
 }

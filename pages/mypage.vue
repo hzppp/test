@@ -20,7 +20,11 @@
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
 								<view class="phonetitle">{{photo}}</view>
-
+							</view>
+							<view v-if="score" class="phoneV">
+								<image class="scoreVicon"
+									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/score.png"></image>
+								<view class="scoretitle">{{score}}</view>
 							</view>
 
 						</view>
@@ -56,6 +60,10 @@
 				<view class="line"></view>
 				<view class="box-list list3" @tap="tomyvideo">
 					<view class="p1">新媒体营销查询</view>
+					<view class="right isApprove"></view>
+				</view>
+				<view class="box-list list5" @tap="tomSuggestion">
+					<view class="p1">意见反馈</view>
 					<view class="right isApprove"></view>
 				</view>
 				<!-- <view class="box-list list4">
@@ -113,7 +121,8 @@
 				isshowUpload: false,
 				fail: false,
 				photo: null,
-				imageData: []
+				imageData: [],
+				score:''
 			}
 		},
 
@@ -134,6 +143,9 @@
 					this.imageData = data[0]
 				}
 			}
+			let scoreData = await api.getScore()
+			console.log('scoreData=' + scoreData)
+             this.score = scoreData.score
 
 
 			// this.qiandao()
@@ -206,11 +218,19 @@
 					url: '/pages/myvideo'
 				})
 			},
+			tomSuggestion(){
+				uni.navigateTo({
+					url: '/pages/Suggestion'
+				})
+			},
 			goImageDetail() {
 				wx.aldstat.sendEvent('我的页面广告图')
 				if (this.imageData) {
 					if (this.imageData.type == 1) {
 						// H5
+						api.fetchActivityVisit({
+							'activityId': this.imageData.originalId
+						})
 						let url = this.imageData.url
 						uni.navigateTo({
 							url: `/pages/webview?webURL=${url}`
