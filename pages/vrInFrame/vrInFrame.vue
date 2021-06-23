@@ -23,6 +23,13 @@
       	let openId =  app.globalData.wxUserInfo.openId;
       	this.src= this.src +  '&openId=' + openId
       }
+	  // #ifdef MP-WEIXIN
+	   this.src = this.src +  '&app=wechat'
+	  // #endif
+	  
+	  // #ifdef MP-TOUTIAO
+	   this.src = this.src + '&app=toutiao'
+	  // #endif
 	}
 	}
 </script>

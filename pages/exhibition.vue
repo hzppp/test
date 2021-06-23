@@ -57,6 +57,14 @@
 					this.webrul = this.webrul +  '&openId=' + openId
 				}
 				
+				// #ifdef MP-WEIXIN
+				 this.webrul = this.webrul +  '&app=wechat'
+				// #endif
+
+				// #ifdef MP-TOUTIAO
+				 this.webrul = this.webrul + '&app=toutiao'
+				// #endif
+				
 				console.log(this.webrul );
 			},
 			loadSuccessHandler(){

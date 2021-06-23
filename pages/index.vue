@@ -391,10 +391,19 @@
 			goVr() {
 				// #ifdef MP-WEIXIN
 				 wx.aldstat.sendEvent('云展厅点击')
+				 uni.navigateTo({
+				 	url: '/pages/exhibition'
+				 })
 				// #endif
-				uni.navigateTo({
-					url: '/pages/exhibition'
+				
+				// #ifdef MP-TOUTIAO
+				uni.switchTab({
+				   url: '/pages/exhibition'
 				})
+				// #endif
+				
+				
+				
 			},
 			handleLinkHot(type, id, status, sourceId,liveSoureId) {
 				// type = 3
