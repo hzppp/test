@@ -98,7 +98,9 @@
 			},
 		},
 		onShareAppMessage(res) {
-			wx.aldstat.sendEvent('直播预告分享') 
+			// #ifdef MP-WEIXIN
+			 wx.aldstat.sendEvent('直播预告分享') 
+			// #endif
 			if (res.from === 'button') { // 来自页面内分享按钮
 				console.log(res.target)
 			}

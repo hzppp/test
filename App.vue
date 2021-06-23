@@ -40,11 +40,13 @@
 			provinceList: [], // 省市列表
 		},
 		onLaunch: function() {
+		  // #ifndef MP-TOUTIAO
 			uni.hideTabBar({
 				animation: false
 			})
+      // #endif
 			console.log('App Launch')
-			if (wx.canIUse('loadFontFace')) {
+			if (uni.canIUse('loadFontFace')) {
 				let _this = this
 				console.log("支持自定义字体");
 				uni.loadFontFace({

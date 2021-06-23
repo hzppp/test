@@ -32,6 +32,12 @@ export default function request(options = {}) {
 			// #ifdef MP-ALIPAY
 			'App': 'alipay'
 			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			'App': 'toutiao'
+			// #endif
+			
+			
 		};
 	} else {
 		// #ifdef MP-WEIXIN
@@ -44,6 +50,10 @@ export default function request(options = {}) {
 
 		// #ifdef MP-ALIPAY
 		options.header['App'] = 'alipay';
+		// #endif
+		
+		// #ifdef MP-TOUTIAO
+			options.header['App'] = 'toutiao';
 		// #endif
 	}
 	let session3rd = uni.getStorageSync('session-3rd')
@@ -68,7 +78,7 @@ export default function request(options = {}) {
 				resolve(res);
 			},
 			fail: (err) => {
-				toast('网络异常，请稍后再试！')
+				console.log(err)
 				reject();
 			}
 		})

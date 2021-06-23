@@ -293,11 +293,20 @@
 				"iconPath": "static/images/tab1_icon.png",
 				"selectedIconPath": "static/images/tab1_icon_c.png"
 			},
+			// #ifdef MP-WEIXIN
 			{
 				"pagePath": "pages/live",
 				"text": "直播",
 				"iconPath": "static/images/tab2_icon.png",
 				"selectedIconPath": "static/images/tab2_icon_c.png"
+			},
+			// #endif
+			
+			{
+				"pagePath": "pages/exhibition",
+				"text": "云展厅",
+				"iconPath": "static/images/tab3_icon.png",
+				"selectedIconPath": "static/images/tab3_icon_c.png"
 			},
 			{
 				"pagePath": "pages/welfareActivity",

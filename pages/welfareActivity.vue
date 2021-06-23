@@ -1,7 +1,9 @@
 <template>
   <view class="welfareActivity">
     <testDrive :aldEventName="'活动列表预约试驾'"></testDrive>
+    <!--  #ifndef MP-TOUTIAO  -->
     <viewTabBar :current="3"></viewTabBar>
+    <!--  #endif  -->
     <pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="'white'" :title.sync="title">
       <view class="city">
         <picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
@@ -240,7 +242,10 @@ export default {
       }
     },
     toActivityPage(item) {
-      wx.aldstat.sendEvent('活动点击')
+	// #ifdef MP-WEIXIN
+	  wx.aldstat.sendEvent('活动点击')
+	// #endif	
+
       console.log('item.redirectType',item)
 	  // web 小程序  
 	  if((item.redirectType == 1 ||item.redirectType == 2) &&  !(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity')){

@@ -76,7 +76,7 @@ export default {
             }
         })
 		console.log('登录返回',data)
-		if(data.data.resultCode==1){
+		if(  data.code == 1 &&data.data.resultCode==1 ){
 			console.log('注册 ==' + phone + 'iv =' + iv)
 			// 说明没有登录过长安 走注册流程
 			if(phone && iv){
@@ -102,10 +102,10 @@ export default {
 		if (data.code == 1) {
 		    if (data.token) {//保存sessionKey
 		        this.setSessionKey(data.token)
+				data['time'] =  new Date().getTime()
+				uni.setStorageSync('loginData', data)
+				app.globalData.loginJson = data
 		    }
-			data['time'] =  new Date().getTime()
-			uni.setStorageSync('loginData', data)
-		    app.globalData.loginJson = data
 		} else {
 		    this.removeSessionKey()
 		    if (this.loginNumber) {//重登一次

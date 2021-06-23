@@ -72,7 +72,10 @@ export default {
         },
         //预约试驾
         goYuyue(){
-            wx.aldstat.sendEvent('预约试驾点击')
+			// #ifdef MP-WEIXIN
+			  wx.aldstat.sendEvent('预约试驾点击')
+			// #endif
+          
             uni.navigateTo({
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
@@ -90,7 +93,9 @@ export default {
 		})	
 		},
 		goXundijia(){
-			wx.aldstat.sendEvent('车系页获取实时底价点击')
+			// #ifdef MP-WEIXIN
+			 wx.aldstat.sendEvent('车系页获取实时底价点击')
+			// #endif
 			uni.navigateTo({
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
 			})

@@ -203,7 +203,10 @@
 			},
 			closeBtnClick() {
 				if (this.from == 'activity') {
-					wx.aldstat.sendEvent('报名活动留资退出')
+					// #ifdef MP-WEIXIN
+					 wx.aldstat.sendEvent('报名活动留资退出')
+					// #endif	
+					
 				}
 				this.formHide()
 			},
@@ -295,7 +298,10 @@
 			},
 			async submit() {
 				if (this.from == 'activity') {
-					wx.aldstat.sendEvent('报名活动留资提交')
+					// #ifdef MP-WEIXIN
+					 wx.aldstat.sendEvent('报名活动留资提交')
+					// #endif	
+					
 				}
 				let ly = this.from
 				let lydx = this.currentObj

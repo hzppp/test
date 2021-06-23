@@ -205,7 +205,10 @@
 			},
 
 			touch(item) {
-				wx.aldstat.sendEvent('首页Banner')
+				// #ifdef MP-WEIXIN
+				  wx.aldstat.sendEvent('首页Banner')
+				// #endif	
+				
 				console.log(JSON.stringify(item))
 				let type = item.contentType;
 				let  contentId = item.contentId
@@ -214,7 +217,9 @@
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
-						wx.aldstat.sendEvent('精选资讯点击')
+						// #ifdef MP-WEIXIN
+						  wx.aldstat.sendEvent('精选资讯点击')
+						// #endif
 						uni.navigateTo({
 							url: `/pages/article?articleId=${contentId}`
 						})

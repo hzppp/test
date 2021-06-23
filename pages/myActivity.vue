@@ -106,7 +106,9 @@
         return status
       },
       toActivityPage(item) {
-        wx.aldstat.sendEvent('活动点击')
+		// #ifdef MP-WEIXIN
+		 wx.aldstat.sendEvent('活动点击')
+		// #endif
         console.log('item.redirectType',item)
         if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
           uni.showToast({

@@ -1,12 +1,12 @@
 <template>
     <view class="a-pop-mask" v-if="isShow">
         <view class="pop-content">
-            <view class="title">温馨提示</view>
+            <view class="title1">温馨提示</view>
             <view class="text">请授权手机号注册长安会员</view>
 			<view class="btnV">
             <button class="btn1" @tap="closeShow">暂不注册</button>
 			<button class="btn2" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)" @tap.stop="stop" >立即注册</button>
-            </view>
+			</view>
 		</view>
     </view>
 </template>
@@ -49,6 +49,22 @@ import api from '@/public/api/index.js'
                 this.isShow = false
 				
             },
+			
+			  getPhoneNumberHandler(e) {
+				  tt.login({
+				    force: true,
+				    success(res) {
+				      console.log(`login 调用成功${res.code} ${res.anonymousCode}`);
+				    },
+				    fail(res) {
+				      console.log(`login 调用失败`);
+				    },
+				  });
+				  
+			    console.log(e.detail.errMsg);
+			    console.log(e.detail.iv);
+			    console.log(e.detail.encryptedData);
+			  },
 			async getPhoneNumber(e) {
 				let {
 					detail
@@ -106,7 +122,7 @@ import api from '@/public/api/index.js'
             background-size: cover;
             margin: 0 auto;
         }
-        .title {
+        .title1 {
             color: #333333;
             font-size: 34rpx;
             margin-top: 64rpx;

@@ -1,11 +1,23 @@
 <template>
 <view>
-  <movable-area class="movableArea">
-    <movable-view class="movableView" :position="position" :x="x" :y="y" :direction="direction" :damping="damping" :inertia="true"
-                  @change="onChange" @touchend="onTouchend">
-      <button class="btn" @tap="goTestDrive"></button>
-    </movable-view>
-  </movable-area>
+  <!--  #ifdef MP-WEIXIN  -->
+  		<movable-area class="movableArea">
+  			<movable-view class="movableView" :position="position" :x="x" :y="y" :direction="direction"
+  				:damping="damping" :inertia="true" @change="onChange" @touchend="onTouchend">
+  				<button class="btn" @tap="goTestDrive"></button>
+  			</movable-view>
+  		</movable-area>
+  		<!--  #endif  -->
+  
+  
+  		<!--  #ifndef MP-WEIXIN  --> 
+  		<view class="movableArea">
+  			<view class="movableView" :position="position" :x="x" :y="y" :direction="direction" :damping="damping"
+  				:inertia="true" @change="onChange" @touchend="onTouchend">
+  				<button class="btn" @tap="goTestDrive"></button>
+  			</view>
+  		</view>
+  		<!--  #endif  -->
 </view>
 </template>
 
@@ -49,7 +61,10 @@ name: "testDrive",
     goTestDrive() {
       if(this.aldEventName) {
         console.log('首页 浮窗',this.aldEventName)
-        wx.aldstat.sendEvent(this.aldEventName)
+		// #ifdef MP-WEIXIN
+		wx.aldstat.sendEvent(this.aldEventName)
+		// #endif
+        
       }
       uni.navigateTo({
          url: `/pages/YuyuePage`
@@ -91,22 +106,31 @@ name: "testDrive",
   background-size: cover;
   // background: #007AFF;
 }
-.movableArea {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; //设置area元素不可点击，则事件便会下移至页面下层元素
-  z-index: 9999;
+ .movableArea {
+   position: fixed;
+  top: 50%;
+  left: 0rpx;
+  /*  #ifdef  MP-WEIXIN */
+   top: 0;
+   left: 0;
+  /*  #endif  */
+   width: 100%;
+   height: 100%;
+   pointer-events: none; //设置area元素不可点击，则事件便会下移至页面下层元素
+   z-index: 9999;
+ 
+ .movableView {
+	/*  #ifndef  MP-WEIXIN */
+	position: absolute;
+	right: 0;
+	/*  #endif  */
+   pointer-events: auto; //可以点击
+   border-radius: 100%;
 
-.movableView {
-  pointer-events: auto; //可以点击
-  border-radius: 100%;
-  width: 130rpx;
-  height: 160rpx;
-  box-sizing: border-box;
-  padding: 0 10rpx;
+   width: 130rpx;
+   height: 160rpx;
+   box-sizing: border-box;
+
 }
 }
 </style>

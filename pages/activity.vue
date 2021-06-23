@@ -1,6 +1,7 @@
 <template>
-	<view class="activity">
+	<view>
 		<userBand></userBand>
+	<view class="activity">
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 		<share-pop ref="shareSuccess"></share-pop>
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
@@ -49,6 +50,7 @@
 			</view>
 		</view>
 	</view>
+    </view>
 </template>
 
 <script>
@@ -156,16 +158,22 @@
 		},
 		methods: {
 			formShow() {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
+				// #endif
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
+				// #endif			
 			},
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('3D看车点击')
+				// #endif
 				const currentLocation = app.globalData.currentLocation
 				let cityId = '1000000262'
 				let cityName = '重庆市'
@@ -178,7 +186,10 @@
 				})
 			},
 			tapAcivity(item) {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动点击')
+				// #endif
+				
 				console.log('item.redirectType', item)
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.h5Link && item.h5Link ==

@@ -9,7 +9,9 @@
 				</picker>
 			</view>
 		</pageTopCity>
-		<viewTabBar :current="0"></viewTabBar>
+		<!--  #ifndef MP-TOUTIAO  -->
+			<viewTabBar :current="0"></viewTabBar>
+		<!-- #endif -->
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
@@ -238,9 +240,11 @@
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
 			}
+			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
 			  console.log('开始及时')
-			if(this.pageData.banners&& this.pageData.banners.length> 0){
+			if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
+			  // console.log(this.$refs.cmSwiper)
 			  this.$refs.cmSwiper.moveRight()
 			}
 			}, 4000); //这里设置定时
@@ -385,7 +389,9 @@
 				}
 			},
 			goVr() {
-				wx.aldstat.sendEvent('云展厅点击')
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('云展厅点击')
+				// #endif
 				uni.navigateTo({
 					url: '/pages/exhibition'
 				})
@@ -400,14 +406,18 @@
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选资讯点击')
+						// #endif
 						uni.navigateTo({
 							url: `/pages/article?articleId=${id}`
 						})
 						break;
 					}
 					case 2: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选活动点击')
+						// #endif
 						// uni.navigateTo({
 						// 	url: `/pages/activity?id=${id}`
 						// })
@@ -415,7 +425,9 @@
 						break;
 					}
 					case 3: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选直播点击')
+						// #endif
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
@@ -551,7 +563,9 @@
 				})
 			},
 			goLookCar(item) {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('热销车型点击')
+				// #endif
 				uni.navigateTo({
 					url: `/pages/LookCar?id=${item.pcSerialGroupId}`
 				})
@@ -636,9 +650,12 @@
 	.shadow {
 		box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
 	}
-
 	.content {
-		padding: 0 32rpx 150rpx;		
+		padding: 0 32rpx 150rpx;	
+		/*  #ifndef  MP-WEIXIN */
+		 padding: 0 32rpx 20rpx;	
+		/*  #endif  */	
+
 		.bannerTop {
 			width: 100%;
 			height: 500rpx;

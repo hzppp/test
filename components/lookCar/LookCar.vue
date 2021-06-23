@@ -40,19 +40,26 @@
         },
 		methods: {
 			goCanPei() {
-                wx.aldstat.sendEvent('查看参数配置点击')
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('查看参数配置点击')
+				// #endif	
 				uni.navigateTo({
 					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
 			},
             goSerialList() {
-                wx.aldstat.sendEvent('车型对比点击')
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('车型对比点击')
+				// #endif	
+                
                 uni.navigateTo({
 					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
 				})
             },
             goCalc() {
-                wx.aldstat.sendEvent('购车计算点击')
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('购车计算点击')
+				// #endif	
                 uni.navigateTo({
                     url:`/pages/calc?serialId=${this.serialId}`
                 })

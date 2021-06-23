@@ -148,7 +148,9 @@
 			},
 
 			formShow() {
-				wx.aldstat.sendEvent('报名活动')
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('报名活动')
+				// #endif
 				this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
 			},
 			// 分享按钮被点击
