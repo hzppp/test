@@ -6,6 +6,7 @@
     <!--				<button class="getUserInfo-btn" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>-->
     <!--			</view>-->
     <!--		</view>-->
+	<view>asdasd</view>
   </view>
 </template>
 
@@ -21,6 +22,19 @@ export default {
     return {}
   },
   async onLoad(options) {
+	  
+	  tt.login({
+	    force: true,
+	    success(res) {
+	      console.log(`login 调用成功code == ${res.code}  anonymousCode ==${res.anonymousCode}`);
+	    },
+	    fail(res) {
+	      console.log(`login 调用失败`);
+	    },
+	  });
+	  
+	   return
+	  
     // this.$refs.loading.changeLoading(true);
     app.globalData.haveUserInfoAuth = uni.getStorageSync('haveUserInfoAuth')
     console.log('页面参数', options,api)

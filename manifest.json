@@ -79,7 +79,7 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true,
-        "appid" : "ttd31ca5a14c2418e501",
+        "appid" : "ttf56383de6a5b35b901",
         "setting" : {
             "minified" : true
         }
