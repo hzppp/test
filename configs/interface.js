@@ -49,7 +49,13 @@ const config = {
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
 
 	api: {
-		login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		// #ifdef MP-WEIXIN
+		 login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		// #endif
+		
+		// #ifdef MP-TOUTIAO
+		 login:  `${DOMAIN.changan}/api/xcx/user/dy/login`,
+		// #endif
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
 		//
