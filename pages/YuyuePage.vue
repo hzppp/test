@@ -1,5 +1,6 @@
 <template> 
     <view>
+	<userBand></userBand>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
@@ -57,6 +58,7 @@ import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
 import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
+import userBand from '@/components/userBand/userBand'
 let app = getApp()
 
 
@@ -66,7 +68,7 @@ let app = getApp()
 const COUNTDOWN = 60
 
     export default {
-        components:{pop,pyBoomV},
+        components:{pop,pyBoomV,userBand},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -127,7 +129,7 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             // console.log('111111options :>> ', options);
-            await login.checkLogin(api)
+            // await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
 			if(this.serialId == ""){

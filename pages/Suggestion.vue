@@ -38,8 +38,6 @@
 					contact: ""
 
 				},
-				contentIcon: require("static/images/imageS.png"),
-				imgListIcon: require("static/images/suggestion.png")
 			}
 		},
 		async onLoad() {

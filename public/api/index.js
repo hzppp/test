@@ -929,6 +929,9 @@ module.exports = {
 	getScore: async(para) => {
 	    let {data} = await request({
 	        url:domain.getAPI('score'),
+	userBind: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('userBind'),
 	        method: "GET",
 	        data:para
 	    })
@@ -950,4 +953,12 @@ module.exports = {
 		})
 		return data
 	},
+	refreshToken: async(para) => {
+	    let {data} = await request({
+	        url:domain.getAPI('refreshToken'),
+	        method: "GET",
+	        data:para
+	    })
+	    return data
+	}
 }

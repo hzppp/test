@@ -1,5 +1,6 @@
 <template>
   <view class="container">
+	<userBand></userBand>
     <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title" :homeBtn="true"></pageTopCommon>
     <view class="content">
       <view class="luckyWheel">
@@ -99,9 +100,10 @@ import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 const app = getApp()
 import api from '@/public/api/index'
 import login from '@/units/login'
+import userBand from '@/components/userBand/userBand'
 export default {
   name: "lotteryPage",
-  components: {LuckyWheel,pageTopCommon},
+  components: {LuckyWheel,pageTopCommon,userBand},
   data() {
     return {
       inviteRecordList: [],
@@ -131,7 +133,7 @@ export default {
     })
     const {activityId=0} = options
     this.activityId = activityId
-    await login.checkLogin(api)
+    // await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
       this.inviteRecordCount = res.total || 0

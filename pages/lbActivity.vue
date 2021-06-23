@@ -1,4 +1,6 @@
 <template>
+	<view>
+	  <userBand></userBand>
 	<view class="activity" v-if="soureDone">
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth" style="top: 128rpx;"></button>
 		<!-- <share-pop ref="shareSuccess"></share-pop> -->
@@ -19,6 +21,7 @@
 			</view>
 		</view>
 	</view>
+		</view>
 </template>
 
 <script>
@@ -29,13 +32,14 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-
+    import userBand from '@/components/userBand/userBand'
 	let app = getApp()
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
 			'form-pop': formpop,
 			'page-top': pageTop,
+			'userBand':userBand
 			// 'share-pop': shareSuccess
 		},
 		data() {
@@ -53,7 +57,7 @@
 		async onLoad(options) {
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
-			await login.checkLogin(api)
+			// await login.checkLogin(api)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)

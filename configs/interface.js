@@ -26,7 +26,7 @@ var DOMAIN_T = {
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	// changan:"https://tccar.pcauto.com.cn",
-	changan:'https://devqd-changan.pcauto.com.cn/',
+	changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
 	UPC:'https://qa-upc2.pc.com.cn'
@@ -83,6 +83,7 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
+		//获取优惠券
 		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
 		// vehicleOupons 车型展厅，获取优惠券
 		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
@@ -224,6 +225,10 @@ const config = {
 		uploadUPC:`${DOMAIN.UPC}/api/images/post?appCode=demo&token=admin123&passportId=489798471&clientIp=192.168.18.166&fileExt=jpg&bizType=pcncc`,
 		// submit
 		submit: `${DOMAIN.changan}/api/xcx/feedback/submit`,		
+		// 注册
+		userBind: `${DOMAIN.changan}/api/xcx/user/bind`,
+		// 刷新token
+		refreshToken: `${DOMAIN.changan}/api/xcx/user/refreshToken`,
 	},
 	getAPI(key) {
 		let url;

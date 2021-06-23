@@ -70,6 +70,17 @@
 					uni.navigateTo({
 						url: '/pages/exhibition'
 					})
+		
+					// let token = uni.getStorageSync('session-3rd')
+					// if(token){
+					// 	uni.navigateTo({
+					// 		url: '/pages/exhibition'
+					// 	})
+					// }else{
+					// 	uni.reLaunch({
+					// 		url:'/pages/userBandv?path=exhibition'
+					// 	})	
+				    // }
 				} else {
 					uni.switchTab({
 						url: path
