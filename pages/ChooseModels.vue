@@ -50,9 +50,9 @@
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
                 if(options.mids) {
-                    this.canSelectLength = 4 - options.mids.split(",").length
+                    this.canSelectLength = 6 - options.mids.split(",").length
                 }else {
-                    this.canSelectLength = 4
+                    this.canSelectLength = 6
                 }
                 this.reqModelsList(options.serialId)
             },
@@ -71,11 +71,14 @@
             add() {
                 // let newMids
                 let tempMids
-                if(this.mids) {
+                if(this.mids && this.currentValue.length > 0) {
                     tempMids = this.mids + ","+ this.currentValue.join(",")
-                }else {
-                    tempMids = this.currentValue.join(",")
+                    console.log('1 :>> ', 1);
+                }else if(this.mids) {
+                    tempMids = this.mids
+                    console.log('2 :>> ', 2);
                 }
+                console.log('tempMids :>> ', tempMids);
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {

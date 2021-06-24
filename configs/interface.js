@@ -229,6 +229,18 @@ const config = {
 		startLottery: `${DOMAIN.changan}/api/xcx/lottery/start`,
 		// 奖励详情
 		lotteryDetail: `${DOMAIN.changan}/api/xcx/lottery/record/detail`,
+		// 获取服务器时间
+		fetchServerTime: `${DOMAIN.changan}/rpr/api/base/time`,
+		// 获取当日的红包雨活动
+		fetchRedPacketRainList: `${DOMAIN.changan}/rpr/api/activity/liveRoom/today`,
+		// 获取红包金额
+		fetchRedPacketAmount: `${DOMAIN.changan}/rpr/api/redPacket/amount`,
+		// 获取开红包
+		fetchRedPacketOpen: `${DOMAIN.changan}/rpr/api/redPacket/open`,
+		// 获取红包记录
+		fetchRedPacketRecord: `${DOMAIN.changan}/rpr/api/redPacket/record`,
+		// 获取开红包状态
+		fetchRedPacketStatus: `${DOMAIN.changan}/rpr/api/redPacket/status`,
 		// 图库url
 		VRouter: `${DOMAIN.changan}/wap/#/outer`,
 		// 积分查询 
