@@ -9,9 +9,12 @@
 				</picker>
 			</view>
 		</pageTopCity>
-		<viewTabBar :current="0"></viewTabBar>
+		<!--  #ifndef MP-TOUTIAO  -->
+			<viewTabBar :current="0"></viewTabBar>
+		<!-- #endif -->
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
 		<view class="content">
 		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
 				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
@@ -45,7 +48,7 @@
 				</view>
 				<scroll-view scroll-x show-scrollbar class="hotCar">
 					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
-						<image :src="item.pcSerialGroupPic" class="img"></image>
+						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
 					</view>
 				</scroll-view>
@@ -63,7 +66,7 @@
 					精选
 				</view>
 				<view v-for="(item,index) in pageData.list" :key="index" class="actItem"
-					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId)">
+					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id)">
 					<view :class="item.contentType == 3 ? 'playType':''">
 						<!--contentType 1文章资讯，2活动，3直播-->
 						<!--status 当为直播类型时 1直播中  2预告  3回放-->
@@ -137,6 +140,7 @@
 					list: []
 				},
 				testUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
+
 				fontLoaded: false,
 				timeOutEvent:''
 			}
@@ -209,6 +213,7 @@
 					}
 				}
 			},
+
 		},
 		onHide() {
 			clearTimeout(this.timeOutEvent); 
@@ -235,9 +240,11 @@
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
 			}
+			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
 			  console.log('开始及时')
-			if(this.pageData.banners&& this.pageData.banners.length> 0){
+			if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
+			  // console.log(this.$refs.cmSwiper)
 			  this.$refs.cmSwiper.moveRight()
 			}
 			}, 4000); //这里设置定时
@@ -250,11 +257,11 @@
 			}
 		},
 		async onLoad(options) {
-			let sgList = await api.getSgList().then(res => {
-				console.log('sssssssss', res)
-				return res.code == 1 && res.data ? res.data : []
-			})
-			this.sgList = [...sgList]	
+			// let sgList = await api.getSgList().then(res => {
+			// 	console.log('sssssssss', res)
+			// 	return res.code == 1 && res.data ? res.data : []
+			// })
+			// this.sgList = [...sgList]	
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -283,6 +290,7 @@
 						list: []
 					}
 				})
+			 this.sgList = this.pageData.heatSgList
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
 			// 请求省份和城市的级联列表
@@ -381,12 +389,23 @@
 				}
 			},
 			goVr() {
-				wx.aldstat.sendEvent('云展厅点击')
-				uni.navigateTo({
-					url: '/pages/exhibition'
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('云展厅点击')
+				 uni.navigateTo({
+				 	url: '/pages/exhibition'
+				 })
+				// #endif
+				
+				// #ifdef MP-TOUTIAO
+				uni.switchTab({
+				   url: '/pages/exhibition'
 				})
+				// #endif
+				
+				
+				
 			},
-			handleLinkHot(type, id, status, sourceId) {
+			handleLinkHot(type, id, status, sourceId,liveSoureId) {
 				// type = 3
 				// id = 48965835
 				// status = 'verticalLive'
@@ -396,45 +415,123 @@
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选资讯点击')
+						// #endif
 						uni.navigateTo({
 							url: `/pages/article?articleId=${id}`
 						})
 						break;
 					}
 					case 2: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选活动点击')
-						uni.navigateTo({
-							url: `/pages/activity?id=${id}`
-						})
+						// #endif
+						// uni.navigateTo({
+						// 	url: `/pages/activity?id=${id}`
+						// })
+						this.getActData(id)
 						break;
 					}
 					case 3: {
+						// #ifdef MP-WEIXIN
 						wx.aldstat.sendEvent('精选直播点击')
+						// #endif
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${sourceId}`
 								})
 								break;
 							}
 							case 1: {
-								this.goMP(id, 'verticalLive', sourceId)
+								this.goMP(id, 'verticalLive', liveSoureId)
 								break;
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${id}`
+									url: `/pages/liveDetail?liveId=${sourceId}`
 								})
 								break;
 							}
 							case 3: {
-								this.goMP(id, 'verticalPlayback', sourceId)
+								this.goMP(id, 'verticalPlayback', liveSoureId)
 								break;
 							}
 						}
 						break;
 					}
+				}
+			},
+			async getActData(contentId){
+			    let {
+					data = {}
+				} = await api.getActivityContent(contentId);
+				let item = data
+				// console.log('dadad' + JSON.stringify(item))
+				switch(item.redirectType) {
+				  case 0: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
+				  case 1: {
+				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
+				      uni.navigateTo({
+				        url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+				      })
+				    }
+				    break;
+				  }
+				  case 2: {
+					if(item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36'){
+						// 说明是自己的小程序
+						uni.navigateTo({
+						  url: item.miniUrl
+						})
+						return
+					}	
+				      uni.navigateToMiniProgram({
+				        appId: item.appId,
+				        path: item.miniUrl,
+				        success: res => {
+				          // 打开成功
+				          console.log("打开成功", res);
+				        },
+				        fail: err => {
+				          console.log("打开失败", err);
+				          uni.showToast({
+				            title: "跳转小程序失败",
+				            icon: "none"
+				          })
+				        },
+				        // envVersion: 'trial'
+				      });
+				    break;
+				  }
+				  default: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
 				}
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
@@ -451,7 +548,7 @@
 					fail: err => {
 						console.log(err);
 					},
-					envVersion: 'trial'
+					// envVersion: 'trial'
 				});
 			},
 			goArtList() {
@@ -475,7 +572,9 @@
 				})
 			},
 			goLookCar(item) {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('热销车型点击')
+				// #endif
 				uni.navigateTo({
 					url: `/pages/LookCar?id=${item.pcSerialGroupId}`
 				})
@@ -536,11 +635,17 @@
 		}
 	}
 
+	.morenpic {
+		height: 970rpx;
+		width: 676rpx;
+		border-radius: 10px;
+		margin-left: 37rpx;
+	}
 	.index {
 		// padding-top: 16rpx;
 		overflow-x: hidden;
 		// font-family: PingFang SC;
-		color: #3C4650;
+		color: #3C4650;		
 	}
 
 	.ovh {
@@ -554,10 +659,12 @@
 	.shadow {
 		box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
 	}
-
 	.content {
-		padding: 0 32rpx 150rpx;
-		
+		padding: 0 32rpx 150rpx;	
+		/*  #ifndef  MP-WEIXIN */
+		 padding: 0 32rpx 20rpx;	
+		/*  #endif  */	
+
 		.bannerTop {
 			width: 100%;
 			height: 500rpx;
@@ -812,4 +919,7 @@
 			}
 		}
 	}
+	
+
+	
 </style>

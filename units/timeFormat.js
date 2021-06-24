@@ -2,7 +2,7 @@
  * 时间格式化函数
  */
 export default function timeFormat(time, flag) {
-	let t = new Date(time);
+	let t = new Date(time.replace(/-/g,'/'));
 
 	let month = t.getMonth() + 1;
 	let date = t.getDate();

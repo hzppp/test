@@ -6,6 +6,7 @@
 
 <script>
 	import domain from '@/configs/interface';
+	let app = getApp()
 	export default {
 		data() {
 			return {
@@ -18,14 +19,35 @@
       let curObj = routes[routes.length - 1]
       let curRoute = curObj.route 
       let curParam = curObj.options
-			
 			let _data = decodeURIComponent(curParam.data)
 			if(_data!='undefined'){
 				this.src = this.src + `vr360.html?data=${_data}`
+				if(app.globalData.wxUserInfo&&app.globalData.wxUserInfo.openId){
+					let openId =  app.globalData.wxUserInfo.openId;
+					this.src= this.src+  '&openId=' + openId
+				}
+				// #ifdef MP-WEIXIN
+				 this.src = this.src +  '&app=wechat'
+				// #endif
+				
+				// #ifdef MP-TOUTIAO
+				 this.src = this.src + '&app=toutiao'
+				// #endif
 				return;
 			}
 			if(curParam.sid){
 				this.src = this.src + `vr360.html?sid=${curParam.sid}&cityId=${curParam.cityId}&cityName=${curParam.cityName}`
+				if(app.globalData.wxUserInfo&&app.globalData.wxUserInfo.openId){
+					let openId =  app.globalData.wxUserInfo.openId;
+					this.src= this.src +  '&openId=' + openId
+				}
+				// #ifdef MP-WEIXIN
+				 this.src = this.src +  '&app=wechat'
+				// #endif
+				
+				// #ifdef MP-TOUTIAO
+				 this.src = this.src + '&app=toutiao'
+				// #endif
 				return;
 			}
 			console.log('参数缺失')

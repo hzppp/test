@@ -6,6 +6,7 @@ var ENV = {
 //当前环境 （上线前检查）！！！！
 
 const CUR_ENV = ENV.TEST;
+const version = 1002;
 
 // 正式域名
 var DOMAIN_R = {
@@ -14,7 +15,8 @@ var DOMAIN_R = {
 	host:"https://pocket.pcauto.com.cn",
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	webUrl:'https://ccar.pcauto.com.cn/h5/' //云展厅
+	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
+	UPC:'https://upc2.pc.com.cn'
 }
 
 //测试环境域名
@@ -23,11 +25,11 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
-	// changan:'https://devqd-changan.pcauto.com.cn/',
-	// changan:"https://devqd-changan.pcauto.com.cn",
+	// changan:"https://tccar.pcauto.com.cn",
+	changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' //云展厅
+	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	UPC:'https://qa-upc2.pc.com.cn'
 }
 
 
@@ -41,11 +43,19 @@ const config = {
 	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
+	
+	version:version,
 
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
 
 	api: {
-		login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		// #ifdef MP-WEIXIN
+		 login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		// #endif
+		
+		// #ifdef MP-TOUTIAO
+		 login:  `${DOMAIN.changan}/api/xcx/user/dy/login`,
+		// #endif
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
 		//
@@ -79,6 +89,7 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
+		//获取优惠券
 		userOuponsDet:`${DOMAIN.changan}/api/xcx/coupon/detail/user`,
 		// vehicleOupons 车型展厅，获取优惠券
 		vehicleOupons: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleOupons`,
@@ -224,6 +235,18 @@ const config = {
 		fetchRedPacketRecord: `${DOMAIN.changan}/rpr/api/redPacket/record`,
 		// 获取开红包状态
 		fetchRedPacketStatus: `${DOMAIN.changan}/rpr/api/redPacket/status`,
+		// 图库url
+		VRouter: `${DOMAIN.changan}/wap/#/outer`,
+		// 积分查询 
+	    score: `${DOMAIN.changan}/api/xcx/user/score`,
+		// UPC
+		uploadUPC:`${DOMAIN.UPC}/api/images/post?appCode=demo&token=admin123&passportId=489798471&clientIp=192.168.18.166&fileExt=jpg&bizType=pcncc`,
+		// submit
+		submit: `${DOMAIN.changan}/api/xcx/feedback/submit`,		
+		// 注册
+		userBind: `${DOMAIN.changan}/api/xcx/user/bind`,
+		// 刷新token
+		refreshToken: `${DOMAIN.changan}/api/xcx/user/refreshToken`,
 	},
 	getAPI(key) {
 		let url;

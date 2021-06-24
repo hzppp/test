@@ -1,4 +1,6 @@
 <template>
+	<view>
+	  <userBand></userBand>
 	<view class="activity" v-if="soureDone">
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth" style="top: 128rpx;"></button>
 		<!-- <share-pop ref="shareSuccess"></share-pop> -->
@@ -11,7 +13,7 @@
 
 		<view class="zw"></view>
 		<view class="operation-list">
-			<view class="type-c" v-if="actiDone">
+			<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else>
@@ -19,6 +21,7 @@
 			</view>
 		</view>
 	</view>
+		</view>
 </template>
 
 <script>
@@ -29,13 +32,14 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-
+    import userBand from '@/components/userBand/userBand'
 	let app = getApp()
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
 			'form-pop': formpop,
 			'page-top': pageTop,
+			'userBand':userBand
 			// 'share-pop': shareSuccess
 		},
 		data() {
@@ -53,7 +57,7 @@
 		async onLoad(options) {
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
-			await login.checkLogin(api)
+			// await login.checkLogin(api)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
@@ -117,11 +121,6 @@
 				} = await api.getFission({
 					activityId: this.activityId
 				})
-				if(code == 10){
-					// 活动以下架
-					console.log('活动已经结束')
-					this.actiDone =  true
-				}else{
 				if (data) {
 					let isApply = data.isApply
 					if (isApply == 1) {
@@ -130,13 +129,28 @@
 						})
 					}
 				}	
-				}
+				// if(code == 10){
+				// 	// 活动以下架
+				// 	console.log('活动已经结束')
+				// 	this.actiDone =  true
+				// }else{
+				// if (data) {
+				// 	let isApply = data.isApply
+				// 	if (isApply == 1) {
+				// 		uni.reLaunch({
+				// 			url: '/pages/lotteryPage?activityId=' + this.activityId
+				// 		})
+				// 	}
+				// }	
+				// }
 				this.soureDone = true
 
 			},
 
 			formShow() {
-				wx.aldstat.sendEvent('报名活动')
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('报名活动')
+				// #endif
 				this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
 			},
 			// 分享按钮被点击

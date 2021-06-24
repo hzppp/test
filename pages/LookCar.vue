@@ -1,19 +1,22 @@
 <template>
 	<view class="cars-page">
         <view class="image-wrap" v-if="serialData.videoUrl">
-            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl"></video>
+            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;"></video>
+            <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
         <!-- <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap> -->
 
 
         <view class="image-wrap">
+			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
-            <i class="vr-icon" @tap="goVr"></i>
+		    <!-- 按钮 -->
+		     <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
         </view>
 
-        <!-- 按钮 -->
-        <BtnWrap :ids="ids" :serialId="serialId"></BtnWrap>
+      
+   
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' />
@@ -36,8 +39,8 @@
 
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
-
-
+import domain from '@/configs/interface';
+let app = getApp()
 export default {
     components: {btnWrap},
     data() {
@@ -69,13 +72,30 @@ export default {
         },
         //预约试驾
         goYuyue(){
-            wx.aldstat.sendEvent('预约试驾点击')
+			// #ifdef MP-WEIXIN
+			  wx.aldstat.sendEvent('预约试驾点击')
+			// #endif
+          
             uni.navigateTo({
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
         },
+		// vr 图库
+		toVR(){
+		let openId =  app.globalData.wxUserInfo.openId;	
+		let url1 = domain.getAPI('VRouter') + '?sgId=' + this.serialId +'&openId=' + openId
+		console.log(url1)
+		let path = '/pages/webview?webURL=' + encodeURIComponent(url1)
+		
+		console.log(path)
+		uni.navigateTo({
+		  url: path,
+		})	
+		},
 		goXundijia(){
-			wx.aldstat.sendEvent('车系页获取实时底价点击')
+			// #ifdef MP-WEIXIN
+			 wx.aldstat.sendEvent('车系页获取实时底价点击')
+			// #endif
 			uni.navigateTo({
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
 			})
@@ -146,6 +166,15 @@ export default {
             
         }
     }
+	.vsIcon{
+		position: absolute;
+		width: 100rpx !important;
+		height: 100rpx !important;
+		top: 20rpx;
+		right: 20rpx;
+		
+		box-sizing: border-box;
+	}
     .btn-wrap {
         position: fixed;
         width: 100%;

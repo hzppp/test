@@ -40,8 +40,7 @@
 			"style": {
 				"navigationBarTitleText": "活动",
 				"enablePullDownRefresh": true,
-				"navigationStyle": "custom",
-				"backgroundTextStyle": "light"
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -266,6 +265,20 @@
 				"navigationBarTitleText": "奖品详情",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/Suggestion",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/userBandv",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"tabBar": {
@@ -275,16 +288,25 @@
 		"backgroundColor": "#fff",
 		"borderStyle": "black",
 		"list": [{
-			"pagePath": "pages/index",
-			"text": "首页",
-			"iconPath": "static/images/tab1_icon.png",
-			"selectedIconPath": "static/images/tab1_icon_c.png"
-		},
+				"pagePath": "pages/index",
+				"text": "首页",
+				"iconPath": "static/images/tab1_icon.png",
+				"selectedIconPath": "static/images/tab1_icon_c.png"
+			},
+			// #ifdef MP-WEIXIN
 			{
 				"pagePath": "pages/live",
 				"text": "直播",
 				"iconPath": "static/images/tab2_icon.png",
 				"selectedIconPath": "static/images/tab2_icon_c.png"
+			},
+			// #endif
+			
+			{
+				"pagePath": "pages/exhibition",
+				"text": "云展厅",
+				"iconPath": "static/images/tab3_icon.png",
+				"selectedIconPath": "static/images/tab3_icon_c.png"
 			},
 			{
 				"pagePath": "pages/welfareActivity",

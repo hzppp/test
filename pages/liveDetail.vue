@@ -1,7 +1,7 @@
 <template>
 	<block v-if="liveObj">
 		<view class="live-detail">
-			<view class="pageTop-back-btn" @tap="navigateBack" :style="'top:' + height + 'px'"></view>
+			<view class="pageTop-back-btn" @tap="back" :style="'top:' + height + 'px'"></view>
 			<view class="banner">
 				<image :src="liveObj.cover"></image>
 			</view>
@@ -57,6 +57,7 @@
 				title: '12312',
 				liveObj: null,
 				height: 0,
+				share:''
 			}
 		},
 		async created() {
@@ -72,10 +73,17 @@
 			console.log('son==', this.height)
 		},
 		methods: {
-			navigateBack() {
+			back() {
+				if(this.share == 'share'){
+					uni.reLaunch({
+						url:"/pages/authorization"
+					})
+				}else{
 				uni.navigateBack({
 					delta: 1
-				})
+				})	
+				}
+				
 			},
 			async getLiveDetail() {
 				let {
@@ -90,17 +98,22 @@
 			},
 		},
 		onShareAppMessage(res) {
-			wx.aldstat.sendEvent('直播预告分享') 
+			// #ifdef MP-WEIXIN
+			 wx.aldstat.sendEvent('直播预告分享') 
+			// #endif
 			if (res.from === 'button') { // 来自页面内分享按钮
 				console.log(res.target)
 			}
 			return {
 				title: this.liveObj.title,
-				path: '/pages/liveDetail?liveId=' + this.id
+				path: '/pages/liveDetail?liveId=' + this.id + '&share=share',
+				imageUrl: this.liveObj.cover
 			}
 		},
 		onLoad(options) {
 			this.id = options.liveId
+			this.share = options.share
+			console.log(options)
 			this.getLiveDetail()
 			// console.log('app.globalData.currentLocation:', app.globalData.currentLocation)
 		},

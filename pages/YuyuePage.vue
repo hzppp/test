@@ -1,5 +1,6 @@
 <template> 
     <view>
+	<userBand></userBand>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
@@ -24,9 +25,9 @@
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
-                    {{currentDealer.name?currentDealer.name:""}}
+                    {{currentDealer.name?currentDealer.name:"暂无对应经销商"}}
                 </view>
-                <view class="arrow"></view>
+                <view class="arrow" v-show="currentDealer.name"></view>
             </view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
@@ -57,6 +58,7 @@ import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
 import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
+import userBand from '@/components/userBand/userBand'
 let app = getApp()
 
 
@@ -66,7 +68,7 @@ let app = getApp()
 const COUNTDOWN = 60
 
     export default {
-        components:{pop,pyBoomV},
+        components:{pop,pyBoomV,userBand},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -127,7 +129,7 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             // console.log('111111options :>> ', options);
-            await login.checkLogin(api)
+            // await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
 			if(this.serialId == ""){
@@ -290,13 +292,18 @@ const COUNTDOWN = 60
                     }else {
                         return uni.showToast({
                             title:res.msg,
-                            icon:"none"
+                            icon:"none",
+							duration:2000
+							
                         })
                     }
                 } catch (error) {
                     console.error(error)
                 }finally {
-                    uni.hideLoading()
+					setTimeout(() => {
+						uni.hideLoading()
+					}, 2000)
+                    
                 }
             },
             //经销商点击，判断提示
@@ -307,6 +314,9 @@ const COUNTDOWN = 60
                         icon:"none"
                     })
                 }
+				if(!this.currentDealer.name){
+					return
+				}
                 // /this.currentCity.id
                 uni.navigateTo({
                   url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`

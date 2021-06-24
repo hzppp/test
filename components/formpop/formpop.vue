@@ -36,9 +36,8 @@
 						:class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
 						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 					</picker>
-					<view v-else class="input-view dealer-input jt-icon placeholder"
-						@tap="showToast(!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商')">
-						<view>{{!crtDistrictItem.id ? '该城市无经销商' : '该地区无经销商'}}</view>
+					<view v-else class="input-view dealer-input  ">
+						<view>暂无对应经销商</view>
 					</view>
 				</block>
 				<!-- 经销商 E -->
@@ -204,7 +203,10 @@
 			},
 			closeBtnClick() {
 				if (this.from == 'activity') {
-					wx.aldstat.sendEvent('报名活动留资退出')
+					// #ifdef MP-WEIXIN
+					 wx.aldstat.sendEvent('报名活动留资退出')
+					// #endif	
+					
 				}
 				this.formHide()
 			},
@@ -296,7 +298,10 @@
 			},
 			async submit() {
 				if (this.from == 'activity') {
-					wx.aldstat.sendEvent('报名活动留资提交')
+					// #ifdef MP-WEIXIN
+					 wx.aldstat.sendEvent('报名活动留资提交')
+					// #endif	
+					
 				}
 				let ly = this.from
 				let lydx = this.currentObj
@@ -384,14 +389,14 @@
 					}
 					this.popName = popname
 				} else if (data.code == 2) { //重复留资
-					if (ly == 'lbactivity') {
-						//跳转抽奖
-					    this.popName = 'lbactivity'
-						uni.navigateTo({
-							url:'/pages/lotteryPage?activityId=' + lydx.id
-						})
-						return
-					}
+					// if (ly == 'lbactivity') {
+					// 	//跳转抽奖
+					//     this.popName = 'lbactivity'
+					// 	uni.navigateTo({
+					// 		url:'/pages/lotteryPage?activityId=' + lydx.id
+					// 	})
+					// 	return
+					// }
 
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'

@@ -2,11 +2,11 @@
 	<view>
 		<!-- @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove" -->
 		<view class="swiperPanel" @touchstart="startMove" @touchend="endMove">
-			<view class="swiperItem" v-for="(item, index) in swiperList" :key="index"
+			<view class="swiperItem" v-for="(item, index) in swiperList2" :key="index"
 				:style="{transform: itemStyle[index].transform, zIndex: itemStyle[index].zIndex, opacity: itemStyle[index].opacity}"
 				@tap="touch(item)">
 				<view class="children">
-					<image class="pic" :src="item.picUrl" lazy-load="true"></image>
+					<image class="pic" :src="item.picUrl" lazy-load="true" mode="aspectFill"></image>
 				</view>
 			</view>
 		</view>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import api from '@/public/api/index'
 	export default {
 		props: {
 			swiperList: {
@@ -30,7 +31,8 @@
 				screenWidth: 0,
 				itemStyle: [],
 				longlock: true,
-				timeOutEvent: 0
+				timeOutEvent: 0,
+				swiperList2:[]
 			};
 		},
 		created() {
@@ -40,6 +42,8 @@
 			this.swiperList.forEach((item, index) => {
 				this.itemStyle.push(this.getStyle(index))
 			})
+			this.swiperList2 = this.swiperList
+			
 		},
 		methods: {
 			getStyle(e) {
@@ -64,6 +68,79 @@
 					}
 				}
 			},
+			
+			async getActData(contentId){
+			    let {
+					data = {}
+				} = await api.getActivityContent(contentId);
+				let item = data
+				// console.log('dadad' + JSON.stringify(item))
+				switch(item.redirectType) {
+				  case 0: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
+				  case 1: {
+				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
+				      uni.navigateTo({
+				        url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+				      })
+				    }
+				    break;
+				  }
+				  case 2: {
+					if(item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36'){
+						// 说明是自己的小程序
+						uni.navigateTo({
+						  url: item.miniUrl
+						})
+						return
+					}	
+				      uni.navigateToMiniProgram({
+				        appId: item.appId,
+				        path: item.miniUrl,
+				        success: res => {
+				          // 打开成功
+				          console.log("打开成功", res);
+				        },
+				        fail: err => {
+				          console.log("打开失败", err);
+				          uni.showToast({
+				            title: "跳转小程序失败",
+				            icon: "none"
+				          })
+				        },
+				        // envVersion: 'trial'
+				      });
+				    break;
+				  }
+				  default: {
+				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
+				      let url = '/pages/lbActivity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }else{
+				      let url = '/pages/activity?id=' + item.id
+				      uni.navigateTo({
+				        url
+				      })
+				    }
+				    break;
+				  }
+				}
+			},
+			
 			touchstart(e) {
 				this.longlock = false; // 每次点击都设置为false
 				// 加背景颜色操作
@@ -128,7 +205,10 @@
 			},
 
 			touch(item) {
-				wx.aldstat.sendEvent('首页Banner')
+				// #ifdef MP-WEIXIN
+				  wx.aldstat.sendEvent('首页Banner')
+				// #endif	
+				
 				console.log(JSON.stringify(item))
 				let type = item.contentType;
 				let  contentId = item.contentId
@@ -137,17 +217,20 @@
 				console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
-						wx.aldstat.sendEvent('精选资讯点击')
+						// #ifdef MP-WEIXIN
+						  wx.aldstat.sendEvent('精选资讯点击')
+						// #endif
 						uni.navigateTo({
 							url: `/pages/article?articleId=${contentId}`
 						})
 						break;
 					}
 					case 2: {
-						wx.aldstat.sendEvent('精选活动点击')
-						uni.navigateTo({
-							url: `/pages/activity?id=${contentId}`
-						})
+						this.getActData(contentId)
+						// wx.aldstat.sendEvent('精选活动点击')
+						// uni.navigateTo({
+						// 	url: `/pages/activity?id=${contentId}`
+						// })
 						break;
 					}
 					case 3: {
@@ -155,7 +238,7 @@
 						switch (status) {
 							case 0: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}
@@ -165,7 +248,7 @@
 							}
 							case 2: {
 								uni.navigateTo({
-									url: `/pages/liveDetail?liveId=${contentId}`
+									url: `/pages/liveDetail?liveId=${item.livestreamId}`
 								})
 								break;
 							}
@@ -180,7 +263,7 @@
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
 				const oUrl =
-					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${sourceId}&type=${type}&sourceId=${id}`
 				console.log('oUrl', oUrl)
 				uni.navigateToMiniProgram({
 					appId: 'wxa860d5a996074dbb',
@@ -192,7 +275,7 @@
 					fail: err => {
 						console.log(err);
 					},
-					envVersion: 'trial'
+					// envVersion: 'trial'
 				});
 			}
 
@@ -203,7 +286,7 @@
 <style lang="scss">
 	.swiperPanel {
 		margin: 0rpx 0;
-		height: 500rpx;
+		height: 970rpx;
 		width: 100%;
 		overflow: hidden;
 		position: relative;

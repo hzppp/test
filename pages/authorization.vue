@@ -1,12 +1,12 @@
 <template>
-  <view>
-    <!--		<loading ref="loading"></loading>-->
-    <!--		<view class="authorization" v-if="isUserInfoPage">-->
-    <!--			<view class="authorization-pop">-->
-    <!--				<button class="getUserInfo-btn" lang="zh_CN" @getuserinfo="getWxUserInfoButton" open-type="getUserInfo"></button>-->
-    <!--			</view>-->
-    <!--		</view>-->
-  </view>
+<!--  <view>
+    <loading ref="loading"></loading>
+    <view class="authorization" v-if="isShowPhoto">
+    <view class="authorization-pop">
+  		<button class="coupon-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)" @tap.stop="stop" >获取手机号</button>
+    </view>
+    </view>		
+  </view> -->
 </template>
 
 <script>
@@ -18,7 +18,9 @@ import api from '@/public/api/index'
 let app = getApp()
 export default {
   data() {
-    return {}
+    return {
+		isShowPhoto: false
+	}
   },
   async onLoad(options) {
     // this.$refs.loading.changeLoading(true);
@@ -43,25 +45,49 @@ export default {
       app.globalData.salesId = options.salesId
     }
 
-    await login.checkLogin(api)
+ let code =   await login.checkLogin(api)
+ if(code == 1){
+	 //需要绑定手机号
+	 console.log('没有绑定过，需要授权手机号')
+	 // this.isShowPhoto = true 
+	 this.goPage(options)
+ }else{
+	 this.goPage(options)
+ }
+ console.log('code',code)
 
-    let cs = ''
-    let url = '/pages/index'
-    for (let i in options) {
-      cs += `${i}=${options[i]}&`
-    }
-    if (options.to) {
-      if (options.to == 'ddxq') {//动态详情页面
-        options.to = 'dynamicDetails'
-      } else if (options.to == 'xcsfq') {//新春送福气页面
-        options.to = 'moneyActivity'
-      }
-      cs = cs.substr(0, cs.length - 1)
-      url = `/pages/${options.to}?${cs}`
-    }
-    uni.reLaunch({url})
+   
   },
-  methods: {
+  methods: {  
+	  // async getPhoneNumber(e) {
+	  // 	let {
+	  // 		detail
+	  // 	} = e
+	  // 	console.log('getPhoneNumber===============',detail.encryptedData, detail.iv)
+	  // 	// api.userBind
+		 // await login.userBind(api,detail.encryptedData,detail.iv)
+	  // },
+	  // stop() {
+	  // 	console.log('stop')
+	  // },
+	goPage(options){
+		let cs = ''
+		let url = '/pages/index'
+		for (let i in options) {
+		  cs += `${i}=${options[i]}&`
+		}
+		if (options.to) {
+		  if (options.to == 'ddxq') {//动态详情页面
+		    options.to = 'dynamicDetails'
+		  } else if (options.to == 'xcsfq') {//新春送福气页面
+		    options.to = 'moneyActivity'
+		  }
+		  cs = cs.substr(0, cs.length - 1)
+		  url = `/pages/${options.to}?${cs}`
+		}
+		uni.reLaunch({url})
+	},
+	  
     GetQueryString(str, name) {
       var reg = new RegExp("(^|-)" + name + "=([^-]*)(-|$)");
       var r = str.match(reg);

@@ -1,5 +1,6 @@
 <template>
     <view>
+		<userBand></userBand>
         <view  class="get-preferential" v-if="serialData.id">
         <pop ref="pop"></pop>
         <!-- 顶部提示S -->
@@ -53,9 +54,9 @@
             <view class="list models">
                 <view class="list-title">经销商</view>
                 <view class="select" @tap="changDealers">
-                    {{currentDealer.name? currentDealer.name : ''}}
+                    {{currentDealer.name? currentDealer.name : '暂无对应经销商'}}
                 </view>
-                <view class="arrow"></view>
+                <view v-show="currentDealer.name" class="arrow"></view>
             </view>
             <!-- 经销商E -->
             <view class="btn-area">
@@ -76,6 +77,7 @@ import pop from '@/components/apop/aPop'
 import distance from '@/units/distance'
 import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
+import userBand from '@/components/userBand/userBand'
 let app = getApp()
 
 /* *
@@ -85,7 +87,7 @@ const COUNTDOWN = 60
 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
     export default {
-        components: {pop,pyBoomV},
+        components: {pop,pyBoomV,userBand},
         data() {
             return {
                 phoneNum: '', //手机号码
@@ -134,7 +136,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
         },
        async onLoad(options) {
             console.log('options :>> ', options);
-            await login.checkLogin(api)
+            // await login.checkLogin(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {
@@ -215,6 +217,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     })
                 }
                 // /this.currentCity.id
+				if(!this.currentDealer.name){
+					return
+				}
                 uni.navigateTo({
 				  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`
 				})

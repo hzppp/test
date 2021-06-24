@@ -1,11 +1,13 @@
 <template>
 	<view>
-
+       <userBand></userBand>
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 
+<!--    #ifdef MP-WEIXIN-->
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
 			@tap="getWxUserInfoAuth"></button>
+<!--  #endif  -->
 		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
@@ -18,7 +20,11 @@
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
 								<view class="phonetitle">{{photo}}</view>
-
+							</view>
+							<view v-if="score" class="phoneV">
+								<image class="scoreVicon"
+									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/score.png"></image>
+								<view class="scoretitle">{{score}}</view>
 							</view>
 
 						</view>
@@ -37,10 +43,10 @@
 			</view>
 
 			<view class="box">
-				<view class="box-list list2" @tap="tocard">
+				<!-- <view class="box-list list2" @tap="tocard">
 					<view class="p1">我的优惠券</view>
 					<view class="right isApprove"></view>
-				</view>
+				</view> -->
 				<view class="line"></view>
 				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
@@ -54,6 +60,10 @@
 				<view class="line"></view>
 				<view class="box-list list3" @tap="tomyvideo">
 					<view class="p1">新媒体营销查询</view>
+					<view class="right isApprove"></view>
+				</view>
+				<view class="box-list list5" @tap="tomSuggestion">
+					<view class="p1">意见反馈</view>
 					<view class="right isApprove"></view>
 				</view>
 				<!-- <view class="box-list list4">
@@ -70,8 +80,9 @@
 			<image src=""></image>
 		</view> -->
 		<testDrive aldEventName='我的页面预约试驾'></testDrive>
+<!--  #ifndef MP-TOUTIAO  -->
 		<viewTabBar :current="4"></viewTabBar>
-
+<!-- #endif -->
 	</view>
 </template>
 
@@ -85,13 +96,14 @@
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import tabBar from '@/components/tabBar/tabBar'
 	import toast from '@/units/showToast'
-
+    import userBand from '@/components/userBand/userBand'
 	let app = getApp()
 	export default {
 		components: {
 			'pageTopCity': pageTopCity,
 			'viewTabBar': tabBar,
-			testDrive
+			testDrive,
+			userBand
 			// 'share-pop': shareSuccess
 		},
 		mixins: [shouquan],
@@ -110,7 +122,8 @@
 				isshowUpload: false,
 				fail: false,
 				photo: null,
-				imageData: []
+				imageData: [],
+				score:''
 			}
 		},
 
@@ -131,6 +144,9 @@
 					this.imageData = data[0]
 				}
 			}
+			let scoreData = await api.getScore()
+			console.log('scoreData=' + scoreData)
+             this.score = scoreData.score
 
 
 			// this.qiandao()
@@ -182,14 +198,18 @@
 		},
 		methods: {
 			tocard() {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的优惠券点击')
+				// #endif
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
 			},
 			toactivity() {
-				wx.aldstat.sendEvent('我的活动点击')
-				uni.navigateTo({
+				// #ifdef MP-WEIXIN
+			    wx.aldstat.sendEvent('我的活动点击')
+				// #endif
+		    	uni.navigateTo({
 					url: '/pages/myActivity'
 				})
 			},
@@ -203,11 +223,21 @@
 					url: '/pages/myvideo'
 				})
 			},
+			tomSuggestion(){
+				uni.navigateTo({
+					url: '/pages/Suggestion'
+				})
+			},
 			goImageDetail() {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的页面广告图')
+				// #endif
 				if (this.imageData) {
 					if (this.imageData.type == 1) {
 						// H5
+						api.fetchActivityVisit({
+							'activityId': this.imageData.originalId
+						})
 						let url = this.imageData.url
 						uni.navigateTo({
 							url: `/pages/webview?webURL=${url}`

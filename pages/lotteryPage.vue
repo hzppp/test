@@ -1,5 +1,6 @@
 <template>
   <view class="container">
+	<userBand></userBand>
     <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title" :homeBtn="true"></pageTopCommon>
     <view class="content">
       <view class="luckyWheel">
@@ -18,7 +19,7 @@
             :defaultStyle="defaultStyle"
             @start="startCallBack"
             @end="endCallBack"
-            v-if="!showDialogL"
+            :showDialogL = "showDialogL"
         />
         <view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
       </view>
@@ -46,7 +47,7 @@
             <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
             <view class="mbt14">1.报名成功即可获得1次抽奖机会，每邀请1名好友助力拼车成功，可增加1次抽奖机会。</view>
             <view class="mbt14">2.每人每天最多可抽奖10次，奖品数量有限，先到先得。</view>
-            <view class="mbt14">3.购车、售后服务代金券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
+            <view class="mbt14">3.购车、售后保养代金券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
             <view class="mbt14">4.购车客户电话号码和活动报名电话号码需保持一致，否则将导致奖券无法使用。</view>
             <view class="mbt14">5.如果用户存在违规行为（包括但不限于作弊、刷中奖、洗钱、恶意套现），将取消用户活动资格。</view>
             <view class="mbt14">**本次活动解释权归长安乘用车营销事业部所有</view>
@@ -62,18 +63,18 @@
           <view class="tBody gotPrize">
             <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
             <view class="time">有效期至：{{lotteryRes.endTime || '-'}}</view>
-            <view class="lotteryType">
+            <view class="lotteryType" v-if="lotteryRes.kind.length==5">
               <view>{{lotteryRes.kind.substr(0,2)}}</view>
               <view>{{lotteryRes.kind.substr(2,5)}}</view>
             </view>
-<!--            <view class="lotteryType" v-else>-->
-<!--&lt;!&ndash;            <view class="lotteryType long" v-else>&ndash;&gt;-->
-<!--              <view>保养</view>-->
-<!--              <view>代金券</view>-->
-<!--            </view>-->
+            <view class="lotteryType long" v-else>
+<!--            <view class="lotteryType long" v-else>-->
+              <view>{{lotteryRes.kind.substr(0,3)}}</view>
+              <view>{{lotteryRes.kind.substr(3,7)}}</view>
+            </view>
           </view>
           <view class="tFoot">
-            <button class="left" @tap="goLotteryDeatail(lotteryRes.lotteryId)">查看详情</button>
+            <button class="left" @tap="goLotteryDetail(lotteryRes.lotteryId)">查看详情</button>
             <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
@@ -99,9 +100,10 @@ import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 const app = getApp()
 import api from '@/public/api/index'
 import login from '@/units/login'
+import userBand from '@/components/userBand/userBand'
 export default {
   name: "lotteryPage",
-  components: {LuckyWheel,pageTopCommon},
+  components: {LuckyWheel,pageTopCommon,userBand},
   data() {
     return {
       inviteRecordList: [],
@@ -131,7 +133,7 @@ export default {
     })
     const {activityId=0} = options
     this.activityId = activityId
-    await login.checkLogin(api)
+    // await login.checkLogin(api)
     //邀请记录list
     this.inviteRecordList = await api.getInviteRecordList({pageNo:1,pageSize:3,activityId}).then(res => {
       this.inviteRecordCount = res.total || 0
@@ -146,7 +148,7 @@ export default {
           icon:"none"
         })
         app.globalData.isRotating = false;
-        return;
+        return {};
         // setTimeout(()=> {
         //   uni.reLaunch({
         //     url:"/pages/authorization"
@@ -158,25 +160,45 @@ export default {
           icon:"none"
         })
         app.globalData.isRotating = false;
-        return;
+        return {};
       }
+    }).finally(res => {
+      console.log('this.lotteryActInfo',this.lotteryActInfo)
     })
-    if(!this.lotteryActInfo.isApply) {
+    this.lotteryActInfo.winnerRecords.reverse()
+    if(!(this.lotteryActInfo.isApply)) {
       //跳到留资页
+      console.log('this.lotteryActInfo.isApply',this.lotteryActInfo.isApply)
+      const wxUserInfo = uni.getStorageSync('wxUserInfo')
+      const url = `/pages/lbActivity?id=${this.activityId}`
+      uni.showToast({
+        title:'您暂未留资',
+        icon:"none"
+      })
+      setTimeout(()=> {
+        uni.reLaunch({
+          url
+        })
+      },1000)
+      return;
     }
     // `../../static/images/prize_${item.id}.png`
     this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.prizeCode-b.prizeCode)
-    this.lotteryActInfo.prizeList.length && this.lotteryActInfo.prizeList.forEach((item,index) => {
-      this.prizes.push({ title: '', background: '#c3ecff', fonts: [{ text: '', top: '18%' }],
-        imgs:[
-          {
-            src:`../../static/images/prize_${item.prizeCode}.png`,width:'100%',height: '100%',top:'1rpx'
-          }
-        ] })
-      if(index == this.lotteryActInfo.prizeList.length-1) {
-        uni.hideLoading()
-      }
-    })
+    if(this.lotteryActInfo.prizeList.length){
+      this.lotteryActInfo.prizeList.forEach((item, index) => {
+        this.prizes.push({
+          title: '', background: '#c3ecff', fonts: [{text: '', top: '18%'}],
+          imgs: [
+            {
+              src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
+            }
+          ]
+        })
+        if (index == this.lotteryActInfo.prizeList.length - 1) {
+          uni.hideLoading()
+        }
+      })
+    }
   },
   async onShareAppMessage() {
     let {
@@ -257,7 +279,7 @@ export default {
     closeDialog() {
       this.showDialogL = false;
     },
-    goLotteryDeatail(id) {
+    goLotteryDetail(id) {
       this.closeDialog()
       setTimeout(()=> {
         let url = `/pages/lotteryDetail?id=${id}`;
@@ -310,9 +332,11 @@ export default {
   background: #000052;
   position: relative;
   .content {
+    overflow-x: hidden;
+    width: 100%;
     .luckyWheel {
       position: relative;
-      .setbg(750rpx, 1130rpx, 'lottory_bg.png');
+      .setbg(100%, 1130rpx, 'lottory_bg.png');
       .lotteryList {
         position: absolute;
         left: 16rpx;
@@ -463,28 +487,28 @@ export default {
           padding:30rpx 0 30rpx 20rpx;
           font-size: 28rpx;
           /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-          ::-webkit-scrollbar
-          {
-            width: 16upx!important;
-            height: 16upx!important;
-            background-color: blue;
-          }
-
-          /*定义滚动条轨道 内阴影+圆角*/
-          ::-webkit-scrollbar-track
-          {
-            // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: 10px;
-            background-color: #1806a3;
-          }
-
-          /*定义滑块 内阴影+圆角*/
-          ::-webkit-scrollbar-thumb
-          {
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-            background-color: #F5F5F5;
-          }
+          //::-webkit-scrollbar
+          //{
+          //  width: 16upx!important;
+          //  height: 16upx!important;
+          //  background-color: blue;
+          //}
+          //
+          ///*定义滚动条轨道 内阴影+圆角*/
+          //::-webkit-scrollbar-track
+          //{
+          //  // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          //  border-radius: 10px;
+          //  background-color: #1806a3;
+          //}
+          //
+          ///*定义滑块 内阴影+圆角*/
+          //::-webkit-scrollbar-thumb
+          //{
+          //  border-radius: 10px;
+          //  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+          //  background-color: #F5F5F5;
+          //}
         }
       }
     }
