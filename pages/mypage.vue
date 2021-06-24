@@ -12,7 +12,10 @@
 						<view class="name_info">
 							<view class="name">
 								<open-data type="userNickName"></open-data>
-								<view>{{name}}</view>
+								<!--  #ifdef MP-TOUTIAO  -->
+										<view>{{name}}</view>
+								<!-- #endif -->
+								
 							</view>
 							<view v-if="photo" class="phoneV">
 								<image class="phoneVicon"
@@ -30,7 +33,9 @@
 					</view>
 
 					<view class="head">
-						<image :src="wxHead"></image>
+						<!--  #ifdef MP-TOUTIAO  -->
+							<image :src="wxHead"></image>
+						<!-- #endif -->
 						<open-data type="userAvatarUrl"></open-data>
 					</view>
 
@@ -42,10 +47,10 @@
 			</view>
 
 			<view class="box">
-				<!-- <view class="box-list list2" @tap="tocard">
-					<view class="p1">我的优惠券</view>
+				<view class="box-list list2" @tap="toMyicon">
+					<view class="p1">我的金币</view>
 					<view class="right isApprove"></view>
-				</view> -->
+				</view>
 				<view class="line"></view>
 				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
@@ -96,6 +101,7 @@
 	import tabBar from '@/components/tabBar/tabBar'
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
+	import domain from '@/configs/interface';
 	let app = getApp()
 	export default {
 		components: {
@@ -146,8 +152,8 @@
 				}
 			}
 			let scoreData = await api.getScore()
-			console.log('scoreData=' + scoreData)
-             this.score = scoreData.score
+			console.log('scoreData=' , scoreData)
+             this.score = scoreData.data.score
 			 if(app.globalData.haveUserInfoAuth){
 				this.name=app.globalData.wxUserInfo.wxName ,
 				this.wxHead=app.globalData.wxUserInfo.wxHead 
@@ -197,8 +203,6 @@
 
 			// console.log('getsignIn', data)
 
-
-
 		},
 		methods: {
 			callback(){
@@ -215,6 +219,18 @@
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
+			},
+			toMyicon(){
+				let token  =  uni.getStorageSync('session-3rd')
+				if(token){
+					let url = encodeURIComponent(domain.getAPI('mystore') + '?token=' + token)
+					console.log('url',url)
+					uni.navigateTo({
+						url: `/pages/webview?webURL=${url}` 
+					})
+				}else{
+					this.$toast('请先登录')
+				}
 			},
 			toactivity() {
 				// #ifdef MP-WEIXIN

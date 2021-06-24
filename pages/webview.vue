@@ -13,7 +13,7 @@
 			}
 		},
 		async onLoad(options) {
-			console.log(options.webURL)
+			console.log(options.webURL,unescape(options.webURL))
 			this.getURL(options)
 		},
 		methods: {

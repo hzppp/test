@@ -16,7 +16,8 @@ var DOMAIN_R = {
 	changan:"https://ccar.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
-	UPC:'https://upc2.pc.com.cn'
+	UPC:'https://upc2.pc.com.cn',
+	mystore:'https://ssl.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.htm'
 }
 
 //测试环境域名
@@ -25,11 +26,12 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	// changan:"https://tccar.pcauto.com.cn",
-	changan:'https://devqd-changan.pcauto.com.cn',
+	changan:"https://tccar.pcauto.com.cn",
+	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
-	UPC:'https://qa-upc2.pc.com.cn'
+	UPC:'https://qa-upc2.pc.com.cn',
+	mystore:'https://ssl.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.htm'
 }
 
 
@@ -218,6 +220,9 @@ const config = {
 		fetchActivityVisit: `${DOMAIN.changan}/api/xcx/activity/visit`,
 		// 云展厅地址
 		webUrl:`${DOMAIN.webUrl}`,
+		// 商城
+		mystore:`${DOMAIN.mystore}`,
+
 		// 中奖记录list
 		lotteryRecordList: `${DOMAIN.changan}/api/xcx/lottery/record/page`,
 		// 中奖记录list
