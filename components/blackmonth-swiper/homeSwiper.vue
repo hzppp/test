@@ -106,6 +106,10 @@
 						})
 						return
 					}	
+					// #ifndef MP-WEIXIN
+					this.$toast('请在微信搜索本小程序参与')
+					// #endif
+					// #ifdef MP-WEIXIN
 				      uni.navigateToMiniProgram({
 				        appId: item.appId,
 				        path: item.miniUrl,
@@ -122,6 +126,7 @@
 				        },
 				        // envVersion: 'trial'
 				      });
+					  // #endif
 				    break;
 				  }
 				  default: {
@@ -265,6 +270,10 @@
 				const oUrl =
 					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${sourceId}&type=${type}&sourceId=${id}`
 				console.log('oUrl', oUrl)
+				// #ifndef MP-WEIXIN
+				this.$toast('请在微信搜索本小程序参与')
+				// #endif
+				// #ifdef MP-WEIXIN
 				uni.navigateToMiniProgram({
 					appId: 'wxa860d5a996074dbb',
 					path: oUrl,
@@ -277,6 +286,7 @@
 					},
 					// envVersion: 'trial'
 				});
+				// #endif
 			}
 
 		}

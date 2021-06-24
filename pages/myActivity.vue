@@ -148,6 +148,10 @@
 			  api.fetchActivityVisit({
 			  	'activityId': item.id
 			  })
+			  // #ifndef MP-WEIXIN
+			  this.$toast('请在微信搜索本小程序参与')
+			  // #endif
+			  // #ifdef MP-WEIXIN
             uni.navigateToMiniProgram({
               appId: item.appId,
               path: item.miniUrl,
@@ -164,7 +168,8 @@
               },
               // envVersion: 'trial'
             });
-            break;
+            // #endif
+			break;
           }
           default: {
             if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){

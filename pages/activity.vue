@@ -25,9 +25,9 @@
 				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 		</view>
-		<!-- customAdList -->
+		<!-- customAdList --> 
 		<view v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
-			<image class="cover" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
+			<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 		</view>
 
 
@@ -209,6 +209,10 @@
 							})
 							return
 						}
+						// #ifndef MP-WEIXIN
+					    this.$toast('请在微信搜索本小程序参与')
+						// #endif
+						 // #ifdef MP-WEIXIN
 						uni.navigateToMiniProgram({
 							appId: item.appId,
 							path: item.miniUrl,
@@ -225,6 +229,7 @@
 							},
 							// envVersion: 'trial'
 						});
+						 // #endif
 						break;
 					}
 				}
@@ -361,6 +366,8 @@
 				border-radius: 24rpx;
 				background-color: #333333;
 			}
+			
+			
 
 			.cover {
 				position: absolute;

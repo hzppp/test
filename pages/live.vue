@@ -169,6 +169,10 @@
 					})
 				} else if (item.status == 1) {
 					/* 直播中 */
+					// #ifndef MP-WEIXIN
+					this.$toast('请在微信搜索本小程序参与')
+					// #endif
+					 // #ifdef MP-WEIXIN
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
 						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' +
@@ -179,8 +183,12 @@
 							// 打开成功 
 						}
 					})
+				    // #endif
 				} else if (item.status == 3) {
 					//回放
+					// #ifndef MP-WEIXIN
+					this.$toast('请在微信搜索本小程序参与')
+					// #endif
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
 						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' +
