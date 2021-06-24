@@ -26,7 +26,7 @@
 			</view>
 		</view>
 		<!-- customAdList -->
-		<view v-for="(item) in customAdList" @tap="tapAcivity(item)">
+		<view v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
 			<image class="cover" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 		</view>
 
@@ -186,40 +186,12 @@
 				})
 			},
 			tapAcivity(item) {
-				// #ifdef MP-WEIXIN
-				wx.aldstat.sendEvent('活动点击')
-				// #endif
-				
-				console.log('item.redirectType', item)
-				// web 小程序  
-				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.h5Link && item.h5Link ==
-						'changan://lbcjactivity')) {
-					api.fetchActivityVisit({
-						'activityId': item.activityId
-					})
-					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
-						uni.showToast({
-							title: "活动结束啦",
-							icon: "none"
-						})
-						return
-					}
-				}
-				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
+				//0:跳转小程序内部页面,1:H5外链,2:外部小程序
 				switch (item.redirectType) {
 					case 0: {
-						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.activityId
-							uni.navigateTo({
-								url
-							})
-						} else {
-							let url = '/pages/activity?id=' + item.activityId
-							uni.navigateTo({
-								url
-							})
-						}
-						break;
+						uni.navigateTo({
+							url: item.miniUrl
+						})
 					}
 					case 1: {
 						if (item.h5Link && item.h5Link.substring(0, 4) == "http") {
@@ -253,20 +225,6 @@
 							},
 							// envVersion: 'trial'
 						});
-						break;
-					}
-					default: {
-						if (item.h5Link && item.h5Link == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.activityId
-							uni.navigateTo({
-								url
-							})
-						} else {
-							let url = '/pages/activity?id=' + item.activityId
-							uni.navigateTo({
-								url
-							})
-						}
 						break;
 					}
 				}
