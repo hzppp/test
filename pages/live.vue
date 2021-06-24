@@ -1,5 +1,7 @@
 <template>
+
 	<view>
+
 		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title"
 			:isShowBackBtn="'false'"></pageTopCity>
 		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
@@ -30,12 +32,12 @@
 						<!-- <view class="status blue" v-if="item.status==0 || item.status==2">
 						<view class="icon1"></view> {{item.startTime}}开始播放
 					</view>
-
-					<view class="icon1 status yellow" v-if="item.status==1">
-
+					
+					<view class="icon1 status yellow" v-if="item.status==1"> 
+		
 					</view>
 					<view class="icon1  status green" v-if="item.status==3">
-
+		
 					</view> -->
 					</view>
 					<view class="title">
@@ -51,9 +53,7 @@
 				<view class="none-text">暂无数据</view>
 			</view>
 		</block>
-    <!--  #ifndef MP-TOUTIAO  -->
-    <viewTabBar :current="1"></viewTabBar>
-    <!--  #endif  -->
+		<viewTabBar :current="1"></viewTabBar>
 	</view>
 </template>
 
@@ -88,7 +88,7 @@
 			this.getList()
 		},
 		async onPullDownRefresh() {
-
+			
 			uni.showLoading({
 				title: '正在加载...'
 			})
@@ -100,7 +100,7 @@
 					  uni.hideLoading()
 					  uni.stopPullDownRefresh()
 			}, 300)
-
+			
 		},
 		async onReachBottom(){
 			this.getList()
@@ -161,9 +161,7 @@
 			},
 
 			toLiveDet(item) {
-				// #ifdef MP-WEIXIN
-				 wx.aldstat.sendEvent('直播点击')
-				// #endif
+				wx.aldstat.sendEvent('直播点击')
 				if (item.status == 2 || item.status == 0) {
 					/* 直播预告 */
 					uni.navigateTo({
@@ -178,7 +176,7 @@
 						extraData: {},
 						// envVersion: 'trial',
 						success(res) {
-							// 打开成功
+							// 打开成功 
 						}
 					})
 				} else if (item.status == 3) {
@@ -209,7 +207,6 @@
 		left: 0;
 		top: 45rpx;
 		padding: 0 0 100rpx;
-		padding: 0 32rpx 150rpx;
 		/*  #ifndef  MP-WEIXIN */
 		padding: 0 0 0rpx;
 		/*  #endif  */	
