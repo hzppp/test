@@ -22,14 +22,89 @@ export default {
                 this.haveUserInfoAuth = app.globalData.haveUserInfoAuth
             }
         },
-        getWxUserInfoAuth(e) {
-            console.log('getWxUserInfoAuth', e)
+        getWxUserInfoAuth(callback) {
+            // console.log('getWxUserInfoAuth', e)
+         // #ifdef MP-TOUTIAO
+            console.log('#ifdef TOUTIAO')
+            uni.getUserInfo({
+                desc: '完善信息',
+				withCredentials:true,
+                success: async (res) => {
+					console.log('res',res)
+                    let info = res
+                    await api.saveWXuserInfo({
+                        encryptedData: info.encryptedData,
+                        iv: info.iv,
+                        rawData: info.rawData,
+                        signature: info.signature
+                    }).then(async sRes=> {
+                        console.log('saveWXuserInfo',sRes)
+                        const {data,code} = sRes
+                        if(code == 1) {
+							if(data.nickName){
+								data['wxName']=data.nickName
+							}
+							if(data.avatarUrl){
+								data['wxHead']=data.avatarUrl
+							}
+							
+						    app.globalData.haveUserInfoAuth = !!data.wxName
+							uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+							app.globalData.wxUserInfo = data
+							uni.setStorageSync('wxUserInfo', data)
+							this.haveUserInfoAuth = !!data.wxName
+                         
+							callback()
+                        }
+                        if(code == -4) {  //如果未登录 则重新登录 并执行原逻辑
+                            console.log('如果未登录 则重新登录 并执行原逻辑')
+                            await login.login()
+                            await api.saveWXuserInfo({
+                                encryptedData: info.encryptedData,
+                                iv: info.iv,
+                                rawData: info.rawData,
+                                signature: info.signature
+                            }).then(async sRes=> {
+                                console.log('sssres',sRes)
+                                let {data,code} = sRes
+                                if(code == 1) {
+									if(data.nickName){
+										data['wxName']=data.nickName
+									}
+									if(data.avatarUrl){
+										data['wxHead']=data.avatarUrl
+									}
+                                   app.globalData.haveUserInfoAuth = !!data.wxName
+                                   uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+                                   app.globalData.wxUserInfo = data
+                                   uni.setStorageSync('wxUserInfo', data)
+                                   this.haveUserInfoAuth = !!data.wxName
+									callback()
+                                }
+                            })
+                        }
+						
+                    })
+					
+                },
+                fail: (res) => {
+                    //拒绝授权
+                    console.log('拒绝授权', res)
+                    uni.setStorageSync('haveUserInfoAuth',false)
+                    app.globalData.haveUserInfoAuth = false
+                    this.haveUserInfoAuth = false
+                    uni.setStorageSync('wxUserInfo',null)
+                    app.globalData.wxUserInfo = null
+                }
+            })
+            // #endif
 
 			// #ifdef MP-WEIXIN
             console.log('#ifdef MP-WEIXIN')
             uni.getUserProfile({
                 desc: '完善信息',
                 success: async (res) => {
+					console.log('res',res)
                     let info = res
                     await api.saveWXuserInfo({
                         encryptedData: info.encryptedData,

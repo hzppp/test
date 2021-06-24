@@ -50,10 +50,18 @@ const config = {
 
 	api: {
 		// #ifdef MP-WEIXIN
+		// 手机号解密
+		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
+		// 保存用户信息
+		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
 		 login:  `${DOMAIN.changan}/api/xcx/user/login`,
 		// #endif
 		
 		// #ifdef MP-TOUTIAO
+		// 手机号解密
+		decryptPhone: `${DOMAIN.changan}/api/xcx/user/dy/decryptPhone`,
+		// 保存用户信息
+		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/dy/decryptInfo`,
 		 login:  `${DOMAIN.changan}/api/xcx/user/dy/login`,
 		// #endif
 		// 获取区域
@@ -83,10 +91,8 @@ const config = {
 		getPocketUserInfo: `${DOMAIN.host}/api/xcx/user/info`,
 		// 记录活动访问
 		visitActivity: `${DOMAIN.host}/api/audi/xcx/visitActivity`,
-		// 保存用户信息
-		saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
-		// 手机号解密
-		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
+		
+		
 		// 获取用户领取的优惠券
 		getUserOupons: `${DOMAIN.changan}/api/xcx/coupon/list/user`,
 		//获取优惠券

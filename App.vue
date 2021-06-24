@@ -9,8 +9,8 @@
 			host: "https://testpocket.pcauto.com.cn",
 			panorama: "https://panorama.pcauto.com.cn", //vr看车图片
 			//panorama:"http://t-panorama.pcauto.com.cn",
-      testDriveX: 400,
-      testDriveY: 465,
+			testDriveX: 400,
+			testDriveY: 465,
 			currentLocation: { //当前位置
 				wxPosition: { // 微信定位的坐标位置
 					wsq: true,
@@ -40,11 +40,11 @@
 			provinceList: [], // 省市列表
 		},
 		onLaunch: function() {
-		  // #ifndef MP-TOUTIAO
+			// #ifndef MP-TOUTIAO
 			uni.hideTabBar({
 				animation: false
 			})
-      // #endif
+			// #endif
 			console.log('App Launch')
 			if (uni.canIUse('loadFontFace')) {
 				let _this = this
@@ -76,8 +76,7 @@
 		onHide: function() {
 			console.log('App Hide')
 		},
-    methods: {
-    }
+		methods: {}
 	}
 </script>
 
