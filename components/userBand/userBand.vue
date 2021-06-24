@@ -29,7 +29,6 @@ import api from '@/public/api/index.js'
 		 }else{
 		    await login.checkExpireTime(api)	 
 		 }
-		 this.isShow = true
         },
         methods: {
             closeShow() {

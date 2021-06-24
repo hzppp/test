@@ -159,6 +159,7 @@ module.exports = {
 	},
 	// 用户留资
 	submitClue: async (cs) => {
+		console.log(cs)
 		const isSession = await login.checkSession()
 		if (!isSession) {
 			await login.login()

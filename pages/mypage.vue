@@ -3,11 +3,8 @@
        <userBand></userBand>
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
-
-<!--    #ifdef MP-WEIXIN-->
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
-			@tap="getWxUserInfoAuth"></button>
-<!--  #endif  -->
+			@tap="getWxUserInfoAuth(callback)"></button>
 		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
@@ -15,6 +12,7 @@
 						<view class="name_info">
 							<view class="name">
 								<open-data type="userNickName"></open-data>
+								<view>{{name}}</view>
 							</view>
 							<view v-if="photo" class="phoneV">
 								<image class="phoneVicon"
@@ -32,6 +30,7 @@
 					</view>
 
 					<view class="head">
+						<image :src="wxHead"></image>
 						<open-data type="userAvatarUrl"></open-data>
 					</view>
 
@@ -123,7 +122,9 @@
 				fail: false,
 				photo: null,
 				imageData: [],
-				score:''
+				score:'',
+				name:'',
+				wxHead:''
 			}
 		},
 
@@ -147,8 +148,11 @@
 			let scoreData = await api.getScore()
 			console.log('scoreData=' + scoreData)
              this.score = scoreData.score
-
-
+			 if(app.globalData.haveUserInfoAuth){
+				this.name=app.globalData.wxUserInfo.wxName ,
+				this.wxHead=app.globalData.wxUserInfo.wxHead 
+			 }
+         
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
@@ -197,6 +201,13 @@
 
 		},
 		methods: {
+			callback(){
+			if(app.globalData.haveUserInfoAuth){
+				this.name=app.globalData.wxUserInfo.wxName,
+				this.wxHead=app.globalData.wxUserInfo.wxHead 
+				console.log(this.name,this.wxHead)
+			}
+			},
 			tocard() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的优惠券点击')

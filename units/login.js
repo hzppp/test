@@ -152,12 +152,13 @@ export default {
 		   	  return 1;
 		   }
             let {code, data} = await api.getUser()
+			 console.log('用户信息2',data)
             if (code == 1 && data) {
                 app.globalData.haveUserInfoAuth = !!data.wxName
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
                 uni.setStorageSync('wxUserInfo', data)
-                console.log('用户信息2',app.globalData.haveUserInfoAuth)
+               
             }
         }
     },
@@ -181,7 +182,7 @@ export default {
 		 if(logindata){
 			let time = new Date().getTime()
 			 console.log('logindata',logindata,'time= ',time,time - logindata.time)
-			if(time - logindata.time > (logindata.expireTime * 1000 - 10 * 60 * 1000)){
+			if(logindata.expireTime > 0 && (time - logindata.time > (logindata.expireTime * 1000 - 10 * 60 * 1000))){
 			let refreshToken= logindata.refreshToken
 			let data = await api.refreshToken({refreshToken})
 			console.log('刷新用户token' , data)
