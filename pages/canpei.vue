@@ -252,7 +252,7 @@
 			this.serialId = options.serialId;
 			this.navigateBack = options.navigateBack;
 			this.max = options.max || 0;
-            this.tabWhich = options.tabWhich || 2;
+            this.tabWhich = options.tabWhich || 1;
 			let mids = options.mids || "";
 			if (mids) {
 				mids = mids.split(",").slice(0, 6);
