@@ -83,7 +83,7 @@
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei") {
                     uni.redirectTo({
-                        url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}`
+                        url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}&tabWhich=2`
                     })
                 }
             },

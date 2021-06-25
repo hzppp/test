@@ -124,7 +124,7 @@
                                         <view class="canpei_head_right"></view>
                                         <view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item2,idx) in item1.detail" :key="idx">
-                                                <view class='right_list' :class="[needHighlighted.includes(Data.detailArray[idx].modelId)? 'highlighted' : '']">
+                                                <view class='right_list' :class="[Data.detailArray[idx] ? needHighlighted.includes(Data.detailArray[idx].modelId)? 'highlighted' : '' : '']">
                                                     <block v-for="(d,i) in item2" :key="i">
                                                         <!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
                                                         <block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
@@ -173,7 +173,7 @@
                 </block>
                 <!-- 导航弹窗e -->
             </view>
-            <view v-else class="no-canpei">
+            <view v-if="loadingData && max <= 0" class="no-canpei">
                 <image mode="WidthFix" src="../static/images/canpei_noData.png" />
                 <view class="text">暂时没有参配信息</view>
             </view>
@@ -227,6 +227,7 @@
                 powerData: {}, // 概述页的动力参数数据
                 externalData: {}, // 概述页的外部参数数据
                 internalData: {}, // 概述页的内部参数数据
+                loadingData:false, //防止数据还没加载,第一次进来展示无数据
 			}
 		},
 		watch: {
@@ -310,13 +311,14 @@
 					let res = await dataInit(data);
 					this.dataList = res.dataList;
 					this.difData = res.difData;
-					uni.hideLoading()
 				} catch (e) {
 					if (e == 0) { //没有数据
 						this.nodata = true
 					}
+				} finally {
 					uni.hideLoading()
-				}
+                    this.loadingData = true
+                }
 			},
 			async addData() {
 				if (this.$store.state.selectCars && this.$store.state.selectCars.newSelect) {
@@ -336,8 +338,9 @@
 						if (e == 0) { //没有数据
 							this.nodata = true
 						}
+					} finally {
 						uni.hideLoading()
-					}
+                    }
 				}
 			},
 			toggleHide(){
@@ -354,6 +357,7 @@
 			// 删除车型
 			delCar(id, index) {
                 this.mids =  this.mids.filter( item => item !=id )
+                this.needHighlighted =  this.needHighlighted.filter( item => item !=id )
                 if(!this.mids.length) {
                     this.Data.detailArray = []
                     this.dataList = []
