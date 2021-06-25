@@ -77,7 +77,7 @@ export default {
         })
 		console.log('登录返回',data)
 		if(  data.code == 1 &&data.data.resultCode==1 ){
-			console.log('注册 ==' + phone + 'iv =' + iv)
+			// console.log('注册 ==' + phone + 'iv =' + iv)
 			// 说明没有登录过长安 走注册流程
 			if(phone && iv){
 				// 有注册需要的参数，直接注册
@@ -105,7 +105,12 @@ export default {
 				data['time'] =  new Date().getTime()
 				uni.setStorageSync('loginData', data)
 				app.globalData.loginJson = data
-		    }
+		    }else if(data.data.token){
+				this.setSessionKey(data.data.token)
+				data.data['time'] =  new Date().getTime()
+				uni.setStorageSync('loginData', data.data)
+				app.globalData.loginJson = data.data
+			}
 		} else {
 		    this.removeSessionKey()
 		    if (this.loginNumber) {//重登一次
@@ -143,6 +148,7 @@ export default {
                     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                     app.globalData.wxUserInfo = data
                     uni.setStorageSync('wxUserInfo', data)
+				    uni.setStorageSync('userPhone', data.mobile)
                 }
             }
             console.log('用户信息1',app.globalData.haveUserInfoAuth)
@@ -158,12 +164,12 @@ export default {
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
                 uni.setStorageSync('wxUserInfo', data)
-               
+                uni.setStorageSync('userPhone', data.mobile)
             }
         }
     },
 	async userBind(api,phone,iv) {
-		console.log('api',api)
+		// console.log('api',api)
 	     await this.login(api,phone,iv)
 		let {code, data} = await api.getUser()
 		if (code == 1 && data) {
@@ -171,6 +177,7 @@ export default {
 		    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
 		    app.globalData.wxUserInfo = data
 		    uni.setStorageSync('wxUserInfo', data)
+		    uni.setStorageSync('userPhone', data.mobile)
 		    console.log('用户信息2',app.globalData.haveUserInfoAuth)
 		}
 		return data

@@ -1011,13 +1011,13 @@ module.exports = {
 		})
 		return data
 	},
-	uploadUPC: async (para) => {
+	uploadUPC: async (ip) => {
 		let {
 			data
 		} = await request({
-			url: domain.getAPI('uploadUPC'),
+			url: domain.getAPI('uploadUPC') + '&clientIp=' + ip ,
 			method: "POST",
-			data: para
+			data: ''
 		})
 		return data
 	},
@@ -1041,4 +1041,14 @@ module.exports = {
 		})
 		return data
 	},
+	getIP: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getIP'),
+			method: "GET",
+			data: para
+		})
+		return data
+	}
 }

@@ -1,6 +1,6 @@
 <template>
 	<view>
-       <userBand></userBand>
+       <userBand @loginSuccess='getData'></userBand>
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
@@ -135,30 +135,8 @@
 		},
 
 		async onShow() {
-			let phone = uni.getStorageSync('userPhone');
-			if (phone) {
-				// this.photo = phone
-				this.photo = phone.substr(0, 3) + '****' + phone.substr(7, phone.length);
-			}
-			let sgList = await api.getBannerByPosition({
-				'positionType': '1'
-			});
-
-			if (sgList) {
-				let data = sgList.data
-				console.log(data);
-				if (data) {
-					this.imageData = data[0]
-				}
-			}
-			let scoreData = await api.getScore()
-			console.log('scoreData=' , scoreData)
-             this.score = scoreData.data.score
-			 if(app.globalData.haveUserInfoAuth){
-				this.name=app.globalData.wxUserInfo.wxName ,
-				this.wxHead=app.globalData.wxUserInfo.wxHead 
-			 }
-         
+			
+             this.getData()
 			// this.qiandao()
 			// await api.getPocketUserInfo()
 			// let user = await api.getUser()
@@ -205,6 +183,32 @@
 
 		},
 		methods: {
+			async getData(){
+				let phone = uni.getStorageSync('userPhone')
+				if (phone) {
+					// this.photo = phone
+					this.photo = phone.substr(0, 3) + '****' + phone.substr(7, phone.length)
+				}
+				let sgList = await api.getBannerByPosition({
+					'positionType': '1'
+				})
+				if (sgList) {
+					let data = sgList.data
+					console.log(data);
+					if (data) {
+						this.imageData = data[0]
+					}
+				}
+				let scoreData = await api.getScore()
+				console.log('scoreData=' , scoreData)
+				if(scoreData&&scoreData.data){
+				 this.score = scoreData.data.score	
+				}
+				 if(app.globalData.haveUserInfoAuth){
+					this.name=app.globalData.wxUserInfo.wxName ,
+					this.wxHead=app.globalData.wxUserInfo.wxHead 
+				 }
+			},
 			callback(){
 			if(app.globalData.haveUserInfoAuth){
 				this.name=app.globalData.wxUserInfo.wxName,
@@ -224,6 +228,9 @@
 				let token  =  uni.getStorageSync('session-3rd')
 				if(token){
 					let url = encodeURIComponent(domain.getAPI('mystore') + '?token=' + token)
+					if(domain.getCurrentEnv() ==0){
+						url = encodeURIComponent(domain.getAPI('mystore') + '&token=' + token)
+					}
 					console.log('url',url)
 					uni.navigateTo({
 						url: `/pages/webview?webURL=${url}` 

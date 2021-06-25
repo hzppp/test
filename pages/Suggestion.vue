@@ -35,14 +35,15 @@
 				data: {
 					imgList: [],
 					content: "",
-					contact: ""
+					contact: "",
+					ip:''
 
 				},
 			}
 		},
 		async onLoad() {
-			let data = await api.uploadUPC()
-			console.log('updata', data)
+			let apidata = await api.getIP()
+			this.ip = apidata.ip
 		},
 		methods: {
 			chooseImage() {
@@ -97,7 +98,7 @@
 
 
 			async upload(item,array) {
-				let data = await api.uploadUPC()
+				let data = await api.uploadUPC(this.ip)
 				// console.log('updata', data, data.publicUrl)
 				let pam = {
 					'key': data.key,
