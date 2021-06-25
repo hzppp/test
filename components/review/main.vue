@@ -4,9 +4,9 @@
 			<view class="main__content__title">{{ mainData.name }}</view>
 			<view class="main__content__bottom">
 				<view class="item" v-for="(item, index) in mainData.parData" :key="index">
-					<view class="item__title"
+					<view class="item__title" @tap="tipShow = true"
 						>{{ item.title }}
-						<view class="title_tip" v-if="item.title == 'OTA'" @tap="tipShow = true">?</view>
+						<view class="title_tip" v-if="item.title == 'OTA'">?</view>
 					</view>
 					<view class="item__value">{{ item.value }}</view>
 				</view>
