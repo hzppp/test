@@ -354,6 +354,7 @@
 			// 删除车型
 			delCar(id, index) {
                 this.mids =  this.mids.filter( item => item !=id )
+                this.needHighlighted =  this.needHighlighted.filter( item => item !=id )
                 if(!this.mids.length) {
                     this.Data.detailArray = []
                     this.dataList = []
