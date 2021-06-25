@@ -46,8 +46,8 @@
                <view><view class="locationCot" v-if="item.type==3"><view class="cityName">{{ selectCity || indexCity.name }}</view><view class="line"></view></view><view class="date">{{item.startTime | dateFilter}} - {{item.endTime | dateFilter}}</view></view>
                <view class="info">
                <view v-show="item.visitCount"><span class="num">{{item.visitCount | numFilter}}</span>人感兴趣</view>
-               <view v-show="item.visitCount && item.clueCount && item.redirectType==0" class="line"></view>
-               <view v-show="item.clueCount && item.redirectType==0"><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
+               <view v-show="item.visitCount && item.clueCount " class="line"></view>
+               <view v-show="item.clueCount "><span class="num">{{item.clueCount | numFilter}}</span>人报名</view>
                </view>
              </view>
              <view class="right-area">

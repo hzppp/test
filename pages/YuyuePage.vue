@@ -339,7 +339,7 @@ const COUNTDOWN = 60
                         icon:none
                     })
                 }
-                this.currentDealer = {}
+                // this.currentDealer = {}
                 uni.navigateTo({
                     url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
                 })
