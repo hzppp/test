@@ -279,6 +279,7 @@
 		methods: {
             //添加选择的车型id - 高亮显示列
             addHighlightedModelId(modelId) {
+                let tempParam = []
                 if(modelId.length > 1) {
                     this.needHighlighted = []
                     this.mids = []
@@ -287,7 +288,11 @@
                     this.needHighlighted.push(String(v))
                 })
                 this.tabWhich = 2
-                let tempParam = [...new Set(this.mids.concat(this.needHighlighted))]
+                if(this.mids) {
+                    tempParam = [...new Set(this.mids.concat(this.needHighlighted))]
+                }else {
+                    tempParam = [...new Set(this.needHighlighted)]
+                }
                 this.mids = tempParam.slice(0, 6)
                 this.init()
             },
