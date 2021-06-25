@@ -17,7 +17,7 @@ var DOMAIN_R = {
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
 	UPC:'https://upc2.pc.com.cn',
-	mystore:'https://ssl.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.htm'
+	mystore:'https://cloud.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.html?biz=69&isShare=true&source=react'
 }
 
 //测试环境域名
@@ -78,6 +78,7 @@ const config = {
 		getActivityUser:`${DOMAIN.changan}/api/xcx/activity/list/user`,
 		//直播列表
 		getLiveList:`${DOMAIN.changan}/api/xcx/livestream/list`,
+		
 		getLiveDetail:`${DOMAIN.changan}/api/xcx/livestream/detail`,
 		// 获取车系列表
 		getAutoSerialList: `${DOMAIN.host}/api/audi/back/vehicleManagement/showVehicle`,
@@ -251,13 +252,15 @@ const config = {
 		// 积分查询 
 	    score: `${DOMAIN.changan}/api/xcx/user/score`,
 		// UPC
-		uploadUPC:`${DOMAIN.UPC}/api/images/post?appCode=demo&token=admin123&passportId=489798471&clientIp=192.168.18.166&fileExt=jpg&bizType=pcncc`,
+		uploadUPC:`${DOMAIN.UPC}/api/images/post?appCode=changan_cloud&token=changan_cloud$0625&passportId=489798471&fileExt=jpg&bizType=pcncc`,
 		// submit
 		submit: `${DOMAIN.changan}/api/xcx/feedback/submit`,		
 		// 注册
 		userBind: `${DOMAIN.changan}/api/xcx/user/bind`,
 		// 刷新token
 		refreshToken: `${DOMAIN.changan}/api/xcx/user/refreshToken`,
+		// 获取用户ip
+		getIP:'https://whois.pconline.com.cn/ipJson.jsp?resp_enc=utf-8&json=true'
 	},
 	getAPI(key) {
 		let url;

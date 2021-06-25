@@ -15,6 +15,9 @@
 import login from '@/units/login.js'
 import api from '@/public/api/index.js'
     export default {
+		props: {
+		 
+		  },
         data() {
             return {
                 isShow: false, //控制显隐
@@ -81,6 +84,8 @@ import api from '@/public/api/index.js'
 	        }else{
 	           this.isShow = false
 	        }
+			uni.hideLoading()
+			this.$emit('loginSuccess')
 			uni.hideLoading()
 			  
 			},

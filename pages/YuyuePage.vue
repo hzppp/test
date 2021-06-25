@@ -1,6 +1,6 @@
 <template> 
     <view>
-	<userBand></userBand>
+	<userBand @loginSuccess='getStoragePhone' ></userBand>
     <view class="yuyue" v-if="serialData.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
@@ -165,6 +165,7 @@ const COUNTDOWN = 60
 			    }
 			},
             getStoragePhone() {
+				console.log('登录成功触发')
 				let phone = uni.getStorageSync('userPhone');
                 if(phone) {
                     this.phoneNum = phone
