@@ -126,7 +126,7 @@
 		}, {
 			"path": "pages/canpei",
 			"style": {
-				"navigationBarTitleText": "参数配置",
+				"navigationBarTitleText": "车型参配",
 				"enablePullDownRefresh": false
 			}
 		}, {

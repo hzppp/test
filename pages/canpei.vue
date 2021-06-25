@@ -3,8 +3,8 @@
     <view>
         <view class="config">
             <view class="config__tab">
-                <view class="config__tab__left" :class="{ 'active' : tabWhich == 1 }" @tap='tabWhich=1'>综述页</view>
-                <view class="config__tab__right" :class="{ 'active' : tabWhich == 2 }" @tap='tabWhich=2'>参配页</view>
+                <view class="config__tab__left" :class="{ 'active' : tabWhich == 1 }" @tap='tabWhich=1'>参配概述</view>
+                <view class="config__tab__right" :class="{ 'active' : tabWhich == 2 }" @tap='tabWhich=2'>参数配置</view>
             </view>
         </view>
         <!-- 参配概述页 S -->
