@@ -281,6 +281,10 @@
 		methods: {
             //添加选择的车型id - 高亮显示列
             addHighlightedModelId(modelId) {
+                uni.showLoading({
+                    title: "加载中"
+                })
+                this.loadingData = false  // 防止点击进来的时候,页面显示暂无参配
                 let tempParam = []
                 if(modelId.length > 1) {
                     this.needHighlighted = []
@@ -317,7 +321,7 @@
 						this.nodata = true
 					}
 				} finally {
-					uni.hideLoading()
+                    uni.hideLoading()
                     this.loadingData = true
                 }
 			},
