@@ -469,7 +469,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             height: 110rpx;
             border-bottom: 2rpx solid #EBEBEB;
             .list-title {
-                width: 100rpx;
+				 width: 100rpx;
+				 /*#ifndef MP-WEIXIN */
+				  width: 120rpx;
+				 /* #endif */
+           
             }
             .select {
                 flex: 1;
