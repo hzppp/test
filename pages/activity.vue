@@ -26,7 +26,7 @@
 			</view>
 		</view>
 		<!-- customAdList --> 
-		<view v-if="content.coverSerialGroup == 0"> v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
+		<view v-if="content.coverSerialGroup == 0" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
 			<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 		</view>
 
