@@ -573,7 +573,7 @@
 			return {
 				title: this.carData.serialGroupName + '购车花多少',
 				desc: '了解购车款项，买车不上当',
-				path: '/pages_car/calc/calc?id=' + modelId + '&serialId=' + serialId
+				path: '/pages/calc?id=' + modelId + '&serialId=' + serialId
 			}
 		},
 		onShow() {

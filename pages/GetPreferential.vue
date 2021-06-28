@@ -47,6 +47,7 @@
                 <view class="select" @tap="goChooseRegion">
                     {{currentRegion.name || ""}}
                 </view>
+				 <i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
                 <view class="arrow"></view>
             </view>
             <!-- 地区选择S -->
@@ -287,6 +288,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 					url: "/pages/ChooseCity"
 				})
             },
+			cleanRegion() {
+			    this.currentRegion = {}
+			},
             //选择地区
             goChooseRegion(){
                 if(!this.currentCity.name) {
@@ -295,7 +299,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         icon:none
                     })
                 }
-                this.currentDealer = {}
+                // this.currentDealer = {}
                 uni.navigateTo({
 					url: `/pages/ChooseRegion?cityId=${this.currentCity.id}&name=${this.currentRegion.name}`
 				})
@@ -483,6 +487,17 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 color: #999999;
                 font-size: 28rpx;
             }
+			.clean-btn {
+			    width: 40rpx;
+			    height: 40rpx;
+			    background-image: url("../static/images/close_btn.png");
+			    background-color: #999999;
+			    border-radius: 50%;
+			    background-size: cover;
+			    margin-right: 20rpx;
+			}
+			
+			
             
         }
         .btn-area {

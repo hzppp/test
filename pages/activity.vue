@@ -16,7 +16,7 @@
 
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
-		</view>
+		</view> 
 		<view class="serial-list" v-if="content.coverSerialGroup == 1">
 			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
 				@tap="seeCarBtnClick(serialGroupItem)">
