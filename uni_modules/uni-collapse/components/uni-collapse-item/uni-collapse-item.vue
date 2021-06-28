@@ -88,28 +88,28 @@
 			this.isOpen = this.open
 			this.nameSync = this.name ? this.name : this.collapse.childrens.length
 			this.collapse.childrens.push(this)
-			if (String(this.collapse.accordion) === 'true') {
-				if (this.isOpen) {
-					let lastEl = this.collapse.childrens[this.collapse.childrens.length - 2]
-					if (lastEl) {
-						this.collapse.childrens[this.collapse.childrens.length - 2].isOpen = false
-					}
-				}
-			}
+			// if (String(this.collapse.accordion) === 'true') {
+			// 	if (this.isOpen) {
+			// 		let lastEl = this.collapse.childrens[this.collapse.childrens.length - 2]
+			// 		if (lastEl) {
+			// 			this.collapse.childrens[this.collapse.childrens.length - 2].isOpen = false
+			// 		}
+			// 	}
+			// }
 		},
 		methods: {
 			onClick() {
 				if (this.disabled) {
 					return
 				}
-				if (String(this.collapse.accordion) === 'true') {
-					this.collapse.childrens.forEach(vm => {
-						if (vm === this) {
-							return
-						}
-						vm.isOpen = false
-					})
-				}
+				// if (String(this.collapse.accordion) === 'true') {
+				// 	this.collapse.childrens.forEach(vm => {
+				// 		if (vm === this) {
+				// 			return
+				// 		}
+				// 		vm.isOpen = false
+				// 	})
+				// }
 				this.isOpen = !this.isOpen
 				// this.collapse.onChange && this.collapse.onChange()
 				this.$forceUpdate()
