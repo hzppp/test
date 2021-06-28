@@ -11,14 +11,16 @@
 						<view class="item__name">{{ item.title }}</view>
 						<uni-collapse-item class="diy_uni-collapse-item" :title="item.value" showAnimation="true" :count="item.amount">
 							<view class="item__model_wrap">
-								<view class="item__model" v-for="(model, mIndex) in item.models" :key="mIndex" @tap='goCanpei(model.id,1)'>
+								<view class="item__model" v-for="(model, mIndex) in item.models" :key="mIndex" @tap="goCanpei(model.id, 1)">
 									<view class="item__model__left">
 										<view class="item__model__left_title">{{ model.name }}</view>
 										<view class="item__model__left_price">{{ model.price }}万</view>
 									</view>
 									<view class="right_icon"></view>
 								</view>
-								<view class="view--more" v-if="item.amount  > 1" @tap='goCanpei(smartData[currentTagIndex].parData[mIndex].modelIds)'>查看{{ item.amount }}款车型完整参数<i class="right_icon" /></view>
+								<view class="view--more" v-if="item.amount > 1" @tap="goCanpei(smartData[currentTagIndex].parData[mIndex].modelIds)"
+									>查看{{ item.amount }}款车型完整参数<i class="right_icon all"
+								/></view>
 							</view>
 						</uni-collapse-item>
 					</uni-collapse>
@@ -52,15 +54,15 @@ export default {
 			});
 		},
 	},
-    methods: {
-        goCanpei(id,type) {
-            if(type == 1) {
-                this.$emit('addHighlightedModelId',[id])
-            }else {
-                this.$emit('addHighlightedModelId',id)
-            }
-        }
-    },    
+	methods: {
+		goCanpei(id, type) {
+			if (type == 1) {
+				this.$emit("addHighlightedModelId", [id]);
+			} else {
+				this.$emit("addHighlightedModelId", id);
+			}
+		},
+	},
 };
 </script>
 
@@ -142,9 +144,13 @@ export default {
 			flex: 1;
 		}
 		.item__model__left_title {
+			width: calc(100% - 30rpx);
 			font-size: 28rpx;
 			line-height: 24rpx;
 			color: #333333;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.item__model__left_price {
 			margin: 27rpx 0;
@@ -155,11 +161,13 @@ export default {
 		}
 	}
 	.right_icon {
-		margin-left: 20rpx;
 		width: 9rpx;
 		height: 14rpx;
 		background-image: url("../../static/images/right_arrow.png");
 		background-size: cover;
+		&.all {
+			margin-left: 20rpx;
+		}
 	}
 }
 </style>
