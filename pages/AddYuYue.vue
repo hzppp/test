@@ -44,9 +44,15 @@ export default {
             }
         },
         goChooseModels(item) {
-            uni.redirectTo({
-                url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}`
-            })
+            if(this.pages == 'canpei') {
+                uni.redirectTo({
+                    url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}&originSerialId=${this.serialId}`
+                })
+            }else {
+                uni.redirectTo({
+                    url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}`
+                })
+            }
         }
     },
 };
