@@ -36,7 +36,7 @@
 					imgList: [],
 					content: "",
 					contact: "",
-					ip:''
+					ip: ''
 
 				},
 			}
@@ -74,35 +74,40 @@
 					urls: this.data.imgList.map(r => r.path)
 				});
 			},
-			submit() {
-				console.log(this.data.content.length)
-				if(this.data.imgList.length > 0){
-					this.uploadImage()
-				}else{
-					this.submin([])
-				}
-				
 
-			},
-			uploadImage() {
+			submit() {
 				if (this.data.content.length == 0 || this.data.content == '') {
 					this.$toast('请描述您的疑问')
 					return
 				}
+				if (this.data.content.length > 200 ) {
+					this.$toast('字数超限，请重新输入')
+					return
+				}
+				console.log(this.data.content.length)
+				if (this.data.imgList.length > 0) {
+					this.uploadImage()
+				} else {
+					this.submin([])
+				}
+
+			},
+			uploadImage() {
+
 				uni.showLoading({
 					title: '提交中'
 				})
 				setTimeout(() => {
 					uni.hideLoading()
 				}, 8000)
-				 var array = new Array()
+				var array = new Array()
 				this.data.imgList.forEach((item, index) => {
-					this.upload(item,array)
+					this.upload(item, array)
 				})
 			},
 
 
-			async upload(item,array) {
+			async upload(item, array) {
 				let data = await api.uploadUPC(this.ip)
 				// console.log('updata', data, data.publicUrl)
 				let pam = {
@@ -117,18 +122,18 @@
 					name: 'file',
 					formData: pam,
 					success: (res) => {
-						 if (res.statusCode === 204) {
-						      let url = data.publicUrl
-						      console.log('url==' + url)
-						      array.unshift(url)
-						      // console.log('arraylength' + array.length)
-						      if (array.length == this.data.imgList.length) {
-						      	// 说明上传完了
+						if (res.statusCode === 204) {
+							let url = data.publicUrl
+							console.log('url==' + url)
+							array.unshift(url)
+							// console.log('arraylength' + array.length)
+							if (array.length == this.data.imgList.length) {
+								// 说明上传完了
 								// console.log(this.submin(),_self.submin())
-						      	this.submin(array)
-						      }
-						    }
-						
+								this.submin(array)
+							}
+						}
+
 
 					},
 					fail: (error) => {
@@ -141,20 +146,24 @@
 			async submin(array) {
 				let pam = {
 					'content': this.data.content,
-					'pic1': array[0]?array[0]:'',
-					'pic2': array[1]?array[1]:'',
-					'pic3': array[2]?array[2]:'',
-					'pic4': array[3]?array[3]:'',
-					'pic5': array[4]?array[4]:''
+					'pic1': array[0] ? array[0] : '',
+					'pic2': array[1] ? array[1] : '',
+					'pic3': array[2] ? array[2] : '',
+					'pic4': array[3] ? array[3] : '',
+					'pic5': array[4] ? array[4] : ''
 				}
 				console.log('pam', pam)
 				let res = await api.submit(pam)
 				uni.hideLoading()
 				if (res.code == 1) {
 					this.$toast('提交成功')
-					uni.navigateBack({
+					setTimeout(() => {
+						uni.navigateBack({
 
-					})
+						})
+					}, 800)
+
+
 				} else {
 					this.$toast('提交失败')
 				}
