@@ -37,6 +37,7 @@
                 type: "",
                 sort: "",
                 modelId:'', //车型id
+                originSerialId: '' //原来进入的车系id
 			}
 		},
 		methods: {
@@ -49,6 +50,7 @@
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
+                this.originSerialId = options.originSerialId || ""
                 if(options.mids) {
                     this.canSelectLength = 6 - options.mids.split(",").length
                 }else {
@@ -81,7 +83,11 @@
                 console.log('tempMids :>> ', tempMids);
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
-                if(this.pages === "canpei") {
+                if(this.pages === "canpei" && this.originSerialId) {
+                    uni.redirectTo({
+                        url:`/pages/canpei?serialId=${this.originSerialId}&mids=${tempMids}&tabWhich=2`
+                    })
+                }else {
                     uni.redirectTo({
                         url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}&tabWhich=2`
                     })

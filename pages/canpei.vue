@@ -94,7 +94,7 @@
                                     <block>
                                         <view class="car_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item,index) in Data.detailArray" :key="index">
-                                                <view :class="['car_list', needHighlighted.includes(Data.detailArray[index].modelId)? 'highlighted' : '']">
+                                                <view :class="['car_list', HighlightList.includes(Data.detailArray[index].modelId)? 'highlighted' : '']">
                                                     <view class="item">
                                                         <text>{{item.modelName}}</text>
                                                         <view class="close" @tap="delCar(item.modelId,index)">
@@ -124,7 +124,7 @@
                                         <view class="canpei_head_right"></view>
                                         <view class="canpei_box_right_box" :style="'width:'+width+'rpx'">
                                             <block v-for="(item2,idx) in item1.detail" :key="idx">
-                                                <view class='right_list' :class="[Data.detailArray[idx] ? needHighlighted.includes(Data.detailArray[idx].modelId)? 'highlighted' : '' : '']">
+                                                <view class='right_list' :class="[Data.detailArray[idx] ? HighlightList.includes(Data.detailArray[idx].modelId)? 'highlighted' : '' : '']">
                                                     <block v-for="(d,i) in item2" :key="i">
                                                         <!-- 在支付宝小程序中 两层v-for后只能获取到当前遍历的值，获取不到其他变量值 showOrhide都为空，zfb兼容性bug 暂时没找到方案解决-->
                                                         <block v-if="d.key != '本地最低价' && showOrhide || (!showOrhide&&difData[d.key])">
@@ -219,7 +219,8 @@
 				navigateBack: '-1',
                 tag: true,
                 tabWhich:1, // tab 选项
-                needHighlighted: [], //需要高亮的列-车型id列表
+                needHighlighted: [], //车型id组
+                HighlightList:[], //需要高亮的数组
                 currentModelList: [], //当前每列的车型
                 mainData: {}, // 概述页的主要参数数据
                 baseData: {}, // 概述页的基础参数数据
@@ -281,6 +282,7 @@
 		methods: {
             //添加选择的车型id - 高亮显示列
             addHighlightedModelId(modelId) {
+                this.HighlightList = []
                 uni.showLoading({
                     title: "加载中"
                 })
@@ -289,6 +291,8 @@
                 if(modelId.length > 1) {
                     this.needHighlighted = []
                     this.mids = []
+                }else {
+                    this.HighlightList.push(String(modelId[0]))
                 }
                 modelId.map(v => {
                     this.needHighlighted.push(String(v))
