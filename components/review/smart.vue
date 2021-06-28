@@ -18,7 +18,7 @@
 									</view>
 									<view class="right_icon"></view>
 								</view>
-								<view class="view--more" v-if="item.amount > 1" @tap="goCanpei(smartData[currentTagIndex].parData[mIndex].modelIds)"
+								<view class="view--more" v-if="item.amount > 1" @tap="goCanpei(smartData[currentTagIndex].parData[index].modelIds)"
 									>查看{{ item.amount }}款车型完整参数<i class="right_icon all"
 								/></view>
 							</view>
