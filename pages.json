@@ -301,13 +301,15 @@
 				"selectedIconPath": "static/images/tab2_icon_c.png"
 			},
 			// #endif
-			
+			// #ifndef MP-WEIXIN
 			{
 				"pagePath": "pages/exhibition",
 				"text": "云展厅",
 				"iconPath": "static/images/tab3_icon.png",
 				"selectedIconPath": "static/images/tab3_icon_c.png"
 			},
+			// #endif
+			
 			{
 				"pagePath": "pages/welfareActivity",
 				"text": "活动",

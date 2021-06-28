@@ -76,12 +76,17 @@
 			},
 			submit() {
 				console.log(this.data.content.length)
-				this.uploadImage()
+				if(this.data.imgList.length > 0){
+					this.uploadImage()
+				}else{
+					this.submin([])
+				}
+				
 
 			},
 			uploadImage() {
 				if (this.data.content.length == 0 || this.data.content == '') {
-					this.$toast('请输入您遇到的问题')
+					this.$toast('请描述您的疑问')
 					return
 				}
 				uni.showLoading({
