@@ -22,7 +22,7 @@
             <!-- 内部配置参数 -->
             <Internal :PropsInternalData='internalData' @addHighlightedModelId='addHighlightedModelId' />
             <!-- 底线 -->
-            <view class="bottom__content"><view class="bottom__line"></view>我是有底线的<view class="bottom__line"></view></view>
+            <view class="bottom__content" v-if="uLindeLoadingData"><view class="bottom__line"></view>我是有底线的<view class="bottom__line"></view></view>
         </view>
         <!-- 参配概述页 E -->
         <!-- 参数配置页 S -->
@@ -228,6 +228,7 @@
                 externalData: {}, // 概述页的外部参数数据
                 internalData: {}, // 概述页的内部参数数据
                 loadingData:false, //防止数据还没加载,第一次进来展示无数据
+                uLindeLoadingData:false, //防止数据还没加载,第一次进来展示(我们是有底线的)
 			}
 		},
 		watch: {
@@ -419,6 +420,7 @@
             async getCompositeInfoBySerialId(serialId) {
 				return new Promise((relove, resject) => {
 					try{
+
 						uni.request({
 							url: "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp",
 							data: {serialId},
@@ -449,7 +451,10 @@
 						})
 					}catch(e){
 						console.error('eeeeeeeeeee',e)
-					}
+					}finally {
+                        uLindeLoadingData = true
+                        uni.hideLoading()
+                    }
 				})
             }
 		}

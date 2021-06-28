@@ -113,10 +113,9 @@ export default {
 		margin-bottom: 27rpx;
 		border-bottom: 2rpx solid #ececec;
 		.item__model__left {
-			flex: 1;
+			width: calc(100% - 30rpx);
 		}
 		.item__model__left_title {
-			width: calc(100% - 30rpx);
 			font-size: 28rpx;
 			line-height: 24rpx;
 			color: #333333;
