@@ -456,7 +456,7 @@
 					}catch(e){
 						console.error('eeeeeeeeeee',e)
 					}finally {
-                        uLindeLoadingData = true
+                        this.uLindeLoadingData = true
                         uni.hideLoading()
                     }
 				})
