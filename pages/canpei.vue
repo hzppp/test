@@ -486,12 +486,13 @@
         background-color: #fff;
         .config__tab {
             display: flex;
+            justify-content: center;
             height: 80rpx;
             color: #333333;
             font-size: 32rpx;
             .config__tab__left {
                 position: relative;
-                margin-right: 44rpx;
+                margin-right: 160rpx;
                 text-align: center;
                 box-sizing: border-box;
             }
