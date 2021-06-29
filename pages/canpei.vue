@@ -1,14 +1,14 @@
 <template>
 	<!-- 参配页 -->
     <view>
-        <view class="config">
+        <view class="config" v-if="serialId">
             <view class="config__tab">
                 <view class="config__tab__left" :class="{ 'active' : tabWhich == 1 }" @tap='tabWhich=1'>参配概述</view>
                 <view class="config__tab__right" :class="{ 'active' : tabWhich == 2 }" @tap='tabWhich=2'>参数配置</view>
             </view>
         </view>
         <!-- 参配概述页 S -->
-        <view class="review" v-show="tabWhich == 1">
+        <view class="review" v-show="tabWhich == 1 && serialId">
             <!-- 主要参数 -->
             <Main :PropsMainData='mainData' /> 
             <!-- 基础参数 -->
@@ -26,8 +26,8 @@
         </view>
         <!-- 参配概述页 E -->
         <!-- 参数配置页 S -->
-        <view v-show="tabWhich == 2">
-            <view class='canpei uni' v-if="max > 0">
+        <view v-show="tabWhich == 2 || !serialId">
+            <view :class='["canpei","uni",serialId?"paddingTop100":""]' v-if="max > 0">
                 <!-- 车型对比计数器 S -->
                 <!-- <count :channel="countPage.car.canpei.count1" v-if="navigateBack == '1' && countPage.car.canpei.count1" :__uuid=" countPage.car.canpei.count1 == 9841 ? serialId+':1': ''"></count> -->
                 <!-- <count :channel="countPage.car.canpei.count2" v-if="navigateBack == '2' && countPage.car.canpei.count2"></count> -->
@@ -249,10 +249,11 @@
 			this.$store.state.selectCars = {}
 		},
 		onLoad(options) {
+            console.log('canpei页面下的第252行输出, options =>', options)
 			uni.showLoading({
 				title: "加载中"
 			})
-			this.serialId = options.serialId;
+			this.serialId = options.serialId || '';
 			this.navigateBack = options.navigateBack;
 			this.max = options.max || 0;
             this.tabWhich = options.tabWhich || 1;
@@ -262,8 +263,9 @@
 			}
 			this.mids = mids;
 			this.init()
-            // this.getCompositeInfoBySerialId(25903)
-            this.getCompositeInfoBySerialId(options.serialId)
+            if(options.serialId) {
+                this.getCompositeInfoBySerialId(options.serialId)
+            }
 		},
 		onShow() {
 			if (!this.Runshow && this.navigateBack == '1') {
@@ -428,7 +430,6 @@
             async getCompositeInfoBySerialId(serialId) {
 				return new Promise((relove, resject) => {
 					try{
-
 						uni.request({
 							url: "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp",
 							data: {serialId},
@@ -436,7 +437,6 @@
 								'Content-Type': 'application/json'
 							},
 							success: res => {
-                                console.log('res1111 :>> ', res);
                                 this.mainData = res.data.mainParModule || {}
                                 this.baseData = res.data.baseParModule || {}
                                 this.powerData = res.data.dongliParModule || {}
@@ -460,8 +460,10 @@
 					}catch(e){
 						console.error('eeeeeeeeeee',e)
 					}finally {
-                        this.uLindeLoadingData = true
                         uni.hideLoading()
+                        setTimeout(()=>{
+                            this.uLindeLoadingData = true
+                        },1000)
                     }
 				})
             }
@@ -545,9 +547,10 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-        padding-top: 100rpx;
 		font-size: 26rpx;
-
+        &.paddingTop100 {
+            padding-top: 100rpx;
+        }
 		.nav_btn {
 			text-align: center;
 			position: fixed;
