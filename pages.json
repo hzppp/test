@@ -127,7 +127,8 @@
 			"path": "pages/canpei",
 			"style": {
 				"navigationBarTitleText": "车型参配",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+                "disableScroll": true
 			}
 		}, {
 			"path": "pages/carSerialsVS",
