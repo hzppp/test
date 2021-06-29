@@ -97,11 +97,11 @@
             },
             leftSerialId() {
                 this.reqModelsBySerialId("left", this.leftSerialId)
-                this.init()
+                this.getVsData()
             },
             rightSerialId() {
                 this.reqModelsBySerialId("right", this.rightSerialId)
-                this.init()
+                this.getVsData()
             }
 		},
 		data() {
@@ -113,7 +113,7 @@
 				city: "广州",
 				cityId: 1,
 				offon: true, //true走onload的init，false走onshow的init；防止onload数据还未初始化就执行了init(百度小程序)
-				worthRead: [], //买车必看pk
+				// worthRead: [], //买车必看pk
 				leftSerial: "", //左边数据
 				rightSerial: "", //右边数据
 				tip: 0, //0left 1right
@@ -151,20 +151,23 @@
             this.rightSerialId = options.rightSerialId || ''
 		},
 		methods: {
-			async init() {
-				try {
-					let data = await this.getVsData();
-					this.worthRead = data.worthRead;
-					this.leftSerial = data.leftSerial;
-					this.rightSerial = data.rightSerial;
-					this.offon = false
-					uni.hideLoading()
-				} catch (e) {
-					uni.hideLoading()
-					console.error(e)
-					this.loadFail = true
-				}
-			},
+			// async init() {
+			// 	try {
+            //         uni.showLoading({
+            //             title: '正在加载...'
+            //         })
+			// 		let data = await this.getVsData();
+			// 		// this.worthRead = data.worthRead;
+			// 		this.leftSerial = data.leftSerial;
+			// 		this.rightSerial = data.rightSerial;
+			// 		this.offon = false
+			// 	} catch (e) {
+            //      console.error(e)
+			// 		this.loadFail = true
+			// 	} finally {
+			// 		uni.hideLoading()
+            //     }
+			// },
             //查看完整参数对比
             goCanpei() {
 				uni.navigateTo({
@@ -173,6 +176,9 @@
             },
             //获取车系下的车型
             async reqModelsBySerialId(noun,sgId) {
+                uni.showLoading({
+					title: '正在加载...'
+				})
                 try {
                     const {code,data} = await api.fetchModelsList({sgId})
                     if(code === 1) {
@@ -184,6 +190,8 @@
                     }
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    uni.hideLoading()
                 }
             },
             // 数组交叉排序重组
@@ -195,6 +203,9 @@
             },
             //获取对比车系
              getVsData(){
+                uni.showLoading({
+					title: '正在加载...'
+				})
                 return new Promise((reolve,resject)=>{
                     uni.request({
                         url:domain.getAPI('fetchVSserials'),
@@ -204,11 +215,16 @@
                         },
                         success:res=>{
                             let data = res.data;
-                            reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
+                            // console.log('carSerialsVS.vue页面下的第215行, res.data =>', res.data)
+                            this.leftSerial = data.leftSerial
+                            this.rightSerial = data.rightSerial
+                            // reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
+                            uni.hideLoading()
                         },
                         fail:err=>{
                             resject(err)
-                        }
+                            uni.hideLoading()
+                        },
                     })
                 })
             },
@@ -220,6 +236,9 @@
             },
 			//获取文字对比数据
 			async getVsDownData(mid1,mid2) {
+                uni.showLoading({
+					title: '正在加载...'
+				})
 				try {
 					const res = await api.fetchCarSerialContrast({mid1,mid2})
                     this.powerErank4ModelA =  res.modelEquipA ? res.modelEquipA.powerErank4Model : []
@@ -248,7 +267,9 @@
 
 				} catch (error) {
 					console.error(error)
-				}
+				} finally {
+                    uni.hideLoading()
+                }
 			},
 			// 更换车系
 			changeCarSearial(e) {

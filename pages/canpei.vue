@@ -7,24 +7,26 @@
                 <view class="config__tab__right" :class="{ 'active' : tabWhich == 2 }" @tap='tabWhich=2'>参数配置</view>
             </view>
         </view>
-        <!-- 参配概述页 S -->
-        <view class="review" v-show="tabWhich == 1 && serialId">
-            <!-- 主要参数 -->
-            <Main :PropsMainData='mainData' /> 
-            <!-- 基础参数 -->
-            <Base :PropsBaseData='baseData' @addHighlightedModelId='addHighlightedModelId' />
-            <!-- 智能化参数 -->
-            <Smart :PropsSmartData='smartData' @addHighlightedModelId='addHighlightedModelId' />
-            <!-- 动力表现参数 -->
-            <Power :PropsPowerData='powerData' @addHighlightedModelId='addHighlightedModelId' />
-            <!-- 外部配置参数 -->
-            <External :PropsExternalData='externalData' @addHighlightedModelId='addHighlightedModelId' />
-            <!-- 内部配置参数 -->
-            <Internal :PropsInternalData='internalData' @addHighlightedModelId='addHighlightedModelId' />
-            <!-- 底线 -->
-            <view class="bottom__content" v-if="uLindeLoadingData"><view class="bottom__line"></view>我是有底线的<view class="bottom__line"></view></view>
-        </view>
-        <!-- 参配概述页 E -->
+        <scroll-view scroll-y>
+            <!-- 参配概述页 S -->
+            <view class="review" v-show="tabWhich == 1 && serialId">
+                <!-- 主要参数 -->
+                <Main :PropsMainData='mainData' /> 
+                <!-- 基础参数 -->
+                <Base :PropsBaseData='baseData' @addHighlightedModelId='addHighlightedModelId' />
+                <!-- 智能化参数 -->
+                <Smart :PropsSmartData='smartData' @addHighlightedModelId='addHighlightedModelId' />
+                <!-- 动力表现参数 -->
+                <Power :PropsPowerData='powerData' @addHighlightedModelId='addHighlightedModelId' />
+                <!-- 外部配置参数 -->
+                <External :PropsExternalData='externalData' @addHighlightedModelId='addHighlightedModelId' />
+                <!-- 内部配置参数 -->
+                <Internal :PropsInternalData='internalData' @addHighlightedModelId='addHighlightedModelId' />
+                <!-- 底线 -->
+                <view class="bottom__content" v-if="uLindeLoadingData"><view class="bottom__line"></view>我是有底线的<view class="bottom__line"></view></view>
+            </view>
+            <!-- 参配概述页 E -->
+        </scroll-view>
         <!-- 参数配置页 S -->
         <view v-show="tabWhich == 2 || !serialId">
             <view :class='["canpei","uni",serialId?"paddingTop100":""]' v-if="max > 0">
@@ -46,7 +48,7 @@
                     </view>
                 </block>
                 <block>
-                    <scroll-view scroll-y class="canpei_bot" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
+                    <scroll-view enable-back-to-top scroll-y :class="['canpei_bot',serialId?'paddingTop100':'']" :scroll-into-view="scrollID" :style="nodata?'background:#fff':''">
                         <block v-if="Data.detailArray.length==0">
                             <view class="canpei_bot_none"></view>
                         </block>
@@ -89,7 +91,7 @@
                                 <!-- 对比内容区域左侧E -->
                             </view>
                             <view class="canpei_box_right_con">
-                                <scroll-view scroll-x class="canpei_box_right" :scroll-left="scrollLeft">
+                                <scroll-view scroll-x class="canpei_box_right">
                                     <!-- 区域右侧车型名称区域S -->
                                     <block>
                                         <view class="car_box" :style="'width:'+width+'rpx'">
@@ -519,7 +521,7 @@
     }
     .review {
         padding-top: 100rpx;
-        height: calc(100vh - 100rpx);
+        height: calc(100vh - 130rpx);
         .review__main__title {
             text-align: center;
             background-color: green;
@@ -771,7 +773,9 @@
 			// background: #eee;
 			@include flex_left_center;
 			position: relative;
-
+            &.paddingTop100 {
+                height: calc(100% - 100rpx);
+            }
 			.canpei_bot_none {
 				background: #fff;
 				height: 100%;
