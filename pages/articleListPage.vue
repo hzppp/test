@@ -18,7 +18,14 @@ name: "articleListPage",
     testDrive
   },
   onLoad(options) {
-    this.$refs.articleList.startGetData()
+	  // #ifdef MP-WEIXIN
+	   this.$refs.articleList.startGetData()
+	  // #endif
+	  
+	  // #ifdef MP-TOUTIAO
+	  this.$children[0].startGetData()
+	  // #endif
+   
   },
   methods: {
     changeLoading(type = false) {

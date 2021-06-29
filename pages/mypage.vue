@@ -225,6 +225,9 @@
 				})
 			},
 			toMyicon(){
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('我的金币点击')
+				// #endif
 				let token  =  uni.getStorageSync('session-3rd')
 				if(token){
 					let url = encodeURIComponent(domain.getAPI('mystore') + '?token=' + token)
@@ -253,11 +256,17 @@
 				})
 			},
 			tomyvideo() {
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('新媒体运营查询点击')
+				// #endif
 				uni.navigateTo({
 					url: '/pages/myvideo'
 				})
 			},
 			tomSuggestion(){
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('意见反馈点击')
+				// #endif
 				uni.navigateTo({
 					url: '/pages/Suggestion'
 				})

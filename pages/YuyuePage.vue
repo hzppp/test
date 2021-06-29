@@ -289,7 +289,14 @@ const COUNTDOWN = 60
                         sourceId:this.serialId
                     })
                     if(res.code === 1) {
-                         this.$refs.pop.isShow = true
+						// #ifdef MP-WEIXIN
+						 this.$refs.pop.isShow = true
+						// #endif
+						
+						// #ifdef MP-TOUTIAO
+						this.$children[1].isShow = true
+						// #endif
+                      
                     }else {
                         return uni.showToast({
                             title:res.msg,

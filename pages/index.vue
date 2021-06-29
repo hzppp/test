@@ -243,11 +243,26 @@
 			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
 			  console.log('开始及时')
-			if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
-			  // console.log(this.$refs.cmSwiper)
-			  this.$refs.cmSwiper.moveRight()
-			}
-			}, 4000); //这里设置定时
+			  
+			  // #ifdef MP-WEIXIN
+			 if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
+			   // console.log(this.$refs.cmSwiper)
+			   this.$refs.cmSwiper.moveRight()
+			 }
+			 }, 4000); //这里设置定时
+			  // #endif
+			  
+			  
+			  // #ifdef MP-TOUTIAO
+			  if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
+			    // console.log(this.$refs.cmSwiper)
+			    this.$children[2].moveRight()
+			  }
+			  }, 4000); //这里设置定
+			  // #endif
+			  
+			  
+		
 			
 			
 		},

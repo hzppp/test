@@ -201,9 +201,9 @@ export default {
       }
       return status
     },
-    formShow(name, from = "", obj = {}, title = "报名活动") {
-      this.$refs.formpop.formShow(name, from, obj, title)
-    },
+    // formShow(name, from = "", obj = {}, title = "报名活动") {
+    //   this.$refs.formpop.formShow(name, from, obj, title)
+    // },
     loadMoreCoupon() {
       this.getWelfarePageNumber++
       this.getWelfare()
@@ -400,13 +400,13 @@ export default {
         }
         this.$nextTick(function () {
           if (this.welfarePageNumber > total || rows.length < 2) {
-            console.log('couponlist=================', this.$refs.couponlist)
-            this.$refs.couponlist.morebtnHide()
+            // console.log('couponlist=================', this.$refs.couponlist)
+            // this.$refs.couponlist.morebtnHide()
           } else {
-            this.$refs.couponlist.morebtnShow()
+            // this.$refs.couponlist.morebtnShow()
           }
 
-          this.$refs.couponlist.setcouponList(this.welfareList)
+          // this.$refs.couponlist.setcouponList(this.welfareList)
         })
       } catch (err) {
         console.error(err)

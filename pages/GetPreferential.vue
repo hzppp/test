@@ -337,7 +337,13 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     })
                     console.log('res :>> ', res);
                     if(res.code === 1) {
-                        this.$refs.pop.isShow = true
+						 // #ifdef MP-WEIXIN
+						 this.$refs.pop.isShow = true
+						// #endif
+						
+						// #ifdef MP-TOUTIAO
+						 this.$children[1].isShow = true
+						// #endif
                         console.log('res :>> ', res);
                     }else {
                         return uni.showToast({
