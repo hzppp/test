@@ -45,11 +45,11 @@
 					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name"
 						maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view>
-				<view class="input-view mobile-input" style="margin-bottom: 0">
+				<view class="input-view mobile-input">
 					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
 						placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
 				</view>
-				<view class="lbactivityphoto" v-if="from == 'lbactivity'" style="margin-bottom: 24rpx">报名手机号需要跟购车手机号一致哦~~</view>
+				<view class="lbactivityphoto" v-if="from == 'lbactivity'" >报名手机号需要跟购车手机号一致哦~~</view>
 				<view class="input-view mobile-input sms-code-input">
 					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码"
 						placeholder-class="placeholder"></input>

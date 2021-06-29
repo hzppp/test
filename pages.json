@@ -306,8 +306,8 @@
 			{
 				"pagePath": "pages/exhibition",
 				"text": "云展厅",
-				"iconPath": "static/images/tab3_icon.png",
-				"selectedIconPath": "static/images/tab3_icon_c.png"
+				"iconPath": "static/images/tab33_icon.png",
+				"selectedIconPath": "static/images/tab33_icon_c.png"
 			},
 			// #endif
 			

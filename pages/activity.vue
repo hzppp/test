@@ -17,7 +17,7 @@
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view> 
-		<view class="serial-list" v-if="content.coverSerialGroup == 1">
+		<view class="serial-list" v-if="content.showCustomAds == 0">
 			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
 				@tap="seeCarBtnClick(serialGroupItem)">
 				<view class="name">{{serialGroupItem.name}}</view>
@@ -26,7 +26,7 @@
 			</view>
 		</view>
 		<!-- customAdList --> 
-		<view v-if="content.coverSerialGroup == 0" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
+		<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
 			<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 		</view>
 
@@ -160,8 +160,14 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
-				// #endif
 				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+				// #endif
+				
+				// #ifdef MP-TOUTIAO
+				console.log(12133123)
+				this.$children[3].formShow('form', 'activity', this.content, '报名活动')
+				// #endif
+				
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -187,6 +193,7 @@
 			},
 			tapAcivity(item) {
 				//0:跳转小程序内部页面,1:H5外链,2:外部小程序
+				console.log('跳转',item)
 				switch (item.redirectType) {
 					case 0: {
 						uni.navigateTo({

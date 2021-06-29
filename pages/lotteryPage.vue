@@ -237,13 +237,28 @@ export default {
           app.globalData.isRotating = false;
           return
         }else if(res.code===1){
-          this.$refs.luckyWheel.play()
+			// #ifdef MP-WEIXIN
+			  this.$refs.luckyWheel.play()
+			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			this.$children[2].play()
+			// #endif
+         
           let index = this.matchIndex(res.data.id) //中奖索引
           console.log('中奖索引',index)
           // 缓慢停止游戏
           setTimeout(() => {
             // 缓慢停止游戏
-            this.$refs.luckyWheel.stop(index)
+			// #ifdef MP-WEIXIN
+			  this.$refs.luckyWheel.stop(index)
+			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			this.$children[2].stop(index)
+			// #endif
+			
+           
           }, 500)
           return res.data
         }else if(res.code == 0){

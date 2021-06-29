@@ -43,7 +43,9 @@
 		},
 		async onLoad() {
 			let apidata = await api.getIP()
-			this.ip = apidata.ip
+			if(apidata){
+			 this.ip = apidata.ip
+			}
 		},
 		methods: {
 			chooseImage() {
