@@ -111,7 +111,7 @@
 				this.content = data
 				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
 					uni.reLaunch({
-						url: `/pages/webview?webURL=${encodeURI(data.h5Link)}`,
+						url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
 					})
 				}
 				if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
@@ -203,7 +203,7 @@
 					case 1: {
 						if (item.h5Link && item.h5Link.substring(0, 4) == "http") {
 							uni.navigateTo({
-								url: `/pages/webview?webURL=${encodeURI(item.h5Link)}`,
+								url: `/pages/webview?webURL=${encodeURIComponent(item.h5Link)}`,
 							})
 						}
 						break;

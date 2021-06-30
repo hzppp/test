@@ -139,7 +139,7 @@
 			  })
             if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
               uni.navigateTo({
-                url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+                url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
               })
             }
             break;

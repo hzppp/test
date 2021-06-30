@@ -305,6 +305,12 @@
 						list: []
 					}
 				})
+		
+			// // #ifdef MP-WEIXIN
+			// if(this.$refs && this.$refs.cmSwiper){
+			//     this.$refs.cmSwiper.dosetData(this.pageData.banners)	
+			// }
+			//  // #endif
 			 this.sgList = this.pageData.heatSgList
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
@@ -502,7 +508,7 @@
 				  case 1: {
 				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
 				      uni.navigateTo({
-				        url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+				        url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
 				      })
 				    }
 				    break;

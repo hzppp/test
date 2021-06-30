@@ -35,6 +35,20 @@
 				swiperList2:[]
 			};
 		},
+		watch:{
+			swiperList(array){
+				console.log('变化了',array)
+				var macInfo = uni.getSystemInfoSync();
+				this.swiperList2 = array
+				this.screenWidth = macInfo.screenWidth;
+				// 计算swiper样式
+				this.itemStyle = []
+				this.swiperList2.forEach((item, index) => {
+					this.itemStyle.push(this.getStyle(index))
+				})
+				
+			}
+		},
 		created() {
 			var macInfo = uni.getSystemInfoSync();
 			this.screenWidth = macInfo.screenWidth;
@@ -93,7 +107,7 @@
 				  case 1: {
 				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
 				      uni.navigateTo({
-				        url: `/pages/webview?webURL=${encodeURI(item.duibaUrl)}`,
+				        url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
 				      })
 				    }
 				    break;
@@ -206,6 +220,21 @@
 				newList = last.concat(newList)
 				this.itemStyle = newList	
 				}
+				
+			},
+			
+			
+			dosetData(array){
+				console.log('数据边',array)
+			this.swiperList =  array
+			var macInfo = uni.getSystemInfoSync();
+			this.screenWidth = macInfo.screenWidth;
+			// 计算swiper样式
+			this.swiperList.forEach((item, index) => {
+				this.itemStyle.push(this.getStyle(index))
+			})
+			this.swiperList2 = this.swiperList
+			
 				
 			},
 
