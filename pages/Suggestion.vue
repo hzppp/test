@@ -112,6 +112,11 @@
 			async upload(item, array) {
 				let data = await api.uploadUPC(this.ip)
 				// console.log('updata', data, data.publicUrl)
+				let uploadURL = data.hostUrl;
+				if(uploadURL.substring(0, 5) != "https"){
+				   uploadURL = uploadURL.replace('http','https')
+				}
+				console.log( '提交' +  uploadURL)
 				let pam = {
 					'key': data.key,
 					'policy': data.policy,
@@ -119,7 +124,7 @@
 					'signature': data.signature,
 				}
 				uni.uploadFile({
-					url: data.hostUrl,
+					url: uploadURL,
 					filePath: item,
 					name: 'file',
 					formData: pam,
