@@ -137,7 +137,8 @@ export default {
                 uni.setStorageSync('wxUserInfo', data)
                 uni.setStorageSync('userPhone', data.mobile)
             } else if (code == -4) {
-              let d  = await this.login()
+			  this.removeSessionKey()
+			  let d  = await this.login()
 			  if (d ==1 ){
 				  return 1;
 			  }

@@ -433,7 +433,7 @@
 				return new Promise((relove, resject) => {
 					try{
 						uni.request({
-							url: "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp",
+							url: "https://mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp",
 							data: {serialId},
 							header: {
 								'Content-Type': 'application/json'
