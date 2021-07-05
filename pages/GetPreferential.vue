@@ -8,7 +8,7 @@
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
         <view class="head-info">
-            <image :src="serialData.picHeadUrl" />
+            <image mode="aspectFill" :src="serialData.picHeadUrl"/>
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
                 <view class="price">指导价:    {{serialData.price}}万</view>

@@ -30,9 +30,14 @@
 			"path": "pages/exhibition",
 			"style": {
 				"navigationBarTitleText": "云展厅",
-				"enablePullDownRefresh": false,
+				// #ifdef MP-WEIXIN
+				"navigationStyle": "custom",
+				// #endif
+				"enablePullDownRefresh": false
 				// "pageOrientation": "landscape",
-				"navigationStyle": "custom"
+				
+			
+				
 			}
 		},
 		{
@@ -285,7 +290,7 @@
 	"tabBar": {
 		"custom": true,
 		"color": "#999999",
-		"selectedColor": "#ce1330",
+		"selectedColor": "#EC8E53",
 		"backgroundColor": "#fff",
 		"borderStyle": "black",
 		"list": [{
