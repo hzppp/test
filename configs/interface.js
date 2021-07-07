@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 const version = 1004;
 
 // 正式域名
@@ -26,8 +26,8 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
-	// changan:'https://devqd-changan.pcauto.com.cn',
+	// changan:"https://tccar.pcauto.com.cn",
+	changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
 	UPC:'https://qa-upc2.pc.com.cn',
@@ -260,7 +260,15 @@ const config = {
 		// 刷新token
 		refreshToken: `${DOMAIN.changan}/api/xcx/user/refreshToken`,
 		// 获取用户ip
-		getIP:'https://whois.pconline.com.cn/ipJson.jsp?resp_enc=utf-8&json=true'
+		getIP:'https://whois.pconline.com.cn/ipJson.jsp?resp_enc=utf-8&json=true',
+		// 娃娃机-活动信息
+		wwjInfo: `${DOMAIN.changan}/api/xcx/wawaji/info`,
+		// 娃娃机-保存车型
+		saveModel: `${DOMAIN.changan}/api/xcx/wawaji/model/save`,
+		// 启动娃娃机
+		wwjStart: `${DOMAIN.changan}/api/xcx/wawaji/start`,
+		// 娃娃机-二维码核销
+		wwjVerify: `${DOMAIN.changan}/api/xcx/wawaji/verify`,
 	},
 	getAPI(key) {
 		let url;

@@ -1,56 +1,56 @@
 <template>
 	<view>
 		<userBand></userBand>
-	<view class="activity">
-		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-		<share-pop ref="shareSuccess"></share-pop>
-		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
-		<form-pop ref="formpop"></form-pop>
-		<view class="title">{{content.name}}</view>
-		<view class="date" v-if="content && isActStart && !isActEnded">
-			离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
-				class="db">{{artDownDate[2]}}</view>分
-			<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
-		</view>
-		<view class="date" v-if="isActEnded">活动已结束</view>
-
-		<view class="content">
-			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
-		</view> 
-		<view class="serial-list" v-if="content.showCustomAds == 0">
-			<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
-				@tap="seeCarBtnClick(serialGroupItem)">
-				<view class="name">{{serialGroupItem.name}}</view>
-				<button class="see-car-btn">3D看车 ></button>
-				<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
+		<view class="activity">
+			<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
+			<share-pop ref="shareSuccess"></share-pop>
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
+			<form-pop ref="formpop"></form-pop>
+			<view class="title">{{content.name}}</view>
+			<view class="date" v-if="content && isActStart && !isActEnded">
+				离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
+					class="db">{{artDownDate[2]}}</view>分
+				<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
 			</view>
-		</view>
-		<!-- customAdList --> 
-		<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
-			<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
-		</view>
+			<view class="date" v-if="isActEnded">活动已结束</view>
+
+			<view class="content">
+				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
+			</view> 
+			<view class="serial-list" v-if="content.showCustomAds == 0">
+				<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
+					@tap="seeCarBtnClick(serialGroupItem)">
+					<view class="name">{{serialGroupItem.name}}</view>
+					<button class="see-car-btn">3D看车 ></button>
+					<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
+				</view>
+			</view>
+			<!-- customAdList --> 
+			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
+				<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
+			</view>
 
 
-		<view class="zw"></view>
-		<view class="operation-list">
-			<view class="type-c"
-				v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
-				<button class="over-btn" hover-class="none">活动已结束</button>
-			</view>
-			<view class="type-a" v-else-if="content.needApply == 1">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-					open-type="share" @click="shareBtnClick">分享好友</button>
-				<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
-					v-if="!phone">报名活动</button>
-				<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
-			</view>
-			<view class="type-b" v-else-if="content.needApply == 0">
-				<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-					open-type="share" @click="shareBtnClick">分享好友</button>
+			<view class="zw"></view>
+			<view class="operation-list">
+				<view class="type-c"
+					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
+					<button class="over-btn" hover-class="none">活动已结束</button>
+				</view>
+				<view class="type-a" v-else-if="content.needApply == 1">
+					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						open-type="share" @click="shareBtnClick">分享好友</button>
+					<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
+						v-if="!phone">报名活动</button>
+					<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
+				</view>
+				<view class="type-b" v-else-if="content.needApply == 0">
+					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						open-type="share" @click="shareBtnClick">分享好友</button>
+				</view>
 			</view>
 		</view>
 	</view>
-    </view>
 </template>
 
 <script>

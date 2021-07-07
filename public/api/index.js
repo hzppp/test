@@ -1050,5 +1050,49 @@ module.exports = {
 			data: para
 		})
 		return data
-	}
+	},
+	// 娃娃机-活动信息
+	wwjInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('wwjInfo'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	// 娃娃机-保存车型
+	saveModel: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('saveModel'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	// 启动娃娃机
+	wwjStart: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('wwjStart'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	// s娃娃机-二维码核销
+	wwjVerify: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('wwjVerify'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
 }
