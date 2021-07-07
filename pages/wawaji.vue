@@ -10,12 +10,13 @@
 		<wwj-rule :visible.sync="showRule"/>
 		<view class="content content-enery" v-if="pageStatus==1">
 			<view class="qrimg">
-				<tki-qrcode ref="qrcode" :val="val" :size="size" :unit="unit" :background="background" :foreground="foreground"
-				 :pdground="pdground" :icon="icon" :iconSize="iconsize" :lv="lv" :onval="onval" :loadMake="loadMake"
-				 :showLoading="showLoading" :loadingText="loadingText" />
+				<tki-qrcode ref="qrcode" :val="eneryCode.val" :size="eneryCode.size" :unit="eneryCode.unit" :background="eneryCode.background" :foreground="eneryCode.foreground"
+				 :pdground="eneryCode.pdground" :lv="eneryCode.lv" :onval="eneryCode.onval" :loadMake="eneryCode.loadMake"
+				 :showLoading="eneryCode.showLoading" :loadingText="eneryCode.loadingText" />
 			</view>
 			<view class="back" @tap="pageStatus=0"></view>
 		</view>
+		
 		<!-- 选择车型 -->
 		<view class="content content-choose-car" v-if="pageStatus==3">
 			<view class="content-tit">科技量产中心</view>
@@ -33,9 +34,10 @@
 						</swiper-item>
 					</swiper>
 				</view>
-				<view class="btn choose-btn">选择此车型</view>
+				<view class="btn choose-btn" @tap="chooseModel">选择此车型</view>
 			</view>
 		</view>
+		
 		<!-- 科技 -->
 		<view class="content content-technology" v-if="pageStatus==2">
 			<view class="content-tit">科技量产中心</view>
@@ -43,18 +45,72 @@
 				<view class="car-img-con">
 					<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg" class="car-img"></image>
 				</view>
-				<view class="show-code-btn" @tap="showCode"></view>
-				<view class="content-info">
-					<text>点击立即领取并前往接待台处</text>
-					<text>领取长安汽车精美礼品一份</text>
-				</view>
+				<template v-if="activityInfo && hasTechnology">
+					<view class="show-code-btn" @tap="pageStatus=4"></view>
+					<view class="content-info">
+						<text>点击立即领取并前往接待台处</text>
+						<text>领取长安汽车精美礼品一份</text>
+					</view>
+				</template>
+				<template v-else>
+					<view class="back" @tap="pageStatus=0"></view>
+					<view class="content-info">
+						<text>您已领取过奖品</text>
+					</view>
+				</template>
 			</view>
+		</view>
+		
+		<!-- 展示科技量产中心二维码 -->
+		<view class="content content-technology-code" v-if="pageStatus==4">
+			<view class="qrimg">
+				<tki-qrcode ref="qrcode" :val="technologyCode.val" :size="technologyCode.size" :unit="technologyCode.unit" :background="technologyCode.background" :foreground="technologyCode.foreground"
+				 :pdground="technologyCode.pdground" :lv="technologyCode.lv" :onval="technologyCode.onval" :loadMake="technologyCode.loadMake"
+				 :showLoading="technologyCode.showLoading" :loadingText="technologyCode.loadingText" />
+			</view>
+			<view class="back" @tap="pageStatus=0"></view>
+		</view>
+	
+		<view class="content content-treasure" v-if="pageStatus==5">
+			<view class="scan-btn" @tap="scan"></view>
+		</view>
+		
+		<!-- 扫码夹娃娃 -->
+		<view class="content content-treasure-scan" v-if="pageStatus==6">
+			<view class="content-tit">寻宝大作战</view>
+			<view class="technology-con">
+				<view class="car-img-con">
+					<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg" class="car-img"></image>
+				</view>
+				<view class="content-info">
+					<text>您获得一次抓娃娃机会，快前往娃娃机处</text>
+					<text>扫码娃娃机上的二维码，开始游戏</text>
+				</view>
+				<view class="btn scan-btn" @tap="scanWwj">扫一扫</view>
+			</view>
+		</view>
+
+
+		<view class="content content-gift" v-if="pageStatus==7">
+			<view class="gift-tit"><image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/verify-tit.png" mode="aspectFit" class="gift-tit"></image></view>
+			<view class="star"></view>
+			<!-- 点击领取定制好礼 -->
+			<view class="star-btn" @tap="receive"></view>
+		</view>
+
+		<view class="content content-technology-code" v-if="pageStatus==8">
+			<view class="qrimg">
+				<tki-qrcode ref="qrcode" :val="gift.val" :size="gift.size" :unit="gift.unit" :background="gift.background" :foreground="gift.foreground"
+				 :pdground="gift.pdground" :lv="gift.lv" :onval="gift.onval" :loadMake="gift.loadMake"
+				 :showLoading="gift.showLoading" :loadingText="gift.loadingText" />
+			</view>
+			<view class="back" @tap="pageStatus=0"></view>
 		</view>
 	</view>
 	
-	
 </template>
 <script>
+	import api from '@/public/api/index'
 	import wwjRule from '@/components/wwjRule/wwjRule.vue';
 	import tkiQrcode from "tki-qrcode";
 	export default {
@@ -83,7 +139,7 @@
 					"https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/unit.jpg",
 					"https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg"
 				],
-				pageStatus:3,
+				pageStatus:7,
 				swiper:{
 					current:1,
 					circular:true,
@@ -92,31 +148,124 @@
 					interval: 3000,
 					duration: 500,
 				},
-				val: 'https://www.baidu.com',
-				size: 348,
-				background: '#ffffff',
-				foreground: '#000000',
-				pdground: '#000000',
-				icon: '',
-				iconsize: 30,
-				lv: 3,
-				onval: true,
-				unit: 'upx',
-				loadMake: true,
-				src: '',
-				showLoading: true,
-				loadingText: '加载中··'
-			
+				eneryCode:{
+					val: 'https://www.baidu.com',
+					size: 348,
+					background: '#ffffff',
+					foreground: '#000000',
+					pdground: '#000000',
+					lv: 3,
+					onval: true,
+					unit: 'upx',
+					loadMake: true,
+					src: '',
+					showLoading: true,
+					loadingText: '加载中··',
+				},
+				technologyCode:{
+					val: 'https://www.baidu.com',
+					size: 348,
+					background: '#ffffff',
+					foreground: '#000000',
+					pdground: '#000000',
+					lv: 3,
+					onval: true,
+					unit: 'upx',
+					loadMake: true,
+					src: '',
+					showLoading: true,
+					loadingText: '加载中··',
+				},
+				gift:{
+					val: 'https://www.baidu.com',
+					size: 348,
+					background: '#ffffff',
+					foreground: '#000000',
+					pdground: '#000000',
+					lv: 3,
+					onval: true,
+					unit: 'upx',
+					loadMake: true,
+					src: '',
+					showLoading: true,
+					loadingText: '加载中··',
+				},
+				activityInfo:{},
+				activityId:107
 			}
 		},
-		
+		onLoad(){
+			this.getActivityInfo();
+		},
 		methods: {
+			async getActivityInfo(){
+				let activityInfo = await api.wwjInfo({
+					activityId: this.activityId
+				})
+				if(activityInfo.code==1){
+					this.activityInfo=activityInfo.data;
+				}
+			},
 			targetItem(item,index){
-				this.pageStatus=index;s
+				this.pageStatus=index;
+				if(index==2){
+					if(this.activityInfo && this.activityInfo.modelPath){
+						this.pageStatus=2;
+					}else{
+						this.pageStatus=3;
+					}
+				}else{
+					this.pageStatus=4;
+				}
+				
 			},
 			swiperChange(e){
 				this.swiper.current = e.detail.current;
 			},
+			async chooseModel(){
+				console.log("选择车型",this.swiper.current);
+				// 保存选中的车型
+				let resData = await api.saveModel({
+					id: this.activityInfo.id,
+					modelPath: this.chooseCarList[this.swiper.current]
+				})
+			},
+			//扫码
+			async scan(){
+				uni.scanCode({
+				    success: function (res) {
+						//扫码成功，核销，判断是否有夹娃娃的机会
+						let verifyData=`${this.activityInfo.userToken}|Prize`
+						console.log(verifyData);
+						// let ress = await api.wwjVerify({
+						// 	data: verifyData
+						// })
+						// if(ress.code==1){
+						// 	if(ress.data.status==1) this.pageStatus=6;
+						// }
+				    }
+				});
+			},
+			//扫描娃娃机
+			async scanWwj(){
+				uni.scanCode({
+					success: function (res) {
+						console.log("扫描娃娃机结果",res.result);
+						//启动娃娃机
+						// const {code,data} = await api.wwjStart({
+						// 	activityId:this.activityId,
+						// 	deviceId:res.result
+						// })
+					}
+				});
+			},
+			async receive(){
+				let verifyData=`${this.activityInfo.userToken}|Prize`
+				let ress = await api.wwjVerify({
+					data: verifyData
+				})
+				this.pageStatus=8;
+			}
 		}
 	}
 </script>
@@ -154,9 +303,27 @@
 		.content-enery{
 			width:647rpx;
 			height:787rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/enery-code-bg.png') no-repeat center top/100%;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/enery-code-bg.png') no-repeat center/100%;
 			.qrimg{
 				margin-top:205rpx;
+			}
+		}
+		.content-technology-code{
+			width:647rpx;
+			height:710rpx;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-code-bg.png') no-repeat center/100%;
+			.qrimg{
+				margin-top:205rpx;
+			}
+		}
+		.content-treasure{
+			width:649rpx;
+			height:574rpx;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/treasure-con.png') no-repeat center/100%;
+			.scan-btn{
+				width:529rpx;
+				height:96rpx;
+				margin:378rpx auto 0;
 			}
 		}
 		.back{
@@ -189,7 +356,7 @@
 		.technology-con{
 			width:649rpx;
 			height:745rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-bg.png') no-repeat center top/100%;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-bg.png') no-repeat center/100%;
 			padding: 0 60rpx;
 			box-sizing:border-box;
 			display:flex;
@@ -206,7 +373,7 @@
 				width:529rpx;
 				height:96rpx;
 				margin:30rpx 0;
-				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/show-code-btn.png') no-repeat center top/100%;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/show-code-btn.png') no-repeat center/100%;
 			}
 		}
 		.content-choose-car .technology-con{
@@ -241,6 +408,22 @@
 				}
 			}
 		}
-
+		.content-treasure-scan{
+			.content-info{
+				margin:30rpx auto 20rpx;
+			}
+		}
+		.content-gift{
+			.gift-tit{
+				width: 438rpx;
+				height: 387rpx;
+			}
+			.star-btn{
+				width: 276rpx;
+				height: 276rpx;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/start.png') no-repeat center/100%;
+				margin: 40rpx auto 0;
+			}
+		}
 	}
 </style>

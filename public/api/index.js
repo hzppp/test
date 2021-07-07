@@ -1058,7 +1058,10 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('wwjInfo'),
 			method: "POST",
-			data: para
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 		})
 		return data
 	},
@@ -1069,7 +1072,10 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('saveModel'),
 			method: "POST",
-			data: para
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 		})
 		return data
 	},
@@ -1080,19 +1086,25 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('wwjStart'),
 			method: "POST",
-			data: para
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 		})
 		return data
 	},
-	// s娃娃机-二维码核销
+	// 娃娃机-二维码核销
 	wwjVerify: async (para) => {
 		let {
 			data
 		} = await request({
 			url: domain.getAPI('wwjVerify'),
 			method: "POST",
-			data: para
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 		})
 		return data
-	},
+	}
 }
