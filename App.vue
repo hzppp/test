@@ -11,6 +11,7 @@
 			//panorama:"http://t-panorama.pcauto.com.cn",
 			testDriveX: 400,
 			testDriveY: 465,
+			adDealerId:'',  // 留资来源id
 			currentLocation: { //当前位置
 				wxPosition: { // 微信定位的坐标位置
 					wsq: true,
