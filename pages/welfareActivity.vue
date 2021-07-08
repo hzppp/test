@@ -330,6 +330,11 @@
 							uni.navigateTo({
 								url: item.miniUrl
 							})
+							// #ifndef MP-WEIXIN
+							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+								this.$toast('请在微信搜索本小程序参与')
+							}
+							// #endif
 							return
 						}
 						// #ifndef MP-WEIXIN

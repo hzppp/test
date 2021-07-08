@@ -30,9 +30,14 @@
 			"path": "pages/exhibition",
 			"style": {
 				"navigationBarTitleText": "云展厅",
-				"enablePullDownRefresh": false,
+				// #ifdef MP-WEIXIN
+				"navigationStyle": "custom",
+				// #endif
+				"enablePullDownRefresh": false
 				// "pageOrientation": "landscape",
-				"navigationStyle": "custom"
+				
+			
+				
 			}
 		},
 		{
@@ -146,7 +151,8 @@
 			"path": "pages/GetPreferential",
 			"style": {
 				"navigationBarTitleText": "获取优惠",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/ChooseSerial",
@@ -294,12 +300,20 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/ToutiaoCarlist",
+			"style": {
+				"navigationBarTitleText": "长安汽车云车展",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {
 		"custom": true,
 		"color": "#999999",
-		"selectedColor": "#ce1330",
+		"selectedColor": "#EC8E53",
 		"backgroundColor": "#fff",
 		"borderStyle": "black",
 		"list": [{

@@ -1,5 +1,6 @@
 <template>
     <view>
+		<pageTop ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title" ></pageTop>
 		<userBand></userBand>
         <view  class="get-preferential" v-if="serialData.id">
         <pop ref="pop"></pop>
@@ -8,7 +9,7 @@
         <!-- 顶部提示E -->
         <!-- 头部信息S -->
         <view class="head-info">
-            <image :src="serialData.picHeadUrl" />
+            <image  mode="aspectFit"  :src="serialData.picCoverUrl"/>
             <view class="text-dec" @tap="changeSerial">
                 <view class="title">{{serialData.name}}</view>
                 <view class="price">指导价:    {{serialData.price}}万</view>
@@ -98,7 +99,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 downNum: COUNTDOWN, //倒计时秒数
                 isFirst: true, //是否是第一次发送
 
-                title: 'picker',
+                title: '获取优惠',
                 cityList: [], //城市列表
                 dealersList: [], //经销商列表
 
@@ -118,6 +119,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isFocus:false,
 
                 isNoData:false,
+				zijie:''
             }
         },
         watch: {
@@ -136,6 +138,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.checkInfo()
         },
        async onLoad(options) {
+		   
+		    this.zijie = options.zijie;
             console.log('options :>> ', options);
             // await login.checkLogin(api)
             this.getStoragePhone()
@@ -333,7 +337,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         sourceId:this.currentDealer.id,
                         smsCode:this.codeNum,
                         dealerId:this.currentDealer.id || "",
-                        sourceId:this.serialId
+                        sourceId:this.serialId,
+						adDealerId:app.globalData.adDealerId
                     })
                     console.log('res :>> ', res);
                     if(res.code === 1) {
@@ -342,7 +347,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 						// #endif
 						
 						// #ifdef MP-TOUTIAO
-						 this.$children[1].isShow = true
+						 this.$children[2].isShow = true
 						// #endif
                         console.log('res :>> ', res);
                     }else {
