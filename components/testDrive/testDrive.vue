@@ -11,12 +11,12 @@
   
   
   		<!--  #ifndef MP-WEIXIN  --> 
-  		<view class="movableArea">
+  	<!-- 	<view class="movableArea">
   			<view class="movableView" :position="position" :x="x" :y="y" :direction="direction" :damping="damping"
   				:inertia="true" @change="onChange" @touchend="onTouchend">
   				<button class="btn" @tap="goTestDrive"></button>
   			</view>
-  		</view>
+  		</view> -->
   		<!--  #endif  -->
 </view>
 </template>

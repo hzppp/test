@@ -197,8 +197,13 @@
 				switch (item.redirectType) {
 					case 0: {
 						uni.navigateTo({
-							url: item.miniUrl
+							url: item.miniUrl,
 						})
+						// #ifndef MP-WEIXIN
+						if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+							this.$toast('请在微信搜索本小程序参与')
+						}
+						// #endif
 					}
 					case 1: {
 						if (item.h5Link && item.h5Link.substring(0, 4) == "http") {
@@ -214,6 +219,11 @@
 							uni.navigateTo({
 								url: item.miniUrl
 							})
+							// #ifndef MP-WEIXIN
+							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+								this.$toast('请在微信搜索本小程序参与')
+							}
+							// #endif
 							return
 						}
 						// #ifndef MP-WEIXIN

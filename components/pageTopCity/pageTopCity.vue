@@ -92,6 +92,9 @@ export default {
   width: 336rpx;
   .tc;
   .seth(42rpx,38rpx,#fff);
+  /*  #ifndef  MP-WEIXIN  */
+   .seth(42rpx,31rpx,#fff);
+  /*  #endif  */
   .ellipsis;
   .pa(50%,50%);
   transform: translate(-50%,-50%);

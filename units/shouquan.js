@@ -89,6 +89,11 @@ export default {
                 },
                 fail: (res) => {
                     //拒绝授权
+					uni.showToast({
+						title:'后续如需授权用户信息，请到设置打开相关权限',
+						icon:'none'
+					})
+					
                     console.log('拒绝授权', res)
                     uni.setStorageSync('haveUserInfoAuth',false)
                     app.globalData.haveUserInfoAuth = false
