@@ -7,6 +7,16 @@
 		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' "></page-top>
 		<form-pop ref="formpop"></form-pop>
 
+		<template v-if="activityType=='wawaji'">
+			<view class="title">{{content.name}}</view>
+			<view class="date" v-if="content && isActStart && !isActEnded">
+				离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
+					class="db">{{artDownDate[2]}}</view>分
+				<!-- <view class="db">{{artDownDate[3]}}</view>秒 -->
+			</view>
+			<view class="date" v-if="isActEnded">活动已结束</view>
+		</template>
+
 		<view class="content">
 			<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 		</view>
@@ -17,7 +27,14 @@
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else>
-				<button class="enroll-btn" @tap="formShow">我要参与抽奖</button>
+				<template v-if="activityType=='wawaji'">
+					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						open-type="share" @click="shareBtnClick">分享好友</button>
+					<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
+						v-if="!phone">报名活动</button>
+					<button class="enroll-btn enroll-btn2" @tap="formShow" v-else>报名活动</button>
+				</template>
+				<button class="enroll-btn" @tap="formShow" v-else>我要参与抽奖</button>
 			</view>
 		</view>
 	</view>
@@ -51,7 +68,9 @@
 				sourceUserId: '',
 				soureDone:false,
 				actiDone:false,
-				activityType:""
+				activityType:"",
+				isActEnded: false,
+				isActStart: false,
 			}
 		},
 		mixins: [shouquan],
@@ -75,6 +94,7 @@
 					data = {}
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
+				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
@@ -125,7 +145,8 @@
 				})
 				if (data) {
 					let isApply = data.isApply
-					if (isApply == 1) {
+					//是否提交过
+					if (isApply == 1 && this.activityType=="") {
 						uni.reLaunch({
 							url: '/pages/lotteryPage?activityId=' + this.activityId
 						})
@@ -152,7 +173,12 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				 wx.aldstat.sendEvent('报名活动')
-				 this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+				 
+				 if(this.activityType=='wawaji'){
+					 this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+				 }else{
+					 this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+				 }
 				// #endif
 				
 				
@@ -191,6 +217,9 @@
 				let time = new Date().getTime()
 				endtime = new Date(endtime.replace(/-/g, '/')).getTime()
 				let j = endtime - time
+				if (j <= 0) {
+					this.isActEnded = true;
+				}
 				let tt = 1000 * 60 * 60
 				let days = parseInt(j / (tt * 24))
 				let hours = parseInt((j % (tt * 24)) / (tt))
@@ -364,6 +393,9 @@
 				font-size: 32rpx;
 				background-color: #fa8845;
 				border-radius: 44rpx;
+				&.enroll-btn2{
+					width: 420rpx;
+				}
 			}
 		}
 

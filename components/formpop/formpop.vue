@@ -212,11 +212,11 @@
 			},
 			formHide() {
 				this.isShowFormPop = false;
-				// if((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1]==='type=wawaji'){
-				// 	uni.navigateTo({
-				// 		url:`/pages/wawaji?activityId=${this.currentObj.id}`
-				// 	})
-				// }
+				if((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1]==='type=wawaji'){
+					uni.navigateTo({
+						url:`/pages/wawaji?activityId=${this.currentObj.id}`
+					})
+				}
 			},
 			// 获取验证码被点击
 			getSmsCodeClick() {
