@@ -1,20 +1,33 @@
 <template>
 	<view class="wwj-page">
+		<view class="back-icon" v-if="pageStatus>0" @tap="pageStatus=0"></view>
 		<view class="content" v-if="pageStatus==0">
 			<view :class="index == 3 ? 'type-item-prize':'type-item'" v-for="(item,index) in btnList" :key="index" @tap="targetItem(item,index+1)">
 				<image :src="item.btn" :class="index == 3 ? 'prize-img':'img'"></image>
 			</view>
 			<view class="rule-btn" @tap="showRule=true">活动规则>></view>
 		</view>
-		<!-- 能量 -->
+		<!-- 活动规则 -->
 		<wwj-rule :visible.sync="showRule"/>
+
+		<!-- 能量 -->
 		<view class="content content-enery" v-if="pageStatus==1">
-			<view class="qrimg">
-				<tki-qrcode ref="qrcode" :val="eneryCode.val" :size="eneryCode.size" :unit="eneryCode.unit" :background="eneryCode.background" :foreground="eneryCode.foreground"
-				 :pdground="eneryCode.pdground" :lv="eneryCode.lv" :onval="eneryCode.onval" :loadMake="eneryCode.loadMake"
-				 :showLoading="eneryCode.showLoading" :loadingText="eneryCode.loadingText" />
+			<view class="content-tit">能量补给站</view>
+			<view class="content-enery-inner">
+				<!-- 已经领取过 -->
+				<template v-if="activityInfo && activityInfo.hasAddEnergy">
+					<view class="hasReceived">您已经领取定制好礼</view>
+				</template>
+				<template v-else>
+					<view class="content-info">请前往接待处领取奖品</view>
+					<view class="qrimg">
+						<tki-qrcode ref="qrcode" :val="eneryCode.val" :size="eneryCode.size" :unit="eneryCode.unit" :background="eneryCode.background" :foreground="eneryCode.foreground"
+						:pdground="eneryCode.pdground" :lv="eneryCode.lv" :onval="eneryCode.onval" :loadMake="eneryCode.loadMake"
+						:showLoading="eneryCode.showLoading" :loadingText="eneryCode.loadingText" />
+					</view>
+				</template>
+				<view class="back" @tap="pageStatus=0">返回</view>
 			</view>
-			<view class="back" @tap="pageStatus=0"></view>
 		</view>
 		
 		<!-- 选择车型 -->
@@ -43,19 +56,19 @@
 			<view class="content-tit">科技量产中心</view>
 			<view class="technology-con">
 				<view class="car-img-con">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg" class="car-img"></image>
+					<image :src="modelPath" class="car-img"></image>
 				</view>
-				<template v-if="activityInfo && hasTechnology">
+				<template v-if="activityInfo && activityInfo.hasTechnology">
+					<view class="back" @tap="pageStatus=0">返回</view>
+					<view class="content-info">
+						<text>您已领取过奖品</text>
+					</view>
+				</template>
+				<template v-else>
 					<view class="show-code-btn" @tap="pageStatus=4"></view>
 					<view class="content-info">
 						<text>点击立即领取并前往接待台处</text>
 						<text>领取长安汽车精美礼品一份</text>
-					</view>
-				</template>
-				<template v-else>
-					<view class="back" @tap="pageStatus=0"></view>
-					<view class="content-info">
-						<text>您已领取过奖品</text>
 					</view>
 				</template>
 			</view>
@@ -68,11 +81,26 @@
 				 :pdground="technologyCode.pdground" :lv="technologyCode.lv" :onval="technologyCode.onval" :loadMake="technologyCode.loadMake"
 				 :showLoading="technologyCode.showLoading" :loadingText="technologyCode.loadingText" />
 			</view>
-			<view class="back" @tap="pageStatus=0"></view>
+			<view class="back" @tap="pageStatus=0">返回</view>
 		</view>
 	
+		<!-- 寻宝大作战 -->
 		<view class="content content-treasure" v-if="pageStatus==5">
-			<view class="scan-btn" @tap="scan"></view>
+			<view class="content-tit">寻宝大作战</view>
+			<view class="content-treasure-con">
+				<template v-if="activityInfo && activityInfo.hasTreasure">
+					<view class="hasReceived">
+						已完成任务
+					</view>
+				</template>
+				<template v-else>
+					<view class="content-info">
+						<text>请在长安展台区域</text>
+						<text>寻找宝藏二维码并扫描</text>
+					</view>
+					<view class="scan-btn" @tap="scan">开始扫描</view>
+				</template>
+			</view>
 		</view>
 		
 		<!-- 扫码夹娃娃 -->
@@ -80,7 +108,7 @@
 			<view class="content-tit">寻宝大作战</view>
 			<view class="technology-con">
 				<view class="car-img-con">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg" class="car-img"></image>
+					<image :src="wwjResultImg" class="car-img"></image>
 				</view>
 				<view class="content-info">
 					<text>您获得一次抓娃娃机会，快前往娃娃机处</text>
@@ -93,18 +121,35 @@
 
 		<view class="content content-gift" v-if="pageStatus==7">
 			<view class="gift-tit"><image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/verify-tit.png" mode="aspectFit" class="gift-tit"></image></view>
-			<view class="star"></view>
+			<view class="task-complete" v-if="activityInfo.hasAddEnergy && activityInfo.hasTechnology && activityInfo.hasTreasure">
+				<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star-complete.gif" class="task-complete"></image>
+			</view>
+			<view class="task-complete" v-else>
+				<view :class="['star', 'star1', {light:activityInfo.hasAddEnergy}]"></view>
+				<view :class="['star', 'star2', {light:activityInfo.hasTechnology}]"></view>
+				<view :class="['star', 'star3', {light:activityInfo.hasTreasure}]"></view>
+			</view>
 			<!-- 点击领取定制好礼 -->
 			<view class="star-btn" @tap="receive"></view>
 		</view>
 
-		<view class="content content-technology-code" v-if="pageStatus==8">
-			<view class="qrimg">
-				<tki-qrcode ref="qrcode" :val="gift.val" :size="gift.size" :unit="gift.unit" :background="gift.background" :foreground="gift.foreground"
-				 :pdground="gift.pdground" :lv="gift.lv" :onval="gift.onval" :loadMake="gift.loadMake"
-				 :showLoading="gift.showLoading" :loadingText="gift.loadingText" />
+		<view class="content content-enery" v-if="pageStatus==8">
+			<view class="content-tit">定制好礼</view>
+			<view class="content-enery-inner">
+				<!-- 已经领取过 -->
+				<template v-if="activityInfo && activityInfo.hasPrize">
+					<view class="hasReceived">您已经领取定制好礼</view>
+				</template>
+				<template v-else>
+					<view class="content-info">请前往接待处领取奖品</view>
+					<view class="qrimg">
+						<tki-qrcode ref="qrcode" :val="gift.val" :size="gift.size" :unit="gift.unit" :background="gift.background" :foreground="gift.foreground"
+						:pdground="gift.pdground" :lv="gift.lv" :onval="gift.onval" :loadMake="gift.loadMake"
+						:showLoading="gift.showLoading" :loadingText="gift.loadingText" />
+					</view>
+				</template>
+				<view class="back" @tap="pageStatus=0">返回</view>
 			</view>
-			<view class="back" @tap="pageStatus=0"></view>
 		</view>
 	</view>
 	
@@ -139,7 +184,7 @@
 					"https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/unit.jpg",
 					"https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/yidong-plus.jpg"
 				],
-				pageStatus:7,
+				pageStatus:0, //0,进入页面状态，1，能量二维码，2，科技，已选车型 3，科技，选择车型 4，科技，二维码 5，寻宝大作战 6，寻宝大作战，有夹娃娃机会 7，集星赢好礼 8，点击领取定制好礼，二维码
 				swiper:{
 					current:1,
 					circular:true,
@@ -149,7 +194,7 @@
 					duration: 500,
 				},
 				eneryCode:{
-					val: 'https://www.baidu.com',
+					val: '',
 					size: 348,
 					background: '#ffffff',
 					foreground: '#000000',
@@ -163,7 +208,7 @@
 					loadingText: '加载中··',
 				},
 				technologyCode:{
-					val: 'https://www.baidu.com',
+					val: '',
 					size: 348,
 					background: '#ffffff',
 					foreground: '#000000',
@@ -177,7 +222,7 @@
 					loadingText: '加载中··',
 				},
 				gift:{
-					val: 'https://www.baidu.com',
+					val: '',
 					size: 348,
 					background: '#ffffff',
 					foreground: '#000000',
@@ -191,10 +236,19 @@
 					loadingText: '加载中··',
 				},
 				activityInfo:{},
-				activityId:107
+				activityId:'',
+				modelPath:"",
+				wwjResultImg:""
 			}
 		},
-		onLoad(){
+		watch:{
+			pageStatus(val){
+				console.log('pageStatus',val)
+			}
+		},
+		onLoad(options){
+			console.log("options",options.activityId)
+			this.activityId = options.activityId
 			this.getActivityInfo();
 		},
 		methods: {
@@ -204,18 +258,27 @@
 				})
 				if(activityInfo.code==1){
 					this.activityInfo=activityInfo.data;
+					this.modelPath = this.activityInfo.modelPath
+					this.eneryCode.val=`${this.activityInfo.userToken}|AddEnergy`
+					this.technologyCode.val=`${this.activityInfo.userToken}|Technology`
+					this.gift.val=`${this.activityInfo.userToken}|Prize`
 				}
 			},
 			targetItem(item,index){
 				this.pageStatus=index;
-				if(index==2){
+				this.getActivityInfo();
+				if(index==1){//能量补给站
+					this.pageStatus=1;
+				}else if(index==2){//科技量产中心
 					if(this.activityInfo && this.activityInfo.modelPath){
 						this.pageStatus=2;
 					}else{
 						this.pageStatus=3;
 					}
-				}else{
-					this.pageStatus=4;
+				}else if(index==3){ //寻宝大作战
+					this.pageStatus=5;
+				}else if(index==4){//集星赢好礼
+					this.pageStatus=7;
 				}
 				
 			},
@@ -223,47 +286,54 @@
 				this.swiper.current = e.detail.current;
 			},
 			async chooseModel(){
-				console.log("选择车型",this.swiper.current);
 				// 保存选中的车型
 				let resData = await api.saveModel({
 					id: this.activityInfo.id,
 					modelPath: this.chooseCarList[this.swiper.current]
 				})
+				// 选择车型成功，重新调用活动接口，获取选择车型图片
+				if(resData.code==1){
+					this.getActivityInfo();
+				}
 			},
 			//扫码
 			async scan(){
+				let that=this;
 				uni.scanCode({
 				    success: function (res) {
-						//扫码成功，核销，判断是否有夹娃娃的机会
-						let verifyData=`${this.activityInfo.userToken}|Prize`
-						console.log(verifyData);
-						// let ress = await api.wwjVerify({
-						// 	data: verifyData
-						// })
-						// if(ress.code==1){
-						// 	if(ress.data.status==1) this.pageStatus=6;
-						// }
+						console.log("扫描寻宝二维码",res)
+						that.wwjResultImg="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/"+res.result
+						//扫码成功，如果未完成寻宝，则扫描夹娃娃机
+						that.getActivityInfo();
+						if(!that.activityInfo.hasTreasure){
+							that.pageStatus=6;
+						}
 				    }
 				});
 			},
 			//扫描娃娃机
-			async scanWwj(){
+			scanWwj(){
+				let that=this;
 				uni.scanCode({
 					success: function (res) {
-						console.log("扫描娃娃机结果",res.result);
-						//启动娃娃机
-						// const {code,data} = await api.wwjStart({
-						// 	activityId:this.activityId,
-						// 	deviceId:res.result
-						// })
+						that.wwjStart(res.result)
 					}
 				});
 			},
-			async receive(){
-				let verifyData=`${this.activityInfo.userToken}|Prize`
-				let ress = await api.wwjVerify({
-					data: verifyData
+			async wwjStart(result){
+				//启动娃娃机
+				let {code,data} = await api.wwjStart({
+					activityId:this.activityId,
+					deviceId:result
 				})
+				if (code == 1) {
+					this.$toast('正在开启中！')
+				} else {
+					this.$toast(data.msg)
+				}
+				console.log("启动娃娃机",code,data)
+			},
+			async receive(){
 				this.pageStatus=8;
 			}
 		}
@@ -280,6 +350,15 @@
 		justify-content:center;
 		align-items:center;
 		text-align:center;
+		position: relative;
+		.back-icon{
+			position: absolute;
+			width: 75rpx;
+			height: 77rpx;
+			left:60rpx;
+			top:150rpx;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/back-icon.png') no-repeat center/100%;
+		}
 		.type-item{
 			margin-bottom:50rpx;
 		}
@@ -300,42 +379,22 @@
 			line-height:1;
 			margin-top:35rpx;
 		}
-		.content-enery{
-			width:647rpx;
-			height:787rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/enery-code-bg.png') no-repeat center/100%;
-			.qrimg{
-				margin-top:205rpx;
-			}
-		}
-		.content-technology-code{
-			width:647rpx;
-			height:710rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-code-bg.png') no-repeat center/100%;
-			.qrimg{
-				margin-top:205rpx;
-			}
-		}
-		.content-treasure{
-			width:649rpx;
-			height:574rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/treasure-con.png') no-repeat center/100%;
-			.scan-btn{
-				width:529rpx;
-				height:96rpx;
-				margin:378rpx auto 0;
-			}
-		}
 		.back{
-			width:530rpx;
-			height:80rpx;
+			width:529rpx;
+			height:76rpx;
 			margin:38rpx auto;
+			line-height: 76rpx;
+			font-size: 42rpx;
+			color: #ffffff;
+			text-align: center;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/back-btn.png') no-repeat center/100%;
 		}
 		.content-tit{
 			font-size:68rpx;
 			color:#0789a8;
 			margin-bottom:40rpx;
 			line-height:1;
+			font-weight: bold;
 		}
 		.content-info{
 			color:#666666;
@@ -343,6 +402,11 @@
 			text{
 				display:block;
 			}
+		}
+		.hasReceived{
+			color: #333333;
+			font-size: 36rpx;
+			padding:30rpx 0;
 		}
 		.btn{
 			width:423rpx;
@@ -353,6 +417,48 @@
 			text-align:center;
 			line-height:81rpx;
 		}
+
+		// 能量补给站
+		.content-enery{
+			.content-enery-inner{
+				width:649rpx;
+				height:710rpx;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/enery-code-bg.png') no-repeat center/100%;
+				display:flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+				.qrimg{
+					margin-top:30rpx;
+				}
+			}
+			
+		}
+		.content-technology-code{
+			width:647rpx;
+			height:710rpx;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-code-bg.png') no-repeat center/100%;
+			.qrimg{
+				margin-top:130rpx;
+			}
+		}
+		.content-treasure{
+			.content-treasure-con{
+				width:649rpx;
+				height:486rpx;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/treasure-con.png') no-repeat center/100%;
+				display:flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+				.scan-btn{
+					width:529rpx;
+					height:96rpx;
+					margin:378rpx auto 0;
+				}
+			}
+		}
+		
 		.technology-con{
 			width:649rpx;
 			height:745rpx;
@@ -417,6 +523,38 @@
 			.gift-tit{
 				width: 438rpx;
 				height: 387rpx;
+			}
+			.task-complete{
+				width: 389rpx;
+				height: 237rpx;
+				position: relative;
+				margin:0 auto;
+				.star{
+					width: 115rpx;
+					height: 108rpx;
+					background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star2.png') no-repeat center/100%;
+					&.light{
+						background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star.png') no-repeat center/100%;
+					}
+				}
+				.star1{
+					position: absolute;
+					left:50%;
+					top:0;
+					transform: translateX(-50%)scale(1);
+				}
+				.star2{
+					position: absolute;
+					left:0;
+					bottom:0;
+					transform: scale(0.8);
+				}
+				.star3{
+					position: absolute;
+					right:0;
+					bottom:0;
+					transform: scale(0.7);
+				}
 			}
 			.star-btn{
 				width: 276rpx;

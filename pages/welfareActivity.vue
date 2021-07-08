@@ -298,6 +298,8 @@
 						return
 					}
 				}
+		
+				// if(item.redirectType == 2 && item.miniUrl && item.miniUrl.split('&')[1])
 				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
 				switch (item.redirectType) {
 					case 0: {

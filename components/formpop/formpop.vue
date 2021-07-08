@@ -1,5 +1,5 @@
 <template>
-	<view class="formpop" v-if="isShowFormPop">
+	<view class="formpop" v-if="isShowFormPop"> 
 		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
 				<view class="p1">{{title}}</view>
@@ -211,7 +211,12 @@
 				this.formHide()
 			},
 			formHide() {
-				this.isShowFormPop = false
+				this.isShowFormPop = false;
+				if((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1]==='type=wawaji'){
+					uni.navigateTo({
+						url:`/pages/wawaji?activityId=${this.currentObj.id}`
+					})
+				}
 			},
 			// 获取验证码被点击
 			getSmsCodeClick() {
@@ -397,13 +402,15 @@
 					// 	})
 					// 	return
 					// }
-
+					
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
 					} else {
 						popname = 'form-warning-pop'
 					}
 					this.popName = popname
+					
+					
 				} else {
 					if (ly == 'coupon') {
 						popname = 'coupon-sb-pop'
