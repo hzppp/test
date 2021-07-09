@@ -49,7 +49,16 @@
 					
 				}
 			}
-		}
+		},
+		onShareAppMessage() {
+			let title = "扫描核销"
+			let path = `pages/authorization?to=scan`
+			return {
+				title: title,
+				path: path,
+				imageUrl: ""
+			}
+		},
 	}
 </script>
 <style lang="less">

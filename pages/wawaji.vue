@@ -98,7 +98,7 @@
 						<text>请在长安展台区域</text>
 						<text>寻找宝藏二维码并扫描</text>
 					</view>
-					<view class="scan-btn" @tap="scan">开始扫描</view>
+					<view class="btn scan-btn" @tap="scan">开始扫描</view>
 				</template>
 			</view>
 		</view>
@@ -169,7 +169,7 @@
 				btnList:[
 					{btn:'https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/wawaji_btn1.png',type:'AddEnergy',name:'能量补给'},
 					{btn:'https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/wawaji_btn2.png',type:'Technology',name:'科技量产中心'},
-					{btn:'https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/wawaji_btn1.png',type:'Prize',name:'定制好礼'},
+					{btn:'https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/wawaji_btn3.png',type:'Prize',name:'定制好礼'},
 					{btn:'https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/wawaji_btn4.png',type:'Prize',name:'定制好礼'}
 				],
 				chooseCarList:[
@@ -294,6 +294,7 @@
 				// 选择车型成功，重新调用活动接口，获取选择车型图片
 				if(resData.code==1){
 					this.getActivityInfo();
+					this.pageStatus=2;
 				}
 			},
 			//扫码
@@ -334,7 +335,12 @@
 				console.log("启动娃娃机",code,data)
 			},
 			async receive(){
-				this.pageStatus=8;
+				if(this.activityInfo.hasAddEnergy && this.activityInfo.hasTechnology && this.activityInfo.hasTreasure){
+					this.pageStatus=8;
+				}else{
+					this.$toast('请先完成任务！')
+				}
+				
 			}
 		}
 	}
@@ -451,10 +457,14 @@
 				flex-direction:column;
 				justify-content:center;
 				align-items:center;
+				.content-info{
+					color: #333333;
+					font-size: 36rpx;
+				}
 				.scan-btn{
 					width:529rpx;
 					height:96rpx;
-					margin:378rpx auto 0;
+					margin:50rpx auto 0;
 				}
 			}
 		}
