@@ -25,6 +25,7 @@
 			
 		},
 		methods: {
+			
 			//二维码核销
 			async scanCode(){
 				uni.scanCode({
@@ -43,13 +44,25 @@
 				})
 				if(code==1){
 					this.pageStatus=data.status;
+					if(data.status==1){
+						uni.$emit('updateCodeStatus',1);
+					}
 					if(data.status==-1){
 						this.description=data.description;
 					}
 					
 				}
 			}
-		}
+		},
+		onShareAppMessage() {
+			let title = "扫描核销"
+			let path = `pages/authorization?to=scan`
+			return {
+				title: title,
+				path: path,
+				imageUrl: ""
+			}
+		},
 	}
 </script>
 <style lang="less">

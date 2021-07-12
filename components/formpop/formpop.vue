@@ -212,6 +212,7 @@
 			},
 			formHide() {
 				this.isShowFormPop = false;
+				console.log(this.currentObj.miniUrl.split('&')[1])
 				if((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1]==='type=wawaji'){
 					uni.navigateTo({
 						url:`/pages/wawaji?activityId=${this.currentObj.id}`

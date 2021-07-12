@@ -67,7 +67,7 @@ export const resolveImage = async (res, img, imgName = 'src', resolveName = '$re
   // 如果是网络图片, 则通过getImageInfo()方法获取图片宽高
   uni.getImageInfo({
     src: src,
-    success: (imgObj) => $resolve(imgObj),
+    success: (imgObj) => {$resolve(imgObj)},
     fail: () => console.error('API `uni.getImageInfo` 加载图片失败', src)
   })
 }

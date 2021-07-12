@@ -3,13 +3,13 @@
 	<userBand></userBand>
     <pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title" :homeBtn="true"></pageTopCommon>
     <view class="content">
-      <view class="luckyWheel">
+      <view class="luckyWheel" :style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
         <view class="lotteryList">
           <swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true" :circular="true" :duration="500" :interval="2000" :autoplay="true">
             <swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords" :key="index"><view class="item">{{item}}</view></swiper-item>
           </swiper>
         </view>
-        <view class="lotteryRecord" @tap="golotteryRecord"></view>
+        <view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
         <LuckyWheel
             ref="luckyWheel"
             width="520rpx"
@@ -42,7 +42,7 @@
       </view>
       <view class="tips">
         <view class="contentBody">
-          <view class="title titleK">活动规则</view>
+          <view class="title titleK">抽奖说明</view>
           <scroll-view scroll-y="true" class="contentTips">
             <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
             <view class="mbt14">1.报名成功即可获得1次抽奖机会，每邀请1名好友助力拼车成功，可增加1次抽奖机会。</view>
@@ -60,27 +60,17 @@
       <view class="dialogContainer">
         <block v-if="lotteryRes.id>1&&lotteryRes.price">
           <view class="tTitle titleQ">恭喜您获得</view>
-          <view class="tBody gotPrize">
-            <view class="amountBox"><view class="iconK">￥</view><view class="amount">{{ lotteryRes.price }}</view></view>
-            <view class="time">有效期至：{{lotteryRes.endTime || '-'}}</view>
-            <view class="lotteryType" v-if="lotteryRes.kind.length==5">
-              <view>{{lotteryRes.kind.substr(0,2)}}</view>
-              <view>{{lotteryRes.kind.substr(2,5)}}</view>
-            </view>
-            <view class="lotteryType long" v-else>
-<!--            <view class="lotteryType long" v-else>-->
-              <view>{{lotteryRes.kind.substr(0,3)}}</view>
-              <view>{{lotteryRes.kind.substr(3,7)}}</view>
-            </view>
+          <view class="tBody">
+            <view class="przie-name" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{lotteryRes.name}}</view>
           </view>
           <view class="tFoot">
-            <button class="left" @tap="goLotteryDetail(lotteryRes.lotteryId)">查看详情</button>
+            <button class="left" @tap="golotteryRecord()">查看中奖纪录</button>
             <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>
         <block v-else>
           <view class="tTitle titleQ">您与奖品檫肩而过</view>
-          <view class="tBody">
+          <view class="tBody tBody2">
             <view class="funnyIcon"></view>
             <view class="thxA">谢谢惠顾~</view>
           </view>
@@ -126,6 +116,7 @@ export default {
   },
   async onLoad(options) {
     this.showDialogL = false;
+    
 
     this.prizes = []
     uni.showLoading({
@@ -184,13 +175,15 @@ export default {
     }
     // `../../static/images/prize_${item.id}.png`
     this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.prizeCode-b.prizeCode)
+    console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
     if(this.lotteryActInfo.prizeList.length){
       this.lotteryActInfo.prizeList.forEach((item, index) => {
         this.prizes.push({
           title: '', background: '#c3ecff', fonts: [{text: '', top: '18%'}],
           imgs: [
             {
-              src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
+              src: item.picUrl, width: '100%', height: '100%', top: '1rpx'
+              // src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
             }
           ]
         })
@@ -198,6 +191,7 @@ export default {
           uni.hideLoading()
         }
       })
+      // console.log("this.prizes",this.prizes);
     }
   },
   async onShareAppMessage() {
@@ -344,7 +338,7 @@ export default {
 }
 
 .container {
-  background: #000052;
+  background: #eef1f5;
   position: relative;
   .content {
     overflow-x: hidden;
@@ -371,7 +365,16 @@ export default {
         position: absolute;
         right: 0;
         top: 16rpx;
-        .setbg(134rpx, 56rpx, 'recode_icon.png');
+        width:134rpx;
+        height: 56rpx;
+        background: rgba(0,0,0,.6);
+        border-top-left-radius: 28rpx;
+        border-bottom-left-radius: 28rpx;
+        font-size: 24rpx;
+        text-align: center;
+        line-height: 56rpx;
+        color: #fff;
+        // .setbg(134rpx, 56rpx, 'recode_icon.png');
       }
       .choiceTime {
         position: absolute;
@@ -379,10 +382,10 @@ export default {
         width: 100%;
         text-align: center;
         font-size: 28rpx;
-        color: #fff;
+        color: #333333;
         .times {
           display: inline-block;
-          color: #ffd75c;
+          color: #ed2c2c;
           margin: 0 10rpx;
         }
       }
@@ -390,6 +393,8 @@ export default {
     .titleK {
       position: relative;
       margin-bottom: 34rpx !important;
+      color: #ed2c2c;
+      font-size: 32rpx;
       &::before {
         position: absolute;
         left: 42rpx;
@@ -397,7 +402,7 @@ export default {
         width: 186rpx;
         height: 13rpx;
         content: '';
-        .setbg(186rpx, 13rpx, 'recode_icon_l.png');
+        .setbg(186rpx, 13rpx, 'recode_new_icon_l.png');
       }
       &::after {
         position: absolute;
@@ -406,33 +411,34 @@ export default {
         width: 186rpx;
         height: 13rpx;
         content: '';
-        .setbg(186rpx, 13rpx, 'recode_icon_r.png');
+        .setbg(186rpx, 13rpx, 'recode_new_icon_2.png');
       }
     }
     .list {
       padding: 0 32rpx 20rpx;
-      background: #000052;
+      background: #eef1f5;
       margin-bottom: 20rpx;
       .invite {
         margin: 0 auto;
-        .setbg(686rpx, 102rpx, 'invite_btn.png');
+        .setbg(686rpx, 102rpx, 'invite_btn_210712.png');
         margin-bottom: 60rpx;
       }
       .inviteRecord {
-        color: #fff;
+        color: #333333;
         padding: 40rpx 20rpx 30rpx;
-        background: #183aba;
+        background: #ffffff;
         border-radius: 10rpx;
         .title {
           text-align: center;
           font-size: 32rpx;
           line-height: 32rpx;
           margin-bottom: 20rpx;
+          color: #ed2c2c;
         }
         .item {
           height: 112rpx;
           line-height: 112rpx;
-          background: #1806a3;
+          background: #eef1f5;
           margin-bottom: 20rpx;
           box-sizing: border-box;
           padding: 20rpx;
@@ -458,17 +464,18 @@ export default {
             overflow: hidden; text-overflow:ellipsis; white-space: nowrap;
           }
           .time {
+            color:#999999;
             font-size: 24rpx;
           }
         }
         .nodata {
           border-radius: 10rpx;
           margin-bottom: 20rpx;
-          background: #1806a3;
+          background: #eef1f5;
           height: 212rpx;
           line-height: 212rpx;
-          font-size: 14px;
-          color: #6b87cf;
+          font-size: 28rpx;
+          color: #999999;
           text-align: center;
         }
         .more {
@@ -480,50 +487,51 @@ export default {
     }
     .tips {
       padding: 0 32rpx 20rpx;
-      background: #000052;
+      background: #ffffff;
       .title {
-        color: #fff;
+        color: #ed2c2c;
         text-align: center;
         font-size: 32rpx;
         line-height: 32rpx;
         margin-bottom: 20rpx;
       }
       .contentBody {
-        color: #fff;
+        color: #333333;
         padding: 40rpx 20rpx 30rpx;
-        background: #183aba;
+        background: #ffffff;
         border-radius: 10rpx;
         .contentTips {
           max-height: 170rpx;
           width: 646rpx;
           overflow: scroll;
           border-radius: 10rpx;
-          background: #1806a3;
-          padding:30rpx 0 30rpx 20rpx;
+          background: #eef1f5;
+          padding:30rpx 20rpx 30rpx 20rpx;
           font-size: 28rpx;
+          line-height: 54rpx;
           /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-          //::-webkit-scrollbar
-          //{
-          //  width: 16upx!important;
-          //  height: 16upx!important;
-          //  background-color: blue;
-          //}
-          //
-          ///*定义滚动条轨道 内阴影+圆角*/
-          //::-webkit-scrollbar-track
-          //{
-          //  // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          ::-webkit-scrollbar
+          {
+           width: 16upx!important;
+           height: 16upx!important;
+           background-color: #eef1f5;
+          }
+          
+          /*定义滚动条轨道 内阴影+圆角*/
+          ::-webkit-scrollbar-track
+          {
+           // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
           //  border-radius: 10px;
           //  background-color: #1806a3;
-          //}
-          //
-          ///*定义滑块 内阴影+圆角*/
-          //::-webkit-scrollbar-thumb
-          //{
-          //  border-radius: 10px;
+          }
+          
+          /*定义滑块 内阴影+圆角*/
+          ::-webkit-scrollbar-thumb
+          {
+           border-radius: 10px;
           //  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-          //  background-color: #F5F5F5;
-          //}
+           background-color: #dee0e2;
+          }
         }
       }
     }
@@ -554,9 +562,20 @@ export default {
       .tBody {
         position: absolute;
         left: 40rpx;
-        top: 216rpx;
+        top: 190rpx;
         width: 480rpx;
         color: #fff;
+        &.tBody2{
+          top:210rpx;
+        }
+        .przie-name{
+          width: 100%;
+          height: 215rpx;
+          font-size: 44rpx;
+          text-align: center;
+          line-height: 215rpx;
+          font-weight: bold;
+        }
         &.gotPrize {
           .setbg(480rpx,164rpx,'coupon_icon.png');
         }

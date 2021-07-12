@@ -71,13 +71,14 @@
 				activityType:"",
 				isActEnded: false,
 				isActStart: false,
+				isApply:0, //是否留咨过
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
-			this.activityType= options.type
+			this.activityType= options.type || ''
 			// await login.checkLogin(api)
 			if (app.Interval) {
 				clearInterval(app.Interval)
@@ -145,6 +146,7 @@
 				})
 				if (data) {
 					let isApply = data.isApply
+					this.isApply=isApply;
 					//是否提交过
 					if (isApply == 1 && this.activityType=="") {
 						uni.reLaunch({
@@ -173,9 +175,16 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				 wx.aldstat.sendEvent('报名活动')
-				 
+				 console.log("this.isApply",this.isApply)
 				 if(this.activityType=='wawaji'){
-					 this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+					 if(!this.isApply){
+						this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+					 }else{
+						uni.navigateTo({
+							url:`/pages/wawaji?activityId=${this.content.id}`
+						})
+					 }
+					 
 				 }else{
 					 this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
 				 }

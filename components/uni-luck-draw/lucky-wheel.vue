@@ -1,21 +1,16 @@
 <template>
   <view v-if="isShow" :class="showDialogL ? 'lucky-box hideWheel':'lucky-box'" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
-    <canvas id="lucky-wheel" canvas-id="lucky-wheel" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"></canvas>
+    <canvas 
+      id="lucky-wheel" 
+      canvas-id="lucky-wheel" 
+      :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"
+    ></canvas>
     <!-- #ifdef APP-PLUS -->
     <view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></view>
     <!-- #endif -->
     <!-- #ifndef APP-PLUS -->
-<!--    <cover-view class="lucky-wheel-btn" @click="toPlay"></cover-view>-->
-<!--    <image class="lucky-wheel-btn" @click="toPlay" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png"></image>-->
     <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
     <!-- #endif -->
-    <div class="lucky-imgs">
-      <div v-for="(block, index) in blocks" :key="index">
-        <div v-if="block.imgs">
-          <image v-for="(img, i) in block.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'blocks', index, i)"></image>
-        </div>
-      </div>
-    </div>
     <div class="lucky-imgs">
       <div v-for="(prize, index) in prizes" :key="index">
         <div v-if="prize.imgs">
@@ -23,13 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="lucky-imgs">
-      <div v-for="(btn, index) in buttons" :key="index">
-        <div v-if="btn.imgs">
-          <image v-for="(img, i) in btn.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'buttons', index, i)"></image>
-        </div>
-      </div>
-    </div>
+
   </view>
 </template>
 
@@ -48,6 +37,7 @@
         btnHeight: 0,
         dpr: 1,
         transformStyle: '',
+        isLoadedNum:0,
       }
     },
     props: {
@@ -107,11 +97,20 @@
       defaultConfig (newData) {
         this.$lucky && (this.$lucky.defaultConfig = newData)
       },
+      isLoadedNum(newData){
+        // console.log("isLoadedNum",newData,newData==this.prizes.length);
+        // if(newData==this.prizes.length){
+        //     this.draw()
+        // }
+      }
     },
     methods: {
       async imgBindload (res, name, index, i) {
         const img = this[name][index].imgs[i]
-        resolveImage(res, img)
+        resolveImage(res, img).then(()=>{
+          this.isLoadedNum+=1;
+        })
+   
       },
       initLucky () {
         const dpr = this.dpr = uni.getSystemInfoSync().pixelRatio
@@ -126,6 +125,7 @@
           this.draw()
         })
       },
+
       draw () {
         const _this = this
         const ctx = this.ctx = uni.createCanvasContext('lucky-wheel', this)
@@ -150,7 +150,7 @@
           unitFunc: (num, unit) => changeUnits(num + unit),
           beforeInit: function () {
             const Radius = Math.min(this.config.width, this.config.height) / 2
-            console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
+            // console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
             ctx.translate(-Radius, -Radius)
           },
           afterInit: function () {

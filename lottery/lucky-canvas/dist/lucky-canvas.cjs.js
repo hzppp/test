@@ -1384,6 +1384,7 @@ var LuckyWheel = /** @class */ (function (_super) {
         ctx.save();
         // 绘制prizes奖品区域
         this.prizes.forEach(function (prize, prizeIndex) {
+            console.log("绘制prizes奖品区域",prize, prizeIndex);
             // 计算当前奖品区域中间坐标点
             var currMiddleDeg = start + prizeIndex * _this.prizeRadian;
             // 奖品区域可见高度
