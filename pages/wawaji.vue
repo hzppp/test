@@ -122,7 +122,7 @@
 		<view class="content content-gift" v-if="pageStatus==7">
 			<view class="gift-tit"><image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/verify-tit.png" mode="aspectFit" class="gift-tit"></image></view>
 			<view class="task-complete" v-if="activityInfo.hasAddEnergy && activityInfo.hasTechnology && activityInfo.hasTreasure">
-				<image src="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star-complete.gif" class="task-complete"></image>
+				<image :src="completeStar" class="task-complete"></image>
 			</view>
 			<view class="task-complete" v-else>
 				<view :class="['star', 'star1', {light:activityInfo.hasAddEnergy}]"></view>
@@ -238,7 +238,9 @@
 				activityInfo:{},
 				activityId:'',
 				modelPath:"",
-				wwjResultImg:""
+				wwjResultImg:"",
+				completeStar:"https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star-complete.gif?hash="+Math.random()*10,
+				gif_show:false
 			}
 		},
 		watch:{
@@ -250,7 +252,7 @@
 			console.log("options",options.activityId)
 			this.activityId = options.activityId
 			this.getActivityInfo();
-		},
+		},  
 		methods: {
 			async getActivityInfo(){
 				let activityInfo = await api.wwjInfo({
@@ -278,7 +280,9 @@
 				}else if(index==3){ //寻宝大作战
 					this.pageStatus=5;
 				}else if(index==4){//集星赢好礼
+					this.completeStar="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/star-complete.gif?hash="+Math.random()*10
 					this.pageStatus=7;
+					
 				}
 				
 			},
@@ -336,6 +340,7 @@
 			},
 			async receive(){
 				if(this.activityInfo.hasAddEnergy && this.activityInfo.hasTechnology && this.activityInfo.hasTreasure){
+					this.gif_show=false;
 					this.pageStatus=8;
 				}else{
 					this.$toast('请先完成任务！')

@@ -6,28 +6,37 @@
         <view class="headerInfo">
           <view class="lDetail">
             <view class="prizeName">{{detailInfo.prizeName}}</view>
-            <view class="prizeCode"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
+            <view class="prizeCode" v-if="detailInfo.source !=3"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
+            <!-- 积分商品 -->
+            <view class="prizeScore" v-else>
+              <view>
+                <view class="code"><text>{{detailInfo.price}}</text> 积分</view>
+                <view class="description">需自行去长安商城兑换商品，兑换记录在商城查看</view>
+              </view>
+              <view class="externalLink" @tap="toExternalPage(detailInfo.externalLink)">去兑换</view>
+            </view>
+          </view>
+          <view class="bodyT">
+            <view class="info">
+              <view class="item"><view class="babelT">报名电话：</view>
+                {{ detailInfo.mobile }}</view>
+              <view class="item"><view class="babelT">中奖时间：</view>{{detailInfo.createTime | formatTimeMins}}</view>
+              <view class="item"><view class="babelT">兑奖期限：</view>{{detailInfo.endDate | formatTimeMins}}</view>
+            </view>
+            <view class="tips">
+              <view class="title">
+                使用须知：
+              </view>
+              <view class="infoItem">{{detailInfo.memo}}</view>
+              <!-- <view class="infoItem">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
+              <view class="infoItem">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
+              <view class="infoItem">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>
+              <view class="infoItem">*本次活动解释权归长安乘用车营销事业部所有</view> -->
+            </view>
           </view>
         </view>
       </view>
-      <view class="bodyT">
-        <view class="info">
-          <view class="item"><view class="babelT">报名电话：</view>
-            {{ detailInfo.mobile }}</view>
-          <view class="item"><view class="babelT">中奖时间：</view>{{detailInfo.createTime | formatTimeMins}}</view>
-          <view class="item"><view class="babelT">兑奖期限：</view>{{detailInfo.endDate | formatTimeMins}}</view>
-        </view>
-        <view class="tips">
-          <view class="title">
-            使用须知：
-          </view>
-          <view class="infoItem">1.兑奖期限：2021年6月30日24时前，过期作废。</view>
-          <view class="infoItem">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
-          <view class="infoItem">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
-          <view class="infoItem">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>
-          <view class="infoItem">*本次活动解释权归长安乘用车营销事业部所有</view>
-        </view>
-      </view>
+     
     </view>
   </view>
 </template>
@@ -69,6 +78,15 @@ export default {
         }
       })
     }
+  },
+  methods: {
+      toExternalPage(url){
+        if (url && url.substring(0, 4) == "http") {
+          uni.navigateTo({
+              url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+          })
+        }
+      }       
   }
 }
 </script>
@@ -88,6 +106,8 @@ export default {
     height: 427rpx;
     width: 100%;
     .setbg(750rpx,223rpx,'lottery_detail_bg.png');
+    padding-top: 98rpx;
+    box-sizing: border-box;
     .lId {
       position: absolute;
       top: 32rpx;
@@ -96,28 +116,28 @@ export default {
       font-size: 28rpx;
     }
     .headerInfo {
-      position: absolute;
-      top: 98rpx;
-      left: 32rpx;
+      position: relative;
       background: #fff;
       border-radius: 20rpx;
+      padding:42rpx;
       width: 686rpx;
-      height: 186rpx;
+      // height: 186rpx;
+      margin:0 auto;
+      box-sizing: border-box;
       .lDetail {
         position: relative;
         height: 100%;
+        padding-bottom: 42rpx;
+        border-bottom: 1px dashed #ebebeb;
         .prizeName {
-          position: absolute;
-          top: 48rpx;
-          left: 42rpx;
+          position: relative;
           color: #000;
           font-weight: 600;
           font-size: 36rpx;
+          margin-bottom: 20rpx;
         }
         .prizeCode {
-          position: absolute;
-          bottom: 42rpx;
-          left: 42rpx;
+          position: relative;
           display: flex;
           font-size: 28rpx;
           color: #999;
@@ -125,18 +145,38 @@ export default {
             color:#FA8845;
           }
         }
+        .prizeScore{
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          font-size: 32rpx;
+          color: #fa8845;
+          .code{
+            text{
+              margin-right:15rpx;
+            }
+          }
+          .description{
+            font-size: 20rpx;
+            color: #999999;
+            margin-top: 10rpx;
+          }
+          .externalLink{
+            width: 140rpx;
+            height: 56rpx;
+            font-size: 24rpx;
+            color: #ffffff;
+            text-align: center;
+            line-height: 56rpx;
+            border-radius: 56rpx;
+            background: #fa8845;
+          }
+        }
       }
     }
   }
   .bodyT {
-    position: absolute;
-    top: 314rpx;
-    left: 32rpx;
-    width: 686rpx;
-    background: #fff;
-    border-radius: 20rpx;
-    box-sizing: border-box;
-    padding: 42rpx;
+    padding-top: 42rpx;
     .info {
       font-size: 26rpx;
       color: #000;

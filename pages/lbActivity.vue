@@ -78,7 +78,7 @@
 		async onLoad(options) {
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
-			this.activityType= options.type
+			this.activityType= options.type || ''
 			// await login.checkLogin(api)
 			if (app.Interval) {
 				clearInterval(app.Interval)
