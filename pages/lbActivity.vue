@@ -27,7 +27,7 @@
 				<button class="over-btn" hover-class="none">活动已结束</button>
 			</view>
 			<view class="type-a" v-else>
-				<template v-if="activityType=='wawaji'">
+				<template v-if="activityType && activityType=='wawaji'">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
 						open-type="share" @click="shareBtnClick">分享好友</button>
 					<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"

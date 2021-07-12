@@ -85,6 +85,8 @@ const config = {
 		getAutoPrice: `${DOMAIN.host}/api/audi/xcx/vehicleExhibition/vehicleInformation`,
 		// 获取活动内容
 		getActivityContent: `${DOMAIN.changan}/api/xcx/activity/detail`,
+		// 是否留过咨
+		getClueInfo: `${DOMAIN.changan}/api/xcx/clue/clueInfo`,
 		// 获取优惠券列表
 		getWelfare: `${DOMAIN.changan}/api/xcx/coupon/list`,
 		// 用户留资

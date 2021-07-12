@@ -1106,5 +1106,15 @@ module.exports = {
 			}
 		})
 		return data
-	}
+	},
+	getClueInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getClueInfo'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
 }

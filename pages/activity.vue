@@ -79,6 +79,8 @@
 				content: "",
 				isActEnded: false,
 				isActStart: false,
+				activityType:"",
+				isApply:0, //是否留咨过
 			}
 		},
 		mixins: [shouquan],
@@ -93,6 +95,10 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
+			console.log("options.type",options.type)
+			if(options.type){
+				this.activityType= options.type || ''
+			}
 			try {
 				uni.showLoading({
 					title: '正在加载...'
@@ -102,6 +108,9 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.activityId)
+				let clueInfo= await api.getClueInfo({activityId: this.activityId})
+				console.log("clueInfo",clueInfo)
+				if(clueInfo.code==1) this.isApply= clueInfo.data.isApply
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
@@ -160,7 +169,16 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
-				this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+				console.log("已经报名，且为抓娃娃机活动",this.isApply,this.activityType)
+				//如果已经报名，且为抓娃娃机活动，则直接跳转活动页面
+				if(this.isApply && this.activityType=="wawaji"){
+					uni.navigateTo({
+						url:`/pages/wawaji?activityId=${this.content.id}`
+					})
+				}else{
+					this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+				}
+				
 				// #endif
 				
 				// #ifdef MP-TOUTIAO
