@@ -44,7 +44,7 @@
         <view class="contentBody">
           <view class="title titleK">抽奖说明</view>
           <scroll-view scroll-y="true" class="contentTips">
-            {{lotteryActInfo.lotteryMemo}}
+            {{lotteryActInfo.activityMemo}}
             <!-- <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
             <view class="mbt14">1.报名成功即可获得1次抽奖机会，每邀请1名好友助力拼车成功，可增加1次抽奖机会。</view>
             <view class="mbt14">2.每人每天最多可抽奖10次，奖品数量有限，先到先得。</view>
@@ -117,8 +117,6 @@ export default {
   },
   async onLoad(options) {
     this.showDialogL = false;
-    
-
     this.prizes = []
     uni.showLoading({
       title: '正在加载...'
@@ -480,7 +478,7 @@ export default {
           text-align: center;
         }
         .more {
-          color: #6b87cf;
+          color: #999999;
           text-align: center;
           font-size: 24rpx;
         }
