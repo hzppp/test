@@ -90,6 +90,8 @@ import api from '@/public/api/index.js'
 			  
 			},
 			stop() {
+				// this.isShow = false
+				// this.$emit('loginSuccess')
 				console.log('stop')
 			},
 
