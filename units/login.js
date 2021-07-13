@@ -61,7 +61,7 @@ export default {
 		// 微信登录
         let _data = {}
         let data1 = await this.uniLogin()//获取jscode
-        // console.log('uni.login()==================', data1)
+        console.log('uni.login()==================', data1)
         _data['code'] = data1.code
 
 

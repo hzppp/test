@@ -81,6 +81,11 @@
 				isActStart: false,
 				activityType:"",
 				isApply:0, //是否留咨过
+			
+				
+				//直播间用的
+				liveUrl:'',
+				
 			}
 		},
 		mixins: [shouquan],
@@ -91,6 +96,19 @@
 				})
 				return
 			}
+			
+			//直播活动相关
+			if(options.type && (options.type == 'Live' || options.type == 'verticalLive')){
+				if(options.type == 'Live' ){
+					this.liveUrl =  '/pages_live/liveRoomPlay/liveRoomPlay?share=' + options.share +  '&id=' +  options.liveId
+
+             }else if(options.type == 'verticalLive' ){
+					this.liveUrl = '/pages_live/verticalLiveRoom/verticalLiveRoom?type=verticalLive&share=' +  options.share +  '&id=' + options.liveId
+				}
+				
+				console.log('liveurl == ',this.liveUrl)
+			}
+			
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
@@ -118,6 +136,9 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
+			    if(this.liveUrl){
+					this.content.liveUrl = this.liveUrl
+				}
 				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
 					uni.reLaunch({
 						url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,

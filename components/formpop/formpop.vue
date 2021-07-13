@@ -80,6 +80,13 @@
 			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
+		<!-- 直播重复 -->
+		<view class="form-warning-pop" v-if="popName == 'form-livewarning-pop'">
+			<view class="warning-icon"></view>
+			<view class="p1">您已报名</view>
+			<text class="p2">若尚未参与红包雨请移步\n红包雨现场</text>
+			<view class="close-btn2" @tap="formHidetoLive">移步红包雨现场</view>
+		</view>
 		<!-- 成功 -->
 		<view class="form-success-pop" v-if="popName == 'form-success-pop'">
 			<view class="success-icon"></view>
@@ -87,6 +94,14 @@
 			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHide">我知道了</view>
 		</view>
+		<!-- 直播成功 -->
+		<view class="form-success-pop" v-if="popName == 'form-livesuccess-pop'">
+			<view class="success-icon"></view>
+			<view class="p1">报名成功</view>
+			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
+			<view class="close-btn2" @tap="formHidetoLive">立即参与红包雨</view>
+		</view>
+		
 		<!--  -->
 		<view class="coupon-sb-pop" v-if="popName == 'coupon-sb-pop'">
 			<view class="sb-icon"></view>
@@ -219,6 +234,37 @@
 					})
 				}
 			},
+			
+			formHidetoLive() {
+				this.isShowFormPop = false;
+				let liveurl  = this.currentObj.liveUrl
+				if(liveurl){
+					// #ifndef MP-WEIXIN
+					this.$toast('请在微信搜索本小程序参与')
+					// #endif
+					 // #ifdef MP-WEIXIN
+					uni.navigateToMiniProgram({
+						appId: 'wxa860d5a996074dbb',
+						path: liveurl,
+						success: res => {
+							// 打开成功
+							console.log("打开成功", res);
+						},
+						fail: err => {
+							console.log("打开失败", err);
+							uni.showToast({
+								title: "跳转小程序失败",
+								icon: "none"
+							})
+						},
+						envVersion: 'trial'
+					});
+					 // #endif
+				}
+			
+			},
+			
+			
 			// 获取验证码被点击
 			getSmsCodeClick() {
 				if (!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(this.phone)) {
@@ -393,6 +439,9 @@
 					} else {
 						popname = 'form-success-pop'
 					}
+					if(this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1 ){
+						popname = 'form-livesuccess-pop'
+					}
 					this.popName = popname
 				} else if (data.code == 2) { //重复留资
 					// if (ly == 'lbactivity') {
@@ -408,6 +457,9 @@
 						popname = 'coupon-warning-pop'
 					} else {
 						popname = 'form-warning-pop'
+					}
+					if(this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1 ){
+						popname = 'form-livewarning-pop'
 					}
 					this.popName = popname
 					

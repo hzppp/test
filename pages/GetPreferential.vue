@@ -178,10 +178,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title: '正在加载...',
                             mask:true
                         })
+						console.log('encryptedData = ',detail.encryptedData,  'detailiv == ', detail.iv)
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
                             uni.setStorageSync('userPhone', data.phoneNumber)
-                            this.phoneNum = data.phoneNumber						
+                            this.phoneNum = data.phoneNumber			
 					    }
                     } catch (error) {
                         uni.showToast({
