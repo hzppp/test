@@ -1,5 +1,6 @@
 <template>
 	<view class="scan-page">
+		<view class="back-icon" v-if="pageStatus!=0" @tap="pageStatus=0"></view>
 		<div class="content" v-if="pageStatus==0">
 			<view class="txt">请打开微信扫描</view>
 			<view class="scan-btn" @tap="scanCode">扫一扫</view>
@@ -25,7 +26,6 @@
 			
 		},
 		methods: {
-			
 			//二维码核销
 			async scanCode(){
 				uni.scanCode({
@@ -39,18 +39,18 @@
 				})
 			},
 			async verifyCode(result){
-				let {data,code} = await api.wwjVerify({
+				let res = await api.wwjVerify({
 					data: result
 				})
-				if(code==1){
-					this.pageStatus=data.status;
-					if(data.status==1){
-						uni.$emit('updateCodeStatus',1);
+	
+				if(res.code==1){
+					this.pageStatus=res.data.status;
+					if(res.data.status==-1){
+						this.description=res.data.description;
 					}
-					if(data.status==-1){
-						this.description=data.description;
-					}
-					
+				}else{
+					this.pageStatus=-1;
+					this.description=res.msg;
 				}
 			}
 		},
@@ -78,6 +78,14 @@
 		text-align:center;
 		position: relative;
 		padding-top: 40%;
+		.back-icon{
+			position: absolute;
+			width: 75rpx;
+			height: 77rpx;
+			left:60rpx;
+			top:150rpx;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/back-icon.png') no-repeat center/100%;
+		}
 		.txt{
 			font-size: 68rpx;
 			color: #0789a8;
