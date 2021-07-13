@@ -76,6 +76,7 @@
 		
 		<!-- 展示科技量产中心二维码 -->
 		<view class="content content-technology-code" v-if="pageStatus==4">
+			<view class="content-info">请前往接待处领取奖品</view>
 			<view class="qrimg">
 				<tki-qrcode ref="qrcode" :val="technologyCode.val" :size="technologyCode.size" :unit="technologyCode.unit" :background="technologyCode.background" :foreground="technologyCode.foreground"
 				 :pdground="technologyCode.pdground" :lv="technologyCode.lv" :onval="technologyCode.onval" :loadMake="technologyCode.loadMake"
@@ -333,6 +334,8 @@
 				})
 				if (code == 1) {
 					this.$toast('正在开启中！')
+					that.getActivityInfo();
+					this.pageStatus=5
 				} else {
 					this.$toast(data.msg)
 				}
@@ -448,9 +451,13 @@
 		.content-technology-code{
 			width:647rpx;
 			height:710rpx;
-			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/technology-code-bg.png') no-repeat center/100%;
+			background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/enery-code-bg.png') no-repeat center/100%;
+			display:flex;
+			flex-direction:column;
+			justify-content:center;
+			align-items:center;
 			.qrimg{
-				margin-top:130rpx;
+				margin-top:35rpx;
 			}
 		}
 		.content-treasure{
