@@ -174,7 +174,7 @@ export default {
     }
     // `../../static/images/prize_${item.id}.png`
     this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a,b) => a.prizeCode-b.prizeCode)
-    console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
+    // console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
     if(this.lotteryActInfo.prizeList.length){
       this.lotteryActInfo.prizeList.forEach((item, index) => {
         this.prizes.push({
@@ -297,6 +297,7 @@ export default {
       },100)
     },
     golotteryRecord() {
+      this.closeDialog();
       let url = '/pages/lotteryRecord';
       uni.navigateTo({
         url
