@@ -157,7 +157,7 @@
 					'activityId': this.activityId
 				})
 			} catch (err) {
-				console.error(err)
+				// console.error(err)
 			} finally {
 				uni.hideLoading()
 			}

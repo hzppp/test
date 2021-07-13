@@ -84,7 +84,7 @@
 		<view class="form-warning-pop" v-if="popName == 'form-livewarning-pop'">
 			<view class="warning-icon"></view>
 			<view class="p1">您已报名</view>
-			<text class="p2">若尚未参与红包雨请移步\n红包雨现场</text>
+			<text class="p2">若尚未参与红包雨请\n移步红包雨现场</text>
 			<view class="close-btn2" @tap="formHidetoLive">移步红包雨现场</view>
 		</view>
 		<!-- 成功 -->
@@ -257,7 +257,7 @@
 								icon: "none"
 							})
 						},
-						envVersion: 'trial'
+						// envVersion: 'trial'
 					});
 					 // #endif
 				}

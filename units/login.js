@@ -63,7 +63,10 @@ export default {
         let data1 = await this.uniLogin()//获取jscode
         console.log('uni.login()==================', data1)
         _data['code'] = data1.code
-
+		
+	    // #ifdef MP-TOUTIAO
+	    _data['type'] = '2'
+	    // #endif	
 
         if (app.globalData.salesId) {
             _data.salesId = app.globalData.salesId

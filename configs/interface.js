@@ -50,12 +50,14 @@ const config = {
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
 
 	api: {
+		
+		login:  `${DOMAIN.changan}/api/xcx/user/login`,
 		// #ifdef MP-WEIXIN
 		// 手机号解密
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 保存用户信息
 		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
-		 login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		
 		// #endif
 		
 		// #ifdef MP-TOUTIAO
@@ -63,7 +65,6 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/dy/decryptPhone`,
 		// 保存用户信息
 		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/dy/decryptInfo`,
-		 login:  `${DOMAIN.changan}/api/xcx/user/dy/login`,
 		// #endif
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
