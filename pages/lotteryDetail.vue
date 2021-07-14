@@ -27,7 +27,7 @@
               <view class="title">
                 使用须知：
               </view>
-              <view class="infoItem">{{detailInfo.memo}}</view>
+              <view class="infoItem"><text>{{detailInfo.memo}}</text></view>
               <!-- <view class="infoItem">2.本券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
               <view class="infoItem">3.请您在购车时出示本券，经服务中心销售人员验证后核销使用。</view>
               <view class="infoItem">4.购车客户电话号码和报名活动电话号码需保持一致，否则将导致奖券无法使用。</view>

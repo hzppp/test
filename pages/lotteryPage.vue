@@ -44,15 +44,7 @@
         <view class="contentBody">
           <view class="title titleK">抽奖说明</view>
           <scroll-view scroll-y="true" class="contentTips">
-            {{lotteryActInfo.activityMemo}}
-            <!-- <view class="mbt14">活动时间：即日起至2021年6月23日24时为止</view>
-            <view class="mbt14">1.报名成功即可获得1次抽奖机会，每邀请1名好友助力拼车成功，可增加1次抽奖机会。</view>
-            <view class="mbt14">2.每人每天最多可抽奖10次，奖品数量有限，先到先得。</view>
-            <view class="mbt14">3.购车、售后保养代金券仅用于活动期间购买长安汽车乘用车品牌经销商（不含新能源）线下使用，每辆车限使用1张代金券。</view>
-            <view class="mbt14">4.购车客户电话号码和活动报名电话号码需保持一致，否则将导致奖券无法使用。</view>
-            <view class="mbt14">5.如果用户存在违规行为（包括但不限于作弊、刷中奖、洗钱、恶意套现），将取消用户活动资格。</view>
-            <view class="mbt14">**本次活动解释权归长安乘用车营销事业部所有</view>
-            <view>温馨提示：6月10日-17日已报名参加“幸运大转盘”活动的用户，可参与长安汽车官方直播间6月18日下午3点的“幸运锦鲤”抽奖活动，至高抽取18888元购车代金券。</view> -->
+            <text>{{activityMemoArr}}</text>
           </scroll-view>
         </view>
       </view>
@@ -109,7 +101,8 @@ export default {
         fontSize: '14px',
       },
       activityId: '',
-      lotteryRes: {}
+      lotteryRes: {},
+      activityMemoArr:[]
     }
   },
   onShow() {
@@ -155,6 +148,10 @@ export default {
     }).finally(res => {
       console.log('this.lotteryActInfo',this.lotteryActInfo)
     })
+    if(this.lotteryActInfo && this.lotteryActInfo.activityMemo){
+      // this.activityMemoArr =this.lotteryActInfo.activityMemo.split(/[\s\n]/)
+      this.activityMemoArr =this.lotteryActInfo.activityMemo.replace('/n','/r/s')
+    }
     this.lotteryActInfo.winnerRecords.reverse()
     if(!(this.lotteryActInfo.isApply)) {
       //跳到留资页
@@ -536,7 +533,7 @@ export default {
       }
     }
     .mbt14 {
-      margin-bottom: 14rpx;
+      // margin-bottom: 14rpx;
     }
   }
   .lotteryDialog {
