@@ -292,14 +292,14 @@
 		{
 			"path": "pages/wawaji",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "活动详情",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/scan",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "核销扫一扫",
 				"enablePullDownRefresh": false
 			}
 		},
