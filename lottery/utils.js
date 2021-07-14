@@ -68,6 +68,6 @@ export const resolveImage = async (res, img, imgName = 'src', resolveName = '$re
   uni.getImageInfo({
     src: src,
     success: (imgObj) => {$resolve(imgObj)},
-    fail: () => console.error('API `uni.getImageInfo` 加载图片失败', src)
+    fail: (e) => console.error('API `uni.getImageInfo` 加载图片失败',e, src)
   })
 }

@@ -127,7 +127,6 @@
 					data = {}
 				} = await api.getActivityContent(this.activityId)
 				let clueInfo= await api.getClueInfo({activityId: this.activityId})
-				console.log("clueInfo",clueInfo)
 				if(clueInfo.code==1) this.isApply= clueInfo.data.isApply
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)

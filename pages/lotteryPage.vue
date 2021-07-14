@@ -54,10 +54,10 @@
         <block v-if="lotteryRes.id>1&&lotteryRes.price">
           <view class="tTitle titleQ">恭喜您获得</view>
           <view class="tBody">
-            <view class="przie-name" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{lotteryRes.name}}</view>
+            <view class="przie-name">{{lotteryRes.name}}</view>
           </view>
           <view class="tFoot">
-            <button class="left" @tap="golotteryRecord()">查看中奖纪录</button>
+            <button class="left" @tap="goLotteryDetail(lotteryRes.lotteryId)">查看详情</button>
             <button class="right" @tap="closeDialog">继续抽奖</button>
           </view>
         </block>

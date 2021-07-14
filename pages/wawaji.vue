@@ -131,7 +131,12 @@
 				<view :class="['star', 'star3', {light:activityInfo.hasTreasure}]"></view>
 			</view>
 			<!-- 点击领取定制好礼 -->
-			<view class="star-btn" @tap="receive"></view>
+			<view class="star-btn" v-if="activityInfo && activityInfo.hasPrize">
+				<text>您已领取\n定制好礼</text>
+			</view>
+			<view class="star-btn" @tap="receive" v-else>
+				<text>点击领取\n定制好礼</text>
+			</view>
 		</view>
 
 		<view class="content content-enery" v-if="pageStatus==8">
@@ -249,11 +254,40 @@
 				console.log('pageStatus',val)
 			}
 		},
-		onLoad(options){
-			console.log("options",options.activityId)
+		async onLoad(options){
 			this.activityId = options.activityId
+			let clueInfo= await api.getClueInfo({activityId: this.activityId})
+			if(clueInfo.code==1){
+				//未留咨，跳到留资页
+				if(!clueInfo.data.isApply){
+					const url = `/pages/activity?id=${this.activityId}&type=wawaji`
+					uni.showToast({
+						title:'您暂未留资',
+						icon:"none"
+					})
+					setTimeout(()=> {
+						uni.reLaunch({
+						url
+						})
+					},1000)
+					return;
+				}
+			}
 			this.getActivityInfo();
 		},  
+		async onShareAppMessage() {
+			let {
+			data = {}
+			} = await api.getActivityContent(this.activityId)
+			const wxUserInfo = uni.getStorageSync('wxUserInfo')
+			const url = `pages/activity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
+			console.log('ui',url)
+			return {
+				title: data.name,
+				path: url, //抽奖页面?activityId=0&userId=0
+				imageUrl: data.sharePic
+			}
+		},
 		methods: {
 			async getActivityInfo(){
 				let activityInfo = await api.wwjInfo({
@@ -581,8 +615,15 @@
 			.star-btn{
 				width: 276rpx;
 				height: 276rpx;
-				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/start.png') no-repeat center/100%;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/start_bg.png') no-repeat center/100%;
 				margin: 40rpx auto 0;
+				display: flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+				text-align:center;
+				font-size: 38rpx;
+				color: #fff;
 			}
 		}
 	}
