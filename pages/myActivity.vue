@@ -1,7 +1,7 @@
 <template>
 	<view class="welfareActivity">
 
-		<scroll-view class="scroll-view" @scrolltolower="getList" lower-threshold="200" scroll-y scroll-with-animation>
+		<scroll-view class="scroll-view"  lower-threshold="200" scroll-y scroll-with-animation>
 
 			<view class="box">
 
@@ -88,7 +88,9 @@
 		async onLoad() {
 			this.getList()
 		},
-
+        onReachBottom() {
+				this.getList()
+		},
 		methods: {
       // 状态过滤器
       statusFilter (startTime, endTime) {
@@ -106,89 +108,106 @@
         return status
       },
       toActivityPage(item) {
-		// #ifdef MP-WEIXIN
-		 wx.aldstat.sendEvent('活动点击')
-		// #endif
-        console.log('item.redirectType',item)
-        if(new Date().getTime() - new Date(item.endTime.replace(/-/g,'/')).getTime() >= 0) {
-          uni.showToast({
-            title: "活动结束啦",
-            icon: "none"
-          })
-          return
-        }
-        //0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
-        switch(item.redirectType) {
-          case 0: {
-            if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
-              let url = '/pages/lbActivity?id=' + item.id
-              uni.navigateTo({
-                url
-              })
-            }else{
-              let url = '/pages/activity?id=' + item.id
-              uni.navigateTo({
-                url
-              })
-            }
-            break;
-          }
-          case 1: {
-			  api.fetchActivityVisit({
-			  	'activityId': item.id
-			  })
-            if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
-              uni.navigateTo({
-                url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
-              })
-            }
-            break;
-          }
-          case 2: {
-			  api.fetchActivityVisit({
-			  	'activityId': item.id
-			  })
-			  // #ifndef MP-WEIXIN
-			  this.$toast('请在微信搜索本小程序参与')
-			  // #endif
-			  // #ifdef MP-WEIXIN
-            uni.navigateToMiniProgram({
-              appId: item.appId,
-              path: item.miniUrl,
-              success: res => {
-                // 打开成功
-                console.log("打开成功", res);
-              },
-              fail: err => {
-                console.log("打开失败", err);
-                uni.showToast({
-                  title: "跳转小程序失败",
-                  icon: "none"
-                })
-              },
-              // envVersion: 'trial'
-            });
-            // #endif
-			break;
-          }
-          default: {
-            if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
-              let url = '/pages/lbActivity?id=' + item.id
-              uni.navigateTo({
-                url
-              })
-            }else{
-              let url = '/pages/activity?id=' + item.id
-              uni.navigateTo({
-                url
-              })
-            }
-            break;
-          }
-        }
-      },
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('活动点击')
+				// #endif	
+
+				console.log('item.redirectType', item)
+				// web 小程序  
+				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
+						'changan://lbcjactivity')) {
+					api.fetchActivityVisit({
+						'activityId': item.id
+					})
+					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+						uni.showToast({
+							title: "活动结束啦",
+							icon: "none"
+						})
+						return
+					}
+				}
+		
+				// if(item.redirectType == 2 && item.miniUrl && item.miniUrl.split('&')[1])
+				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
+				switch (item.redirectType) {
+					case 0: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+					case 1: {
+						if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http") {
+							uni.navigateTo({
+								url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
+							})
+						}
+						break;
+					}
+					case 2: {
+						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							// 说明是自己的小程序
+							uni.navigateTo({
+								url: item.miniUrl
+							})
+							// #ifndef MP-WEIXIN
+							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+								this.$toast('请在微信搜索本小程序参与')
+							}
+							// #endif
+							return
+						}
+						// #ifndef MP-WEIXIN
+						this.$toast('请在微信搜索本小程序参与')
+						// #endif
+						// #ifdef MP-WEIXIN
+						uni.navigateToMiniProgram({
+							appId: item.appId,
+							path: item.miniUrl,
+							success: res => {
+								// 打开成功
+								console.log("打开成功", res);
+							},
+							fail: err => {
+								console.log("打开失败", err);
+								uni.showToast({
+									title: "跳转小程序失败",
+									icon: "none"
+								})
+							},
+							// envVersion: 'trial'
+						});
+						// #endif
+						break;
+					}
+					default: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
+				}
+			},
 			// 获取活动列表
 			async getList() {
+				console.log('shuaxin')
 				if (!this.hasNext) {
 					return false;
 				}

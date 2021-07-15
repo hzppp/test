@@ -127,6 +127,11 @@ export default {
 
     },
     async checkLogin(api) {
+		
+		//yuchen 测试 
+	   // this.setSessionKey('7BrDhtBULm4dfblD7JKvbMw9paHON0ML')
+		
+		
 		await this.checkExpireTime(api)
 		// 先判断微信  session 是否有效
         let isSession = await this.checkSession()

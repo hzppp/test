@@ -104,13 +104,26 @@ export default {
       lotteryRes: {},
       activityMemoArr:[],
 	  shareTitle:'',
-	  shareUrl:''
+	  shareUrl:'',
+	  isIOS:false
     }
   },
   onShow() {
     app.globalData.isRotating = false;
   },
   async onLoad(options) {
+	  // #ifndef MP-WEIXIN
+	try {
+	    const res = uni.getSystemInfoSync();
+		console.log('platform' , res.platform )
+	    if(res.platform != 'android'){
+		   this.isIOS = true
+		}
+	} catch (e) {
+	    // error
+	}
+	 // #endif
+	 
     this.showDialogL = false;
     this.prizes = []
     uni.showLoading({
@@ -177,16 +190,24 @@ export default {
     // console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
     if(this.lotteryActInfo.prizeList.length){
       this.lotteryActInfo.prizeList.forEach((item, index) => {
-        this.prizes.push({
-          title: '', background: '#c3ecff', fonts: [{text: '', top: '18%'}],
-          imgs: [
-            {
-              src: item.picUrl.trim(), width: '100%', height: '100%', top: '1rpx'
-              // src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
-              //src: `https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_${item.prizeCode}.png `, width: '100%', height: '100%', top: '1rpx'
-            }          
-          ]
-        })
+		if(this.isIOS){
+			this.prizes.push({
+			  title: '', background: '#c3ecff', fonts: [{text: '', top: '18%'}],
+			  imgs: [
+			    {
+			      src: item.picUrl.trim(), width: '100%', height: '100%', top: '1rpx'
+			      // src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
+			      //src: `https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_${item.prizeCode}.png `, width: '100%', height: '100%', top: '1rpx'
+			    }          
+			  ]
+			})
+		}else{
+			this.prizes.push({
+			  title: item.name, background: '#F9F9D5', fonts: [{text: item.name, top: '18%',fontColor:'red'}] 
+			 
+			})
+		}
+       
         if (index == this.lotteryActInfo.prizeList.length - 1) {
           uni.hideLoading()
         }
