@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.TEST;
-const version = 1005;
+const version = 1006;
 
 // 正式域名
 var DOMAIN_R = {
