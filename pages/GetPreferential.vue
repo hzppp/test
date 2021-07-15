@@ -21,8 +21,8 @@
             <!-- 手机号S -->
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  zijie == 'zijie'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
-				<button  class="getPhoneBtn" v-if="getPhoneBtn == false && zijie != 'zijie'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
+                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<button  class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <!-- 手机号E -->
             <!-- 验证码S -->
@@ -119,7 +119,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isFocus:false,
 
                 isNoData:false,
-				zijie:''
+				zijie:'',
+				TOUTIAO:''
             }
         },
         watch: {
@@ -141,7 +142,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.checkInfo()
         },
        async onLoad(options) {
-		   
+		   // #ifdef MP-TOUTIAO
+		    this.TOUTIAO = 'TOUTIAO'
+		   // #endif
 		    this.zijie = options.zijie;
             console.log('options :>> ', options);
             // await login.checkLogin(api)
