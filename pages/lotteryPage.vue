@@ -102,7 +102,9 @@ export default {
       },
       activityId: '',
       lotteryRes: {},
-      activityMemoArr:[]
+      activityMemoArr:[],
+	  shareTitle:'',
+	  shareUrl:''
     }
   },
   onShow() {
@@ -153,6 +155,7 @@ export default {
       this.activityMemoArr =this.lotteryActInfo.activityMemo.replace('/n','/r/s')
     }
     this.lotteryActInfo.winnerRecords.reverse()
+
     if(!(this.lotteryActInfo.isApply)) {
       //跳到留资页
       console.log('this.lotteryActInfo.isApply',this.lotteryActInfo.isApply)
@@ -190,18 +193,23 @@ export default {
       })
       // console.log("this.prizes",this.prizes);
     }
+	
+	let {
+	  data = {}
+	} = await api.getActivityContent(this.activityId)
+	console.log('fenxang ', data)
+	this.shareTitle = data.name
+	this.shareUrl = data.sharePic
+	
   },
-  async onShareAppMessage() {
-    let {
-      data = {}
-    } = await api.getActivityContent(this.activityId)
-    const wxUserInfo = uni.getStorageSync('wxUserInfo')
-    const url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
-    console.log('ui',url)
+   onShareAppMessage() { 	   
+    let wxUserInfo = uni.getStorageSync('wxUserInfo')
+    let url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
+    console.log('ui',url,this.shareTitle,this.shareUrl)
     return {
-      title: data.name,
+      title: this.shareTitle,
       path: url, //抽奖页面?activityId=0&userId=0
-      imageUrl: data.sharePic
+      imageUrl: this.shareUrl
     }
   },
   methods: {

@@ -5,10 +5,10 @@
       canvas-id="lucky-wheel" 
       :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"
     ></canvas>
-    <!-- #ifdef APP-PLUS -->
-    <view class="lucky-wheel-btn" @click="toPlay" :style="{ width: btnWidth + 'px', height: btnHeight + 'px' }"></view>
+    <!-- #ifndef MP-WEIXIN -->
+   <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay" style="z-index: 999;">
     <!-- #endif -->
-    <!-- #ifndef APP-PLUS -->
+    <!-- #ifdef MP-WEIXIN -->
     <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
     <!-- #endif -->
     <div class="lucky-imgs">
@@ -121,6 +121,7 @@
           ${-compute(this.boxWidth * dpr)}%, ${-compute(this.boxHeight * dpr)}%
         )`
         this.isShow = true
+		// 页面绘制完
         this.$nextTick(() => {
           this.draw()
         })
@@ -150,7 +151,7 @@
           unitFunc: (num, unit) => changeUnits(num + unit),
           beforeInit: function () {
             const Radius = Math.min(this.config.width, this.config.height) / 2
-            // console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
+             console.log('this.config.width, this.config.height',this.config.width, this.config.height,this.config)
             ctx.translate(-Radius, -Radius)
           },
           afterInit: function () {
