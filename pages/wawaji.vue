@@ -362,7 +362,7 @@
 			},
 			async wwjStart(result){
 				//启动娃娃机
-				let {code,data} = await api.wwjStart({
+				let {code,msg,data} = await api.wwjStart({
 					activityId:this.activityId,
 					deviceId:result
 				})
@@ -371,7 +371,7 @@
 					that.getActivityInfo();
 					this.pageStatus=5
 				} else {
-					this.$toast(data.msg)
+					this.$toast(msg)
 				}
 				console.log("启动娃娃机",code,data)
 			},
