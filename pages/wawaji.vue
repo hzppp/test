@@ -341,14 +341,22 @@
 				let that=this;
 				uni.scanCode({
 				    success: function (res) {
-						console.log("扫描寻宝二维码",res)
-						that.wwjResultImg="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/"+res.result
-						//扫码成功，如果未完成寻宝，则扫描夹娃娃机
-						that.getActivityInfo();
-						if(!that.activityInfo.hasTreasure){
-							that.pageStatus=6;
+						// console.log("扫描寻宝二维码",res.result,res.result.indexOf(".jpg"))
+						if(res.result && (res.result.indexOf('.png')>-1|| res.result.indexOf(".jpg")>-1)){
+							that.wwjResultImg="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/"+res.result
+							//扫码成功，如果未完成寻宝，则扫描夹娃娃机
+							that.getActivityInfo();
+							if(!that.activityInfo.hasTreasure){
+								that.pageStatus=6;
+							}
+						}else{
+							that.$toast('无效二维码')
 						}
-				    }
+						
+					},
+					fail:function(err){
+						that.$toast(err)
+					}
 				});
 			},
 			//扫描娃娃机
@@ -357,6 +365,9 @@
 				uni.scanCode({
 					success: function (res) {
 						that.wwjStart(res.result)
+					},
+					fail:function(err){
+						that.$toast(err)
 					}
 				});
 			},
