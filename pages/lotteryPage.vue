@@ -105,7 +105,7 @@ export default {
       activityMemoArr:[],
 	  shareTitle:'',
 	  shareUrl:'',
-	  isIOS:false
+	  isIOS:true
     }
   },
   onShow() {
@@ -116,8 +116,8 @@ export default {
 	try {
 	    const res = uni.getSystemInfoSync();
 		console.log('platform' , res.platform )
-	    if(res.platform != 'android'){
-		   this.isIOS = true
+	    if(res.platform === 'android'){
+		   this.isIOS = false
 		}
 	} catch (e) {
 	    // error
