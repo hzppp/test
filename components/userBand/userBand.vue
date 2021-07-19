@@ -4,7 +4,7 @@
             <view class="title1">温馨提示</view>
             <view class="text">请授权手机号注册长安会员</view>
 			<view class="btnV">
-            <button class="btn1" @tap="closeShow">暂不注册</button>
+            <button v-if="cancleShow" class="btn1" @tap="closeShow">暂不注册</button>
 			<button class="btn2" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)" @tap.stop="stop" >立即注册</button>
 			</view>
 		</view>
@@ -15,9 +15,9 @@
 import login from '@/units/login.js'
 import api from '@/public/api/index.js'
     export default {
-		props: {
-		 
-		  },
+		props: 
+		 ["cancleShow"]
+		  ,
         data() {
             return {
                 isShow: false, //控制显隐
@@ -27,8 +27,10 @@ import api from '@/public/api/index.js'
          let token  =  uni.getStorageSync('session-3rd')
 		 console.log('userBand token'+token)
 		 if(!token){	 
-			this.isShow = true
 			await login.checkLogin(api)
+			if( !uni.getStorageSync('session-3rd')){
+				this.isShow = true
+			}
 		 }else{
 		    await login.checkExpireTime(api)	 
 		 }

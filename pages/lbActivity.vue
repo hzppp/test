@@ -1,10 +1,10 @@
 <template>
 	<view>
-	  <userBand></userBand>
+	  <userBand :cancleShow='!sourceUserId'></userBand>
 	<view class="activity" v-if="soureDone">
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth" style="top: 128rpx;"></button>
 		<!-- <share-pop ref="shareSuccess"></share-pop> -->
-		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' "></page-top>
+		<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse = "sourceUserId"></page-top>
 		<form-pop ref="formpop"></form-pop>
 
 		<template v-if="activityType=='wawaji'">
@@ -76,6 +76,7 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			await login.checkLogin(api)
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType= options.type || ''
@@ -103,6 +104,8 @@
 				this.content = data
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
+					console.log('sourceUserId' + this.sourceUserId  )
+				    // this.$toast('sourceUserId' + this.sourceUserId  )
 				}
 			} catch (err) {
 				console.error(err)

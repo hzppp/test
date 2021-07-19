@@ -421,7 +421,7 @@
 				if(this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj.sourceUserId != 0){
 					pam.sourceUserId =  this.currentObj.sourceUserId
 				}
-
+                console.log('留资参数',pam)
 				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
