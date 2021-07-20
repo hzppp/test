@@ -76,10 +76,20 @@ import api from '@/public/api/index'
 					
                 }
                 if(this.pages) {
-                    this.$store.commit('changModel',id)
-                    return  uni.redirectTo({
-                        url:`/pages/${this.pages}?serialId=${id}`
-                    })
+				    if(this.pages == 'GetPreferential'){
+						let pages = getCurrentPages();  //获取所有页面栈实例列表
+						let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+						prevPage.$vm.serialId = id;   //修改上一页data里面的searchVal参数值为1211
+						// prevPage.$vm.show  = true; 
+						uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+						    delta: 1
+						});
+					}else{
+					this.$store.commit('changModel',id)
+					return  uni.redirectTo({
+					    url:`/pages/${this.pages}?serialId=${id}`
+					})	
+					}
 					 return
                 }
                 if(this.noun) {

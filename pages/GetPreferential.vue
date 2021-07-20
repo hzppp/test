@@ -131,9 +131,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
 			serialId(n){
-			 if(this.zijie == 'zijie'){
-				  this.reqSerialDetail(this.serialId)
-			 }
+			 // if(this.zijie == 'zijie'){
+				//   this.reqSerialDetail(this.serialId)
+			 // }
+			 this.serialId = n
+			 this.reqSerialDetail(this.serialId)
 			 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
 			}
 
@@ -243,7 +245,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 						url: "/pages/ChooseSerial?type=yuyue"
 					})
 				}else{
-				uni.redirectTo({
+				uni.navigateTo({
 					url: "/pages/ChooseSerial?pages=GetPreferential"
 				})	
 				}
