@@ -232,6 +232,9 @@
                 internalData: {}, // 概述页的内部参数数据
                 loadingData:false, //防止数据还没加载,第一次进来展示无数据
                 uLindeLoadingData:false, //防止数据还没加载,第一次进来展示(我们是有底线的)
+				ref:'',
+				watMides:'',
+				watSerialId:''
 			}
 		},
 		watch: {
@@ -239,6 +242,49 @@
 				this.max = val.length;
 				this.width = 280 + val.length * 250;
 			},
+			
+			watSerialId(val){
+				this.serialId = val
+			},
+			
+			watMides(val){
+				let mids = val || "";
+				if (typeof mids === 'string') {
+					mids = mids.split(",").slice(0, 6);
+				}
+				this.mids = mids
+			},
+			tabWhich(val){
+				console.log('1ref')
+				this.tabWhich = val
+			},
+			// ref(val){
+			// 	if(val=="ref"){
+			// 	console.log('ref')
+			// 	 this.init()
+			// 		if(this.serialId) {
+			// 		    this.getCompositeInfoBySerialId(this.serialId)
+			// 		}
+			// 		this.var = ''
+			// 	}
+			// }
+			
+			
+			ref: {
+			      handler: function (val, oldVal) {
+					  	if(val=="ref"){
+					  	console.log('ref')
+					  	 this.init()
+					  		if(this.serialId) {
+					  		    this.getCompositeInfoBySerialId(this.serialId)
+					  		}
+					  		this.ref = ''
+					  	}
+					  
+				  },
+			      deep: true
+			    }
+			
             // needHighlighted(v) {
             //     console.log('vvvvvvvvvvvv :>> ', v);
             //     let mids = this.mids.concat(v)
@@ -312,6 +358,7 @@
             },
 			async init() {
 				try {
+				   console.log('init',this.mids)
 					let data = await this.getCarData(this.mids.join(","));
 					this.width += data.detailArray.length * 250;
 					console.log('data. :>> ', data.detailArray);
@@ -325,6 +372,7 @@
 					this.dataList = res.dataList;
 					this.difData = res.difData;
 				} catch (e) {
+					console.log('e',e)
 					if (e == 0) { //没有数据
 						this.nodata = true
 					}
@@ -363,7 +411,7 @@
 			},
 			// 添加车型
 			addCar() {
-                uni.redirectTo({
+                uni.navigateTo({
 					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids.join(',')}&pages=canpei`
                 })
 			},
@@ -430,6 +478,7 @@
 
             //获取参配综述页信息通过车系id
             async getCompositeInfoBySerialId(serialId) {
+				console.log('请求',serialId)
 				return new Promise((relove, resject) => {
 					try{
 						uni.request({

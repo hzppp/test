@@ -196,7 +196,7 @@
 		}, {
 			"path": "pages/AddYuYue",
 			"style": {
-				"navigationBarTitleText": "添加试驾车型",
+				"navigationBarTitleText": "选择车型",
 				"enablePullDownRefresh": false
 			}
 		}, {
