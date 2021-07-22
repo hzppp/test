@@ -1,5 +1,5 @@
 <template>
-	<view v-if="isShow" class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
+	<view v-if="isShow" :class="showDialogL ? 'lucky-box hideWheel':'lucky-box'" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
     <canvas id="lucky-grid" canvas-id="lucky-grid" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"></canvas>
     <!-- #ifdef APP-PLUS -->
     <view v-if="btnShow">
@@ -107,6 +107,10 @@
           return {}
         }
       },
+	  showDialogL: {
+	    type: Boolean,
+	    default: false
+	  },
       activeStyle: {
         type: Object,
         default: () => {
@@ -256,5 +260,8 @@
     width: 0;
     height: 0;
     visibility: hidden;
+  }
+  .hideWheel {
+    top: -11111rpx;
   }
 </style>

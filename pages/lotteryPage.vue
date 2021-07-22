@@ -21,7 +21,7 @@
 
 				<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
 					:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-					@start="gridStart" @end="gridEnd" />
+					@start="gridStart" @end="gridEnd"  :showDialogL="showDialogL"/>
 				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
 				<view v-if="lotteryType == 'grid'" class="btnBackV">
 					<button class="shareFiedv" open-type="share"></button>
@@ -535,7 +535,7 @@
 							array.push({
 								x: j,
 								y: i,
-								// background:'#296f92',
+								background:'#296f92',
 								fonts: [{
 									text: '',
 									top: 20
@@ -555,7 +555,7 @@
 							array.push({
 								x: j,
 								y: i,
-								// background:'#296f92',
+								background:'#296f92',
 								fonts: [{
 									text: '',
 									top: 20
@@ -1234,7 +1234,7 @@
 
 		.girdDialog {
 			position: fixed;
-			z-index: 9999;
+			z-index: 99999;
 			height: 100vh;
 			width: 100%;
 			background: rgba(0, 0, 0, .3);

@@ -931,27 +931,27 @@ var drawSectorByArcTo = function (flag, ctx, minRadius, maxRadius, start, end, g
 };
 // 绘制圆角矩形 (由于微信小程序的 arcTo 有 bug, 下面的圆弧使用二次贝塞尔曲线代替)
 var drawRoundRect = function (ctx, x, y, w, h, r, color) {
-    var min = Math.min(w, h);
-    if (r > min / 2)
-        r = min / 2;
-    ctx.beginPath();
-    ctx.fillStyle = color;
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    // ctx.arcTo(x + w, y, x + w, y + r, r)
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    // ctx.arcTo(x + w, y + h, x + w - r, y + h, r)
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    // ctx.arcTo(x, y + h, x, y + h - r, r)
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    // ctx.arcTo(x, y, x + r, y, r)
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-    ctx.fill();
+    // var min = Math.min(w, h);
+    // if (r > min / 2)
+    //     r = min / 2;
+    // ctx.beginPath();
+    // ctx.fillStyle = color;
+    // ctx.moveTo(x + r, y);
+    // ctx.lineTo(x + r, y);
+    // ctx.lineTo(x + w - r, y);
+    // // ctx.arcTo(x + w, y, x + w, y + r, r)
+    // ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    // ctx.lineTo(x + w, y + h - r);
+    // // ctx.arcTo(x + w, y + h, x + w - r, y + h, r)
+    // ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    // ctx.lineTo(x + r, y + h);
+    // // ctx.arcTo(x, y + h, x, y + h - r, r)
+    // ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    // ctx.lineTo(x, y + r);
+    // // ctx.arcTo(x, y, x + r, y, r)
+    // ctx.quadraticCurveTo(x, y, x + r, y);
+    // ctx.closePath();
+    // ctx.fill();
 };
 /**
  * 创建线性渐变色
@@ -1662,7 +1662,7 @@ var LuckyGrid = /** @class */ (function (_super) {
             fontStyle: 'sans-serif',
             fontWeight: '400',
             lineHeight: '',
-            background: 'rgba(0,0,0,0)',
+            background: '#ffffff',
             shadow: '',
             wordWrap: true,
             lengthLimit: '90%',
@@ -1950,6 +1950,7 @@ var LuckyGrid = /** @class */ (function (_super) {
             // 绘制边框
             var background = block.background || _defaultStyle.background;
             if (hasBackground(background)) {
+				console.log('background' + background)
                 drawRoundRect(ctx, x, y, w, h, r, _this.handleBackground(x, y, w, h, background));
             }
             return {
@@ -1991,10 +1992,10 @@ var LuckyGrid = /** @class */ (function (_super) {
                 }
                 drawRoundRect(ctx, x, y, width, height, _this.getLength(cell.borderRadius ? cell.borderRadius : _defaultStyle.borderRadius), _this.handleBackground(x, y, width, height, background));
                 // 清空阴影
-                ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
-                ctx.shadowBlur = 0;
+                // ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+                // ctx.shadowOffsetX = 0;
+                // ctx.shadowOffsetY = 0;
+                // ctx.shadowBlur = 0;
             }
             // 修正图片缓存
             var cellName = 'prizeImgs';
@@ -2018,8 +2019,12 @@ var LuckyGrid = /** @class */ (function (_super) {
                     y + _this.getHeight(imgInfo.top, cell.row)
                 ], xAxis = _b[0], yAxis = _b[1];
 				
-				
+				// console.log('renderImg',renderImg)
                 _this.drawImage(renderImg, xAxis, yAxis, trueWidth, trueHeight);
+				
+				
+				
+				
             });
             // 绘制文字
             cell.fonts && cell.fonts.forEach(function (font) {
