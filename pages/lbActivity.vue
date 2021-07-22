@@ -72,11 +72,13 @@
 				isActEnded: false,
 				isActStart: false,
 				isApply:0, //是否留咨过
+				lotteryType:'' //转盘类型
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
 			await login.checkLogin(api)
+			this.lotteryType = options.lotteryType
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType= options.type || ''
@@ -153,7 +155,8 @@
 					//是否提交过
 					if (isApply == 1 && this.activityType=="") {
 						uni.reLaunch({
-							url: '/pages/lotteryPage?activityId=' + this.activityId
+							url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' +	this.lotteryType
+							
 						})
 					}
 				}	

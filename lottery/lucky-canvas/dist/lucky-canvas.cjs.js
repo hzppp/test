@@ -716,6 +716,18 @@ var Lucky = /** @class */ (function () {
             // 小程序中直接绘制一个路径
             drawImg = imgObj.path;
         }
+			// console.log(drawImg)
+		
+	 // uni.getImageInfo({
+		// 	src:drawImg,
+		// 	success(res) {
+		// 		console.log(res)
+		// 		 return ctx.drawImage(drawImg, xAxis, yAxis, width, height);
+		// 	},
+		// 	fail(error) {
+		// 		console.log(error)
+		// 	}
+		// })
         return ctx.drawImage(drawImg, xAxis, yAxis, width, height);
     };
     /**
@@ -1741,7 +1753,7 @@ var LuckyGrid = /** @class */ (function (_super) {
         });
         // 中奖样式
         this.$computed(this, '_activeStyle', function () {
-            return __assign({ background: '#ffce98', shadow: '' }, _this.activeStyle);
+            return __assign({ shadow: '' }, _this.activeStyle);
         });
     };
     /**
@@ -1914,6 +1926,7 @@ var LuckyGrid = /** @class */ (function (_super) {
      * 绘制九宫格抽奖
      */
     LuckyGrid.prototype.draw = function () {
+		// console.log('draw')
         var _this = this;
         var _a, _b;
         var _c = this, config = _c.config, ctx = _c.ctx, _defaultConfig = _c._defaultConfig, _defaultStyle = _c._defaultStyle, _activeStyle = _c._activeStyle;
@@ -2004,6 +2017,8 @@ var LuckyGrid = /** @class */ (function (_super) {
                     x + _this.getOffsetX(trueWidth, cell.col),
                     y + _this.getHeight(imgInfo.top, cell.row)
                 ], xAxis = _b[0], yAxis = _b[1];
+				
+				
                 _this.drawImage(renderImg, xAxis, yAxis, trueWidth, trueHeight);
             });
             // 绘制文字
