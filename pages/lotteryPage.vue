@@ -24,12 +24,12 @@
 					@start="gridStart" @end="gridEnd" />
 				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
 				<view v-if="lotteryType == 'grid'" class="btnBackV">
-					<button class="shareFiedv" open-type="share" ></button>
-					<button class="goGirldv" @tap = 'gridStart()'></button>
+					<button class="shareFiedv" open-type="share"></button>
+					<button class="goGirldv" @tap='gridStart()'></button>
 				</view>
-				
+
 			</view>
-			<view :class= "lotteryType != 'grid'?'list':'gridlist'">
+			<view :class="lotteryType != 'grid'?'list':'list girdList'">
 				<button v-if="lotteryType != 'grid'" open-type="share" class="invite"></button>
 				<view class="inviteRecord">
 					<view class="title titleK">邀请记录</view>
@@ -91,7 +91,7 @@
 				<block v-if="lotteryRes.id>1&&lotteryRes.price">
 					<view class="tTitle ">恭喜您获得</view>
 					<view class="tBody">
-						<image  class='funnyPrizeIcon' :src="lotteryRes.picUrl"></image>
+						<image class='funnyPrizeIcon' :src="lotteryRes.picUrl"></image>
 						<view class="przie-name">{{lotteryRes.name}}</view>
 					</view>
 					<view class="tFoot">
@@ -113,7 +113,7 @@
 			</view>
 		</view>
 
-    <!-- 绘图用 -->
+		<!-- 绘图用 -->
 		<view style="position: absolute; top: 10px;z-index:-1 ; visibility: hidden;">
 			<canvas v-if="canvasshow" id="myCanvas" canvas-id="myCanvas"
 				style="margin-top: 100rpx;width: 90px;height: 117px;position:fixed;left:100%;"></canvas>
@@ -197,7 +197,7 @@
 			try {
 				const res = uni.getSystemInfoSync();
 				console.log('platform', res.platform)
-				if (res.platform === 'android') { 
+				if (res.platform === 'android') {
 					this.isIOS = false
 				}
 			} catch (e) {
@@ -595,7 +595,7 @@
 			dawSelectV(index, res) {
 				let item = res.data
 				var that = this
-				console.log('开始下载',item.picUrl.trim())
+				console.log('开始下载', item.picUrl.trim())
 				uni.downloadFile({
 					url: item.picUrl.trim(),
 					success: function(res) {
@@ -738,10 +738,11 @@
 				}
 			}
 
-	.LuckyGrid {
+			.LuckyGrid {
 				position: relative;
 				.setbg(100%, 1460rpx, 'lottory_bg.png');
 				text-align: center;
+
 				.lotteryList {
 					position: absolute;
 					left: 16rpx;
@@ -785,10 +786,10 @@
 					height: 60rpx;
 					width: 316rpx;
 					border-radius: 30rpx;
-				    line-height: 60rpx;
+					line-height: 60rpx;
 					left: 50%;
 					margin-left: -165rpx;
-				
+
 					.times {
 						display: inline-block;
 						color: #FA8845;
@@ -796,26 +797,27 @@
 					}
 				}
 			}
-			
-			.btnBackV{
+
+			.btnBackV {
 				position: absolute;
 				bottom: 235rpx;
 				display: flex;
 				width: 100%;
 				// background: #007AFF;
 				text-align: center;
-				.shareFiedv{
+
+				.shareFiedv {
 					margin-left: 42rpx;
 					.setbg(311rpx, 109rpx, 'sFiedv.png');
 				}
-				
-				.goGirldv{
+
+				.goGirldv {
 					margin-left: 42rpx;
 					.setbg(311rpx, 109rpx, 'goGirldv.png');
 				}
 			}
-			
-			
+
+
 			.titleK {
 				position: relative;
 				margin-bottom: 34rpx !important;
@@ -842,10 +844,12 @@
 					.setbg(186rpx, 13rpx, 'recode_new_icon_22.png');
 				}
 			}
-			
+
+			.girdList {
+				margin-top: -160rpx;
+			}
 
 			.list {
-             
 				padding: 0 32rpx 20rpx;
 				background: #eef1f5;
 				margin-bottom: 20rpx;
@@ -857,7 +861,6 @@
 				}
 
 				.inviteRecord {
-				
 					color: #333333;
 					padding: 40rpx 20rpx 30rpx;
 					background: #ffffff;
@@ -868,7 +871,7 @@
 						font-size: 32rpx;
 						line-height: 32rpx;
 						margin-bottom: 20rpx;
-						color: #FA8845;
+						color: #ed2c2c;
 					}
 
 					.item {
@@ -930,26 +933,26 @@
 					}
 				}
 			}
-			
+
 			.gridlist {
-			    margin-top: -160rpx;
+				margin-top: -160rpx;
 				padding: 0 32rpx 20rpx;
 				background: #eef1f5;
 				margin-bottom: 20rpx;
-			
+
 				.invite {
 					margin: 0 auto;
 					.setbg(686rpx, 102rpx, 'invite_btn_210712.png');
 					margin-bottom: 60rpx;
 				}
-			
+
 				.inviteRecord {
-				
+
 					color: #333333;
 					padding: 40rpx 20rpx 30rpx;
 					background: #ffffff;
 					border-radius: 10rpx;
-			
+
 					.title {
 						text-align: center;
 						font-size: 32rpx;
@@ -957,7 +960,7 @@
 						margin-bottom: 20rpx;
 						color: #FA8845;
 					}
-			
+
 					.item {
 						height: 112rpx;
 						line-height: 112rpx;
@@ -969,22 +972,22 @@
 						justify-content: space-between;
 						align-items: center;
 						border-radius: 10rpx;
-			
+
 						&>view {
 							display: inline-block;
 						}
-			
+
 						.imgView {
 							width: 72rpx;
 							height: 72rpx;
-			
+
 							.img {
 								width: 100%;
 								height: 100%;
 								border-radius: 50%;
 							}
 						}
-			
+
 						.name {
 							font-size: 30rpx;
 							width: 232rpx;
@@ -992,13 +995,13 @@
 							text-overflow: ellipsis;
 							white-space: nowrap;
 						}
-			
+
 						.time {
 							color: #999999;
 							font-size: 24rpx;
 						}
 					}
-			
+
 					.nodata {
 						border-radius: 10rpx;
 						margin-bottom: 20rpx;
@@ -1009,7 +1012,7 @@
 						color: #999999;
 						text-align: center;
 					}
-			
+
 					.more {
 						color: #999999;
 						text-align: center;
@@ -1017,8 +1020,8 @@
 					}
 				}
 			}
-			
-			
+
+
 
 			.tips {
 				padding: 0 32rpx 20rpx;
@@ -1106,7 +1109,7 @@
 					left: 40rpx;
 					top: 190rpx;
 					width: 480rpx;
-					
+
 					&.tBody2 {
 						top: 210rpx;
 					}
@@ -1118,7 +1121,7 @@
 						text-align: center;
 						line-height: 215rpx;
 						font-weight: bold;
-					
+
 					}
 
 					&.gotPrize {
@@ -1277,7 +1280,6 @@
 						text-align: center;
 						color: #333333;
 						padding-top: 65rpx
-											
 					}
 
 					&.gotPrize {
@@ -1293,8 +1295,8 @@
 						top: -30rpx;
 						width: 112rpx;
 					}
-					
-					
+
+
 					.funnyPrizeIcon {
 						position: absolute;
 						left: 50%;

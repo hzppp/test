@@ -310,6 +310,14 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/ActivitySelect",
+			"style": {
+				"navigationBarTitleText": "活动详情",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {
