@@ -21,10 +21,16 @@
 
 				<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
 					:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-					@start="gridStart" @end="gridEnd"  :showDialogL="showDialogL"/>
+					@start="gridStart" @end="gridEnd" :showDialogL="showDialogL" />
 				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
 				<view v-if="lotteryType == 'grid'" class="btnBackV">
+					<!--  #ifdef MP-WEIXIN  -->
+					<button class="shareFiedv" @tap='shareChoise()'></button>
+					<!-- #endif -->
+					<!--  #ifndef MP-WEIXIN  -->
 					<button class="shareFiedv" open-type="share"></button>
+					<!-- #endif -->
+
 					<button class="goGirldv" @tap='gridStart()'></button>
 				</view>
 
@@ -85,7 +91,6 @@
 			</view>
 		</view>
 
-
 		<view class="girdDialog" v-if="showDialogL && lotteryType == 'grid'" @touchmove.stop.prevent>
 			<view class="dialogContainer">
 				<block v-if="lotteryRes.id>1&&lotteryRes.price">
@@ -112,6 +117,28 @@
 				<button class="closeBtn" @tap="closeDialog"></button>
 			</view>
 		</view>
+	
+		<uni-popup ref="popup" type="bottom">
+			<view class="shareBtnBackV">
+				<view class="shareBtnV">
+					<view class="shareBtn" @tap="shareHB()">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png">
+						</image>
+						<view class="text">海报分享</view>
+					</view>
+					<button class="shareBtn" open-type="share">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png">
+						</image>
+						<view class="text1">分享微信好友</view>
+					</button>
+				</view>
+				<view class="line"></view>
+				<button @tap='shareCancle()'>取消</button>
+			</view>
+
+		</uni-popup>
+
+
 
 		<!-- 绘图用 -->
 		<view style="position: absolute; top: 10px;z-index:-1 ; visibility: hidden;">
@@ -164,7 +191,8 @@
 				shareUrl: '',
 				isIOS: true,
 				lotteryType: '',
-				shareURL:'',
+				shareURL: '',
+				sharePosterPic:'',
 				buttons: [{
 						radius: '35px',
 						background: '#d64737'
@@ -194,6 +222,7 @@
 			app.globalData.isRotating = false;
 		},
 		async onLoad(options) {
+
 			// #ifndef MP-WEIXIN
 			try {
 				const res = uni.getSystemInfoSync();
@@ -333,13 +362,14 @@
 			console.log('fenxang ', data)
 			this.shareTitle = data.name
 			this.shareUrl = data.sharePic
+			this.sharePosterPic = data.sharePosterPic
 
 		},
 		onShareAppMessage() {
 			console.log('ui', this.shareURL, this.shareTitle, this.shareUrl)
 			return {
 				title: this.shareTitle,
-				path:this.shareURL,
+				path: this.shareURL,
 				imageUrl: this.shareUrl
 			}
 		},
@@ -535,7 +565,7 @@
 							array.push({
 								x: j,
 								y: i,
-								background:'#296f92',
+								background: '#296f92',
 								fonts: [{
 									text: '',
 									top: 20
@@ -555,7 +585,7 @@
 							array.push({
 								x: j,
 								y: i,
-								background:'#296f92',
+								background: '#296f92',
 								fonts: [{
 									text: '',
 									top: 20
@@ -643,6 +673,25 @@
 					this.showDialogL = true;
 					this.lotteryActInfo.chanceCount--;
 				}, 500)
+			},
+
+			shareChoise() {
+				this.$refs.popup.open('bottom')
+			},
+
+			shareCancle() {
+				this.$refs.popup.close()
+			},
+			shareHB() {
+				
+				let url = '/pages/sharePost?scene=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.sharePosterPic)
+				uni.navigateTo({
+					url:url
+				})
+				
+				
+				
+				this.$refs.popup.close()
 			}
 
 
@@ -1412,5 +1461,80 @@
 				}
 			}
 		}
+
+
+		.shareBtnBackV {
+			border-top-left-radius: 10rpx;
+			border-top-right-radius: 10rpx;
+			width: 100%;
+			height: 331rpx;
+			background: #ffffff;
+
+			.shareBtnV {
+				width: 90%;
+				margin: auto;
+				display: flex;
+
+				.shareBtn {
+					text-align: center;
+					width: 50%;
+					height: 230rpx;
+					margin: auto;
+
+				}
+
+				image {
+					width: 88rpx;
+					height: 88rpx;
+					margin-top: 50rpx;
+
+				}
+
+				.text {
+					width: 100%;
+					height: 23rpx;
+					text-align: center;
+					margin-top: 20rpx;
+					font-size: 24rpx;
+					color: #666666;
+
+				}
+
+				.text1 {
+					width: 100%;
+					height: 23rpx;
+					text-align: center;
+					margin-top: -20rpx;
+					font-size: 24rpx;
+					color: #666666;
+				}
+
+
+			}
+
+			.line {
+				background: #EBEBEB;
+				height: 1rpx;
+				width: 100%;
+				// margin-top: ;
+			}
+
+			button {
+				width: 100%;
+				color: #333333;
+				background: #FFFFFF;
+				font-size: 33rpx;
+				margin: auto;
+				margin-top: 10rpx;
+			}
+
+		}
+
+
+
+
+
+
+
 	}
 </style>

@@ -271,6 +271,9 @@ const config = {
 		wwjStart: `${DOMAIN.changan}/api/xcx/wawaji/start`,
 		// 娃娃机-二维码核销
 		wwjVerify: `${DOMAIN.changan}/api/xcx/wawaji/verify`,
+		// 生成微信二维码
+		createWxQrCode: `${DOMAIN.changan}/api/xcx/base/createWxQrCode`,
+		
 	},
 	getAPI(key) {
 		let url;

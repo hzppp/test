@@ -41,8 +41,15 @@
 							</view>
 						</template>
 						<template v-else>
+							
+							<!--  #ifdef MP-WEIXIN  -->
 							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+								hover-class="none" @tap='shareChoise()'>分享好友</button>
+							<!-- #endif -->
+							<!--  #ifndef MP-WEIXIN  -->
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+							<!-- #endif -->
 							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
 								@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 							<button class="enroll-btn enroll-btn2" @tap="formShow"
@@ -53,6 +60,26 @@
 				</view>
 			</view>
 		</view>
+	
+	<uni-popup ref="popup" type="bottom">
+		<view class="shareBtnBackV">
+			<view class="shareBtnV">
+				<view class="shareBtn" @tap="shareHB()">
+					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png">
+					</image>
+					<view class="text">海报分享</view>
+				</view>
+				<button class="shareBtn" open-type="share">
+					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png">
+					</image>
+					<view class="text1">分享微信好友</view>
+				</button>
+			</view>
+			<view class="line"></view>
+			<button @tap='shareCancle()'>取消</button>
+		</view>
+	
+	</uni-popup>
 	</view>
 </template>
 
@@ -328,6 +355,24 @@
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
+			},
+			shareChoise() {
+				this.$refs.popup.open('bottom')
+			},
+			
+			shareCancle() {
+				this.$refs.popup.close()
+			},
+			shareHB() {
+				
+				let url = '/pages/sharePost?scene=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.content.sharePosterPic)
+				uni.navigateTo({
+					url:url
+				})
+				
+				
+				
+				this.$refs.popup.close()
 			}
 		}
 	}
@@ -560,5 +605,75 @@
 				border-radius: 44rpx;
 			}
 		}
+		
+		
 	}
+	.shareBtnBackV {
+		border-top-left-radius: 10rpx;
+		border-top-right-radius: 10rpx;
+		width: 100%;
+		height: 331rpx;
+		background: #ffffff;
+	
+		.shareBtnV {
+			width: 90%;
+			margin: auto;
+			display: flex;
+	
+			.shareBtn {
+				text-align: center;
+				width: 50%;
+				height: 230rpx;
+				margin: auto;
+	
+			}
+	
+			image {
+				width: 88rpx;
+				height: 88rpx;
+				margin-top: 50rpx;
+	
+			}
+	
+			.text {
+				width: 100%;
+				height: 23rpx;
+				text-align: center;
+				margin-top: 20rpx;
+				font-size: 24rpx;
+				color: #666666;
+	
+			}
+	
+			.text1 {
+				width: 100%;
+				height: 23rpx;
+				text-align: center;
+				margin-top: -20rpx;
+				font-size: 24rpx;
+				color: #666666;
+			}
+	
+	
+		}
+	
+		.line {
+			background: #EBEBEB;
+			height: 1rpx;
+			width: 100%;
+			// margin-top: ;
+		}
+	
+		button {
+			width: 100%;
+			color: #333333;
+			background: #FFFFFF;
+			font-size: 33rpx;
+			margin: auto;
+			margin-top: 10rpx;
+		}
+	
+	}
+	
+	
 </style>

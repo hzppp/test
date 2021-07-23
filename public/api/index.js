@@ -1117,4 +1117,14 @@ module.exports = {
 		})
 		return data
 	},
+	createWxQrCode: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('createWxQrCode'),
+			method: "POST",
+			data: para
+		})
+		return data
+	}
 }
