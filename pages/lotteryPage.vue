@@ -164,6 +164,7 @@
 				shareUrl: '',
 				isIOS: true,
 				lotteryType: '',
+				shareURL:'',
 				buttons: [{
 						radius: '35px',
 						background: '#d64737'
@@ -204,6 +205,7 @@
 				// error
 			}
 			// #endif
+			this.shareURL = decodeURIComponent(options.shareURL)
 			this.lotteryType = options.lotteryType
 			this.showDialogL = false;
 			this.prizes = []
@@ -334,12 +336,10 @@
 
 		},
 		onShareAppMessage() {
-			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			let url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
-			console.log('ui', url, this.shareTitle, this.shareUrl)
+			console.log('ui', this.shareURL, this.shareTitle, this.shareUrl)
 			return {
 				title: this.shareTitle,
-				path: url, //抽奖页面?activityId=0&userId=0
+				path:this.shareURL,
 				imageUrl: this.shareUrl
 			}
 		},

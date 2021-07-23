@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<userBand></userBand>
+		<userBand @loginSuccess='getData'></userBand>
 		<view class="activity">
 			<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 			<share-pop ref="shareSuccess"></share-pop>
@@ -81,22 +81,20 @@
 				isActStart: false,
 				activityType:"",
 				isApply:0, //是否留咨过
-			
-				
 				//直播间用的
 				liveUrl:'',
+				shareURL:'',
 				
 			}
 		},
 		mixins: [shouquan],
-		async onLoad(options) {
+		async onLoad(options) {	
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
 				})
 				return
 			}
-			
 			//直播活动相关
 			if(options.type && (options.type == 'Live' || options.type == 'verticalLive')){
 				if(options.type == 'Live' ){
@@ -117,6 +115,7 @@
 			if(options.type){
 				this.activityType= options.type || ''
 			}
+			await login.checkLogin(api)
 			try {
 				uni.showLoading({
 					title: '正在加载...'
@@ -149,8 +148,6 @@
 							.sourceUserId
 					})
 				}
-
-
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
@@ -160,6 +157,16 @@
 			} finally {
 				uni.hideLoading()
 			}
+			
+			// 分享用
+			let cs = ''
+			for (let i in options) {
+			  cs += `${i}=${options[i]}&`
+			}
+			  cs = cs.substr(0, cs.length - 1)
+			  this.shareURL = `/pages/activity?${cs}`
+			  console.log('shareurl',this.shareURL)
+			
 		},
 		onHide() {
 			if (app.Interval) {
@@ -168,10 +175,7 @@
 		},
 		onShareAppMessage() {
 			let title = this.content.name
-			let path = `pages/authorization?to=activity&id=${this.content.id}`
-			if (app.globalData.salesId) {
-				path += `&salesId=${app.globalData.salesId}`
-			}
+			let path = this.shareURL
 			api.shareActivity(this.content.id).then(res => {
 				console.log(res)
 				if (res.data > 0) {
@@ -343,7 +347,15 @@
 			// +0
 			add0(number) {
 				return number > 9 ? number : '0' + number
-			}
+			},
+		    
+			getData(){
+		    	// 访问活动 记录活动访问次数
+		    	api.fetchActivityVisit({
+		    		'activityId': this.activityId
+		    	})
+		    }
+		
 		}
 	}
 </script>

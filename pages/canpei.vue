@@ -192,6 +192,7 @@
     import power from '@/components/review/power.vue'
     import external from '@/components/review/external.vue'
     import internal from '@/components/review/internal.vue'
+	import domain from '@/configs/interface';
 	export default {
         components:{ main, base, smart, power, external, internal },
 		data() {
@@ -481,8 +482,13 @@
 				console.log('请求',serialId)
 				return new Promise((relove, resject) => {
 					try{
+						 let url = "https://mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp"
+						if(domain.getCurrentEnv() ==1 ){
+							url = "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp"
+						}
 						uni.request({
-							url: "https://mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp",
+
+							url: url,
 							data: {serialId},
 							header: {
 								'Content-Type': 'application/json'

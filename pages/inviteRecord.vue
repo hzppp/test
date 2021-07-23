@@ -37,7 +37,7 @@ name: "inviteRecord",
 .inviteRecord {
   color: #fff;
   padding: 40rpx 20rpx 30rpx;
-  background: #183aba;
+  background: rgb(236,239,243);
   min-height: 100vh;
   .title {
     text-align: center;
@@ -48,7 +48,7 @@ name: "inviteRecord",
   .item {
     height: 112rpx;
     line-height: 112rpx;
-    background: #1806a3;
+    background: #FFFFFF;
     margin-bottom: 20rpx;
     box-sizing: border-box;
     padding: 20rpx;
@@ -62,17 +62,21 @@ name: "inviteRecord",
     .imgView {
       width: 72rpx;
       height: 72rpx;
+	  border-radius: 36rpx;
       .img {
+		 border-radius: 36rpx;
         width: 100%;
         height: 100%;
       }
     }
     .name {
+		color: #333333;
       font-size: 30rpx;
       width: 270rpx;
       overflow: hidden; text-overflow:ellipsis; white-space: nowrap;
     }
     .time {
+	 color:#999999;
       font-size: 24rpx;
     }
   }

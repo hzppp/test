@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<userBand :cancleShow='!sourceUserId'></userBand>
+		<userBand :cancleShow='!sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
 				style="top: 128rpx;"></button>
@@ -86,6 +86,7 @@
 				activityType: "",
 				isActEnded: false,
 				isActStart: false,
+				shareURL:'',
 				isApply: 0, //是否留咨过
 				lotteryType: '', //转盘类型
 				actSelect: '' // 玩法（0   线下   1 线上抽奖  2 both）
@@ -99,7 +100,16 @@
 			this.activityId = options.id
 			this.activityType = options.type || ''
 			this.actSelect = options.actSelect || ''
-			// await login.checkLogin(api)
+			// 分享用
+			let cs = ''
+			for (let i in options) {
+			  cs += `${i}=${options[i]}&`
+			}
+			  cs = cs.substr(0, cs.length - 1)
+			  let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			  this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`
+			  
+			  console.log('shareurl',this.shareURL)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
@@ -126,6 +136,13 @@
 					console.log('sourceUserId' + this.sourceUserId)
 					// this.$toast('sourceUserId' + this.sourceUserId  )
 				}
+				if(this.shareURL){
+					this.content.shareURL = this.shareURL
+				}
+			    this.content.from = 'lbactivity'
+				this.content.lotteryType = this.lotteryType
+				this.content.actSelect = this.actSelect
+				
 			} catch (err) {
 				console.error(err)
 			} finally {
@@ -135,6 +152,7 @@
 			api.fetchActivityVisit({
 				'activityId': this.activityId
 			})
+		
 		},
 		onHide() {
 			if (app.Interval) {
@@ -142,8 +160,6 @@
 			}
 		},
 		onShareAppMessage() {
-			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			let url = `pages/lbActivity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
 			let title = this.content.name
 			// let path = `pages/authorization?to=lbActivity&id=${this.content.id}`
 			// if (app.globalData.salesId) {
@@ -158,7 +174,7 @@
 			let imageUrl = this.content.sharePic || this.content.detailPic
 			return {
 				title: title,
-				path: url,
+				path: this.shareURL,
 				imageUrl: imageUrl
 			}
 		},
@@ -178,7 +194,7 @@
 					if (isApply == 1 && this.activityType == "") {
 						uni.reLaunch({
 							url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-								.lotteryType
+								.lotteryType + "&shareURL=" +   encodeURIComponent(this.shareURL)
 
 						})
 					}
@@ -208,7 +224,7 @@
 			actSelect2(){
 				uni.reLaunch({
 					url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-						.lotteryType
+						.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 				})
 			},
 
@@ -223,7 +239,7 @@
 						if (this.actSelect == 1) {
 							uni.reLaunch({
 								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType
+									.lotteryType + "&shareURL=" +  encodeURIComponent(this.shareURL)
 							})
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
@@ -305,6 +321,13 @@
 			// +0
 			add0(number) {
 				return number > 9 ? number : '0' + number
+			},
+			
+			getData(){
+				// 访问活动 记录活动访问次数
+				api.fetchActivityVisit({
+					'activityId': this.activityId
+				})
 			}
 		}
 	}

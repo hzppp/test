@@ -355,6 +355,7 @@
 					// #endif	
 					
 				}
+			
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
@@ -366,10 +367,10 @@
 				if (ly == 'coupon') {
 					source = 0
 					sourceId = lydx.id
-				} else if (ly == 'activity') {
+				} else if (ly == 'activity' && lydx.from != 'lbactivity') {
 					source = 1
 					sourceId = lydx.id
-				} else if (ly = 'lbactivity') {
+				} else if (ly = 'lbactivity' || lydx.from == 'lbactivity') {
 					source = 5
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
@@ -418,6 +419,7 @@
 
 				}
 				console.log(this.currentObj.sourceUserId)
+				
 				if(this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj.sourceUserId != 0){
 					pam.sourceUserId =  this.currentObj.sourceUserId
 				}
@@ -426,12 +428,36 @@
 				let popname
 				if (data.code == 1) { //成功留资
 				console.log(ly + data)
-					if (ly == 'lbactivity') {
+					if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
+							if (lydx.actSelect == 0) {
+							  // 线下
+							  uni.navigateTo({
+							  	url: `/pages/wawaji?activityId=${lydx.id}`
+							  })
+							} else if (lydx.actSelect == 2) {
+								// both
+								uni.navigateTo({
+									url: '/pages/ActivitySelect?activityId=' + lydx.id + '&lotteryType=' + lydx
+										.lotteryType
+								})
+							} else {
+								// 不传或者1  抽奖
+								uni.reLaunch({
+									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
+										.lotteryType + "&shareURL=" +  encodeURIComponent(lydx.shareURL)
+								})
+								
+							}
+                         this.popName = 'lbactivity'
 						//跳转抽奖
-						this.popName = 'lbactivity'
-						uni.navigateTo({
-							url:'/pages/lotteryPage?activityId=' + lydx.id
-						})
+						// this.popName = 'lbactivity'
+						// let url = '/pages/lotteryPage?activityId=' + lydx.id
+						// if(lydx.shareURL){
+						// 	url = lydx.shareURL
+						// }
+						// uni.navigateTo({
+						// 	url:url
+						// })
 						return
 					}
 					if (ly == 'coupon') {
