@@ -53,12 +53,15 @@
 			draw() {
 				var that = this
 				console.log('开始下载', this.shareUrl.trim())
+				uni.showLoading({
+					title: '正在加载...'
+				})
 				// 背景
 				uni.downloadFile({
 					url: this.shareUrl.trim(),
 					success: function(res) {
 						that.canvasShow = true
-
+						uni.hideLoading()
 						console.log('下载成功', res)
 						// that.imageURL = res.tempFilePath
 						that.context.save()
@@ -82,6 +85,7 @@
 
 					},
 					fail(res) {
+						uni.hideLoading()
 						that.drawHeader()
 						console.log('下载失败', res)
 

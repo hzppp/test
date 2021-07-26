@@ -85,7 +85,7 @@ name: "inviteRecord",
   }
   .nomore {
     font-size: 24rpx;
-    color: #6b87cf;
+    color: #999999;
     margin-top: 20rpx;
     text-align: center;
   }

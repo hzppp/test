@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<userBand :cancleShow='!sourceUserId' @loginSuccess='getData'></userBand>
+		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
 				style="top: 128rpx;"></button>
@@ -43,8 +43,11 @@
 						<template v-else>
 							
 							<!--  #ifdef MP-WEIXIN  -->
-							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							<button v-if="content.sharePosterPic" :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 								hover-class="none" @tap='shareChoise()'>分享好友</button>
+								
+							<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>	
 							<!-- #endif -->
 							<!--  #ifndef MP-WEIXIN  -->
 						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"

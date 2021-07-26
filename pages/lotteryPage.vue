@@ -25,7 +25,8 @@
 				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
 				<view v-if="lotteryType == 'grid'" class="btnBackV">
 					<!--  #ifdef MP-WEIXIN  -->
-					<button class="shareFiedv" @tap='shareChoise()'></button>
+					<button v-if="sharePosterPic" class="shareFiedv" @tap='shareChoise()'></button>
+					<button v-else class="shareFiedv" open-type="share"></button>
 					<!-- #endif -->
 					<!--  #ifndef MP-WEIXIN  -->
 					<button class="shareFiedv" open-type="share"></button>
@@ -1091,7 +1092,7 @@
 					border-radius: 10rpx;
 
 					.contentTips {
-						max-height: 170rpx;
+						max-height: 406rpx;
 						width: 646rpx;
 						overflow: scroll;
 						border-radius: 10rpx;
