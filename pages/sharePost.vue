@@ -25,14 +25,14 @@
 				dpr1: '',
 				width: '',
 				height: '',
-				scene:''
+				scene1:''
 			}
 		},
 		mixins: [],
 		async onLoad(options) {
-            this.scene = decodeURIComponent(options.scene)
+            this.scene1 = decodeURIComponent(options.scene1)
 			this.shareUrl = decodeURIComponent(options.shareUrl)
-			console.log( this.scene,this.shareUrl)
+			console.log( this.scene1,this.shareUrl)
 
 			this.dpr1 = uni.getSystemInfoSync().pixelRatio
 			this.width = this.dpr(270)
@@ -131,8 +131,26 @@
 
 			async drawWxQrCode() {
 				var that = this  
-				let page = encodeURIComponent('/pages/lbActivity')
-				let scene = encodeURIComponent(this.scene.replace('/pages/lbActivity?',''))
+				let page = 'pages/lbActivity'
+				
+				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
+			    this.scene1 =this.scene1.replace('/pages/lbActivity?','')
+				this.scene1 =this.scene1.replace('type','tt')
+				this.scene1 =this.scene1.replace('lotteryType','ll')
+				this.scene1 =this.scene1.replace('id','dd')
+				this.scene1 =this.scene1.replace('grid','gg')
+				this.scene1 =this.scene1.replace('wawaji','ww')
+				this.scene1 =this.scene1.replace('actSelect','aa')
+				this.scene1 =this.scene1.replace('sourceUserId','ss')
+				console.log(this.scene1,this.scene1.length)
+				let scene = encodeURIComponent(this.scene1)
+				
+				
+				
+				
+				
+				
+				console.log('scene',scene)
 				let url = `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
 				if (domain.getCurrentEnv() == 1) {
 					url = `https://devqd-changan.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`

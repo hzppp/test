@@ -200,6 +200,14 @@
 
 		},
 		methods: {
+			
+			
+			 handleContact (e) {
+			        console.log(e.detail.path)
+			        console.log(e.detail.query)
+			    },
+			
+
 			async getData(){
 				let phone = uni.getStorageSync('userPhone')
 				if (phone) {

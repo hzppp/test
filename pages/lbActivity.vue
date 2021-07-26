@@ -124,6 +124,26 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			if(options.scene){ // 分享海报来的
+				let url = decodeURIComponent(options.scene)
+				//dd=69&ll=gg&tt=ww&aa=1&ss=66
+				url =url.replace('tt','type')	
+				url =url.replace('ll','lotteryType')
+				url =url.replace('dd','id')
+				url =url.replace('gg','grid')
+				url =url.replace('ww','wawaji')
+				url =url.replace('aa','actSelect')
+				url =url.replace('ss','sourceUserId')
+			   //id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
+		      let array = url.split('&')
+			  array.forEach((item, index) => {
+			  let arr = item.split('=')
+			  if(arr){
+			  		options[arr[0]] = arr[1]
+			  }
+			  })
+
+			}
 			await login.checkLogin(api)
 			this.lotteryType = options.lotteryType
 			this.sourceUserId = options.sourceUserId
@@ -133,7 +153,10 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-			  cs += `${i}=${options[i]}&`
+			  if(i!='scene' && i!='sourceUserId'){
+				 cs += `${i}=${options[i]}&`  
+			  }
+			 
 			}
 			  cs = cs.substr(0, cs.length - 1)
 			  let wxUserInfo = uni.getStorageSync('wxUserInfo')
@@ -379,7 +402,7 @@
 			},
 			shareHB() {
 				
-				let url = '/pages/sharePost?scene=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.content.sharePosterPic)
+				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.content.sharePosterPic)
 				uni.navigateTo({
 					url:url
 				})
@@ -388,6 +411,7 @@
 				
 				this.$refs.popup.close()
 			}
+			
 		}
 	}
 </script>

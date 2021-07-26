@@ -15,13 +15,16 @@
 import login from '@/units/login.js'
 import api from '@/public/api/index.js'
     export default {
-		props: 
-		 ["cancleShow"]
-		  ,
+		props: {
+			cancleShow: {
+			      type: Boolean,
+			      default:true
+			    }
+		},
         data() {
             return {
                 isShow: false, //控制显隐
-				cancleShow:true
+				
             }
         },
        async created() {
