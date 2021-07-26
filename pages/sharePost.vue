@@ -72,9 +72,7 @@
 						that.context.setFillStyle('#FFFFFF')
 						that.context.setFontSize(12)
 						let name = that.wxUserInfo.wxName
-						if(name.length>9){
-							name = name.substr(0,8)
-						}
+					     name =   that.cutString(name,16)
 						that.context.fillText(name, that.dpr(57), that.dpr(419))
 
 						that.context.setFontSize(9)
@@ -194,7 +192,57 @@
 
 
 			},
-
+			
+			
+		
+			  cutString(str, len) { 
+			 
+			   //length属性读出来的汉字长度为1 
+			 
+			   if(str.length*2 <= len) { 
+			 
+			     return str; 
+			 
+			   } 
+			 
+			   var strlen = 0; 
+			 
+			   var s = ""; 
+			 
+			   for(var i = 0;i < str.length; i++) { 
+			 
+			     s = s + str.charAt(i); 
+			 
+			     if (str.charCodeAt(i) > 128) { 
+			 
+			       strlen = strlen + 2; 
+			 
+			       if(strlen >= len){ 
+			 
+			         return s.substring(0,s.length-1) + "..."; 
+			 
+			       } 
+			 
+			     } else { 
+			 
+			       strlen = strlen + 1; 
+			 
+			       if(strlen >= len){ 
+			 
+			         return s.substring(0,s.length-2) + "..."; 
+			 
+			       } 
+			 
+			     } 
+			 
+			   } 
+			 
+			   return s; 
+			 
+			 },
+				
+			
+		
 			handleBorderRect(ctx, x, y, w, h, r, color) {
 				ctx.beginPath();
 				// 左上角
