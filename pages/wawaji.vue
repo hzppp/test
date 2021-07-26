@@ -8,7 +8,7 @@
 			<view class="rule-btn" @tap="showRule=true">活动规则>></view>
 		</view>
 		<!-- 活动规则 -->
-		<wwj-rule :visible.sync="showRule"/>
+		<wwj-rule :visible.sync="showRule"  @colse='close()'/>
 
 		<!-- 能量 -->
 		<view class="content content-enery" v-if="pageStatus==1">
@@ -300,6 +300,9 @@
 					this.technologyCode.val=`${this.activityInfo.userToken}|Technology`
 					this.gift.val=`${this.activityInfo.userToken}|Prize`
 				}
+			},
+			close(){
+			  this.showRule = false
 			},
 			targetItem(item,index){
 				this.pageStatus=index;

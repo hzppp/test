@@ -41,7 +41,9 @@
 		mounted() { },
 		methods: {
 			close() {
+				console.log('update:visible')
 				this.$emit('update:visible', false)
+				this.$emit('colse')
 			}
 		}
 	}

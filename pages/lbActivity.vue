@@ -269,7 +269,7 @@
 						this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 						// #endif
 						// #ifdef MP-TOUTIAO
-						this.$children[2].formShow('form', 'activity', this.content, '报名活动')
+						this.$children[3].formShow('form', 'activity', this.content, '报名活动')
 						// #endif
 						
 					} else {
@@ -297,7 +297,7 @@
 					// #endif
 				
 				   // #ifdef MP-TOUTIAO
-				   this.$children[2].formShow('form', 'lbactivity', this.content, '报名活动')
+				   this.$children[3].formShow('form', 'lbactivity', this.content, '报名活动')
 				   // #endif
 				}
 			
@@ -552,7 +552,11 @@
 				border-radius: 44rpx;
 
 				.selectTitle1 {
+					
 					margin-top: 13rpx;
+					/*  #ifndef  MP-WEIXIN */
+					margin-top: 5rpx;
+					/*  #endif  */	
 					font-size: 32rpx;
 					font-weight: 800;
 
@@ -577,7 +581,10 @@
 				border-radius: 44rpx;
 
 				.selectTitle1 {
-					margin-top: 10rpx;
+					margin-top: 13rpx;
+					/*  #ifndef  MP-WEIXIN */
+					margin-top: 5rpx;
+					/*  #endif  */	
 					font-size: 32rpx;
 					font-weight: 800;
 

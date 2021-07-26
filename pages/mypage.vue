@@ -66,22 +66,25 @@
 					<view class="p1">新媒体营销查询</view>
 					<view class="right isApprove"></view>
 				</view>
-				<!-- <view class="line"></view>
-				<view class="box-list list5" @tap="tomSuggestion">
-					<view class="p1">意见反馈</view>
-					<view class="right isApprove"></view>
-				</view> -->
 				
-				<view class="line"></view>
-					
-				<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
-				<view class="box-list list7">
 				
-					<view class="p1">联系客服</view>
-					<view class="right isApprove"></view>
-					
+				<!--  #ifdef MP-TOUTIAO  -->
+					<view class="line"></view>
+					<view class="box-list list5" @tap="tomSuggestion">
+						<view class="p1">意见反馈</view>
+						<view class="right isApprove"></view>
+					</view>
+				<!-- #endif -->
+				<!--  #ifndef MP-TOUTIAO  -->
+					<view class="line"></view>
+					<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
+					<view class="box-list list7">
+						<view class="p1">联系客服</view>
+						<view class="right isApprove"></view>
+					</view>
+				<!-- #endif -->
 				
-				</view>
+			
 				
 			
 				<!-- <view class="box-list list4">
