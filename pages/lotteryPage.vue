@@ -511,7 +511,7 @@
 						// #endif
 
 						// #ifdef MP-TOUTIAO
-						this.$children[2].play()
+						this.$children[3].play()
 						// #endif
 
 						let index = this.matchIndex(res.data.id) //中奖索引
@@ -531,7 +531,7 @@
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							this.$children[2].stop(num)
+							this.$children[3].stop(num)
 							// #endif
 
 						}, 500)

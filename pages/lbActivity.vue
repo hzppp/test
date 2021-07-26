@@ -261,10 +261,17 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
+				// #endif
 				console.log("this.isApply", this.isApply)
 				if (this.activityType == 'wawaji') {
 					if (!this.isApply) {
+						// #ifdef MP-WEIXIN
 						this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
+						// #endif
+						// #ifdef MP-TOUTIAO
+						this.$children[2].formShow('form', 'activity', this.content, '报名活动')
+						// #endif
+						
 					} else {
 						if (this.actSelect == 1) {
 							uni.reLaunch({
@@ -285,14 +292,18 @@
 					}
 
 				} else {
-					this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+					// #ifdef MP-WEIXIN
+						this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+					// #endif
+				
+				   // #ifdef MP-TOUTIAO
+				   this.$children[2].formShow('form', 'lbactivity', this.content, '报名活动')
+				   // #endif
 				}
-				// #endif
+			
 
 
-				// #ifdef MP-TOUTIAO
-				this.$children[2].formShow('form', 'lbactivity', this.content, '报名活动')
-				// #endif
+			
 
 
 			},
@@ -566,7 +577,7 @@
 				border-radius: 44rpx;
 
 				.selectTitle1 {
-					margin-top: 13rpx;
+					margin-top: 10rpx;
 					font-size: 32rpx;
 					font-weight: 800;
 

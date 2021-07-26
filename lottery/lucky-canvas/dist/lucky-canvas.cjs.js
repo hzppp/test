@@ -1144,11 +1144,19 @@ var LuckyWheel = /** @class */ (function (_super) {
         _this.defaultStyle = {};
         _this._defaultStyle = {
             fontSize: '18px',
-            fontColor: '#000',
+            fontColor: '#000000',
             fontStyle: 'sans-serif',
             fontWeight: '400',
             lineHeight: '',
-            background: 'rgba(0,0,0,0)',
+			// #ifdef MP-WEIXIN
+			
+			 background: 'rgba(0,0,0,0)',
+			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			 background: '',
+			// #endif
+           
             wordWrap: true,
             lengthLimit: '90%',
         };
@@ -1206,7 +1214,15 @@ var LuckyWheel = /** @class */ (function (_super) {
         });
         // 默认样式
         this.$computed(this, '_defaultStyle', function () {
-            var style = __assign({ fontSize: '18px', fontColor: '#000', fontStyle: 'sans-serif', fontWeight: '400', background: 'rgba(0,0,0,0)', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #ifdef MP-WEIXIN
+			
+			 var style = __assign({ fontSize: '18px', fontColor: '#000000', fontStyle: 'sans-serif', fontWeight: '400', background: 'rgba(0,0,0,0)', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			 var style = __assign({ fontSize: '18px', fontColor: '#000000', fontStyle: 'sans-serif', fontWeight: '400', background: '', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #endif
+           
             return style;
         });
     };
@@ -1657,7 +1673,7 @@ var LuckyGrid = /** @class */ (function (_super) {
         _this.defaultStyle = {};
         _this._defaultStyle = {
             borderRadius: 20,
-            fontColor: '#000',
+            fontColor: '#000000',
             fontSize: '18px',
             fontStyle: 'sans-serif',
             fontWeight: '400',
@@ -1749,7 +1765,15 @@ var LuckyGrid = /** @class */ (function (_super) {
         });
         // 默认样式
         this.$computed(this, '_defaultStyle', function () {
-            return __assign({ borderRadius: 20, fontColor: '#000', fontSize: '18px', fontStyle: 'sans-serif', fontWeight: '400', background: 'rgba(0,0,0,0)', shadow: '', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #ifdef MP-WEIXIN
+			
+			  return __assign({ borderRadius: 20, fontColor: '#000000', fontSize: '18px', fontStyle: 'sans-serif', fontWeight: '400', background: 'rgba(0,0,0,0)', shadow: '', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #endif
+			
+			// #ifdef MP-TOUTIAO
+			  return __assign({ borderRadius: 20, fontColor: '#000000', fontSize: '18px', fontStyle: 'sans-serif', fontWeight: '400', background: '', shadow: '', wordWrap: true, lengthLimit: '90%' }, _this.defaultStyle);
+			// #endif
+          
         });
         // 中奖样式
         this.$computed(this, '_activeStyle', function () {
