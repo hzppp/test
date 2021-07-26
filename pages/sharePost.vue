@@ -33,7 +33,6 @@
             this.scene1 = decodeURIComponent(options.scene1)
 			this.shareUrl = decodeURIComponent(options.shareUrl)
 			console.log( this.scene1,this.shareUrl)
-
 			this.dpr1 = uni.getSystemInfoSync().pixelRatio
 			this.width = this.dpr(270)
 			this.height = this.dpr(480)
@@ -52,6 +51,9 @@
 		methods: {
 			draw() {
 				var that = this
+				if(this.shareUrl.substring(0, 5) != "https"){
+				   this.shareUrl = this.shareUrl.replace('http','https')
+				}
 				console.log('开始下载', this.shareUrl.trim())
 				uni.showLoading({
 					title: '正在加载...'
@@ -69,7 +71,11 @@
 						that.context.drawImage(res.tempFilePath, 0, 0, that.dpr(270), that.dpr(480))
 						that.context.setFillStyle('#FFFFFF')
 						that.context.setFontSize(12)
-						that.context.fillText(that.wxUserInfo.wxName, that.dpr(57), that.dpr(419))
+						let name = that.wxUserInfo.wxName
+						if(name.length>9){
+							name = name.substr(0,8)
+						}
+						that.context.fillText(name, that.dpr(57), that.dpr(419))
 
 						that.context.setFontSize(9)
 						that.context.fillText('邀请你参与活动啦', that.dpr(57), that.dpr(436))
