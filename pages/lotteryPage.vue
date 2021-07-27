@@ -21,7 +21,7 @@
 
 				<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
 					:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-					@start="gridStart" @end="gridEnd" :showDialogL="showDialogL" />
+					@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
 				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
 				<view v-if="lotteryType == 'grid'" class="btnBackV">
 					<!--  #ifdef MP-WEIXIN  -->
@@ -119,7 +119,7 @@
 			</view>
 		</view>
 	
-		<uni-popup ref="popup" type="bottom">
+		<uni-popup ref="popup" type="bottom" :mask-click="false">
 			<view class="shareBtnBackV">
 				<view class="shareBtnV">
 					<view class="shareBtn" @tap="shareHB()">
@@ -179,6 +179,7 @@
 				title: '转盘抽奖',
 				blocks: [],
 				showDialogL: false,
+				GirdShowDialogL: false,
 				prizes: [],
 				defaultStyle: {
 					fontColor: '#d64737',
@@ -238,6 +239,7 @@
 			this.shareURL = decodeURIComponent(options.shareURL)
 			this.lotteryType = options.lotteryType
 			this.showDialogL = false;
+			this.GirdShowDialogL = false;
 			this.prizes = []
 			uni.showLoading({
 				title: '正在加载...'
@@ -451,11 +453,13 @@
 				console.log('抽奖结束触发回调')
 				app.globalData.isRotating = false;
 				this.showDialogL = true;
+				this.GirdShowDialogL = true
 				this.lotteryActInfo.chanceCount--;
 				console.log(prize)
 			},
 			closeDialog() {
 				this.showDialogL = false;
+				this.GirdShowDialogL = false
 			},
 			goLotteryDetail(id) {
 				this.closeDialog()
@@ -672,19 +676,25 @@
 				setTimeout(() => {
 					app.globalData.isRotating = false;
 					this.showDialogL = true;
+					this.GirdShowDialogL = true
 					this.lotteryActInfo.chanceCount--;
 				}, 500)
 			},
 
 			shareChoise() {
+				
+				this.GirdShowDialogL = true
 				this.$refs.popup.open('bottom')
 			},
 
 			shareCancle() {
+				
+				this.GirdShowDialogL = false
 				this.$refs.popup.close()
 			},
 			shareHB() {
 				
+				this.GirdShowDialogL = false
 				let url = '/pages/sharePost?scene=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.sharePosterPic)
 				uni.navigateTo({
 					url:url
