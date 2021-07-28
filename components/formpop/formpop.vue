@@ -473,20 +473,18 @@
 						popname = 'form-livesuccess-pop'
 					}
 					this.popName = popname
-
-
-
 					// #ifdef MP-WEIXIN
-					if (ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.tmplId) {
+					if (ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.subscribeTemplateId) {
 						// 普通活动
 						let that = this
 						wx.requestSubscribeMessage({
-							tmplIds: [that.currentObj.tmplId],
+							tmplIds: [that.currentObj.subscribeTemplateId],
 							success(res) {
-								if (res[that.currentObj.tmplId] == 'accept') {
+								if (res[that.currentObj.subscribeTemplateId] == 'accept') {
 									that.showToast('订阅成功')
+									api.subscribe({'contentId':sourceId,'contentType':2,'templateId':that.currentObj.subscribeTemplateId});
 								}
-								if (res[that.currentObj.tmplId] == 'ban' | 'filter') {
+								if (res[that.currentObj.subscribeTemplateId] == 'ban' | 'filter') {
 									that.showToast('订阅失败，请重试')
 								}
 

@@ -1126,5 +1126,18 @@ module.exports = {
 			data: para
 		})
 		return data
-	}
+	},
+	subscribe: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('subscribe'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	
+	
+	
 }

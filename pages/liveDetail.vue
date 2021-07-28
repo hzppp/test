@@ -73,7 +73,7 @@
 				height: 0,
 				share: '',
 				rsTitle: '订阅',
-				tmplId: 'TJh-uMMcyKdJjuzyJt-mZQ7IHGdZMg7p1I4xCKtUry0'
+				tmplId: ''
 
 			}
 		},
@@ -111,6 +111,12 @@
 				data.summary = data.summary.replaceAll('\n', '<br>')
 				// console.log('预告1323===',data.summary)
 				this.liveObj = data
+				if(data.hasSubscribe){
+					this.rsTitle = "已订阅"
+				}
+				this.tmplId = data.subscribeTemplateId
+				
+				
 
 			},
 			cxMessage() {
@@ -130,26 +136,35 @@
 
 			rsMessage() {
 				if (this.rsTitle != '已订阅') {	
+					let that = this
 					wx.requestSubscribeMessage({
 						tmplIds: [that.tmplId],
 						success(res) {
 							if(res[that.tmplId]=='accept'){
-								that.showToast('订阅成功')
+								that.$toast('订阅成功')
 								that.rsTitle = '已订阅'
+								that.subscribe()
 							}
 							if(res[that.tmplId]=='ban'|'filter'){
-								that.showToast('订阅失败，请重试')
+								that.$toast('订阅失败，请重试')
 							}
 							
 						    console.log(res);
 						},
 						fail(err) {
-							that.showToast('订阅失败，请重试')
+							that.$toast('订阅失败，请重试')
 							console.error(err);
 						}
 							
 					})}
+			},
+			
+			subscribe(){
+				api.subscribe({'contentId':this.id,'contentType':1,'templateId':this.tmplId});
 			}
+			
+			
+			
 		},
 		onShareAppMessage(res) {
 			// #ifdef MP-WEIXIN
