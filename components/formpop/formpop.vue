@@ -1,5 +1,5 @@
 <template>
-	<view class="formpop" v-if="isShowFormPop"> 
+	<view class="formpop" v-if="isShowFormPop">
 		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
 				<view class="p1">{{title}}</view>
@@ -49,16 +49,17 @@
 					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
 						placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
 				</view>
-				<view class="lbactivityphoto" v-if="from == 'lbactivity'" >报名手机号需要跟购车手机号一致哦~~</view>
+				<view class="lbactivityphoto" v-if="from == 'lbactivity'">报名手机号需要跟购车手机号一致哦~~</view>
 				<view class="input-view mobile-input sms-code-input">
 					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码"
 						placeholder-class="placeholder"></input>
 
 					<view :class="'sms-code-btn' + (from == 'lbactivity' ? 'Red':'')" @tap="getSmsCodeClick">
-						{{smsCodeText}}</view>
+						{{smsCodeText}}
+					</view>
 				</view>
-				<view class="btn" @tap="submit"  v-if="from == 'lbactivity'">提交去抽奖</view>
-				<view class="btn" @tap="submit"  v-else>提交</view>
+				<view class="btn" @tap="submit" v-if="from == 'lbactivity'">提交去抽奖</view>
+				<view class="btn" @tap="submit" v-else>提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
 				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 				<view class="pyview" @tap="doPy">
@@ -101,7 +102,7 @@
 			<text class="p2">工作人员会尽快与您电话联系\n请保持电话畅通</text>
 			<view class="close-btn2" @tap="formHidetoLive">立即参与红包雨</view>
 		</view>
-		
+
 		<!--  -->
 		<view class="coupon-sb-pop" v-if="popName == 'coupon-sb-pop'">
 			<view class="sb-icon"></view>
@@ -219,30 +220,32 @@
 			closeBtnClick() {
 				if (this.from == 'activity') {
 					// #ifdef MP-WEIXIN
-					 wx.aldstat.sendEvent('报名活动留资退出')
+					wx.aldstat.sendEvent('报名活动留资退出')
 					// #endif	
-					
+
 				}
 				this.formHide()
 			},
 			formHide() {
 				this.isShowFormPop = false;
 				console.log(this.currentObj.miniUrl.split('&')[1])
-				if((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1]==='type=wawaji'){
+				if ((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj
+					.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1] ===
+					'type=wawaji') {
 					uni.navigateTo({
-						url:`/pages/wawaji?activityId=${this.currentObj.id}`
+						url: `/pages/wawaji?activityId=${this.currentObj.id}`
 					})
 				}
 			},
-			
+
 			formHidetoLive() {
 				this.isShowFormPop = false;
-				let liveurl  = this.currentObj.liveUrl
-				if(liveurl){
+				let liveurl = this.currentObj.liveUrl
+				if (liveurl) {
 					// #ifndef MP-WEIXIN
 					this.$toast('请在微信搜索本小程序参与')
 					// #endif
-					 // #ifdef MP-WEIXIN
+					// #ifdef MP-WEIXIN
 					uni.navigateToMiniProgram({
 						appId: 'wxa860d5a996074dbb',
 						path: liveurl,
@@ -259,12 +262,12 @@
 						},
 						// envVersion: 'trial'
 					});
-					 // #endif
+					// #endif
 				}
-			
+
 			},
-			
-			
+
+
 			// 获取验证码被点击
 			getSmsCodeClick() {
 				if (!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(this.phone)) {
@@ -307,7 +310,7 @@
 					detail
 				} = e
 				this.crtSerialItem = this.serialList[detail.value]
-			    this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
+				this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
 			},
 			bindMultiPickerColumnChangeArea(e) {
 				let {
@@ -351,11 +354,11 @@
 			async submit() {
 				if (this.from == 'activity') {
 					// #ifdef MP-WEIXIN
-					 wx.aldstat.sendEvent('报名活动留资提交')
+					wx.aldstat.sendEvent('报名活动留资提交')
 					// #endif	
-					
+
 				}
-			
+
 				let ly = this.from
 				let lydx = this.currentObj
 				let source, sourceId
@@ -419,36 +422,37 @@
 
 				}
 				console.log(this.currentObj.sourceUserId)
-				
-				if(this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj.sourceUserId != 0){
-					pam.sourceUserId =  this.currentObj.sourceUserId
+
+				if (this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj
+					.sourceUserId != 0) {
+					pam.sourceUserId = this.currentObj.sourceUserId
 				}
-                console.log('留资参数',pam)
+				console.log('留资参数', pam)
 				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
-				console.log(ly + data)
+					console.log(ly + data)
 					if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
-							if (lydx.actSelect == 0) {
-							  // 线下
-							  uni.navigateTo({
-							  	url: `/pages/wawaji?activityId=${lydx.id}`
-							  })
-							} else if (lydx.actSelect == 2) {
-								// both
-								uni.navigateTo({
-									url: '/pages/ActivitySelect?activityId=' + lydx.id + '&lotteryType=' + lydx
-										.lotteryType
-								})
-							} else {
-								// 不传或者1  抽奖
-								uni.reLaunch({
-									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
-										.lotteryType + "&shareURL=" +  encodeURIComponent(lydx.shareURL)
-								})
-								
-							}
-                         this.popName = 'lbactivity'
+						if (lydx.actSelect == 0) {
+							// 线下
+							uni.navigateTo({
+								url: `/pages/wawaji?activityId=${lydx.id}`
+							})
+						} else if (lydx.actSelect == 2) {
+							// both
+							uni.navigateTo({
+								url: '/pages/ActivitySelect?activityId=' + lydx.id + '&lotteryType=' + lydx
+									.lotteryType
+							})
+						} else {
+							// 不传或者1  抽奖
+							uni.reLaunch({
+								url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
+									.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
+							})
+
+						}
+						this.popName = 'lbactivity'
 						//跳转抽奖
 						// this.popName = 'lbactivity'
 						// let url = '/pages/lotteryPage?activityId=' + lydx.id
@@ -465,10 +469,38 @@
 					} else {
 						popname = 'form-success-pop'
 					}
-					if(this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1 ){
+					if (this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1) {
 						popname = 'form-livesuccess-pop'
 					}
 					this.popName = popname
+
+
+
+					// #ifdef MP-WEIXIN
+					if (ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.tmplId) {
+						// 普通活动
+						let that = this
+						wx.requestSubscribeMessage({
+							tmplIds: [that.currentObj.tmplId],
+							success(res) {
+								if (res[that.currentObj.tmplId] == 'accept') {
+									that.showToast('订阅成功')
+								}
+								if (res[that.currentObj.tmplId] == 'ban' | 'filter') {
+									that.showToast('订阅失败，请重试')
+								}
+
+								console.log(res);
+							},
+							fail(err) {
+								that.showToast('订阅失败，请重试')
+								console.error(err);
+							}
+
+						})
+					}
+					// #endif
+
 				} else if (data.code == 2) { //重复留资
 					// if (ly == 'lbactivity') {
 					// 	//跳转抽奖
@@ -478,18 +510,18 @@
 					// 	})
 					// 	return
 					// }
-					
+
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
 					} else {
 						popname = 'form-warning-pop'
 					}
-					if(this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1 ){
+					if (this.currentObj.liveUrl && this.currentObj.liveUrl.indexOf("pages_live") != -1) {
 						popname = 'form-livewarning-pop'
 					}
 					this.popName = popname
-					
-					
+
+
 				} else {
 					if (ly == 'coupon') {
 						popname = 'coupon-sb-pop'
@@ -583,8 +615,12 @@
 				this.dealerList = []
 				this.crtDealerItem = {}
 				try {
-                    let pcSerialGroupId =this.crtSerialItem.pcSerialGroupId
-				    const res = await api.fetchDealerListByCityId({cityId, districtId,pcSerialGroupId})
+					let pcSerialGroupId = this.crtSerialItem.pcSerialGroupId
+					const res = await api.fetchDealerListByCityId({
+						cityId,
+						districtId,
+						pcSerialGroupId
+					})
 					if (res.code == 1) {
 						this.dealerList = res.data
 						if (this.dealerList && this.dealerList.length) {
