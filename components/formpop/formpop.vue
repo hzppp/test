@@ -228,6 +228,9 @@
 			},
 			formHide() {
 				this.isShowFormPop = false;
+				let ly = this.from
+				let lydx = this.currentObj
+				let source,sourceId
 				console.log(this.currentObj.miniUrl.split('&')[1])
 				if ((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj
 					.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1] ===
@@ -236,6 +239,47 @@
 						url: `/pages/wawaji?activityId=${this.currentObj.id}`
 					})
 				}
+				if (ly == 'coupon') {
+					source = 0
+					sourceId = lydx.id
+				} else if (ly == 'activity' && lydx.from != 'lbactivity') {
+					source = 1
+					sourceId = lydx.id
+				} else if (ly = 'lbactivity' || lydx.from == 'lbactivity') {
+					source = 5
+					sourceId = lydx.id
+				} else if (ly == 'serial') {
+					source = 2
+					sourceId = this.crtSerialItem.id
+				} else if (ly == 'dealer') {
+					source = 3
+					sourceId = lydx.id || lydx.dealerId
+				}
+				// #ifdef MP-WEIXIN
+				if (this.popName == 'form-success-pop' && ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.subscribeTemplateId) {
+					// 普通活动
+					let that = this
+					wx.requestSubscribeMessage({
+						tmplIds: [that.currentObj.subscribeTemplateId],
+						success(res) {
+							if (res[that.currentObj.subscribeTemplateId] == 'accept') {
+								that.showToast('订阅成功')
+								api.subscribe({'contentId':sourceId,'contentType':2,'templateId':that.currentObj.subscribeTemplateId});
+							}
+							if (res[that.currentObj.subscribeTemplateId] == 'ban' | 'filter') {
+								that.showToast('订阅失败，请重试')
+							}
+
+							console.log(res);
+						},
+						fail(err) {
+							that.showToast('订阅失败，请重试')
+							console.error(err);
+						}
+
+					})
+				}
+				// #endif
 			},
 
 			formHidetoLive() {
@@ -473,31 +517,6 @@
 						popname = 'form-livesuccess-pop'
 					}
 					this.popName = popname
-					// #ifdef MP-WEIXIN
-					if (ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.subscribeTemplateId) {
-						// 普通活动
-						let that = this
-						wx.requestSubscribeMessage({
-							tmplIds: [that.currentObj.subscribeTemplateId],
-							success(res) {
-								if (res[that.currentObj.subscribeTemplateId] == 'accept') {
-									that.showToast('订阅成功')
-									api.subscribe({'contentId':sourceId,'contentType':2,'templateId':that.currentObj.subscribeTemplateId});
-								}
-								if (res[that.currentObj.subscribeTemplateId] == 'ban' | 'filter') {
-									that.showToast('订阅失败，请重试')
-								}
-
-								console.log(res);
-							},
-							fail(err) {
-								that.showToast('订阅失败，请重试')
-								console.error(err);
-							}
-
-						})
-					}
-					// #endif
 
 				} else if (data.code == 2) { //重复留资
 					// if (ly == 'lbactivity') {
