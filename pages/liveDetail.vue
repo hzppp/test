@@ -73,7 +73,8 @@
 				height: 0,
 				share: '',
 				rsTitle: '订阅',
-				tmplId: ''
+				tmplId: '',
+				rsing:false
 
 			}
 		},
@@ -135,11 +136,13 @@
 			},
 
 			rsMessage() {
-				if (this.rsTitle != '已订阅') {	
+				if (this.rsTitle != '已订阅' && !this.rsing) {	
 					let that = this
+					this.rsing = true
 					wx.requestSubscribeMessage({
 						tmplIds: [that.tmplId],
 						success(res) {
+							that.rsing = false
 							if(res[that.tmplId]=='accept'){
 								that.$toast('订阅成功')
 								that.rsTitle = '已订阅'
@@ -152,6 +155,7 @@
 						    console.log(res);
 						},
 						fail(err) {
+							that.rsing = false
 							that.$toast('订阅失败，请重试')
 							console.error(err);
 						}

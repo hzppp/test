@@ -153,7 +153,7 @@
 				console.log('scene',scene,scene.length)
 				let url = `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
 				if (domain.getCurrentEnv() == 1) {
-					url = `https://devqd-changan.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
+					url = `https://tccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
 				}
 				uni.downloadFile({
 					url: url,
