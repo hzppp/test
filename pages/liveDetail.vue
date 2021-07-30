@@ -74,8 +74,8 @@
 				share: '',
 				rsTitle: '订阅',
 				tmplId: '',
-				rsing:false
-
+				rsing:false,
+				hasSubscribe:false
 			}
 		},
 		async created() {
@@ -109,10 +109,12 @@
 				} = await api.getLiveDetail({
 					id: this.id
 				})
+				let res = await  api.checkSubscribe({'contentId':this.id,'contentType':1})
+				this.hasSubscribe=res.data.hasSubscribe
 				data.summary = data.summary.replaceAll('\n', '<br>')
-				// console.log('预告1323===',data.summary)
+				// console.log('预告1323===',res,this.hasSubscribe)
 				this.liveObj = data
-				if(data.hasSubscribe){
+				if(this.hasSubscribe){
 					this.rsTitle = "已订阅"
 				}
 				this.tmplId = data.subscribeTemplateId
@@ -120,6 +122,7 @@
 				
 
 			},
+			
 			cxMessage() {
 				wx.getSetting({
 					withSubscriptions: true,
@@ -135,8 +138,8 @@
 				})
 			},
 
-			rsMessage() {
-				if (this.rsTitle != '已订阅' && !this.rsing) {	
+			async rsMessage() {
+				if (this.rsTitle != '已订阅' && !this.rsing) {
 					let that = this
 					this.rsing = true
 					wx.requestSubscribeMessage({

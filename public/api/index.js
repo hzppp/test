@@ -1137,7 +1137,19 @@ module.exports = {
 		})
 		return data
 	},
-	
+	checkSubscribe: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('checkSubscribe'),
+			method: "POST",
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		})
+		return data
+	},
 	
 	
 }

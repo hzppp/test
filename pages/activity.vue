@@ -89,6 +89,7 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {	
+			
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId

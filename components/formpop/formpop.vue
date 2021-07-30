@@ -226,7 +226,7 @@
 				}
 				this.formHide()
 			},
-			formHide() {
+			async formHide() {
 				this.isShowFormPop = false;
 				let ly = this.from
 				let lydx = this.currentObj
@@ -255,29 +255,35 @@
 					source = 3
 					sourceId = lydx.id || lydx.dealerId
 				}
+				
+			
 				// #ifdef MP-WEIXIN
 				if (this.popName == 'form-success-pop' && ly == 'activity' && lydx.from != 'lbactivity' && this.currentObj.subscribeTemplateId) {
 					// 普通活动
 					let that = this
-					wx.requestSubscribeMessage({
-						tmplIds: [that.currentObj.subscribeTemplateId],
-						success(res) {
-							if (res[that.currentObj.subscribeTemplateId] == 'accept') {
-								that.showToast('订阅成功')
-								api.subscribe({'contentId':sourceId,'contentType':2,'templateId':that.currentObj.subscribeTemplateId});
-							}
-							if (res[that.currentObj.subscribeTemplateId] == 'ban' | 'filter') {
+					//判断是否订阅
+					let {data} = await api.checkSubscribe({'contentId':sourceId,'contentType':2})
+					if(!data.hasSubscribe){
+						wx.requestSubscribeMessage({
+							tmplIds: [that.currentObj.subscribeTemplateId],
+							success(res) {
+								if (res[that.currentObj.subscribeTemplateId] == 'accept') {
+									that.showToast('订阅成功')
+									api.subscribe({'contentId':sourceId,'contentType':2,'templateId':that.currentObj.subscribeTemplateId});
+								}
+								if (res[that.currentObj.subscribeTemplateId] == 'ban' | 'filter') {
+									that.showToast('订阅失败，请重试')
+								}
+
+								console.log(res);
+							},
+							fail(err) {
 								that.showToast('订阅失败，请重试')
+								console.error(err);
 							}
 
-							console.log(res);
-						},
-						fail(err) {
-							that.showToast('订阅失败，请重试')
-							console.error(err);
-						}
-
-					})
+						})
+					}
 				}
 				// #endif
 			},
