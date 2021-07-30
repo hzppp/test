@@ -127,8 +127,8 @@
 			if(options.scene){ // 分享海报来的
 				let url = decodeURIComponent(options.scene)
 			   console.log(url)
-			    //I=69&L=G&T=W&A=1&S=66
-				if(url.indexOf('I') != 0){ // 新
+			   //D=69&L=G&P=W&A=1&O=66
+				if(url.indexOf('D') != -1){ // 新
 					url =url.replace('P','type')
 					url =url.replace('L','lotteryType')
 					url =url.replace('D','id')

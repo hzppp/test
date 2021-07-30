@@ -117,10 +117,10 @@
 							id: contentId
 						})
 						if(!data){ // 直播存在
-							uni.reLaunch({
+							uni.reLaunch({ 
 								url: `/pages/live`
 							})
-							this.$toast('直播已删除')
+							// this.$toast('直播已删除')
 							return
 						}
 						
