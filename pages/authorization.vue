@@ -116,6 +116,15 @@
 						} = await api.getLiveDetail({
 							id: contentId
 						})
+						if(!data){ // 直播存在
+							uni.reLaunch({
+								url: `/pages/live`
+							})
+							this.$toast('直播已删除')
+							return
+						}
+						
+						
 						let status = data.status
 						let id = data.roomId
 						// contentId 本系统id    id 直播间id
