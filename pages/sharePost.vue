@@ -136,9 +136,30 @@
 			async drawWxQrCode() {
 				var that = this  
 				let page = 'pages/lbActivity'
-				
+				this.scene1 =this.scene1.replace('/pages/lbActivity?','')
 				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
-			    this.scene1 =this.scene1.replace('/pages/lbActivity?','')
+				
+				{
+					// 过滤多余参数，保证只有这7个
+					let array =  this.scene1.split('&')
+					let dic = {};
+					array.forEach((item, index) => {
+					let arr = item.split('=')
+					if(arr){
+						console.log('array',arr[0],arr[1])
+						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId' ){
+						  dic[arr[0]] = arr[1]	
+						}
+					}
+					})
+					let cs = ''
+					for (let i in dic) {
+					     cs += `${i}=${dic[i]}&`  
+					}
+					cs = cs.substr(0, cs.length - 1)
+					this.scene1 = cs
+					console.log('cs',cs)
+				}
 				this.scene1 =this.scene1.replace('type','P')
 				this.scene1 =this.scene1.replace('lotteryType','L')
 				this.scene1 =this.scene1.replace('id','D')

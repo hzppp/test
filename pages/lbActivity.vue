@@ -237,6 +237,7 @@
 			// 	}
 			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
+			console.log('fenxiang ',this.shareURL)
 			return {
 				title: title,
 				path: this.shareURL,
