@@ -19,12 +19,14 @@
 				return {
 				  activityId: '',
 				  lotteryType:'' ,//转盘类型
+				  shareURL:''
 				}
 			},
 			mixins: [],
 			async onLoad(options) {
 				this.activityId = options.activityId
 				this.lotteryType= options.lotteryType || ''
+				this.shareURL = decodeURIComponent(options.shareURL)
 			},
 			onHide() {},
 		
@@ -37,7 +39,7 @@
 				
 				actSelectXs(){
 					uni.reLaunch({
-						url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' +	this.lotteryType
+						url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' +	this.lotteryType + "&shareURL=" +  encodeURIComponent(this.shareURL)
 					})
 				}
 				

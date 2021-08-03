@@ -317,7 +317,7 @@
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType
+									.lotteryType  + "&shareURL=" +  encodeURIComponent(this.shareURL)
 							})
 						} else {
 							uni.navigateTo({
