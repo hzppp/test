@@ -695,7 +695,7 @@
 			shareHB() {
 				
 				this.GirdShowDialogL = false
-				let url = '/pages/sharePost?scene=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.sharePosterPic)
+				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.sharePosterPic)
 				uni.navigateTo({
 					url:url
 				})
