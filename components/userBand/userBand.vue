@@ -18,7 +18,7 @@ import api from '@/public/api/index.js'
 		props: {
 			cancleShow: {
 			      type: Boolean,
-			      default:true
+			      default:false
 			    }
 		},
         data() {

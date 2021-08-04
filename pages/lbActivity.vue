@@ -126,14 +126,26 @@
 		async onLoad(options) {
 			if(options.scene){ // 分享海报来的
 				let url = decodeURIComponent(options.scene)
+			   console.log(url)
+			   //D=69&L=G&P=W&A=1&O=66
+				if(url.indexOf('D') != -1){ // 新
+					url =url.replace('P','type')
+					url =url.replace('L','lotteryType')
+					url =url.replace('D','id')
+					url =url.replace('G','grid')
+					url =url.replace('W','wawaji')
+					url =url.replace('A','actSelect')
+					url =url.replace('O','sourceUserId')	
+				}else{  // 旧
 				//dd=69&ll=gg&tt=ww&aa=1&ss=66
-				url =url.replace('tt','type')	
-				url =url.replace('ll','lotteryType')
-				url =url.replace('dd','id')
-				url =url.replace('gg','grid')
-				url =url.replace('ww','wawaji')
-				url =url.replace('aa','actSelect')
-				url =url.replace('ss','sourceUserId')
+					url =url.replace('tt','type')
+					url =url.replace('ll','lotteryType')
+					url =url.replace('dd','id')
+					url =url.replace('gg','grid')
+					url =url.replace('ww','wawaji')
+					url =url.replace('aa','actSelect')
+					url =url.replace('ss','sourceUserId')
+				}
 			   //id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
 		      let array = url.split('&')
 			  array.forEach((item, index) => {
@@ -225,6 +237,7 @@
 			// 	}
 			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
+			console.log('fenxiang ',this.shareURL)
 			return {
 				title: title,
 				path: this.shareURL,
@@ -304,7 +317,7 @@
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType
+									.lotteryType  + "&shareURL=" +  encodeURIComponent(this.shareURL)
 							})
 						} else {
 							uni.navigateTo({

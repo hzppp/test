@@ -5,7 +5,8 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE;
-const version = 1011;
+const version = 1016;
+
 
 
 // 正式域名
@@ -274,6 +275,12 @@ const config = {
 		wwjVerify: `${DOMAIN.changan}/api/xcx/wawaji/verify`,
 		// 生成微信二维码
 		createWxQrCode: `${DOMAIN.changan}/api/xcx/base/createWxQrCode`,
+		// 订阅消息
+		subscribe: `${DOMAIN.changan}/api/xcx/subscribe/add`,
+		//检查是否订阅
+		checkSubscribe:`${DOMAIN.changan}/api/xcx/subscribe/check`,
+		
+		
 		
 	},
 	getAPI(key) {

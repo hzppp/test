@@ -21,9 +21,23 @@
 				<htmlParser :content="liveObj.summary" class="intro"></htmlParser>
 			</view>
 			<view class="fixed-bot">
+
+				<!--  #ifndef MP-WEIXIN  -->
+				<button open-type="share" class="btns ">
+					<view class="icon"></view>分享
+				</button>
+
+				<!-- #endif -->
+
+				<!--  #ifdef MP-WEIXIN  -->
 				<button open-type="share" class="btns icon-share">
 					<view class="icon"></view>分享
 				</button>
+				<button @tap='rsMessage()' :class=" (rsTitle =='已订阅'?'btns icon-share3': 'btns icon-share2')">
+					<view class="icon"></view>{{rsTitle}}
+				</button>
+				<!-- #endif -->
+
 			</view>
 		</view>
 	</block>
@@ -57,7 +71,11 @@
 				title: '12312',
 				liveObj: null,
 				height: 0,
-				share:''
+				share: '',
+				rsTitle: '订阅',
+				tmplId: '',
+				rsing:false,
+				hasSubscribe:false
 			}
 		},
 		async created() {
@@ -74,16 +92,16 @@
 		},
 		methods: {
 			back() {
-				if(this.share == 'share'){
+				if (this.share == 'share') {
 					uni.reLaunch({
-						url:"/pages/authorization"
+						url: "/pages/authorization"
 					})
-				}else{
-				uni.navigateBack({
-					delta: 1
-				})	
+				} else {
+					uni.navigateBack({
+						delta: 1
+					})
 				}
-				
+
 			},
 			async getLiveDetail() {
 				let {
@@ -91,15 +109,73 @@
 				} = await api.getLiveDetail({
 					id: this.id
 				})
+				let res = await  api.checkSubscribe({'contentId':this.id,'contentType':1})
+				this.hasSubscribe=res.data.hasSubscribe
 				data.summary = data.summary.replaceAll('\n', '<br>')
-				// console.log('预告1323===',data.summary)
+				// console.log('预告1323===',res,this.hasSubscribe)
 				this.liveObj = data
+				if(this.hasSubscribe){
+					this.rsTitle = "已订阅"
+				}
+				this.tmplId = data.subscribeTemplateId
+				
+				
 
 			},
+			
+			cxMessage() {
+				wx.getSetting({
+					withSubscriptions: true,
+					success(res) {
+
+						console.log('dingyue', res)
+
+
+					},
+					fail(err) {
+						console.error('dingyue', err);
+					}
+				})
+			},
+
+			async rsMessage() {
+				if (this.rsTitle != '已订阅' && !this.rsing) {
+					let that = this
+					this.rsing = true
+					wx.requestSubscribeMessage({
+						tmplIds: [that.tmplId],
+						success(res) {
+							that.rsing = false
+							if(res[that.tmplId]=='accept'){
+								that.$toast('订阅成功')
+								that.rsTitle = '已订阅'
+								that.subscribe()
+							}
+							if(res[that.tmplId]=='ban'|'filter'){
+								that.$toast('订阅失败，请重试')
+							}
+							
+						    console.log(res);
+						},
+						fail(err) {
+							that.rsing = false
+							that.$toast('订阅失败，请重试')
+							console.error(err);
+						}
+							
+					})}
+			},
+			
+			subscribe(){
+				api.subscribe({'contentId':this.id,'contentType':1,'templateId':this.tmplId});
+			}
+			
+			
+			
 		},
 		onShareAppMessage(res) {
 			// #ifdef MP-WEIXIN
-			 wx.aldstat.sendEvent('直播预告分享') 
+			wx.aldstat.sendEvent('直播预告分享')
 			// #endif
 			if (res.from === 'button') { // 来自页面内分享按钮
 				console.log(res.target)
@@ -115,6 +191,10 @@
 			this.share = options.share
 			console.log(options)
 			this.getLiveDetail()
+			this.cxMessage();
+
+
+
 			// console.log('app.globalData.currentLocation:', app.globalData.currentLocation)
 		},
 		onShow() {
@@ -185,17 +265,17 @@
 			box-sizing: border-box;
 
 			.prev {
-				background: url('@{imgURL}live_prev.png') 0 0 no-repeat ;
+				background: url('@{imgURL}live_prev.png') 0 0 no-repeat;
 				background-size: 140rpx 40rpx;
 				padding-left: 156rpx;
 				color: #fa843f;
 				font-weight: 800;
 				margin: 80rpx 0;
-				line-height:40rpx ;
+				line-height: 40rpx;
 			}
 
 			.title {
-				
+
 				font-size: 48rpx;
 				font-weight: 800;
 			}
@@ -239,7 +319,7 @@
 			width: 100%;
 			left: 0;
 			bottom: 41rpx;
-			.dflex(center, center);
+			display: flex;
 
 			.btns {
 				width: 630rpx;
@@ -251,11 +331,43 @@
 
 				.dflex(center, center);
 
+
+
 				.icon {
 					.setbg(48rpx, 48rpx, 'share_btn.png');
 					margin-right: 18rpx;
 				}
 			}
+
+			.icon-share {
+				width: 330rpx;
+				margin-left: 32rpx;
+			}
+
+			.icon-share2 {
+				width: 330rpx;
+				margin-left: 26rpx;
+
+				.icon {
+					.setbg(45rpx, 48rpx, 'dyMessage.png');
+					margin-right: 18rpx;
+				}
+			}
+
+			.icon-share3 {
+				width: 330rpx;
+				margin-left: 26rpx;
+				color: #cccccc;
+				background: #f8f8f8;
+
+				.icon {
+					.setbg(45rpx, 48rpx, 'dyMessageDone.png');
+					margin-right: 18rpx;
+				}
+			}
+
+
+
 		}
 	}
 </style>

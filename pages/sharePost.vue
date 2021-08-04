@@ -136,28 +136,45 @@
 			async drawWxQrCode() {
 				var that = this  
 				let page = 'pages/lbActivity'
-				
+				this.scene1 =this.scene1.replace('/pages/lbActivity?','')
 				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
-			    this.scene1 =this.scene1.replace('/pages/lbActivity?','')
-				this.scene1 =this.scene1.replace('type','tt')
-				this.scene1 =this.scene1.replace('lotteryType','ll')
-				this.scene1 =this.scene1.replace('id','dd')
-				this.scene1 =this.scene1.replace('grid','gg')
-				this.scene1 =this.scene1.replace('wawaji','ww')
-				this.scene1 =this.scene1.replace('actSelect','aa')
-				this.scene1 =this.scene1.replace('sourceUserId','ss')
+				
+				{
+					// 过滤多余参数，保证只有这7个
+					let array =  this.scene1.split('&')
+					let dic = {};
+					array.forEach((item, index) => {
+					let arr = item.split('=')
+					if(arr){
+						console.log('array',arr[0],arr[1])
+						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId' ){
+						  dic[arr[0]] = arr[1]	
+						}
+					}
+					})
+					let cs = ''
+					for (let i in dic) {
+					     cs += `${i}=${dic[i]}&`  
+					}
+					cs = cs.substr(0, cs.length - 1)
+					this.scene1 = cs
+					console.log('cs',cs)
+				}
+				this.scene1 =this.scene1.replace('type','P')
+				this.scene1 =this.scene1.replace('lotteryType','L')
+				this.scene1 =this.scene1.replace('id','D')
+				this.scene1 =this.scene1.replace('grid','G')
+				this.scene1 =this.scene1.replace('wawaji','W')
+				this.scene1 =this.scene1.replace('actSelect','A')
+				this.scene1 =this.scene1.replace('sourceUserId','O')
+				
+				// this.scene1 = 'dd=169&ll=gg&型=ww&aa=1&ss=72160'
 				console.log(this.scene1,this.scene1.length)
 				let scene = encodeURIComponent(this.scene1)
-				
-				
-				
-				
-				
-				
-				console.log('scene',scene)
+				console.log('scene',scene,scene.length)
 				let url = `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
 				if (domain.getCurrentEnv() == 1) {
-					url = `https://devqd-changan.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
+					url = `https://tccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
 				}
 				uni.downloadFile({
 					url: url,
