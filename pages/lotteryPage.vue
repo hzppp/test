@@ -496,6 +496,7 @@
 				})
 			},
 			async gridStart() {
+				console.log(this.$children)
 				this.lotteryResindex == 999
 				this.selectPrizesURL = ''
 				this.initGirdData()
@@ -527,7 +528,11 @@
 						// #endif
 
 						// #ifdef MP-TOUTIAO
-						this.$children[3].play()
+						if(this.$refs.luckyGrid){
+							this.$refs.luckyGrid.play(num)						  
+						}else{
+						   this.$children[3].play(num)	
+						}
 						// #endif
 
 						let index = this.matchIndex(res.data.id) //中奖索引
@@ -547,7 +552,11 @@
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							this.$children[3].stop(num)
+							if(this.$refs.luckyGrid){
+								this.$refs.luckyGrid.stop(num)						  
+							}else{
+							   this.$children[3].stop(num)	
+							}
 							// #endif
 
 						}, 500)

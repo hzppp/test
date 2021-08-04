@@ -8,6 +8,7 @@ const CUR_ENV = ENV.TEST;
 const version = 1016;
 
 
+
 // 正式域名
 var DOMAIN_R = {
 	csbHost:"https://price.pcauto.com.cn",//基础信息

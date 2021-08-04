@@ -65,7 +65,13 @@
 					</view>
 				</template>
 				<template v-else>
-					<view class="show-code-btn" @tap="pageStatus=4"></view>
+					<!--  #ifndef MP-TOUTIAO  -->
+						<view class="show-code-btn" @tap="pageStatus=4"></view>
+					<!-- #endif -->
+					<!--  #ifdef MP-TOUTIAO  -->
+						<view class="show-code-btn" @tap="changPaheS(4)"></view>
+					<!-- #endif -->
+					
 					<view class="content-info">
 						<text>点击立即领取并前往接待台处</text>
 						<text>领取长安汽车精美礼品一份</text>
@@ -305,15 +311,40 @@
 			  this.showRule = false
 			},
 			targetItem(item,index){
-				this.pageStatus=index;
+				// #ifndef MP-TOUTIAO
+			   this.pageStatus=index;
+				// #endif
+				
 				this.getActivityInfo();
+				
 				if(index==1){//能量补给站
+		
+					// #ifndef MP-TOUTIAO
 					this.pageStatus=1;
+				
+					// #endif
+					// #ifdef MP-TOUTIAO
+				   if(this.activityInfo && this.activityInfo.hasAddEnergy){
+					   this.pageStatus=1;
+				   }else{
+					uni.navigateTo({
+						url:'/pages/wawaerwei?val=' + this.eneryCode.val + '&tit=能量补给&seconde=请前往接待处领取奖品'
+					})   
+				   }	
+					// #endif
+					
+					
+				
 				}else if(index==2){//科技量产中心
 					if(this.activityInfo && this.activityInfo.modelPath){
+						
 						this.pageStatus=2;
+					
+					
 					}else{
 						this.pageStatus=3;
+						
+						
 					}
 				}else if(index==3){ //寻宝大作战
 					this.pageStatus=5;
@@ -397,8 +428,29 @@
 					this.$toast('请先完成任务！')
 				}
 				
+			},
+			changPaheS(index){
+				console.log(index)
+				// #ifndef MP-TOUTIAO
+					this.pageStatus = index
+			
+				// #endif
+				// #ifdef MP-TOUTIAO
+				if(index == 4){
+				
+				uni.navigateTo({
+					url:'/pages/wawaerwei?val=' + this.technologyCode.val
+				})	
+				}
+				// #endif
+			
+				
+				
+				
+				
 			}
 		}
+		
 	}
 </script>
 <style lang="less">
