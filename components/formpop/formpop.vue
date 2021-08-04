@@ -492,7 +492,7 @@
 							// both
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + lydx.id + '&lotteryType=' + lydx
-									.lotteryType
+									.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
 							})
 						} else {
 							// 不传或者1  抽奖
