@@ -4,67 +4,77 @@
 		<pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"
 			:homeBtn="true"></pageTopCommon>
 		<view class="content">
-			<view :class="lotteryType != 'grid'?'luckyWheel':'LuckyGrid'"
-				:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
-				<view class="lotteryList">
-					<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true" :circular="true"
-						:duration="500" :interval="2000" :autoplay="true">
-						<swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords" :key="index">
-							<view class="item">{{item}}</view>
-						</swiper-item>
-					</swiper>
+
+			<template v-if="lotteryType == 'Vouchers'">
+				代金券
+			</template>
+
+			<template v-else>
+				<view :class="lotteryType != 'grid'?'luckyWheel':'LuckyGrid'"
+					:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
+					<view class="lotteryList">
+						<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true"
+							:circular="true" :duration="500" :interval="2000" :autoplay="true">
+							<swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords"
+								:key="index">
+								<view class="item">{{item}}</view>
+							</swiper-item>
+						</swiper>
+					</view>
+					<template class="lotteryRecord" @tap="golotteryRecord">中奖纪录</template>
+					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
+						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" @start="startCallBack"
+						@end="endCallBack" :showDialogL="showDialogL" />
+
+					<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
+						:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
+						@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
+					<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会
+					</view>
+					<view v-if="lotteryType == 'grid'" class="btnBackV">
+						<!--  #ifdef MP-WEIXIN  -->
+						<button v-if="sharePosterPic" class="shareFiedv" @tap='shareChoise()'></button>
+						<button v-else class="shareFiedv" open-type="share"></button>
+						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<button class="shareFiedv" open-type="share"></button>
+						<!-- #endif -->
+
+						<button class="goGirldv" @tap='gridStart()'></button>
+					</view>
+
 				</view>
-				<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
-				<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-					:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" @start="startCallBack"
-					@end="endCallBack" :showDialogL="showDialogL" />
-
-				<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
-					:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-					@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
-				<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会</view>
-				<view v-if="lotteryType == 'grid'" class="btnBackV">
-					<!--  #ifdef MP-WEIXIN  -->
-					<button v-if="sharePosterPic" class="shareFiedv" @tap='shareChoise()'></button>
-					<button v-else class="shareFiedv" open-type="share"></button>
-					<!-- #endif -->
-					<!--  #ifndef MP-WEIXIN  -->
-					<button class="shareFiedv" open-type="share"></button>
-					<!-- #endif -->
-
-					<button class="goGirldv" @tap='gridStart()'></button>
-				</view>
-
-			</view>
-			<view :class="lotteryType != 'grid'?'list':'list girdList'">
-				<button v-if="lotteryType != 'grid'" open-type="share" class="invite"></button>
-				<view class="inviteRecord">
-					<view class="title titleK">邀请记录</view>
-					<block v-if="inviteRecordList&&inviteRecordList.length">
-						<view class="item" v-for="(item,index) in inviteRecordList" :key="index">
-							<view class="imgView">
-								<image class="img" :src="item.wxHead"></image>
+				<view :class="lotteryType != 'grid'?'list':'list girdList'">
+					<button v-if="lotteryType != 'grid'" open-type="share" class="invite"></button>
+					<view class="inviteRecord">
+						<view class="title titleK">邀请记录</view>
+						<block v-if="inviteRecordList&&inviteRecordList.length">
+							<view class="item" v-for="(item,index) in inviteRecordList" :key="index">
+								<view class="imgView">
+									<image class="img" :src="item.wxHead"></image>
+								</view>
+								<view class="name">{{item.wxName}}</view>
+								<view class="time">{{item.joinTime}} 加入</view>
 							</view>
-							<view class="name">{{item.wxName}}</view>
-							<view class="time">{{item.joinTime}} 加入</view>
+						</block>
+						<view class="nodata" v-else>
+							您还没有邀请记录哦！快去邀请好友参与吧~
 						</view>
-					</block>
-					<view class="nodata" v-else>
-						您还没有邀请记录哦！快去邀请好友参与吧~
-					</view>
-					<view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
-						查看更多 >
+						<view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
+							查看更多 >
+						</view>
 					</view>
 				</view>
-			</view>
-			<view class="tips">
-				<view class="contentBody">
-					<view class="title titleK">抽奖说明</view>
-					<scroll-view scroll-y="true" class="contentTips">
-						<text>{{activityMemoArr}}</text>
-					</scroll-view>
+				<view class="tips">
+					<view class="contentBody">
+						<view class="title titleK">抽奖说明</view>
+						<scroll-view scroll-y="true" class="contentTips">
+							<text>{{activityMemoArr}}</text>
+						</scroll-view>
+					</view>
 				</view>
-			</view>
+
+			</template>
 		</view>
 		<view class="lotteryDialog" v-if="showDialogL && lotteryType != 'grid'" @touchmove.stop.prevent>
 			<view class="dialogContainer">
@@ -118,7 +128,7 @@
 				<button class="closeBtn" @tap="closeDialog"></button>
 			</view>
 		</view>
-	
+
 		<uni-popup ref="popup" type="bottom" :mask-click="false">
 			<view class="shareBtnBackV">
 				<view class="shareBtnV">
@@ -146,6 +156,8 @@
 			<canvas v-if="canvasshow" id="myCanvas" canvas-id="myCanvas"
 				style="margin-top: 100rpx;width: 90px;height: 117px;position:fixed;left:100%;"></canvas>
 		</view>
+
+
 
 	</view>
 </template>
@@ -194,7 +206,7 @@
 				isIOS: true,
 				lotteryType: '',
 				shareURL: '',
-				sharePosterPic:'',
+				sharePosterPic: '',
 				buttons: [{
 						radius: '35px',
 						background: '#d64737'
@@ -682,26 +694,27 @@
 			},
 
 			shareChoise() {
-				
+
 				this.GirdShowDialogL = true
 				this.$refs.popup.open('bottom')
 			},
 
 			shareCancle() {
-				
+
 				this.GirdShowDialogL = false
 				this.$refs.popup.close()
 			},
 			shareHB() {
-				
+
 				this.GirdShowDialogL = false
-				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.sharePosterPic)
+				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
+					encodeURIComponent(this.sharePosterPic)
 				uni.navigateTo({
-					url:url
+					url: url
 				})
-				
-				
-				
+
+
+
 				this.$refs.popup.close()
 			}
 

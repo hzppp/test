@@ -36,22 +36,23 @@
 								<view class="selectTitle2">线下活动</view>
 							</view>
 							<view class="enroll-btn actSelectTwoBtn" @click="actSelect2()">
-								<view class="selectTitle1" >奇趣拆盲盒</view>
-								<view class="selectTitle2" >线上抽豪礼</view>
+								<view class="selectTitle1">奇趣拆盲盒</view>
+								<view class="selectTitle2">线上抽豪礼</view>
 							</view>
 						</template>
 						<template v-else>
-							
+
 							<!--  #ifdef MP-WEIXIN  -->
-							<button v-if="content.sharePosterPic" :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" @tap='shareChoise()'>分享好友</button>
-								
+							<button v-if="content.sharePosterPic"
+								:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+								@tap='shareChoise()'>分享好友</button>
+
 							<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>	
+								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
 							<!--  #ifndef MP-WEIXIN  -->
-						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
 							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
 								@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
@@ -63,26 +64,26 @@
 				</view>
 			</view>
 		</view>
-	
-	<uni-popup ref="popup" type="bottom">
-		<view class="shareBtnBackV">
-			<view class="shareBtnV">
-				<view class="shareBtn" @tap="shareHB()">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png">
-					</image>
-					<view class="text">海报分享</view>
+
+		<uni-popup ref="popup" type="bottom">
+			<view class="shareBtnBackV">
+				<view class="shareBtnV">
+					<view class="shareBtn" @tap="shareHB()">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png">
+						</image>
+						<view class="text">海报分享</view>
+					</view>
+					<button class="shareBtn" open-type="share">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png">
+						</image>
+						<view class="text1">分享微信好友</view>
+					</button>
 				</view>
-				<button class="shareBtn" open-type="share">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png">
-					</image>
-					<view class="text1">分享微信好友</view>
-				</button>
+				<view class="line"></view>
+				<button @tap='shareCancle()'>取消</button>
 			</view>
-			<view class="line"></view>
-			<button @tap='shareCancle()'>取消</button>
-		</view>
-	
-	</uni-popup>
+
+		</uni-popup>
 	</view>
 </template>
 
@@ -116,7 +117,7 @@
 				activityType: "",
 				isActEnded: false,
 				isActStart: false,
-				shareURL:'',
+				shareURL: '',
 				isApply: 0, //是否留咨过
 				lotteryType: '', //转盘类型
 				actSelect: '' // 玩法（0   线下   1 线上抽奖  2 both）
@@ -124,36 +125,17 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
-			if(options.scene){ // 分享海报来的
+			if (options.scene) { // 分享海报来的
 				let url = decodeURIComponent(options.scene)
-			   console.log(url)
-			   //D=69&L=G&P=W&A=1&O=66
-				if(url.indexOf('D') != -1){ // 新
-					url =url.replace('P','type')
-					url =url.replace('L','lotteryType')
-					url =url.replace('D','id')
-					url =url.replace('G','grid')
-					url =url.replace('W','wawaji')
-					url =url.replace('A','actSelect')
-					url =url.replace('O','sourceUserId')	
-				}else{  // 旧
-				//dd=69&ll=gg&tt=ww&aa=1&ss=66
-					url =url.replace('tt','type')
-					url =url.replace('ll','lotteryType')
-					url =url.replace('dd','id')
-					url =url.replace('gg','grid')
-					url =url.replace('ww','wawaji')
-					url =url.replace('aa','actSelect')
-					url =url.replace('ss','sourceUserId')
-				}
-			   //id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
-		      let array = url.split('&')
-			  array.forEach((item, index) => {
-			  let arr = item.split('=')
-			  if(arr){
-			  		options[arr[0]] = arr[1]
-			  }
-			  })
+				url = this.changURl(url)
+				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
+				let array = url.split('&')
+				array.forEach((item, index) => {
+					let arr = item.split('=')
+					if (arr) {
+						options[arr[0]] = arr[1]
+					}
+				})
 
 			}
 			await login.checkLogin(api)
@@ -165,16 +147,16 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-			  if(i!='scene' && i!='sourceUserId'){
-				 cs += `${i}=${options[i]}&`  
-			  }
-			 
+				if (i != 'scene' && i != 'sourceUserId') {
+					cs += `${i}=${options[i]}&`
+				}
+
 			}
-			  cs = cs.substr(0, cs.length - 1)
-			  let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			  this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`
-			  
-			  console.log('shareurl',this.shareURL)
+			cs = cs.substr(0, cs.length - 1)
+			let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`
+
+			console.log('shareurl', this.shareURL)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
@@ -201,13 +183,13 @@
 					console.log('sourceUserId' + this.sourceUserId)
 					// this.$toast('sourceUserId' + this.sourceUserId  )
 				}
-				if(this.shareURL){
+				if (this.shareURL) {
 					this.content.shareURL = this.shareURL
 				}
-			    this.content.from = 'lbactivity'
+				this.content.from = 'lbactivity'
 				this.content.lotteryType = this.lotteryType
 				this.content.actSelect = this.actSelect
-				
+
 			} catch (err) {
 				console.error(err)
 			} finally {
@@ -217,7 +199,7 @@
 			api.fetchActivityVisit({
 				'activityId': this.activityId
 			})
-		
+
 		},
 		onHide() {
 			if (app.Interval) {
@@ -237,7 +219,7 @@
 			// 	}
 			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
-			console.log('fenxiang ',this.shareURL)
+			console.log('fenxiang ', this.shareURL)
 			return {
 				title: title,
 				path: this.shareURL,
@@ -260,7 +242,7 @@
 					if (isApply == 1 && this.activityType == "") {
 						uni.reLaunch({
 							url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-								.lotteryType + "&shareURL=" +   encodeURIComponent(this.shareURL)
+								.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 
 						})
 					}
@@ -282,12 +264,12 @@
 				this.soureDone = true
 
 			},
-			actSelect1(){
+			actSelect1() {
 				uni.navigateTo({
 					url: `/pages/wawaji?activityId=${this.content.id}`
 				})
 			},
-			actSelect2(){
+			actSelect2() {
 				uni.reLaunch({
 					url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
 						.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
@@ -307,17 +289,17 @@
 						// #ifdef MP-TOUTIAO
 						this.$children[3].formShow('form', 'activity', this.content, '报名活动')
 						// #endif
-						
+
 					} else {
 						if (this.actSelect == 1) {
 							uni.reLaunch({
 								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" +  encodeURIComponent(this.shareURL)
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							})
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType  + "&shareURL=" +  encodeURIComponent(this.shareURL)
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							})
 						} else {
 							uni.navigateTo({
@@ -329,17 +311,17 @@
 
 				} else {
 					// #ifdef MP-WEIXIN
-						this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+					this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
 					// #endif
-				
-				   // #ifdef MP-TOUTIAO
-				   this.$children[3].formShow('form', 'lbactivity', this.content, '报名活动')
-				   // #endif
+
+					// #ifdef MP-TOUTIAO
+					this.$children[3].formShow('form', 'lbactivity', this.content, '报名活动')
+					// #endif
 				}
-			
 
 
-			
+
+
 
 
 			},
@@ -399,8 +381,8 @@
 			add0(number) {
 				return number > 9 ? number : '0' + number
 			},
-			
-			getData(){
+
+			getData() {
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
@@ -409,22 +391,53 @@
 			shareChoise() {
 				this.$refs.popup.open('bottom')
 			},
-			
+
 			shareCancle() {
 				this.$refs.popup.close()
 			},
 			shareHB() {
-				
-				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL)  + '&shareUrl='  + encodeURIComponent(this.content.sharePosterPic)
+
+				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
+					encodeURIComponent(this.content.sharePosterPic)
 				uni.navigateTo({
-					url:url
+					url: url
 				})
-				
-				
-				
+
+
+
 				this.$refs.popup.close()
+			},
+
+			changURl(url) {
+				console.log(url)
+				//D=69&L=G&P=W&A=1&O=66
+				if (url.indexOf('D') != -1) { // 新
+					url = url.replace('P', 'type')
+					url = url.replace('L', 'lotteryType')
+					url = url.replace('D', 'id')
+					url = url.replace('G', 'grid')
+					url = url.replace('W', 'wawaji')
+					url = url.replace('A', 'actSelect')
+					url = url.replace('O', 'sourceUserId')
+				} else { // 旧
+					//dd=69&ll=gg&tt=ww&aa=1&ss=66
+					url = url.replace('tt', 'type')
+					url = url.replace('ll', 'lotteryType')
+					url = url.replace('dd', 'id')
+					url = url.replace('gg', 'grid')
+					url = url.replace('ww', 'wawaji')
+					url = url.replace('aa', 'actSelect')
+					url = url.replace('ss', 'sourceUserId')
+				}
+
+
+				return url
+
+
 			}
-			
+
+
+
 		}
 	}
 </script>
@@ -589,11 +602,11 @@
 				border-radius: 44rpx;
 
 				.selectTitle1 {
-					
+
 					margin-top: 13rpx;
 					/*  #ifndef  MP-WEIXIN */
 					margin-top: 5rpx;
-					/*  #endif  */	
+					/*  #endif  */
 					font-size: 32rpx;
 					font-weight: 800;
 
@@ -621,7 +634,7 @@
 					margin-top: 13rpx;
 					/*  #ifndef  MP-WEIXIN */
 					margin-top: 5rpx;
-					/*  #endif  */	
+					/*  #endif  */
 					font-size: 32rpx;
 					font-weight: 800;
 
@@ -663,36 +676,37 @@
 				border-radius: 44rpx;
 			}
 		}
-		
-		
+
+
 	}
+
 	.shareBtnBackV {
 		border-top-left-radius: 10rpx;
 		border-top-right-radius: 10rpx;
 		width: 100%;
 		height: 331rpx;
 		background: #ffffff;
-	
+
 		.shareBtnV {
 			width: 90%;
 			margin: auto;
 			display: flex;
-	
+
 			.shareBtn {
 				text-align: center;
 				width: 50%;
 				height: 230rpx;
 				margin: auto;
-	
+
 			}
-	
+
 			image {
 				width: 88rpx;
 				height: 88rpx;
 				margin-top: 50rpx;
-	
+
 			}
-	
+
 			.text {
 				width: 100%;
 				height: 23rpx;
@@ -700,9 +714,9 @@
 				margin-top: 20rpx;
 				font-size: 24rpx;
 				color: #666666;
-	
+
 			}
-	
+
 			.text1 {
 				width: 100%;
 				height: 23rpx;
@@ -711,17 +725,17 @@
 				font-size: 24rpx;
 				color: #666666;
 			}
-	
-	
+
+
 		}
-	
+
 		.line {
 			background: #EBEBEB;
 			height: 1rpx;
 			width: 100%;
 			// margin-top: ;
 		}
-	
+
 		button {
 			width: 100%;
 			color: #333333;
@@ -730,8 +744,6 @@
 			margin: auto;
 			margin-top: 10rpx;
 		}
-	
+
 	}
-	
-	
 </style>
