@@ -7,6 +7,8 @@
 
 			<template v-if="lotteryType == 'Vouchers'">
 				代金券
+				<button class="shareFiedv" @tap='shareChoise()'>fenxiang </button>
+		
 			</template>
 
 			<template v-else>

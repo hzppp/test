@@ -431,6 +431,7 @@
 					url = url.replace('W', 'wawaji')
 					url = url.replace('A', 'actSelect')
 					url = url.replace('O', 'sourceUserId')
+					url = url.replace('V', 'Vouchers')
 				} else { // 旧
 					//dd=69&ll=gg&tt=ww&aa=1&ss=66
 					url = url.replace('tt', 'type')
@@ -441,8 +442,6 @@
 					url = url.replace('aa', 'actSelect')
 					url = url.replace('ss', 'sourceUserId')
 				}
-
-
 				return url
 
 
