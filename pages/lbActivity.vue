@@ -158,16 +158,20 @@
 			}
 			cs = cs.substr(0, cs.length - 1)
 			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`
+			if(this.lotteryType == 'Vouchers'){
+				this.formShowTitle = '领取代金券'
+				this.shareURL = `/pages/lbActivity?${cs}`
+			}else{
+			this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`	
+			}
+			
 
 			console.log('shareurl', this.shareURL)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			if(this.lotteryType == 'Vouchers'){
-				this.formShowTitle = '领取代金券'
-			}
+			
 			this.getFission()
 			try {
 				uni.showLoading({
@@ -248,11 +252,20 @@
 					this.isApply = isApply;
 					//是否提交过
 					if (isApply == 1 && this.activityType == "") {
+						if(this.lotteryType == 'Vouchers'){
+							uni.redirectTo({
+							 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+							
+							})
+						}else{
 						uni.reLaunch({
 							url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
 								.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-
-						})
+						
+						})	
+						}
+						
 					}
 				}
 				// if(code == 10){

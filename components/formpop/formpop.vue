@@ -505,11 +505,18 @@
 						}
 						}else{
 							// 非wawa就去抽奖
+							if(lydx.lotteryType == 'Vouchers'){
+								uni.redirectTo({
+								url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
+									.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
+							})
+							}else{
 							uni.reLaunch({
 								url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 									.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
 							})
-							
+							}
+	
 						}
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity'

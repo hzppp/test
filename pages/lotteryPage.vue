@@ -1,14 +1,32 @@
 <template>
 	<view class="container">
 		<userBand></userBand>
-		<pageTopCommon ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'" :title.sync="title"
-			:homeBtn="true"></pageTopCommon>
-		<view class="content">
-
+		<page-top v-if="lotteryType == 'Vouchers'" :background="'#FA8845'" :titleys="'#000'" :btnys="''"
+			:title.sync="title"></page-top>
+		<pageTopCommon v-else ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'"
+			:title.sync="title" :homeBtn="true"></pageTopCommon>
+		<view :class="'content' +  (lotteryType == 'Vouchers' ? '  vouchers' : '' )">
 			<template v-if="lotteryType == 'Vouchers'">
-				代金券
-				<button class="shareFiedv" @tap='shareChoise()'>fenxiang </button>
-		
+				<view class="VoucherBC">
+					<view class="VoucherBCImg">
+						<view class="BCtitle">{{lotteryActInfo.prizeList[0].name}}</view>
+						<scroll-view scroll-y="true" class="BCContentTips">
+							<text>{{activityMemoArr}}</text>
+						</scroll-view>
+						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
+							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?'查看代金券':'立即领取'}}
+							</button>
+						<view class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" >代金券存入[我的]-[中奖记录]</view>
+						<!--  #ifdef MP-WEIXIN  -->
+						<button v-if="sharePosterPic" class="BCShare" @tap='shareChoise()'>分享好友</button>
+						<button v-else class="BCShare" open-type="share">分享好友</button>
+						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<button class="BCShare" open-type="share">分享好友</button>
+						<!-- #endif -->
+					</view>
+
+				</view>
 			</template>
 
 			<template v-else>
@@ -172,6 +190,7 @@
 	import api from '@/public/api/index'
 	import login from '@/units/login'
 	import userBand from '@/components/userBand/userBand'
+	import pageTop from '@/components/pageTop/pageTop'
 	import {
 		changeUnits,
 		resolveImage
@@ -182,7 +201,8 @@
 			LuckyWheel,
 			pageTopCommon,
 			userBand,
-			LuckyGrid
+			LuckyGrid,
+			pageTop
 		},
 		data() {
 			return {
@@ -255,6 +275,13 @@
 			this.showDialogL = false;
 			this.GirdShowDialogL = false;
 			this.prizes = []
+
+			if (this.lotteryType == 'Vouchers') {
+				this.title = '购车代金券'
+			}
+
+
+
 			uni.showLoading({
 				title: '正在加载...'
 			})
@@ -307,6 +334,8 @@
 				// this.activityMemoArr =this.lotteryActInfo.activityMemo.split(/[\s\n]/)
 				this.activityMemoArr = this.lotteryActInfo.activityMemo.replace('/n', '/r/s')
 			}
+
+
 			this.lotteryActInfo.winnerRecords.reverse()
 
 			if (!(this.lotteryActInfo.isApply)) {
@@ -497,6 +526,49 @@
 					url
 				})
 			},
+			// 购车代金券抽奖
+			async voucherStart() {
+				if (this.lotteryActInfo.chanceCount == 0) {
+					uni.navigateTo({
+						url:'/pages/lotteryRecord'
+					})
+					return
+				}
+				uni.showLoading({})
+				this.lotteryRes = await api.handleStartLottery({
+					activityId: this.activityId
+				}).then(res => {
+					uni.hideLoading()
+					console.log('tttttt', res)
+					if (res.code == 10) {
+						uni.showToast({
+							title: res.msg,
+							icon: "none"
+						})			
+						return
+					} else if (res.code === 1) {
+						if(res.price == 0){
+							this.$toast('来晚啦～代金券已抢光')
+							this.lotteryActInfo.chanceCount=0
+						}else{
+						   this.$toast('领取成功')
+						    this.lotteryActInfo.chanceCount=0	
+						}
+						return res.data
+					} else if (res.code == 0) {
+						uni.showToast({
+							title: '来晚啦～代金券已抢光',
+							icon: "none"
+						})
+					
+						return
+					}
+				})
+				
+				
+
+			},
+			// 盲盒抽奖
 			async gridStart() {
 				console.log(this.$children)
 				this.lotteryResindex == 999
@@ -530,10 +602,10 @@
 						// #endif
 
 						// #ifdef MP-TOUTIAO
-						if(this.$refs.luckyGrid){
-							this.$refs.luckyGrid.play(num)						  
-						}else{
-						   this.$children[3].play(num)	
+						if (this.$refs.luckyGrid) {
+							this.$refs.luckyGrid.play(num)
+						} else {
+							this.$children[3].play(num)
 						}
 						// #endif
 
@@ -554,10 +626,10 @@
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							if(this.$refs.luckyGrid){
-								this.$refs.luckyGrid.stop(num)						  
-							}else{
-							   this.$children[3].stop(num)	
+							if (this.$refs.luckyGrid) {
+								this.$refs.luckyGrid.stop(num)
+							} else {
+								this.$children[3].stop(num)
 							}
 							// #endif
 
@@ -761,13 +833,112 @@
 		}
 	}
 
+
 	.container {
-		background: #eef1f5;
 		position: relative;
+
+		.vouchers {
+
+			background: #FA8845;
+			height: 100vh;
+		}
 
 		.content {
 			overflow-x: hidden;
+			overflow-y: hidden;
 			width: 100%;
+
+			.VoucherBC {
+				position: relative;
+				height: calc(85.9vh - 0rpx);
+				width: 686rpx;
+				top: 10rpx;
+				left: 30rpx;
+				width: 686rpx;
+				margin-bottom: 30rpx;
+
+				.VoucherBCImg {
+					.setbg(100%, 100%, 'VouchersBC.png');
+
+					.BCtitle {
+						position: relative;
+						top: 56rpx;
+						font-size: 56rpx;
+						font-weight: 700;
+						text-align: center;
+						color: #333333;
+					}
+
+					.BCContentTips {
+						width: 601rpx;
+						position: relative;
+						top: 157rpx;
+						left: 44rpx;
+						font-size: 28rpx;
+						font-weight: 400;
+						color: #999999;
+						line-height: 44rpx;
+						height: 46vh;
+
+					}
+
+					.BCSub {
+						position: fixed;
+						bottom: 13.6vh;
+						width: 588rpx;
+						height: 88rpx;
+						left: 81rpx;
+						opacity: 1;
+						background: #fa8845;
+						border-radius: 44px;
+						color: #FFFFFF;
+					}
+
+					.BCSub1 {
+						position: fixed;
+						bottom: 13.6vh;
+						width: 588rpx;
+						height: 88rpx;
+						left: 81rpx;
+						opacity: 1;
+						background: #FFFFFF;
+						border: 2px solid #fa8845;
+						border-radius: 44px;
+						line-height: 50rpx;
+						color: #FA8845 !important;
+					}
+					.BCSub1Title{
+						font-size: 22rpx;
+						left: 236rpx;
+	                    position: fixed;
+						bottom: 14.46vh;
+						font-weight: 400;
+						text-align: center;
+						color: #999999;
+						
+					}
+
+					.BCShare {
+						position: fixed;
+						bottom: 5.2vh;
+						width: 588rpx;
+						height: 88rpx;
+						left: 81rpx;
+						opacity: 1;
+						background: #FFFFFF;
+						border: 2px solid #fa8845;
+						border-radius: 44px;
+						color: #FA8845 !important;
+					}
+
+				}
+
+
+
+				// 
+			}
+
+
 
 			.luckyWheel {
 				position: relative;
