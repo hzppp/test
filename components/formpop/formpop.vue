@@ -232,7 +232,7 @@
 				let lydx = this.currentObj
 				let source,sourceId
 				console.log(this.currentObj.miniUrl.split('&')[1])
-				if ((this.popName == 'form-success-pop' || this.popName == 'form-warning-pop') && this.currentObj
+				if ((this.popName == 'form-success-pop' ) && this.currentObj
 					.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1] ===
 					'type=wawaji') {
 					uni.navigateTo({
@@ -483,6 +483,7 @@
 				if (data.code == 1) { //成功留资
 					console.log(ly + data)
 					if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
+						if(lydx.activityType == 'wawaji'){
 						if (lydx.actSelect == 0) {
 							// 线下
 							uni.navigateTo({
@@ -502,6 +503,15 @@
 							})
 
 						}
+						}else{
+							// 非wawa就去抽奖
+							uni.reLaunch({
+								url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
+									.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
+							})
+							
+						}
+						this.isShowFormPop = false;
 						this.popName = 'lbactivity'
 						//跳转抽奖
 						// this.popName = 'lbactivity'

@@ -60,7 +60,10 @@
 								v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
 						</template>
 					</template>
-					<button class="enroll-btn" @tap="formShow" v-else>我要参与抽奖</button>
+					<button class="enroll-btn" @tap="formShow" v-else>{{formShowTitle}}</button>
+					
+					
+					
 				</view>
 			</view>
 		</view>
@@ -120,7 +123,8 @@
 				shareURL: '',
 				isApply: 0, //是否留咨过
 				lotteryType: '', //转盘类型
-				actSelect: '' // 玩法（0   线下   1 线上抽奖  2 both）
+				actSelect: '' ,// 玩法（0   线下   1 线上抽奖  2 both）
+				formShowTitle:'我要参与抽奖'
 			}
 		},
 		mixins: [shouquan],
@@ -161,6 +165,9 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
+			if(this.lotteryType == 'Vouchers'){
+				this.formShowTitle = '领取代金券'
+			}
 			this.getFission()
 			try {
 				uni.showLoading({
@@ -189,6 +196,7 @@
 				this.content.from = 'lbactivity'
 				this.content.lotteryType = this.lotteryType
 				this.content.actSelect = this.actSelect
+				this.content.activityType = this.activityType
 
 			} catch (err) {
 				console.error(err)
@@ -310,12 +318,16 @@
 					}
 
 				} else {
+					var formpopName = 'lbactivity'
+					if(this.lotteryType == 'Vouchers'){
+						formpopName = 'activity'
+					}
 					// #ifdef MP-WEIXIN
-					this.$refs.formpop.formShow('form', 'lbactivity', this.content, '报名活动')
+					this.$refs.formpop.formShow('form', formpopName, this.content, '报名活动')
 					// #endif
 
 					// #ifdef MP-TOUTIAO
-					this.$children[3].formShow('form', 'lbactivity', this.content, '报名活动')
+					this.$children[3].formShow('form', formpopName, this.content, '报名活动')
 					// #endif
 				}
 
