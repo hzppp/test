@@ -1151,5 +1151,41 @@ module.exports = {
 		return data
 	},
 	
+	openRed: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('openRed'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
+	
+	redRecord: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('redRecord'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+	
+	redStatus: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('redStatus'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+
 	
 }

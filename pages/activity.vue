@@ -167,7 +167,8 @@
 			  cs = cs.substr(0, cs.length - 1)
 			  this.shareURL = `/pages/activity?${cs}`
 			  console.log('shareurl',this.shareURL)
-			
+			// 红包相关
+			this.redStatus(this.activityId)
 		},
 		onHide() {
 			if (app.Interval) {
@@ -355,7 +356,52 @@
 		    	api.fetchActivityVisit({
 		    		'activityId': this.activityId
 		    	})
-		    }
+		    },
+			
+			async redStatus(){
+			let {data} = await api.redStatus({
+					'activityId':this.activityId
+				})
+			let status = data.status
+			console.log('红包状态',status)
+			
+		// yuchentest
+		status = 1
+			
+			if(status == 0){
+				//未开过
+				
+			}else if(status == 1){
+				// 开过
+				this.redRecord()
+			}else if(status == 3){
+				// 无关联红包
+				
+			}
+
+			},
+			
+			async redRecord(){
+				let data  = await  api.redRecord({
+					'activityId':this.activityId
+				})
+				console.log('中奖记录',data)
+				let rows = data.rows
+			   if(rows.count > 0){
+				   // 中奖过
+			   }else{
+				   // 为中奖
+			   }
+				
+				
+			}
+			
+			
+		
+		
+		
+		
+		
 		
 		}
 	}
