@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.TEST;
-const version = 1016; 
+const version = 1017;
 
 
 
@@ -205,8 +205,8 @@ const config = {
 		postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
-		//计算器获取车型
-		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
+		//计算器获取车型 
+		calcModel: `${DOMAIN.csbHost}/price/api/v1/serialgroup/model_list_v3`,
 		// 获取验证码
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 		// 获取省份和城市的级联列表
