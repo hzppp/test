@@ -14,7 +14,7 @@
 							<text>{{activityMemoArr}}</text>
 						</scroll-view>
 						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
-							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?'查看代金券':'立即领取'}}
+							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'已领完':'立即领取')}}
 							</button>
 						<view class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" >代金券存入[我的]-[中奖记录]</view>
 						<!--  #ifdef MP-WEIXIN  -->
@@ -528,6 +528,10 @@
 			},
 			// 购车代金券抽奖
 			async voucherStart() {
+				if(this.lotteryActInfo.prizeList[0].stock == 0){
+					// 没有库存
+				   return	
+				}
 				if (this.lotteryActInfo.chanceCount == 0) {
 					uni.navigateTo({
 						url:'/pages/lotteryRecord'
