@@ -15,8 +15,9 @@
 						</scroll-view>
 						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
 							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'已领完':'立即领取')}}
-							</button>
-						<view class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" >代金券存入[我的]-[中奖记录]</view>
+						</button>
+						<view class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)">
+							代金券存入[我的]-[中奖记录]</view>
 						<!--  #ifdef MP-WEIXIN  -->
 						<button v-if="sharePosterPic" class="BCShare" @tap='shareChoise()'>分享好友</button>
 						<button v-else class="BCShare" open-type="share">分享好友</button>
@@ -49,7 +50,11 @@
 					<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
 						:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
 						@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
-					<view class="choiceTime">您还有<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>次抽奖机会
+					<view class="choiceTime">
+						您还有
+						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
+						次抽奖机会
+						<view class="refChangBtn" @tap='refChangBtn()'></view>
 					</view>
 					<view v-if="lotteryType == 'grid'" class="btnBackV">
 						<!--  #ifdef MP-WEIXIN  -->
@@ -258,7 +263,6 @@
 			app.globalData.isRotating = false;
 		},
 		async onLoad(options) {
-
 			// #ifndef MP-WEIXIN
 			try {
 				const res = uni.getSystemInfoSync();
@@ -528,13 +532,13 @@
 			},
 			// 购车代金券抽奖
 			async voucherStart() {
-				if(this.lotteryActInfo.prizeList[0].stock == 0){
+				if (this.lotteryActInfo.prizeList[0].stock == 0) {
 					// 没有库存
-				   return	
+					return
 				}
 				if (this.lotteryActInfo.chanceCount == 0) {
 					uni.navigateTo({
-						url:'/pages/lotteryRecord'
+						url: '/pages/lotteryRecord'
 					})
 					return
 				}
@@ -548,15 +552,15 @@
 						uni.showToast({
 							title: res.msg,
 							icon: "none"
-						})			
+						})
 						return
 					} else if (res.code === 1) {
-						if(res.price == 0){
+						if (res.price == 0) {
 							this.$toast('来晚啦～代金券已抢光')
-							this.lotteryActInfo.chanceCount=0
-						}else{
-						   this.$toast('领取成功')
-						    this.lotteryActInfo.chanceCount=0	
+							this.lotteryActInfo.chanceCount = 0
+						} else {
+							this.$toast('领取成功')
+							this.lotteryActInfo.chanceCount = 0
 						}
 						return res.data
 					} else if (res.code == 0) {
@@ -564,12 +568,12 @@
 							title: '来晚啦～代金券已抢光',
 							icon: "none"
 						})
-					
+
 						return
 					}
 				})
-				
-				
+
+
 
 			},
 			// 盲盒抽奖
@@ -803,6 +807,26 @@
 
 
 				this.$refs.popup.close()
+			},
+			
+			async refChangBtn(){
+				await api.getLotteryActInfo({
+					'activityId':this.activityId
+				}).then(res => {
+					if (res.code == 1) {
+						this.lotteryActInfo.chanceCount = res.data.chanceCount
+						this.lotteryActInfo.prizeList = res.data.prizeList
+						
+						
+					} else if (res.code == 10) {
+						
+					} else if (res.code == 0) {
+						
+					}
+				}).finally(res => {})
+				
+				
+				
 			}
 
 
@@ -911,15 +935,16 @@
 						line-height: 50rpx;
 						color: #FA8845 !important;
 					}
-					.BCSub1Title{
+
+					.BCSub1Title {
 						font-size: 22rpx;
 						left: 236rpx;
-	                    position: fixed;
+						position: fixed;
 						bottom: 14.46vh;
 						font-weight: 400;
 						text-align: center;
 						color: #999999;
-						
+
 					}
 
 					.BCShare {
@@ -988,11 +1013,27 @@
 					text-align: center;
 					font-size: 28rpx;
 					color: #333333;
+					// background: #DD524D;
+				
+					.refChangBtn{
+						display: inline-block;
+						width: 32rpx;
+						height: 32rpx;
+						line-height: 32rpx;
+						margin-left: 30rpx;
+						position: absolute;
+						top: 50%;
+						// left:50%;
+						 transform: translate(-50% , -50%);
+						.setbg(32rpx, 32rpx, 'fotteryRef.png');
+					}
 
 					.times {
+						height: 38rpx;
 						display: inline-block;
 						color: #ed2c2c;
-						margin: 0 10rpx;
+						// margin: 0 10rpx;
+						line-height: 38rpx;
 					}
 				}
 			}
@@ -1017,6 +1058,18 @@
 						background: rgba(0, 0, 0, .3);
 						border-radius: 28rpx;
 					}
+				}
+				.refChangBtn{
+					display: inline-block;
+					width: 32rpx;
+					height: 32rpx;
+					line-height: 32rpx;
+					margin-left: 30rpx;
+					position: absolute;
+					top: 50%;
+					// left:50%;
+					 transform: translate(-50% , -50%);
+					.setbg(32rpx, 32rpx, 'fotteryRef.png');
 				}
 
 				.lotteryRecord {
@@ -1043,11 +1096,12 @@
 					color: #FFFFFF;
 					background: #035E8A;
 					height: 60rpx;
-					width: 316rpx;
+					width: 356rpx;
 					border-radius: 30rpx;
 					line-height: 60rpx;
 					left: 50%;
-					margin-left: -165rpx;
+					 margin-left: -175rpx;
+					 padding-right: 25rpx;
 
 					.times {
 						display: inline-block;
