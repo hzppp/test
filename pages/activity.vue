@@ -16,7 +16,7 @@
 
 			<view class="content">
 				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
-			</view> 
+			</view>
 			<view class="serial-list" v-if="content.showCustomAds == 0">
 				<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
 					@tap="seeCarBtnClick(serialGroupItem)">
@@ -25,9 +25,10 @@
 					<image class="cover" :src="serialGroupItem.picCoverUrl" mode="aspectFill" lazy-load="true"></image>
 				</view>
 			</view>
-			<!-- customAdList --> 
+			<!-- customAdList -->
 			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
-				<image  style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;" :src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
+				<image style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;"
+					:src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
 
 
@@ -50,6 +51,30 @@
 				</view>
 			</view>
 		</view>
+
+		<view class="myred" @tap='tapmyred()' v-if="red.redDone"></view>
+		<uni-popup ref="popup" type="center" :mask-click="false">
+			<view v-if="!red.redDone" class="redOpenV" @tap='redOpen()'>
+				<!-- <image  src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redBack.png" mode="aspectFit"></image> -->
+			</view>
+
+			<view v-if="red.redDone" class='redShow'>
+				<view>
+					<view class="title">{{red.amount>0?'恭喜获得':'谢谢参与'}}</view>
+					<view class="middelTitle" v-if="red.amount>0">
+						<view class="amount">{{red.amount}}</view>
+						元
+					</view>
+					<view class="middelTitle1" v-else>
+						<view class="amount">祝好运常伴</view>
+					</view>
+					<view class="miaos">{{red.amount>0?'红包约30分钟后到账':''}}</view>
+					<button class="shareV" hover-class="none" open-type="share" @click="shareBtnClick"></button>
+				</view>
+			</view>
+
+			<view class="closeBtn" @tap='closePop()'></view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -57,7 +82,7 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-    import userBand from '@/components/userBand/userBand'
+	import userBand from '@/components/userBand/userBand'
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
@@ -69,7 +94,7 @@
 			'form-pop': formpop,
 			'page-top': pageTop,
 			'share-pop': shareSuccess,
-			'userBand':userBand
+			'userBand': userBand
 		},
 		data() {
 			return {
@@ -79,17 +104,20 @@
 				content: "",
 				isActEnded: false,
 				isActStart: false,
-				activityType:"",
-				isApply:0, //是否留咨过
+				activityType: "",
+				isApply: 0, //是否留咨过
 				//直播间用的
-				liveUrl:'',
-				shareURL:'',
-				
+				liveUrl: '',
+				shareURL: '',
+				red: {
+					amount: 0,
+					redDone: false
+				}
+
 			}
 		},
 		mixins: [shouquan],
-		async onLoad(options) {	
-			
+		async onLoad(options) {
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
@@ -97,24 +125,26 @@
 				return
 			}
 			//直播活动相关
-			if(options.type && (options.type == 'Live' || options.type == 'verticalLive')){
-				if(options.type == 'Live' ){
-					this.liveUrl =  '/pages_live/liveRoomPlay/liveRoomPlay?share=' + options.share +  '&id=' +  options.liveId
+			if (options.type && (options.type == 'Live' || options.type == 'verticalLive')) {
+				if (options.type == 'Live') {
+					this.liveUrl = '/pages_live/liveRoomPlay/liveRoomPlay?share=' + options.share + '&id=' + options
+						.liveId
 
-             }else if(options.type == 'verticalLive' ){
-					this.liveUrl = '/pages_live/verticalLiveRoom/verticalLiveRoom?type=verticalLive&share=' +  options.share +  '&id=' + options.liveId
+				} else if (options.type == 'verticalLive') {
+					this.liveUrl = '/pages_live/verticalLiveRoom/verticalLiveRoom?type=verticalLive&share=' + options
+						.share + '&id=' + options.liveId
 				}
-				
-				console.log('liveurl == ',this.liveUrl)
+
+				console.log('liveurl == ', this.liveUrl)
 			}
-			
+
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			console.log("options.type",options.type)
-			if(options.type){
-				this.activityType= options.type || ''
+			console.log("options.type", options.type)
+			if (options.type) {
+				this.activityType = options.type || ''
 			}
 			await login.checkLogin(api)
 			try {
@@ -126,8 +156,10 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.activityId)
-				let clueInfo= await api.getClueInfo({activityId: this.activityId})
-				if(clueInfo.code==1) this.isApply= clueInfo.data.isApply
+				let clueInfo = await api.getClueInfo({
+					activityId: this.activityId
+				})
+				if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
@@ -135,7 +167,7 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
-			    if(this.liveUrl){
+				if (this.liveUrl) {
 					this.content.liveUrl = this.liveUrl
 				}
 				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
@@ -158,15 +190,15 @@
 			} finally {
 				uni.hideLoading()
 			}
-			
+
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-			  cs += `${i}=${options[i]}&`
+				cs += `${i}=${options[i]}&`
 			}
-			  cs = cs.substr(0, cs.length - 1)
-			  this.shareURL = `/pages/activity?${cs}`
-			  console.log('shareurl',this.shareURL)
+			cs = cs.substr(0, cs.length - 1)
+			this.shareURL = `/pages/activity?${cs}`
+			console.log('shareurl', this.shareURL)
 			// 红包相关
 			this.redStatus(this.activityId)
 		},
@@ -195,23 +227,23 @@
 			formShow() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
-				console.log("已经报名，且为抓娃娃机活动",this.isApply,this.activityType)
+				console.log("已经报名，且为抓娃娃机活动", this.isApply, this.activityType)
 				//如果已经报名，且为抓娃娃机活动，则直接跳转活动页面
-				if(this.isApply && this.activityType=="wawaji"){
+				if (this.isApply && this.activityType == "wawaji") {
 					uni.navigateTo({
-						url:`/pages/wawaji?activityId=${this.content.id}`
+						url: `/pages/wawaji?activityId=${this.content.id}`
 					})
-				}else{
+				} else {
 					this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
 				}
-				
+
 				// #endif
-				
+
 				// #ifdef MP-TOUTIAO
 				console.log(12133123)
 				this.$children[3].formShow('form', 'activity', this.content, '报名活动')
 				// #endif
-				
+
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -237,14 +269,14 @@
 			},
 			tapAcivity(item) {
 				//0:跳转小程序内部页面,1:H5外链,2:外部小程序
-				console.log('跳转',item)
+				console.log('跳转', item)
 				switch (item.redirectType) {
 					case 0: {
 						uni.navigateTo({
 							url: item.miniUrl,
 						})
 						// #ifndef MP-WEIXIN
-						if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+						if (item.miniUrl && item.miniUrl.substr(0, 3) == 'cxd') {
 							this.$toast('请在微信搜索本小程序参与')
 						}
 						// #endif
@@ -264,16 +296,16 @@
 								url: item.miniUrl
 							})
 							// #ifndef MP-WEIXIN
-							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+							if (item.miniUrl && item.miniUrl.substr(0, 3) == 'cxd') {
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
 							return
 						}
 						// #ifndef MP-WEIXIN
-					    this.$toast('请在微信搜索本小程序参与')
+						this.$toast('请在微信搜索本小程序参与')
 						// #endif
-						 // #ifdef MP-WEIXIN
+						// #ifdef MP-WEIXIN
 						uni.navigateToMiniProgram({
 							appId: item.appId,
 							path: item.miniUrl,
@@ -290,7 +322,7 @@
 							},
 							// envVersion: 'trial'
 						});
-						 // #endif
+						// #endif
 						break;
 					}
 				}
@@ -350,65 +382,98 @@
 			add0(number) {
 				return number > 9 ? number : '0' + number
 			},
-		    
-			getData(){
-		    	// 访问活动 记录活动访问次数
-		    	api.fetchActivityVisit({
-		    		'activityId': this.activityId
-		    	})
-		    },
-			
-			async redStatus(){
-			let {data} = await api.redStatus({
-					'activityId':this.activityId
+
+			getData() {
+				// 访问活动 记录活动访问次数
+				api.fetchActivityVisit({
+					'activityId': this.activityId
 				})
-			let status = data.status
-			console.log('红包状态',status)
-			
-		// yuchentest
-		status = 1
-			
-			if(status == 0){
-				//未开过
-				
-			}else if(status == 1){
-				// 开过
-				this.redRecord()
-			}else if(status == 3){
-				// 无关联红包
-				
-			}
+			},
+
+			async redStatus() {
+				let {
+					data
+				} = await api.redStatus({
+					'activityId': this.activityId
+				})
+				let status = data.status
+				console.log('红包状态', status)
+				if (status == 0) {
+					//未开过
+					this.$refs.popup.open('center')
+				} else if (status == 1) {
+					// 开过
+					this.redRecord()
+				} else if (status == 3) {
+					// 无关联红包
+
+				}
 
 			},
-			
-			async redRecord(){
-				let data  = await  api.redRecord({
-					'activityId':this.activityId
+
+			async redRecord() {
+				let data = await api.redRecord({
+					'activityId': this.activityId
 				})
-				console.log('中奖记录',data)
+				console.log('中奖记录', data)
 				let rows = data.rows
-			   if(rows.count > 0){
-				   // 中奖过
-			   }else{
-				   // 为中奖
-			   }
-				
-				
+				this.red.redDone = true
+				if (rows.length > 0) {
+					// 中奖过
+					this.red.amount = rows[0].amount
+				} else {
+					// 为中奖
+					this.red.amount = 0
+				}
+
+
+			},
+
+			async redOpen() {
+				let openId = ''
+				if (app.globalData.wxUserInfo && app.globalData.wxUserInfo.openId) {
+					openId = app.globalData.wxUserInfo.openId
+				}
+				let {
+					data
+				} = await api.openRed({
+					'activityId': this.activityId,
+					'openId': openId,
+					'scene': '0',
+				})
+
+				this.red.redDone = true
+				this.red.amount = data.amount
+				console.log(data, data.amount)
+
+			},
+
+
+			closePop() {
+				this.$refs.popup.close()
+			},
+			tapmyred() {
+				this.$refs.popup.open('center')
 			}
-			
-			
-		
-		
-		
-		
-		
-		
+
+
 		}
 	}
 </script>
 
 <style lang="less">
 	@import '@/static/less/public.less';
+
+
+	.myred {
+		position: absolute;
+		bottom: 162rpx;
+		right: 36rpx;
+		width: 89rpx;
+		height: 109rpx;
+		z-index: 66;
+		.setbg(89rpx, 109rpx, 'myRed.png');
+	}
 
 	.title {
 		line-height: 65rpx;
@@ -480,8 +545,8 @@
 				border-radius: 24rpx;
 				background-color: #333333;
 			}
-			
-			
+
+
 
 			.cover {
 				position: absolute;
@@ -581,5 +646,96 @@
 				border-radius: 44rpx;
 			}
 		}
+	}
+
+	.redOpenV {
+		width: 560rpx;
+		height: 760rpx;
+		.setbg(560rpx, 760rpx, 'redBack.png');
+	}
+
+	.redShow {
+		width: 560rpx;
+		height: 560rpx;
+		.setbg(560rpx, 560rpx, 'redBC.png');
+		text-align: center;
+
+		.middelTitle {
+			display: flex;
+			margin-top: 53rpx;
+			font-size: 32rpx;
+			font-weight: 700;
+			color: #f82e1c;
+			// height: 77rpx;
+			justify-content: center;
+			align-items: flex-end;
+
+			// background: #F0AD4E;
+			.amount {
+				// margin: auto;
+				height: 62rpx;
+				line-height: 62rpx;
+				font-size: 78rpx;
+				font-weight: 700;
+				color: #f82e1c;
+
+			}
+		}
+
+		.middelTitle1 {
+			display: flex;
+			margin-top: 53rpx;
+			font-size: 32rpx;
+			font-weight: 700;
+			color: #f82e1c;
+			// height: 77rpx;
+			justify-content: center;
+			align-items: flex-end;
+			// background: #F0AD4E;
+
+			.amount {
+				// margin: auto;
+				height: 62rpx;
+				line-height: 62rpx;
+				font-size: 64rpx;
+				font-weight: 700;
+				color: #f82e1c;
+				margin-bottom: 63rpx;
+
+			}
+		}
+
+		.title {
+			font-size: 40rpx;
+			height: 33rpx;
+			font-weight: 700;
+			color: #fa8845;
+			margin-top: 65rpx;
+		}
+
+		.miaos {
+			margin-top: 43rpx;
+			font-size: 24rpx;
+			font-weight: 700;
+			color: #FA8845;
+
+		}
+
+		.shareV {
+			margin: auto;
+			margin-top: 129rpx;
+			width: 420rpx;
+			height: 100rpx;
+			.setbg(420rpx, 100rpx, 'redBCShare.png');
+		}
+
+	}
+
+	.closeBtn {
+		margin: auto;
+		margin-top: 60rpx;
+		width: 64rpx;
+		height: 64rpx;
+		.setbg(64rpx, 64rpx, 'redClose.png');
 	}
 </style>
