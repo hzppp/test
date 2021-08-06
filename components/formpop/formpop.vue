@@ -540,6 +540,7 @@
 						popname = 'form-livesuccess-pop'
 					}
 					this.popName = popname
+					this.$emit('subSuccess')
 
 				} else if (data.code == 2) { //重复留资
 					// if (ly == 'lbactivity') {

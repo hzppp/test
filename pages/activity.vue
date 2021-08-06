@@ -5,7 +5,7 @@
 			<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
 			<share-pop ref="shareSuccess"></share-pop>
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
-			<form-pop ref="formpop"></form-pop>
+			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
 			<view class="title">{{content.name}}</view>
 			<view class="date" v-if="content && isActStart && !isActEnded">
 				离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
@@ -40,10 +40,18 @@
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick">分享好友</button>
-					<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
-						v-if="!phone">报名活动</button>
-					<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
+						open-type="share" @click="shareBtnClick">分享好友</button>		
+					
+					<template v-if="!isActStart && isApply">
+						<button class="enroll-btn" >已报名，活动未开始</button>
+					</template>
+					
+					<template v-else>
+						<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
+							v-if="!phone">报名活动</button>
+						<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
+					</template>
+					
 				</view>
 				<view class="type-b" v-else-if="content.needApply == 0">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
@@ -461,6 +469,10 @@
 			},
 			tapmyred() {
 				this.$refs.popup.open('center')
+			},
+			subSuccess(){
+				// 留资成功
+				this.isApply = true
 			}
 
 
