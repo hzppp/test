@@ -41,7 +41,7 @@
 							</swiper-item>
 						</swiper>
 					</view>
-					<template class="lotteryRecord" @tap="golotteryRecord">中奖纪录</template>
+					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
 					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
 						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" @start="startCallBack"
 						@end="endCallBack" :showDialogL="showDialogL" />
