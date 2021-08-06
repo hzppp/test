@@ -430,6 +430,7 @@
 			},
 
 			async redOpen() {
+				// #ifdef MP-WEIXIN
 				let openId = ''
 				if (app.globalData.wxUserInfo && app.globalData.wxUserInfo.openId) {
 					openId = app.globalData.wxUserInfo.openId
@@ -441,11 +442,17 @@
 					'openId': openId,
 					'scene': '0',
 				})
-
+				
 				this.red.redDone = true
 				this.red.amount = data.amount
 				console.log(data, data.amount)
-
+				// #endif
+				
+				// #ifdef MP-TOUTIAO
+				this.$toast('请在微信搜索【长安汽车云车展】参与本活动')
+				// #endif
+				
+				
 			},
 
 
