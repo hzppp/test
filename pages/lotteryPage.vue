@@ -54,7 +54,7 @@
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
 						次抽奖机会
-						<view class="refChangBtn" @tap='refChangBtn()'></view>
+						<view :class="'refChangBtn'+  (lotteryType == 'grid'?' girdchangBtn':'')" @tap='refChangBtn()'></view>
 					</view>
 					<view v-if="lotteryType == 'grid'" class="btnBackV">
 						<!--  #ifdef MP-WEIXIN  -->
@@ -1070,7 +1070,17 @@
 					// left:50%;
 					 transform: translate(-50% , -50%);
 					.setbg(32rpx, 32rpx, 'fotteryRef.png');
+					
+					
+					
+					
 				}
+				
+				.girdchangBtn{
+					.setbg(32rpx, 32rpx, 'fotteryRefWrite.png');
+				}
+				
+				
 
 				.lotteryRecord {
 					position: absolute;
