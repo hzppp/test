@@ -129,7 +129,7 @@ export default {
     async checkLogin(api) {
 		
 		//yuchen 测试 
-	 //   this.setSessionKey('VBMDzSjaPWGTtljIgHPkhoO4rN9Uhrb7')
+	   // this.setSessionKey("8axKMq01t3sQJxiF2u5nIqtvjPqpLlgw")
 		
 		
 		await this.checkExpireTime(api)

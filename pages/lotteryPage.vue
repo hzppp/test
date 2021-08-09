@@ -1,11 +1,11 @@
 <template>
-	<view class="container">
+	<view :class="'container' +  (lotteryType == 'Vouchers' ? '  containerv' : '' )">
 		<userBand></userBand>
 		<page-top v-if="lotteryType == 'Vouchers'" :background="'#FA8845'" :titleys="'#000'" :btnys="''"
 			:title.sync="title"></page-top>
 		<pageTopCommon v-else ref="pagetop" :background="'#fff'" :titleys="'#3C4650'" :btnys="'white'"
 			:title.sync="title" :homeBtn="true"></pageTopCommon>
-		<view :class="'content' +  (lotteryType == 'Vouchers' ? '  vouchers' : '' )">
+		<view :class="'content' +  (lotteryType == 'Vouchers' ? '  vouchers' : '' )" >
 			<template v-if="lotteryType == 'Vouchers'">
 				<view class="VoucherBC">
 					<view class="VoucherBCImg">
@@ -26,8 +26,10 @@
 						<button class="BCShare" open-type="share">分享好友</button>
 						<!-- #endif -->
 					</view>
+					
 
 				</view>
+				
 			</template>
 
 			<template v-else>
@@ -860,22 +862,25 @@
 			transform: translateY(-50%);
 		}
 	}
-
-
+ 
+ 
+    .containerv{
+	  height: 100vh;
+	}
 	.container {
 		position: relative;
-
+      
 		.vouchers {
-
+            overflow: hidden;
 			background: #FA8845;
 			height: 100vh;
+			
 		}
 
 		.content {
 			overflow-x: hidden;
 			overflow-y: hidden;
 			width: 100%;
-
 			.VoucherBC {
 				position: relative;
 				height: calc(85.9vh - 0rpx);
@@ -884,6 +889,8 @@
 				left: 30rpx;
 				width: 686rpx;
 				margin-bottom: 30rpx;
+				
+				
 
 				.VoucherBCImg {
 					.setbg(100%, 100%, 'VouchersBC.png');
