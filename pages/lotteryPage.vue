@@ -16,8 +16,8 @@
 						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
 							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'已领完':'立即领取')}}
 						</button>
-						<view class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)">
-							代金券存入[我的]-[中奖记录]</view>
+						<text class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" @tap='voucherStart()'>
+							代金券存入[我的]-[中奖记录]</text>
 						<!--  #ifdef MP-WEIXIN  -->
 						<button v-if="sharePosterPic" class="BCShare" @tap='shareChoise()'>分享好友</button>
 						<button v-else class="BCShare" open-type="share">分享好友</button>
