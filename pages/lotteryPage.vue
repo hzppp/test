@@ -256,7 +256,9 @@
 				},
 				canvasshow: true,
 				grid: {},
-				canvasShow: false
+				canvasShow: false,
+				startIng:false
+				
 
 
 			}
@@ -438,6 +440,7 @@
 					app.globalData.isRotating = false;
 					return
 				}
+				this.startIng = true
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -499,6 +502,7 @@
 			// 抽奖结束触发回调
 			endCallBack(prize) {
 				// 奖品详情
+				this.startIng = false
 				console.log('抽奖结束触发回调')
 				app.globalData.isRotating = false;
 				this.showDialogL = true;
@@ -594,6 +598,7 @@
 					app.globalData.isRotating = false;
 					return
 				}
+				this.startIng = true
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -777,6 +782,7 @@
 
 			},
 			showDia() {
+				this.startIng = false
 				this.initGirdData()
 				setTimeout(() => {
 					app.globalData.isRotating = false;
@@ -812,6 +818,7 @@
 			},
 			
 			async refChangBtn(){
+				if(!this.startIng){
 				await api.getLotteryActInfo({
 					'activityId':this.activityId
 				}).then(res => {
@@ -825,10 +832,8 @@
 					} else if (res.code == 0) {
 						
 					}
-				}).finally(res => {})
-				
-				
-				
+				}).finally(res => {})	
+				}
 			}
 
 
