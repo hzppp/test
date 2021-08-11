@@ -234,7 +234,7 @@
 				console.log(this.currentObj.miniUrl.split('&')[1])
 				if ((this.popName == 'form-success-pop' ) && this.currentObj
 					.redirectType == 2 && this.currentObj.miniUrl && this.currentObj.miniUrl.split('&')[1] ===
-					'type=wawaji') {
+					'type=wawaji' && this.currentObj.isActStart) {
 					uni.navigateTo({
 						url: `/pages/wawaji?activityId=${this.currentObj.id}`
 					})
@@ -482,7 +482,7 @@
 				let popname
 				if (data.code == 1) { //成功留资
 					console.log(ly + data)
-					if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
+					if ((ly == 'lbactivity' || lydx.from == 'lbactivity') && lydx.isActStart) {
 						if(lydx.activityType == 'wawaji'){
 						if (lydx.actSelect == 0) {
 							// 线下

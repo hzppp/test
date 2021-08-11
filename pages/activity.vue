@@ -62,7 +62,8 @@
 
 		<view class="myred" @tap='tapmyred()' v-if="red.redDone"></view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
-			<view v-if="!red.redDone" class="redOpenV" @tap='redOpen()'>
+			<view v-if="!red.redDone" class="redOpenV" >
+				<view @tap='redOpen()' class="redOpenVBtn"></view>
 				<!-- <image  src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redBack.png" mode="aspectFit"></image> -->
 			</view>
 
@@ -120,7 +121,8 @@
 				red: {
 					amount: 0,
 					redDone: false
-				}
+				},
+				redOpening:false 
 
 			}
 		},
@@ -178,6 +180,9 @@
 				if (this.liveUrl) {
 					this.content.liveUrl = this.liveUrl
 				}
+				this.content.isActStart = this.isActStart
+				
+				
 				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
 					uni.reLaunch({
 						url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
@@ -249,7 +254,13 @@
 
 				// #ifdef MP-TOUTIAO
 				console.log(12133123)
+				if (this.isApply && this.activityType == "wawaji") {
+					uni.navigateTo({
+						url: `/pages/wawaji?activityId=${this.content.id}`
+					})
+				} else {
 				this.$children[3].formShow('form', 'activity', this.content, '报名活动')
+				}
 				// #endif
 
 			},
@@ -443,6 +454,11 @@
 				if (app.globalData.wxUserInfo && app.globalData.wxUserInfo.openId) {
 					openId = app.globalData.wxUserInfo.openId
 				}
+				uni.showLoading({})
+				if(this.redOpening){
+					return
+				}
+				this.redOpening = true
 				let {
 					data
 				} = await api.openRed({
@@ -450,14 +466,16 @@
 					'openId': openId,
 					'scene': '0',
 				})
-				
+				uni.hideLoading()
+				this.redOpening = false
 				this.red.redDone = true
 				this.red.amount = data.amount
 				console.log(data, data.amount)
 				// #endif
 				
 				// #ifdef MP-TOUTIAO
-				this.$toast('请在微信搜索【长安汽车云车展】参与本活动')
+				this.$toast('请在微信搜索本小程序参与活动')
+	
 				// #endif
 				
 				
@@ -668,9 +686,19 @@
 	}
 
 	.redOpenV {
+		position: relative;
 		width: 560rpx;
 		height: 760rpx;
 		.setbg(560rpx, 760rpx, 'redBack.png');
+		.redOpenVBtn{
+			// background: #0062CC;
+			position: absolute;
+			top: 150rpx;
+			left: 90rpx;
+			width: 400rpx;
+			height: 300rpx;
+			
+		}
 	}
 
 	.redShow {

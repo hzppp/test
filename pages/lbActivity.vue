@@ -7,7 +7,7 @@
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse="sourceUserId">
 			</page-top>
-			<form-pop ref="formpop"></form-pop>
+			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
 
 			<template v-if="activityType=='wawaji'">
 				<view class="title">{{content.name}}</view>
@@ -30,7 +30,7 @@
 				</view>
 				<view class="type-a" v-else>
 					<template v-if="activityType && activityType=='wawaji'">
-						<template v-if="isApply && actSelect == 2 ">
+						<template v-if="isApply && actSelect == 2 && isActStart ">
 							<view class="enroll-btn actSelectOneBtn" @click="actSelect1()">
 								<view class="selectTitle1">车展现场活动</view>
 								<view class="selectTitle2">线下活动</view>
@@ -54,16 +54,18 @@
 							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
-							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-								@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
-							<button class="enroll-btn enroll-btn2" @tap="formShow"
-								v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
+							<template v-if="!isActStart && isApply">
+								<button class="enroll-btn enroll-btn2" >已报名，活动未开始</button>
+							</template>
+							<template v-else>
+								<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+									@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+								<button class="enroll-btn enroll-btn2" @tap="formShow"
+									v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
+							</template>
 						</template>
 					</template>
 					<button class="enroll-btn" @tap="formShow" v-else>{{formShowTitle}}</button>
-					
-					
-					
 				</view>
 			</view>
 		</view>
@@ -172,7 +174,6 @@
 				console.log('----------------', this.Interval)
 			}
 			
-			this.getFission()
 			try {
 				uni.showLoading({
 					title: '正在加载...'
@@ -184,6 +185,7 @@
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
+				this.getFission()
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
@@ -201,6 +203,7 @@
 				this.content.lotteryType = this.lotteryType
 				this.content.actSelect = this.actSelect
 				this.content.activityType = this.activityType
+				this.content.isActStart = this.isActStart
 
 			} catch (err) {
 				console.error(err)
@@ -241,17 +244,27 @@
 		methods: {
 			async getFission() {
 				console.log(1)
-				let {
-					data,
-					code
-				} = await api.getFission({
+				// let {
+				// 	data,
+				// 	code
+				// } = await api.getFission({
+				// 	activityId: this.activityId
+				// })
+				
+				let clueInfo = await api.getClueInfo({
 					activityId: this.activityId
 				})
-				if (data) {
-					let isApply = data.isApply
+				if (clueInfo) {
+					let isApply = clueInfo.data.isApply
 					this.isApply = isApply;
+					if(isApply && !this.isActStart){
+						this.formShowTitle = "已报名,活动未开始"
+					}
+					
+					
+					console.log('isApply' , isApply,this.activityType,this.isActStart)
 					//是否提交过
-					if (isApply == 1 && this.activityType == "") {
+					if (isApply == 1 && this.activityType == "" && this.isActStart) {
 						if(this.lotteryType == 'Vouchers'){
 							uni.redirectTo({
 							 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
@@ -298,6 +311,9 @@
 			},
 
 			formShow() {
+				if(!this.isActStart && this.isApply){
+					return
+				}
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				// #endif
@@ -343,12 +359,6 @@
 					this.$children[3].formShow('form', formpopName, this.content, '报名活动')
 					// #endif
 				}
-
-
-
-
-
-
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -406,12 +416,17 @@
 			add0(number) {
 				return number > 9 ? number : '0' + number
 			},
-
+			
+			subSuccess(){
+				this.getFission()
+			},
 			getData() {
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
+			
+				
 			},
 			shareChoise() {
 				this.$refs.popup.open('bottom')

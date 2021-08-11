@@ -818,15 +818,25 @@
 			},
 			
 			async refChangBtn(){
+				
 				if(!this.startIng){
+				uni.showLoading({})
+				this.inviteRecordList = await api.getInviteRecordList({
+					pageNo: 1,
+					pageSize: 3,
+					'activityId':this.activityId
+				}).then(res => {
+					this.inviteRecordCount = res.total || 0
+					return res.code == 1 ? res.rows : []
+				})
+					
 				await api.getLotteryActInfo({
 					'activityId':this.activityId
 				}).then(res => {
+					uni.hideLoading()
 					if (res.code == 1) {
 						this.lotteryActInfo.chanceCount = res.data.chanceCount
 						this.lotteryActInfo.prizeList = res.data.prizeList
-						
-						
 					} else if (res.code == 10) {
 						
 					} else if (res.code == 0) {
@@ -907,6 +917,10 @@
 						font-weight: 700;
 						text-align: center;
 						color: #333333;
+						/*  #ifndef  %MP-WEIXIN%  */
+							font-size: 46rpx;	
+							top: 36rpx;
+						/*  #endif  */
 					}
 
 					.BCContentTips {
