@@ -13,7 +13,7 @@
 						<scroll-view scroll-y="true" class="BCContentTips">
 							<text>{{activityMemoArr}}</text>
 						</scroll-view>
-						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
+						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : (lotteryActInfo.prizeList[0].stock == 0 )?'BCSub2':'BCSub' "
 							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'代金券已领完':'立即领取')}}
 						</button>
 						<text class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" @tap='voucherStart()'>
@@ -972,6 +972,17 @@
 						border-radius: 44px;
 						line-height: 50rpx;
 						color: #FA8845 !important;
+					}
+					.BCSub2 {
+						position: fixed;
+						bottom: 13.6vh;
+						width: 588rpx;
+						height: 88rpx;
+						left: 81rpx;
+						opacity: 1;
+						background: #F8F8F8;
+						border-radius: 44px;
+						color: #CCCCCC;
 					}
 
 					.BCSub1Title {

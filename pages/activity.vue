@@ -425,7 +425,6 @@
 					this.redRecord()
 				} else if (status == 3) {
 					// 无关联红包
-
 				}
 
 			},
@@ -514,8 +513,8 @@
 
 
 	.myred {
-		position: absolute;
-		bottom: 162rpx;
+		position: fixed;
+		bottom: 282rpx;
 		right: 36rpx;
 		width: 89rpx;
 		height: 109rpx;
