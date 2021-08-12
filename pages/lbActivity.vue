@@ -55,7 +55,7 @@
 								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
 							<template v-if="!isActStart && isApply">
-								<button class="enroll-btn enroll-btn2" >已报名，活动未开始</button>
+								<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
 							</template>
 							<template v-else>
 								<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
@@ -65,7 +65,7 @@
 							</template>
 						</template>
 					</template>
-					<button class="enroll-btn" @tap="formShow" v-else>{{formShowTitle}}</button>
+					<button :class="(!isActStart && isApply)?'enroll-btn enroll-btn3': 'enroll-btn'" @tap="formShow" v-else>{{formShowTitle}}</button>
 				</view>
 			</view>
 		</view>
@@ -626,11 +626,19 @@
 				font-size: 32rpx;
 				background-color: #fa8845;
 				border-radius: 44rpx;
-
+				
 				&.enroll-btn2 {
 					width: 420rpx;
+						
 				}
+				
+				
 			}
+			.enroll-btn3 {
+				background-color: #DEDEDE;
+					
+			}
+			
 
 			.actSelectOneBtn {
 				text-align: center;

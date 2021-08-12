@@ -43,7 +43,7 @@
 						open-type="share" @click="shareBtnClick">分享好友</button>		
 					
 					<template v-if="!isActStart && isApply">
-						<button class="enroll-btn" >已报名，活动未开始</button>
+						<button class="enroll-btn enroll-btn3" >已报名，活动未开始</button>
 					</template>
 					
 					<template v-else>
@@ -454,23 +454,34 @@
 				if (app.globalData.wxUserInfo && app.globalData.wxUserInfo.openId) {
 					openId = app.globalData.wxUserInfo.openId
 				}
-				uni.showLoading({})
+				
 				if(this.redOpening){
 					return
 				}
+				
 				this.redOpening = true
-				let {
-					data
-				} = await api.openRed({
-					'activityId': this.activityId,
-					'openId': openId,
-					'scene': '0',
-				})
-				uni.hideLoading()
-				this.redOpening = false
-				this.red.redDone = true
-				this.red.amount = data.amount
-				console.log(data, data.amount)
+				uni.showLoading({})
+				try {
+				 let {
+				 	data,code
+				 } = await api.openRed({
+				 	'activityId': this.activityId,
+				 	'openId': openId,
+				 	'scene': '0',
+				 })
+				 uni.hideLoading()
+				
+				 this.red.redDone = true
+				 this.red.amount = data.amount
+				 console.log(data, data.amount)
+				} catch(err) {
+					uni.hideLoading()
+				 	this.$toast('网络繁忙，请稍后重试')
+				}
+				
+				 this.redOpening = false
+		
+				
 				// #endif
 				
 				// #ifdef MP-TOUTIAO
@@ -656,6 +667,9 @@
 				background-color: #fa8845;
 				border-radius: 44rpx;
 			}
+			.enroll-btn3 {
+				background-color: #DEDEDE;	
+			}
 		}
 
 		.type-b {
@@ -693,10 +707,11 @@
 		.redOpenVBtn{
 			// background: #0062CC;
 			position: absolute;
-			top: 150rpx;
-			left: 90rpx;
-			width: 400rpx;
-			height: 300rpx;
+			top: 146rpx;
+			left: 156rpx;
+			width: 249rpx;
+			height: 250rpx;
+			.setbg(249rpx, 250rpx, 'redBackOpen.png');
 			
 		}
 	}

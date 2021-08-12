@@ -14,7 +14,7 @@
 							<text>{{activityMemoArr}}</text>
 						</scroll-view>
 						<button :class="(lotteryActInfo.chanceCount == 0  && lotteryActInfo) ? 'BCSub1' : 'BCSub' "
-							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'已领完':'立即领取')}}
+							@tap='voucherStart()'>{{(lotteryActInfo.chanceCount == 0  && lotteryActInfo)?('查看代金券'):(lotteryActInfo.prizeList[0].stock == 0 ?'代金券已领完':'立即领取')}}
 						</button>
 						<text class="BCSub1Title" v-if="(lotteryActInfo.chanceCount == 0  && lotteryActInfo)" @tap='voucherStart()'>
 							代金券存入[我的]-[中奖记录]</text>
@@ -342,7 +342,8 @@
 				// this.activityMemoArr =this.lotteryActInfo.activityMemo.split(/[\s\n]/)
 				this.activityMemoArr = this.lotteryActInfo.activityMemo.replace('/n', '/r/s')
 			}
-
+			uni.hideLoading()
+			
 
 			this.lotteryActInfo.winnerRecords.reverse()
 
@@ -538,14 +539,14 @@
 			},
 			// 购车代金券抽奖
 			async voucherStart() {
-				if (this.lotteryActInfo.prizeList[0].stock == 0) {
-					// 没有库存
-					return
-				}
 				if (this.lotteryActInfo.chanceCount == 0) {
 					uni.navigateTo({
 						url: '/pages/lotteryRecord'
 					})
+					return
+				}
+				if (this.lotteryActInfo.prizeList[0].stock == 0) {
+					// 没有库存
 					return
 				}
 				uni.showLoading({})
@@ -563,13 +564,16 @@
 					} else if (res.code === 1) {
 						if (res.price == 0) {
 							this.$toast('来晚啦～代金券已抢光')
+							this.lotteryActInfo.prizeList[0].stock = 0
 							this.lotteryActInfo.chanceCount = 0
 						} else {
 							this.$toast('领取成功')
+							this.lotteryActInfo.prizeList[0].stock = 0
 							this.lotteryActInfo.chanceCount = 0
 						}
 						return res.data
 					} else if (res.code == 0) {
+						this.lotteryActInfo.prizeList[0].stock = 0
 						uni.showToast({
 							title: '来晚啦～代金券已抢光',
 							icon: "none"
@@ -913,20 +917,28 @@
 					.BCtitle {
 						position: relative;
 						top: 56rpx;
-						font-size: 56rpx;
+						font-size: 46rpx;
 						font-weight: 700;
 						text-align: center;
+					    align-items:center;
+						height: 130rpx;
+						display: flex;
+						  justify-content: center;
+						  align-items:center;
+						  width: 100%;
+
 						color: #333333;
-						/*  #ifndef  %MP-WEIXIN%  */
-							font-size: 46rpx;	
-							top: 36rpx;
-						/*  #endif  */
+						/*  #ifndef  MP-WEIXIN */
+						font-size: 46rpx;
+						top: 36rpx;
+						/*  #endif  */	
+		
 					}
 
 					.BCContentTips {
 						width: 601rpx;
 						position: relative;
-						top: 157rpx;
+						top: 107rpx;
 						left: 44rpx;
 						font-size: 28rpx;
 						font-weight: 400;
