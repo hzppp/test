@@ -181,7 +181,7 @@
 						str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length-6)
 					}
 					
-					this.fromShowBtnTitle = '抽奖凭证CA' + this.activityId +  str; 
+					this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId +  str; 
 				}
 				
 				this.downDate(data.endTime)
@@ -252,6 +252,12 @@
 		},
 		methods: {
 			formShow() {
+				
+				if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
+					// 针对有抽奖凭证的 不能点击
+					return
+				}
+				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				console.log("已经报名，且为抓娃娃机活动", this.isApply, this.activityType)
@@ -680,6 +686,8 @@
 				border-radius: 44rpx;
 				box-sizing: border-box;
 				background-color: #FFFFFF;
+				font-size: 27rpx;
+				line-height: 88rpx;
 			}
 
 			.enroll-btn {
