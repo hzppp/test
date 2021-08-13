@@ -497,7 +497,7 @@
 				 console.log(data, data.amount)
 				} catch(err) {
 					uni.hideLoading()
-				 	this.$toast('网络繁忙，请稍后重试')
+				 	this.$toast('活动太火爆啦，请稍后再来')
 				}
 				
 				 this.redOpening = false
