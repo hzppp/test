@@ -124,7 +124,8 @@
 				},
 				redOpening:false,
 				fromShowBtnTitle:'报名活动',
-				voucherShow:false
+				voucherShow:false,
+				activitySceneId:''
 
 			}
 		},
@@ -160,64 +161,10 @@
 			}
 			this.voucherShow = options.voucherShow
 			await login.checkLogin(api)
-			try {
-				uni.showLoading({
-					title: '正在加载...'
-				})
-				// await login.login()
-				this.activityId = options.id
-				let {
-					data = {}
-				} = await api.getActivityContent(this.activityId)
-				let clueInfo = await api.getClueInfo({
-					activityId: this.activityId
-				})
-				if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
-				
-				if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
-					
-					let str = ''
-					if(app.globalData.wxUserInfo.openId){
-						str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length-6)
-					}
-					
-					this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId +  str; 
-				}
-				
-				this.downDate(data.endTime)
-				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
-				app.Interval = setInterval(() => {
-					this.downDate(data.endTime)
-				}, 1000)
-				this.phone = uni.getStorageSync('userPhone');
-				this.content = data
-				if (this.liveUrl) {
-					this.content.liveUrl = this.liveUrl
-				}
-				this.content.isActStart = this.isActStart
-				
-				
-				if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
-					uni.reLaunch({
-						url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
-					})
-				}
-				if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
-					uni.reLaunch({
-						url: '/pages/lbActivity?id=' + this.activityId + '&sourceUserId=' + options
-							.sourceUserId
-					})
-				}
-				// 访问活动 记录活动访问次数
-				api.fetchActivityVisit({
-					'activityId': this.activityId
-				})
-			} catch (err) {
-				console.error(err)
-			} finally {
-				uni.hideLoading()
-			}
-
+			// await login.login()
+			this.activityId = options.id
+			// 数据相关
+			this.getData()
 			// 分享用
 			let cs = ''
 			for (let i in options) {
@@ -226,8 +173,7 @@
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
-			// 红包相关
-			this.redStatus(this.activityId)
+		
 		},
 		onHide() {
 			if (app.Interval) {
@@ -422,11 +368,64 @@
 				return number > 9 ? number : '0' + number
 			},
 
-			getData() {
-				// 访问活动 记录活动访问次数
-				api.fetchActivityVisit({
-					'activityId': this.activityId
-				})
+		 async	getData() {
+					try {
+						uni.showLoading({
+							title: '正在加载...'
+						})
+						let {
+							data = {}
+						} = await api.getActivityContent(this.activityId)
+						let clueInfo = await api.getClueInfo({
+							activityId: this.activityId
+						})
+						if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
+						
+						if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
+							
+							let str = ''
+							if(app.globalData.wxUserInfo.openId){
+								str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length-6)
+							}
+							
+							this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId +  str; 
+						}
+						
+						this.downDate(data.endTime)
+						this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
+						app.Interval = setInterval(() => {
+							this.downDate(data.endTime)
+						}, 1000)
+						this.phone = uni.getStorageSync('userPhone');
+						this.content = data
+						if (this.liveUrl) {
+							this.content.liveUrl = this.liveUrl
+						}
+						this.content.isActStart = this.isActStart
+						
+						
+						if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
+							uni.reLaunch({
+								url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
+							})
+						}
+						if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
+							uni.reLaunch({
+								url: '/pages/lbActivity?id=' + this.activityId 
+							})
+						}
+						// 访问活动 记录活动访问次数
+						api.fetchActivityVisit({
+							'activityId': this.activityId
+						})
+					} catch (err) {
+						console.error(err)
+					} finally {
+						uni.hideLoading()
+					}
+				
+				// 红包相关
+			  this.redStatus(this.activityId)
 			},
 
 			async redStatus() {
@@ -435,6 +434,7 @@
 				} = await api.redStatus({
 					'activityId': this.activityId
 				})
+				this.activitySceneId = data.activitySceneId
 				let status = data.status
 				console.log('红包状态', status)
 				if (status == 0) {
@@ -451,7 +451,8 @@
 
 			async redRecord() {
 				let data = await api.redRecord({
-					'activityId': this.activityId
+					'activityId': this.activityId,
+					'activitySceneId':this.activitySceneId
 				})
 				console.log('中奖记录', data)
 				let rows = data.rows
@@ -487,6 +488,7 @@
 				 	'activityId': this.activityId,
 				 	'openId': openId,
 				 	'scene': '0',
+					'activitySceneId':this.activitySceneId
 				 })
 				 uni.hideLoading()
 				

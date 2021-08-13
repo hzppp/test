@@ -74,7 +74,7 @@
 				liveList: [],
 				hasNext: true,
 				pageNum: 1,
-				pageSize: 10,
+				pageSize: 30,
 				dealerGroupId: '',
 				nothing: 1,
 				liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png',
