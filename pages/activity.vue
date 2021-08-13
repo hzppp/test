@@ -49,7 +49,7 @@
 					<template v-else>
 						<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
 							v-if="!phone">报名活动</button>
-						<button class="enroll-btn" @tap="formShow" v-else>报名活动</button>
+						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn' " @tap="formShow" v-else>{{fromShowBtnTitle}}</button>
 					</template>
 					
 				</view>
@@ -122,7 +122,9 @@
 					amount: 0,
 					redDone: false
 				},
-				redOpening:false 
+				redOpening:false,
+				fromShowBtnTitle:'报名活动',
+				voucherShow:false
 
 			}
 		},
@@ -156,6 +158,7 @@
 			if (options.type) {
 				this.activityType = options.type || ''
 			}
+			this.voucherShow = options.voucherShow
 			await login.checkLogin(api)
 			try {
 				uni.showLoading({
@@ -170,6 +173,17 @@
 					activityId: this.activityId
 				})
 				if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
+				
+				if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
+					
+					let str = ''
+					if(app.globalData.wxUserInfo.openId){
+						str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length-6)
+					}
+					
+					this.fromShowBtnTitle = '抽奖凭证CA' + this.activityId +  str; 
+				}
+				
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				app.Interval = setInterval(() => {
@@ -651,6 +665,15 @@
 
 			.share-btn {
 				width: 236rpx;
+				height: 88rpx;
+				color: #fa8845;
+				border: 2rpx solid #fa8845;
+				border-radius: 44rpx;
+				box-sizing: border-box;
+				background-color: #FFFFFF;
+			}
+			.enroll-btn4 {
+				width: 420rpx;
 				height: 88rpx;
 				color: #fa8845;
 				border: 2rpx solid #fa8845;
