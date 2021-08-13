@@ -491,10 +491,13 @@
 					'activitySceneId':this.activitySceneId
 				 })
 				 uni.hideLoading()
-				
-				 this.red.redDone = true
-				 this.red.amount = data.amount
-				 console.log(data, data.amount)
+				 if(code==-1){
+					this.$toast('活动太火爆啦，请稍后再来') 
+				 }else{
+				  this.red.redDone = true
+				  this.red.amount = data.amount
+				  console.log(data, data.amount)	 
+				 }
 				} catch(err) {
 					uni.hideLoading()
 				 	this.$toast('活动太火爆啦，请稍后再来')
