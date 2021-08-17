@@ -40,16 +40,16 @@
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick">分享好友</button>		
+						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>		
 					
 					<template v-if="!isActStart && isApply">
-						<button class="enroll-btn enroll-btn3" >已报名，活动未开始</button>
+						<button :class="'enroll-btn enroll-btn3'" :style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
 					</template>
 					
 					<template v-else>
-						<button class="enroll-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
-							v-if="!phone">报名活动</button>
-						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn' " @tap="formShow" v-else>{{fromShowBtnTitle}}</button>
+						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
+							v-if="!phone" :style="{width:canShare?'420rpx':'686rpx'}">报名活动</button>
+						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" :style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow" v-else>{{fromShowBtnTitle}}</button>
 					</template>
 					
 				</view>
@@ -125,7 +125,8 @@
 				redOpening:false,
 				fromShowBtnTitle:'报名活动',
 				voucherShow:false,
-				activitySceneId:''
+				activitySceneId:'',
+				canShare:true
 
 			}
 		},
@@ -150,7 +151,9 @@
 
 				console.log('liveurl == ', this.liveUrl)
 			}
-
+			if(options.canShare && options.canShare == 'no'){
+				this.canShare = false
+			}
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
@@ -183,12 +186,12 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = this.shareURL
-			api.shareActivity(this.content.id).then(res => {
-				console.log(res)
-				if (res.data > 0) {
-					this.content.shareStatus = 1
-				}
-			})
+			// api.shareActivity(this.content.id).then(res => {
+			// 	console.log(res)
+			// 	if (res.data > 0) {
+			// 		this.content.shareStatus = 1
+			// 	}
+			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
 			return {
 				title: title,
@@ -424,8 +427,11 @@
 						uni.hideLoading()
 					}
 				
+				
+				// #ifdef MP-WEIXIN
 				// 红包相关
-			  this.redStatus(this.activityId)
+				this.redStatus(this.activityId)
+				// #endif
 			},
 
 			async redStatus() {
@@ -694,7 +700,6 @@
 				font-size: 27rpx;
 				line-height: 88rpx;
 			}
-
 			.enroll-btn {
 				width: 420rpx;
 				height: 88rpx;
