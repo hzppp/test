@@ -819,6 +819,10 @@
 				width: 700rpx;
 				overflow: hidden;
 				white-space: nowrap;
+				/*  #ifndef  MP-WEIXIN */
+				height: 180rpx;
+				/*  #endif  */	
+				
 
 				.hotCarItem {
 					display: inline-block;

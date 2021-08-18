@@ -824,7 +824,9 @@
 			async refChangBtn(){
 				
 				if(!this.startIng){
-				uni.showLoading({})
+				uni.showLoading({
+					title:'加载中'
+				})
 				this.inviteRecordList = await api.getInviteRecordList({
 					pageNo: 1,
 					pageSize: 3,
