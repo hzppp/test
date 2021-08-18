@@ -375,7 +375,7 @@ const COUNTDOWN = 60
                         const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.currentDealer = data[Math.ceil(Math.random()*(data.length - 1))]
                         }else {
                             this.currentDealer = {}
                         }
@@ -383,7 +383,7 @@ const COUNTDOWN = 60
                         const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.currentDealer = data[Math.ceil(Math.random()*(data.length - 1))]
                         }else {
                             this.currentDealer = {}
                         }

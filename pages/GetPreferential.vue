@@ -394,7 +394,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.currentDealer = data[Math.ceil(Math.random()*(data.length - 1))]
                         }else {
                             this.currentDealer = {}
                         }
@@ -402,7 +402,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
                             this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.currentDealer = data[Math.ceil(Math.random()*(data.length - 1))]
                         }else {
                             this.currentDealer = {}
                         }

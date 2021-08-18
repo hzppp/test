@@ -24,11 +24,11 @@
 					:value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
 				</picker>
-				<!-- 	<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
+					<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
 					:range="districtList" :range-key="'name'"
 					:class="'input-view area-input ' + (showDistrictText == '请选择您的地区' ? 'placeholder':'')">
 					<view>{{showDistrictText}}</view>
-				</picker> -->
+				</picker>
 				<!-- 经销商 S -->
 				<block>
 					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList"
@@ -718,7 +718,7 @@
 					if (res.code == 1) {
 						this.dealerList = res.data
 						if (this.dealerList && this.dealerList.length) {
-							this.crtDealerItem = this.dealerList[0]
+							this.crtDealerItem = this.dealerList[Math.ceil(Math.random()*(this.dealerList.length - 1))]
 						}
 					}
 				} catch (err) {

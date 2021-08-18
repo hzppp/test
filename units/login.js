@@ -60,7 +60,12 @@ export default {
 		
 		// 微信登录
         let _data = {}
-        let data1 = await this.uniLogin()//获取jscode
+        let data1 = {}
+		 try{
+		 	data1 = await this.uniLogin()//获取jscode
+		 }catch(e){
+		 	console.log('登录获取code失败')
+		 }
         console.log('uni.login()==================', data1)
         _data['code'] = data1.code
 		
@@ -129,7 +134,7 @@ export default {
     async checkLogin(api) {
 		
 		//yuchen 测试 
-	   // this.setSessionKey("rbqDcUMiOERZnvQqgmtzOoY8wWKErtgT")
+	   // this.setSessionKey("8axKMq01t3sQJxiF2u5nIqtvjPqpLlgw")
 		
 		
 		await this.checkExpireTime(api)

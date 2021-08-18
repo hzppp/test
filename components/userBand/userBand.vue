@@ -31,8 +31,6 @@ import api from '@/public/api/index.js'
          let token  =  uni.getStorageSync('session-3rd')
 		 console.log('userBand token'+token)
 		 if(!token){	 
-			
-			
 			try{
 			await login.checkLogin(api)
 				if( !uni.getStorageSync('session-3rd')){
@@ -43,7 +41,6 @@ import api from '@/public/api/index.js'
 					this.isShow = true
 				}
 			}
-			
 		 }else{
 		    await login.checkExpireTime(api)	 
 		 }
