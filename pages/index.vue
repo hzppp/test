@@ -46,7 +46,7 @@
 				<view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
 					热销车型
 				</view>
-				<scroll-view scroll-x show-scrollbar class="hotCar">
+				<scroll-view scroll-x="true" show-scrollbar class="hotCar">
 					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
 						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
@@ -821,6 +821,7 @@
 				white-space: nowrap;
 				/*  #ifndef  MP-WEIXIN */
 				height: 180rpx;
+			   flex-direction :column;
 				/*  #endif  */	
 				
 
@@ -829,6 +830,7 @@
 					width: 210rpx;
 					align-items: center;
 					margin-right: 16rpx;
+					white-space: nowrap;
 
 					.img {
 						width: 210rpx;
