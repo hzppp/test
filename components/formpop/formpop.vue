@@ -698,6 +698,9 @@
 					})
 					if (res.code == 1) {
 						this.districtList.push(...res.data)
+						this.crtDistrictItem = this.districtList[Math.ceil(Math.random()*(this.districtList.length-1)+1)]
+						this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
+						// console.log('this.crtDistrictItem',this.crtDistrictItem)
 					}
 				} catch (err) {
 					this.showToast('获取地区信息失败')
