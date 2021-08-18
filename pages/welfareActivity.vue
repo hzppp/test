@@ -177,6 +177,7 @@
 				uni.hideLoading()
 				uni.stopPullDownRefresh()
 			}, 300)
+			uni.pageScrollTo({})
 		},
 		onShareAppMessage() {
 			let title = '长安云车展：活动优惠都在这里！'
