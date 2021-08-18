@@ -176,7 +176,6 @@
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
-		
 		},
 		onHide() {
 			if (app.Interval) {

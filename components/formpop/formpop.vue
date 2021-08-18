@@ -686,11 +686,7 @@
 			},
 			// 根据城市id请求地区
 			async reqDistrictListByCityId(cityId) {
-				this.districtList = [{
-					id: '',
-					name: '请选择您的地区',
-					letter: '',
-				}]
+				this.districtList = []
 				this.crtDistrictItem = {}
 				try {
 					const res = await api.fetchDistrictListByCityId({
@@ -698,9 +694,11 @@
 					})
 					if (res.code == 1) {
 						this.districtList.push(...res.data)
-						this.crtDistrictItem = this.districtList[Math.ceil(Math.random()*(this.districtList.length-1)+1)]
+						let num = Math.floor(Math.random()*(this.districtList.length ))
+						this.crtDistrictItem = this.districtList[num]
+						console.log('this.crtDistrictItem',this.crtDistrictItem,this.districtList,num)
 						this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
-						// console.log('this.crtDistrictItem',this.crtDistrictItem)
+						
 					}
 				} catch (err) {
 					this.showToast('获取地区信息失败')
@@ -720,8 +718,8 @@
 					})
 					if (res.code == 1) {
 						this.dealerList = res.data
-						if (this.dealerList && this.dealerList.length) {
-							this.crtDealerItem = this.dealerList[Math.ceil(Math.random()*(this.dealerList.length - 1))]
+						if (this.dealerList && this.dealerList.length) { 100
+							this.crtDealerItem = this.dealerList[Math.floor(Math.random()*(this.dealerList.length - 1))]
 						}
 					}
 				} catch (err) {

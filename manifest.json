@@ -57,9 +57,9 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxe6ffa5dceb3b003b",
+        "appid" : "wxb36fb5205e5afb36",
         "setting" : {
-            "urlCheck" : true,
+            "urlCheck" : false,
             "es6" : true,
             "postcss" : false,
             "minified" : true
@@ -67,7 +67,7 @@
         "usingComponents" : true,
         "permission" : {
             "scope.userLocation" : {
-                "desc" : "你的位置信息将用于小程序位置接口的效果展示"
+                "desc" : "用于推荐附近的长安汽车线下服务中心，提升服务体验"
             }
         }
     },
