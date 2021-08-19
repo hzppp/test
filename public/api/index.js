@@ -23,7 +23,7 @@ module.exports = {
 			url: domain.getAPI('getIpAreaCoord'),
 			data: {
 				resp_enc: "utf-8",
-				level: 2,
+				level: 3,
 				json: true,
 				coords: zb
 			}

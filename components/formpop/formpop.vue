@@ -647,7 +647,7 @@
 					this.smsCodeShow = false
 				} else {
 					this.smsCodeShow = true
-				}
+				} 
 
 				await distance.getLocation()
 				// 省市区 经销商
@@ -694,7 +694,25 @@
 					})
 					if (res.code == 1) {
 						this.districtList.push(...res.data)
+						
 						let num = Math.floor(Math.random()*(this.districtList.length ))
+						// 根据定位出区
+						let currentLocation = app.globalData.currentLocation
+						if(currentLocation){
+							let  cityData = currentLocation.cityData 
+							// console.log('cityData',cityData,currentLocation.selectedCityData)
+							let regionShow = true
+							if(currentLocation.selectedCityData.isChange){// 改过
+								if(cityData.city.replace('市', '') != currentLocation.selectedCityData.city.replace('市', '')){ // 切改了城市不同了
+									regionShow = false
+								}
+							}
+							if(regionShow){ //要根据定位出区域
+							num = this.districtList.findIndex(item => item.name.replace('区', '').replace(
+						'县', '') == cityData.region.replace('区', '').replace('县', ''))
+						console.log('匹配到了',num)
+							}
+						}
 						this.crtDistrictItem = this.districtList[num]
 						console.log('this.crtDistrictItem',this.crtDistrictItem,this.districtList,num)
 						this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
