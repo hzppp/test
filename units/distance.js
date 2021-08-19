@@ -128,7 +128,7 @@ export default {
         d = 2 * w * a;
         h1 = (3 * r - 1) / 2 / c;
         h2 = (3 * r + 1) / 2 / s;
-        return (parseInt(d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg))) / 1000).toFixed(1);;
+        return (parseInt(d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg))));
     },
     //给每个item计算出distance并加上字段
     addItemDistance(curMapX, curMapY, list) {
@@ -160,5 +160,32 @@ export default {
         let listWithDistance = this.addItemDistance(curMapX, curMapY, list)
         //根据distance从小到大排列
         return listWithDistance.sort((prev, next) => (+prev.distance) - (+next.distance))
-    }
+    },
+	
+	
+	// 根据坐标排经销商
+	sortDealersByDistance(list){
+		let  crtPosition = app.globalData.currentLocation.wxPosition
+		let longitude =  crtPosition.longitude
+		let latitude   =  crtPosition.latitude
+		if(longitude && latitude){
+			console.log('用户当前定位',longitude,latitude)
+			list.forEach((item,index)=>{
+				// item 加距离
+				if(item.lngX && item.lngY){
+				item.distance  =  this.countLatLng(latitude,longitude,item.lngY,item.lngX)
+				console.log(item.name,item.distance)	
+				}else{
+					item.distance  = Infinity
+				}
+			// item.distance = 8890
+			})
+			
+			
+			return list.sort((one,two)=>one.distance - two.distance)
+		}else{
+			return list
+		}
+	}
+
 }

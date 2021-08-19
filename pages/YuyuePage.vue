@@ -372,18 +372,18 @@ const COUNTDOWN = 60
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[Math.floor(Math.random()*(data.length ))]
+                            this.dealersList = distance.sortDealersByDistance(data)
+                            this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[Math.floor(Math.random()*(data.length ))]
+                          this.dealersList = distance.sortDealersByDistance(data)
+                          this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }

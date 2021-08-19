@@ -707,8 +707,8 @@
 			},
 			// 根据城市id请求经销商
 			async reqDealerListByCityId(cityId = '', districtId = '') {
-				this.dealerList = []
-				this.crtDealerItem = {}
+				// this.dealerList = []
+				// this.crtDealerItem = {}
 				try {
 					let pcSerialGroupId = this.crtSerialItem.pcSerialGroupId
 					const res = await api.fetchDealerListByCityId({
@@ -717,9 +717,9 @@
 						pcSerialGroupId
 					})
 					if (res.code == 1) {
-						this.dealerList = res.data
-						if (this.dealerList && this.dealerList.length) { 100
-							this.crtDealerItem = this.dealerList[Math.floor(Math.random()*(this.dealerList.length - 1))]
+						this.dealerList =distance.sortDealersByDistance(res.data) 
+						if (this.dealerList && this.dealerList.length) { 
+							this.crtDealerItem = this.dealerList[0]
 						}
 					}
 				} catch (err) {

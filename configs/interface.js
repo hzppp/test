@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE;
+const CUR_ENV = ENV.TEST;
 const version = 1022;
 
 
@@ -175,8 +175,6 @@ const config = {
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
 		//获取车系对比
 		fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
-		//获取经销商列表
-		fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
