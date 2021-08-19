@@ -112,7 +112,7 @@ import distance from '@/units/distance'
             font-size: 24rpx;
             margin-top: 24rpx;
             margin-bottom: 32rpx;
-			margin-right: 120rpx;
+			margin-right: 145rpx;
             &.isSelect {
                 color: #FA8845 !important;
             }
@@ -122,7 +122,7 @@ import distance from '@/units/distance'
 		   font-size: 24rpx;
 		   top:50% ;
 		   height: 31rpx;
-		   right: 25rpx;
+		   right: 10rpx;
 		   margin-top: - 16rpx;
 		   
 		}

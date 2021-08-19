@@ -173,12 +173,12 @@ export default {
 			list.forEach((item,index)=>{
 				// item 加距离
 				if(item.lngX && item.lngY){
-				item.distance  =  this.countLatLng(latitude,longitude,item.lngY,item.lngX)
+				item.distance  =  this.countLatLng(parseFloat(latitude),parseFloat(longitude),parseFloat(item.lngY),parseFloat(item.lngX))
 				console.log(item.name,item.distance)	
 				}else{
 					item.distance  = Infinity
 				}
-			// item.distance = 8890
+			// item.distance = 889
 			})
 			
 			
