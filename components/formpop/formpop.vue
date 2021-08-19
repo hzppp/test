@@ -694,7 +694,7 @@
 					})
 					if (res.code == 1) {
 						this.districtList.push(...res.data)
-						
+						console.log('this.districtList',this.districtList)
 						let num = Math.floor(Math.random()*(this.districtList.length ))
 						// 根据定位出区
 						let currentLocation = app.globalData.currentLocation
@@ -708,9 +708,12 @@
 								}
 							}
 							if(regionShow){ //要根据定位出区域
-							num = this.districtList.findIndex(item => item.name.replace('区', '').replace(
+							let index = this.districtList.findIndex(item => item.name.replace('区', '').replace(
 						'县', '') == cityData.region.replace('区', '').replace('县', ''))
-						console.log('匹配到了',num)
+						console.log('匹配到了',index)
+						  if(index != -1){
+							  num = index
+						  }
 							}
 						}
 						this.crtDistrictItem = this.districtList[num]

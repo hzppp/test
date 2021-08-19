@@ -13,8 +13,8 @@ export default {
 			} catch (err) {
 				currentLocation.wxPosition = {
 					wsq: true,
-					latitude: 29.57,
-					longitude: 106.5,
+					latitude: 0,
+					longitude: 0,
 					provider: 'default',
 				}
 				currentLocation.cityData = {
