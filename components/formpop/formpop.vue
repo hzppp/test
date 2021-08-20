@@ -33,7 +33,7 @@
 				<block>
 					<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex" :range="dealerList"
 						:range-key="'name'"
-						:class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')">
+						:class="'input-view dealer-input jt-icon ' + (!crtDealerItem.id ? 'placeholder':'')" :value="selectDealerIndex">
 						<view>{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 					</picker>
 					<view v-else class="input-view dealer-input  ">
@@ -218,6 +218,11 @@
 			},
 			selectDistrictIndex() {
 				let districtIndex = this.districtList.findIndex(item => item.id == this.crtDistrictItem.id)
+				districtIndex = districtIndex > -1 ? districtIndex : 0
+				return districtIndex
+			},
+			selectDealerIndex(){
+				let districtIndex = this.dealerList.findIndex(item => item.id == this.crtDealerItem.id)
 				districtIndex = districtIndex > -1 ? districtIndex : 0
 				return districtIndex
 			}
