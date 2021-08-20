@@ -37,6 +37,11 @@
 
 			this.getcity()
 		},
+		onShow() {
+		uni.setNavigationBarTitle({
+		  title: '云展厅'
+		})	
+		},
 		methods: {
 			async getcity() {
 				await distance.getLocation()
