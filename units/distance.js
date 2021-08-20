@@ -23,8 +23,8 @@ export default {
 					"error": "",
 					"pro": "重庆市",
 					"proCode": "500000",
-					"region": "江北区",
-					"regionCode": "500105"
+					"region": "",
+					"regionCode": ""
 				}
 				console.error(err)
 			}
