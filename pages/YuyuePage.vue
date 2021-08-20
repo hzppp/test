@@ -338,8 +338,8 @@ const COUNTDOWN = 60
             },
             //选择城市
             goChooseCity(){
-                this.currentDealer = {}
-                this.currentRegion = {}
+                // this.currentDealer = {}
+                // this.currentRegion = {}
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name
                 })

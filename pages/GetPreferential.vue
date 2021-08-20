@@ -433,6 +433,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
     text-align: center;
 }
 .get-preferential {
+	overflow: hidden;
     .getPhoneBtn {
         background-color: transparent;
         color: #777777;
