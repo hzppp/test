@@ -171,9 +171,11 @@ export default {
 		if(longitude && latitude){
 			console.log('用户当前定位',longitude,latitude)
 			list.forEach((item,index)=>{
-				// item 加距离
 				if(item.lngX && item.lngY){
 				item.distance  =  this.countLatLng(parseFloat(latitude),parseFloat(longitude),parseFloat(item.lngY),parseFloat(item.lngX))
+				if (isNaN(item.distance) ) {
+				    item.distance = 0;
+				}
 				console.log(item.name,item.distance)	
 				}else{
 					item.distance  = Infinity

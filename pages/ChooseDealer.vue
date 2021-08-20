@@ -7,7 +7,7 @@
             <view class="address" :class="{'isSelect':currentDealerId==item.id}">
                  {{item.address?item.address:'暂无详细地址'}}
             </view>
-			<view v-if="item.distance && item.distance != Infinity" class="distance">
+			<view v-if="item.distance != undefined && item.distance != Infinity" class="distance">
 				{{item.distance | formatThousand}}
 			</view>
         </view>
