@@ -60,10 +60,18 @@ export default {
 		
 		// 微信登录
         let _data = {}
-        let data1 = await this.uniLogin()//获取jscode
-        // console.log('uni.login()==================', data1)
+        let data1 = {}
+		 try{
+		 	data1 = await this.uniLogin()//获取jscode
+		 }catch(e){
+		 	console.log('登录获取code失败')
+		 }
+        console.log('uni.login()==================', data1)
         _data['code'] = data1.code
-
+		
+	    // #ifdef MP-TOUTIAO
+	    _data['type'] = '2'
+	    // #endif	
 
         if (app.globalData.salesId) {
             _data.salesId = app.globalData.salesId
@@ -76,16 +84,16 @@ export default {
             }
         })
 		console.log('登录返回',data)
-		if(  data.code == 1 &&data.data.resultCode==1 ){
+		if(data.code == 1 &&data.data.resultCode==1 ){
 			// console.log('注册 ==' + phone + 'iv =' + iv)
 			// 说明没有登录过长安 走注册流程
 			if(phone && iv){
-				// 有注册需要的参数，直接注册
-				let bindToken =  data.data.bindToken
-				let encryptedData = phone
-				let  data1 = await api.userBind({bindToken,encryptedData,iv})
-				console.log('注册参数=',{bindToken,encryptedData,iv},'注册结果=',data1)
-				data['data'] = data1
+				// // 有注册需要的参数，直接注册
+				// let bindToken =  data.data.bindToken
+				// let encryptedData = phone
+				// let  data1 = await api.userBind({bindToken,encryptedData,iv})
+				// console.log('注册参数=',{bindToken,encryptedData,iv},'注册结果=',data1)
+				// data['data'] = data1
 			}else{
 	     		// return 1
 			}
@@ -99,6 +107,7 @@ export default {
 		    }
 		}
 		console.log('自己系统登录login-data' , data)	
+		uni.setStorageSync('bindToken', data.bindToken)
 		if (data.code == 1) {
 		    if (data.token) {//保存sessionKey
 		        this.setSessionKey(data.token)
@@ -123,6 +132,11 @@ export default {
 
     },
     async checkLogin(api) {
+		
+		//yuchen 测试 
+	   // this.setSessionKey("ACONaxlTf6PaKadoxQkcOVeYG4g8LBBD")
+		
+		
 		await this.checkExpireTime(api)
 		// 先判断微信  session 是否有效
         let isSession = await this.checkSession()
@@ -170,19 +184,39 @@ export default {
         }
     },
 	async userBind(api,phone,iv) {
-		// console.log('api',api)
-	     await this.login(api,phone,iv)
-		let {code, data} = await api.getUser()
-		if (code == 1 && data) {
-		    app.globalData.haveUserInfoAuth = !!data.wxName
-		    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-		    app.globalData.wxUserInfo = data
-		    uni.setStorageSync('wxUserInfo', data)
-		    uni.setStorageSync('userPhone', data.mobile)
-		    console.log('用户信息2',app.globalData.haveUserInfoAuth)
-		}
-		return data
-	
+		if(phone && iv){
+			// 有注册需要的参数，直接注册
+			let bindToken =  uni.getStorageSync('bindToken')
+			console.log('写入的bindToken',bindToken);
+			let encryptedData = phone
+			let  data1 = await api.userBind({bindToken,encryptedData,iv})
+			console.log('注册参数=',{bindToken,encryptedData,iv},'注册结果=',data1)
+			if (data1.code == 1) {
+			    if (data1.token) {//保存sessionKey
+			        this.setSessionKey(data1.token)
+					data1['time'] =  new Date().getTime()
+					uni.setStorageSync('loginData', data1)
+					app.globalData.loginJson = data1
+			    }else if(data1.data.token){
+					this.setSessionKey(data1.data.token)
+					data1.data['time'] =  new Date().getTime()
+					uni.setStorageSync('loginData', data1.data)
+					app.globalData.loginJson = data1.data
+				}
+			} 
+			
+			let {code, data} = await api.getUser()
+			if (code == 1 && data) {
+			    app.globalData.haveUserInfoAuth = !!data.wxName
+			    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+			    app.globalData.wxUserInfo = data
+			    uni.setStorageSync('wxUserInfo', data)
+			    uni.setStorageSync('userPhone', data.mobile)
+			    console.log('用户信息2',app.globalData.haveUserInfoAuth)
+			}
+			return data
+			
+		  }
 	},
 	// 刷新token
 	async checkExpireTime(api){

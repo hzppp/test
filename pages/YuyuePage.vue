@@ -31,8 +31,8 @@
             </view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
-				<button class="getPhoneBtn" v-if="getPhoneBtn == false" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
+                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<button class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <view class="list models">
                 <view class="list-title">验证码</view>
@@ -105,6 +105,7 @@ const COUNTDOWN = 60
                 getPhoneBtn: false,
                 isFocus:false,
                 isNoData:false,
+				TOUTIAO:''
             }
         },
         watch: {
@@ -130,6 +131,11 @@ const COUNTDOWN = 60
         async onLoad(options) {
             // console.log('111111options :>> ', options);
             // await login.checkLogin(api)
+			
+			// #ifdef MP-TOUTIAO
+			 this.TOUTIAO = 'TOUTIAO'
+			// #endif
+			
             this.getStoragePhone()
             this.serialId = options.serialId || ""
 			if(this.serialId == ""){
@@ -332,8 +338,8 @@ const COUNTDOWN = 60
             },
             //选择城市
             goChooseCity(){
-                this.currentDealer = {}
-                this.currentRegion = {}
+                // this.currentDealer = {}
+                // this.currentRegion = {}
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name
                 })
@@ -366,18 +372,18 @@ const COUNTDOWN = 60
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.dealersList = distance.sortDealersByDistance(data)
+                            this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[0]
+                          this.dealersList = distance.sortDealersByDistance(data)
+                          this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }

@@ -21,8 +21,8 @@
             <!-- 手机号S -->
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  zijie == 'zijie'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
-				<button  class="getPhoneBtn" v-if="getPhoneBtn == false && zijie != 'zijie'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
+                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<button  class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <!-- 手机号E -->
             <!-- 验证码S -->
@@ -119,7 +119,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 isFocus:false,
 
                 isNoData:false,
-				zijie:''
+				zijie:'',
+				TOUTIAO:''
             }
         },
         watch: {
@@ -130,9 +131,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
 			serialId(n){
-			 if(this.zijie == 'zijie'){
-				  this.reqSerialDetail(this.serialId)
-			 }
+			 // if(this.zijie == 'zijie'){
+				//   this.reqSerialDetail(this.serialId)
+			 // }
+			 this.serialId = n
+			 this.reqSerialDetail(this.serialId)
 			 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
 			}
 
@@ -141,7 +144,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             this.checkInfo()
         },
        async onLoad(options) {
-		   
+		   // #ifdef MP-TOUTIAO
+		    this.TOUTIAO = 'TOUTIAO'
+		   // #endif
 		    this.zijie = options.zijie;
             console.log('options :>> ', options);
             // await login.checkLogin(api)
@@ -178,10 +183,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             title: '正在加载...',
                             mask:true
                         })
+						console.log('encryptedData = ',detail.encryptedData,  'detailiv == ', detail.iv)
                         let {data} = await api.decryptPhone(detail.encryptedData, detail.iv)
                         if (data && data.phoneNumber) {
                             uni.setStorageSync('userPhone', data.phoneNumber)
-                            this.phoneNum = data.phoneNumber						
+                            this.phoneNum = data.phoneNumber			
 					    }
                     } catch (error) {
                         uni.showToast({
@@ -239,7 +245,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 						url: "/pages/ChooseSerial?type=yuyue"
 					})
 				}else{
-				uni.redirectTo({
+				uni.navigateTo({
 					url: "/pages/ChooseSerial?pages=GetPreferential"
 				})	
 				}
@@ -251,9 +257,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 				    console.log(2111111111 + cityId)
 				   if(cityId){
 					let pcSerialGroupId = this.serialId;
-					 const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
+					 const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
 					 if(code === 1) {
-					     this.dealersList = data
+					     this.dealersList = distance.sortDealersByDistance(data) 
 					  }    
 				   }
                 } catch (error) {
@@ -296,8 +302,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //选择城市
             goChooseCity(){
-                this.currentDealer = {}
-                this.currentRegion = {}
+                // this.currentDealer = {}
+                // this.currentRegion = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity"
 				})
@@ -385,18 +391,18 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealersList({cityId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[0]
+                            this.dealersList = distance.sortDealersByDistance(data)
+                            this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealersList({cityId,districtId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,districtId,pcSerialGroupId})
                         if(code === 1 && data.length) {
-                            this.dealersList = data
-                            this.currentDealer = data[0]
+                          this.dealersList = distance.sortDealersByDistance(data)
+                          this.currentDealer = this.dealersList[0]
                         }else {
                             this.currentDealer = {}
                         }
@@ -427,6 +433,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
     text-align: center;
 }
 .get-preferential {
+	overflow: hidden;
     .getPhoneBtn {
         background-color: transparent;
         color: #777777;

@@ -177,6 +177,7 @@
 				uni.hideLoading()
 				uni.stopPullDownRefresh()
 			}, 300)
+			uni.pageScrollTo({})
 		},
 		onShareAppMessage() {
 			let title = '长安云车展：活动优惠都在这里！'
@@ -287,9 +288,6 @@
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
 						'changan://lbcjactivity')) {
-					api.fetchActivityVisit({
-						'activityId': item.id
-					})
 					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
 						uni.showToast({
 							title: "活动结束啦",
@@ -317,6 +315,9 @@
 						break;
 					}
 					case 1: {
+						api.fetchActivityVisit({
+							'activityId': item.id
+						})
 						if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http") {
 							uni.navigateTo({
 								url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
@@ -335,29 +336,40 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
+						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 ){
+							   // 跳转到本喜爱但不是活动页
+							   api.fetchActivityVisit({
+							   	'activityId': item.id
+							   })
+						   }	
 							return
+						}else{
+							api.fetchActivityVisit({
+								'activityId': item.id
+							})
+							
+							// #ifndef MP-WEIXIN
+							this.$toast('请在微信搜索本小程序参与')
+							// #endif
+							// #ifdef MP-WEIXIN
+							uni.navigateToMiniProgram({
+								appId: item.appId,
+								path: item.miniUrl,
+								success: res => {
+									// 打开成功
+									console.log("打开成功", res);
+								},
+								fail: err => {
+									console.log("打开失败", err);
+									uni.showToast({
+										title: "跳转小程序失败",
+										icon: "none"
+									})
+								},
+								// envVersion: 'trial'
+							});
+							// #endif
 						}
-						// #ifndef MP-WEIXIN
-						this.$toast('请在微信搜索本小程序参与')
-						// #endif
-						// #ifdef MP-WEIXIN
-						uni.navigateToMiniProgram({
-							appId: item.appId,
-							path: item.miniUrl,
-							success: res => {
-								// 打开成功
-								console.log("打开成功", res);
-							},
-							fail: err => {
-								console.log("打开失败", err);
-								uni.showToast({
-									title: "跳转小程序失败",
-									icon: "none"
-								})
-							},
-							// envVersion: 'trial'
-						});
-						// #endif
 						break;
 					}
 					default: {

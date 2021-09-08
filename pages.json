@@ -196,7 +196,7 @@
 		}, {
 			"path": "pages/AddYuYue",
 			"style": {
-				"navigationBarTitleText": "添加试驾车型",
+				"navigationBarTitleText": "选择车型",
 				"enablePullDownRefresh": false
 			}
 		}, {
@@ -270,7 +270,9 @@
 			"path": "pages/lotteryDetail",
 			"style": {
 				"navigationBarTitleText": "奖品详情",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#fa8845",
+				"navigationBarTextStyle":"white"
 			}
 		},
 		{
@@ -290,14 +292,14 @@
 		{
 			"path": "pages/wawaji",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "活动详情",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/scan",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "核销扫一扫",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -308,7 +310,35 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/ActivitySelect",
+			"style": {
+				"navigationBarTitleText": "活动详情",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/sharePost",
+			"style": {
+				"navigationBarTitleText": "分享海报",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wawaerwei",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+				
+			}
 		}
+		
+		
+		
+		
 	],
 	"tabBar": {
 		"custom": true,
@@ -359,7 +389,7 @@
 	],
 	"permission": {
 		"scope.userLocation": {
-			"desc": "你的位置信息将用于小程序位置接口的效果展示"
+			"desc": "用于推荐附近的长安汽车线下服务中心，提升服务体验"
 		}
 	},
 	"globalStyle": {

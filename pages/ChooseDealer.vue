@@ -5,8 +5,11 @@
                 {{item.name}}
             </view>
             <view class="address" :class="{'isSelect':currentDealerId==item.id}">
-                {{item.address}}
+                 {{item.address?item.address:'暂无详细地址'}}
             </view>
+			<view v-if="item.distance != undefined && item.distance != Infinity" class="distance">
+				{{item.distance | formatThousand}}
+			</view>
         </view>
         <view class="no-dealer" v-if="dealersList.length === 0 && isComplete">暂无对应经销商</view>
     </view>
@@ -14,7 +17,7 @@
 
 <script>
 import api from '@/public/api/index'
-
+import distance from '@/units/distance'
     export default {
         data() {
             return {
@@ -47,9 +50,9 @@ import api from '@/public/api/index'
                     if(pcSerialGroupId){
                     	pam = {cityId,districtId,pcSerialGroupId};
                     }
-                    const {code,data} = await api.fetchDealersList(pam)				
+                    const {code,data} = await api.fetchDealerListByCityId(pam)				
                     if(code === 1 && data.length) {
-                        this.dealersList = data
+                        this.dealersList = distance.sortDealersByDistance(data)
                     }else {
                         this.isComplete = true
                     }
@@ -74,6 +77,16 @@ import api from '@/public/api/index'
                 });
             }
         },
+		filters: {
+		    //m 转化
+		    formatThousand (num) {
+		       if(num > 1000){
+				   return (num / 1000).toFixed(2)  + 'km'
+			   }else{
+				   return num + 'm'
+			   }
+		    }
+		},
     }
 </script>
 
@@ -81,30 +94,44 @@ import api from '@/public/api/index'
 .choose-dealer {
     padding: 32rpx;
     .dealer-item {
+		position: relative;
         border-bottom: 2rpx solid #EBEBEB;
         margin-bottom: 20rpx;
         .title {
             color: #333333;
             font-size: 32rpx;
             font-weight: bold;
+			margin-right: 120rpx;
             &.isSelect {
                 color: #FA8845 !important;
             }
+			
         }
         .address {
             color: #999999;
             font-size: 24rpx;
             margin-top: 24rpx;
             margin-bottom: 32rpx;
+			margin-right: 145rpx;
             &.isSelect {
                 color: #FA8845 !important;
             }
         }
+		.distance{
+		   position:absolute;
+		   font-size: 24rpx;
+		   top:50% ;
+		   height: 31rpx;
+		   right: 10rpx;
+		   margin-top: - 16rpx;
+		   
+		}
      
     }
     .no-dealer {
         text-align: center;
         padding: 100rpx;
     }
+	
 }
 </style>

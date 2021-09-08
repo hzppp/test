@@ -80,17 +80,37 @@
                     tempMids = this.mids
                     console.log('2 :>> ', 2);
                 }
-                console.log('tempMids :>> ', tempMids);
+                console.log('tempMids :>> ', tempMids,typeof(tempMids));
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei" && this.originSerialId) {
-                    uni.redirectTo({
-                        url:`/pages/canpei?serialId=${this.originSerialId}&mids=${tempMids}&tabWhich=2`
-                    })
+					 console.log('originSerialId :>> ', this.originSerialId);
+					let pages = getCurrentPages();  //获取所有页面栈实例列表
+					let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+					prevPage.$vm.watSerialId = this.originSerialId;   
+					prevPage.$vm.watMides = tempMids;
+					prevPage.$vm.tabWhich = 2;
+					prevPage.$vm.ref = 'ref'
+					uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+					    delta: 1
+					});
+                    // uni.redirectTo({
+                    //     url:`/pages/canpei?serialId=${this.originSerialId}&mids=${tempMids}&tabWhich=2&ref='ref'`
+                    // })
                 }else {
-                    uni.redirectTo({
-                        url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}&tabWhich=2`
-                    })
+					 console.log('serialId :>> ', this.serialId);
+					let pages = getCurrentPages();  //获取所有页面栈实例列表
+					let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+					prevPage.$vm.watSerialId = this.serialId;   
+					prevPage.$vm.watMides = tempMids;
+					prevPage.$vm.tabWhich = 2;
+					prevPage.$vm.ref = 'ref'
+					uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+					    delta: 1
+					});
+                    // uni.redirectTo({
+                    //     url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}&tabWhich=2&ref='ref'`
+                    // })
                 }
             },
             //goSingle 单选跳转

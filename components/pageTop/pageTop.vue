@@ -83,7 +83,7 @@
     top: 0;
     background: #fff;
     overflow: hidden;
-    z-index: 666;
+    z-index: 66;
 }
 .pageTop-back-btn{
     width: 26rpx;

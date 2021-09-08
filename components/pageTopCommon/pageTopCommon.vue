@@ -3,7 +3,13 @@
     <view class="pageTop-zw" :style="'height:' + height + 'px'"></view>
     <cover-view class="pageTop-title" :style="'background:' + background + ';height:' + height + 'px'">
       <cover-view class="pageTop-content" :style="'height:' + jnHeight + 'px;top:' + jnTop + 'px'">
-        <cover-image v-if="homeBtn" class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></cover-image>
+       <!--  #ifndef MP-WEIXIN  -->
+       <image v-if="homeBtn" class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></image>
+       <!-- #endif -->
+	   
+		<!--  #ifdef MP-WEIXIN  -->
+		<cover-image v-if="homeBtn" class="pageTop-home pageTop-home-left" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/homepage_icon.png" @tap="topIndexPage"></cover-image>
+		<!-- #endif -->
         <cover-view class="pageTop-text" :style="'color:' + titleys ">{{title}}</cover-view>
       </cover-view>
     </cover-view>

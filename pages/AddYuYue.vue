@@ -1,16 +1,16 @@
 <template>
-  <view class="add-yuyue"> 
-      <view class="yuyue-item" v-for="(item,index) in serialData" :key="index" @tap="goChooseModels(item)">
-          <image mode="widthFix" :src="item.pcSerialGroupPic" />
-          <view class="dec">
-              <view class="title">
-                  {{item.name}}
-              </view>
-              <view class="price">
-                  {{item.price}}
-              </view>
-          </view>
-      </view>
+  <view class="choose-serial">
+    <view class="serial-item" v-for="(item,index) in serialData" :key="index" @tap="goChooseModels(item)">
+        <image mode="widthFix" :src="item.pcSerialGroupPic" />
+		<view class="dec">
+			<view class="title">
+                {{item.name}}
+            </view>
+            <view class="price">
+                ¥<text>{{item.minPrice | formatThousand}}</text>起
+            </view>
+		</view>
+    </view>
   </view>
 </template>
 
@@ -55,32 +55,44 @@ export default {
             }
         }
     },
+ filters: {
+            //千份位逗号
+            formatThousand (num) {
+                num = num*1000*10
+                var reg=/\d{1,3}(?=(\d{3})+$)/g;
+                return (num + '').replace(reg, '$&,');
+            }
+        },
 };
 </script>
 
 <style lang="scss" scoped>
-.add-yuyue {
-    .yuyue-item {
-        display: flex;
-        margin-bottom: 48rpx;
+.choose-serial {
+    padding: 40rpx;
+	.serial-item {
+		display: flex;
         align-items: center;
-        padding: 0 20rpx;
-        image {
-            width: 180rpx;
-            height: 136rpx;
-        }
-        .dec {
-            margin-left: 22rpx;
+        margin-top: 56rpx;
+		image {
+			width: 340rpx;
+		}
+		.dec {
+            flex: 1;
+            text-align: center;
             .title {
-                color: #333333;
                 font-size: 32rpx;
-                font-weight: bold;
+                color: #333333;
             }
             .price {
                 font-size: 28rpx;
-                color: #FA8845;
+                text {
+                    font-size: 32rpx;
+                    font-weight: bold;
+                    color: #333333;
+                    padding: 0 4rpx;
+                }
             }
         }
-    }
-}
+	}
+	}
 </style>

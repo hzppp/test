@@ -13,8 +13,8 @@ export default {
 			} catch (err) {
 				currentLocation.wxPosition = {
 					wsq: true,
-					latitude: 29.57,
-					longitude: 106.5,
+					latitude: 0,
+					longitude: 0,
 					provider: 'default',
 				}
 				currentLocation.cityData = {
@@ -23,8 +23,8 @@ export default {
 					"error": "",
 					"pro": "重庆市",
 					"proCode": "500000",
-					"region": "江北区",
-					"regionCode": "500105"
+					"region": "",
+					"regionCode": ""
 				}
 				console.error(err)
 			}
@@ -128,7 +128,7 @@ export default {
         d = 2 * w * a;
         h1 = (3 * r - 1) / 2 / c;
         h2 = (3 * r + 1) / 2 / s;
-        return (parseInt(d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg))) / 1000).toFixed(1);;
+        return (parseInt(d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg))));
     },
     //给每个item计算出distance并加上字段
     addItemDistance(curMapX, curMapY, list) {
@@ -160,5 +160,34 @@ export default {
         let listWithDistance = this.addItemDistance(curMapX, curMapY, list)
         //根据distance从小到大排列
         return listWithDistance.sort((prev, next) => (+prev.distance) - (+next.distance))
-    }
+    },
+	
+	
+	// 根据坐标排经销商
+	sortDealersByDistance(list){
+		let  crtPosition = app.globalData.currentLocation.wxPosition
+		let longitude =  crtPosition.longitude
+		let latitude   =  crtPosition.latitude
+		if(longitude && latitude){
+			console.log('用户当前定位',longitude,latitude)
+			list.forEach((item,index)=>{
+				if(item.lngX && item.lngY){
+				item.distance  =  this.countLatLng(parseFloat(latitude),parseFloat(longitude),parseFloat(item.lngY),parseFloat(item.lngX))
+				if (isNaN(item.distance) ) {
+				    item.distance = 0;
+				}
+				console.log(item.name,item.distance)	
+				}else{
+					item.distance  = Infinity
+				}
+			// item.distance = 889
+			})
+			
+			
+			return list.sort((one,two)=>one.distance - two.distance)
+		}else{
+			return list
+		}
+	}
+
 }

@@ -23,7 +23,7 @@ module.exports = {
 			url: domain.getAPI('getIpAreaCoord'),
 			data: {
 				resp_enc: "utf-8",
-				level: 2,
+				level: 3,
 				json: true,
 				coords: zb
 			}
@@ -1117,4 +1117,75 @@ module.exports = {
 		})
 		return data
 	},
+	createWxQrCode: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('createWxQrCode'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	subscribe: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('subscribe'),
+			method: "POST",
+			data: para
+		})
+		return data
+	},
+	checkSubscribe: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('checkSubscribe'),
+			method: "POST",
+			data: para,
+			header: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		})
+		return data
+	},
+	
+	openRed: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('openRed'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
+	
+	redRecord: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('redRecord'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+	
+	redStatus: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('redStatus'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+
+	
 }

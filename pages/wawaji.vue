@@ -8,7 +8,7 @@
 			<view class="rule-btn" @tap="showRule=true">活动规则>></view>
 		</view>
 		<!-- 活动规则 -->
-		<wwj-rule :visible.sync="showRule"/>
+		<wwj-rule :visible.sync="showRule"  @colse='close()'/>
 
 		<!-- 能量 -->
 		<view class="content content-enery" v-if="pageStatus==1">
@@ -65,7 +65,13 @@
 					</view>
 				</template>
 				<template v-else>
-					<view class="show-code-btn" @tap="pageStatus=4"></view>
+					<!--  #ifndef MP-TOUTIAO  -->
+						<view class="show-code-btn" @tap="pageStatus=4"></view>
+					<!-- #endif -->
+					<!--  #ifdef MP-TOUTIAO  -->
+						<view class="show-code-btn" @tap="changPaheS(4)"></view>
+					<!-- #endif -->
+					
 					<view class="content-info">
 						<text>点击立即领取并前往接待台处</text>
 						<text>领取长安汽车精美礼品一份</text>
@@ -131,7 +137,12 @@
 				<view :class="['star', 'star3', {light:activityInfo.hasTreasure}]"></view>
 			</view>
 			<!-- 点击领取定制好礼 -->
-			<view class="star-btn" @tap="receive"></view>
+			<view class="star-btn" v-if="activityInfo && activityInfo.hasPrize">
+				<text>您已领取\n定制好礼</text>
+			</view>
+			<view class="star-btn" @tap="receive" v-else>
+				<text>点击领取\n定制好礼</text>
+			</view>
 		</view>
 
 		<view class="content content-enery" v-if="pageStatus==8">
@@ -249,11 +260,40 @@
 				console.log('pageStatus',val)
 			}
 		},
-		onLoad(options){
-			console.log("options",options.activityId)
+		async onLoad(options){
 			this.activityId = options.activityId
+			let clueInfo= await api.getClueInfo({activityId: this.activityId})
+			if(clueInfo.code==1){
+				//未留咨，跳到留资页
+				if(!clueInfo.data.isApply){
+					const url = `/pages/activity?id=${this.activityId}&type=wawaji`
+					uni.showToast({
+						title:'您暂未留资',
+						icon:"none"
+					})
+					setTimeout(()=> {
+						uni.reLaunch({
+						url
+						})
+					},1000)
+					return;
+				}
+			}
 			this.getActivityInfo();
 		},  
+		async onShareAppMessage() {
+			let {
+			data = {}
+			} = await api.getActivityContent(this.activityId)
+			const wxUserInfo = uni.getStorageSync('wxUserInfo')
+			const url = `pages/activity?id=${this.activityId}&sourceUserId=${wxUserInfo.id}`
+			console.log('ui',url)
+			return {
+				title: data.name,
+				path: url, //抽奖页面?activityId=0&userId=0
+				imageUrl: data.sharePic
+			}
+		},
 		methods: {
 			async getActivityInfo(){
 				let activityInfo = await api.wwjInfo({
@@ -267,16 +307,44 @@
 					this.gift.val=`${this.activityInfo.userToken}|Prize`
 				}
 			},
+			close(){
+			  this.showRule = false
+			},
 			targetItem(item,index){
-				this.pageStatus=index;
+				// #ifndef MP-TOUTIAO
+			   this.pageStatus=index;
+				// #endif
+				
 				this.getActivityInfo();
+				
 				if(index==1){//能量补给站
+		
+					// #ifndef MP-TOUTIAO
 					this.pageStatus=1;
+				
+					// #endif
+					// #ifdef MP-TOUTIAO
+				   if(this.activityInfo && this.activityInfo.hasAddEnergy){
+					   this.pageStatus=1;
+				   }else{
+					uni.navigateTo({
+						url:'/pages/wawaerwei?val=' + this.eneryCode.val + '&tit=能量补给&seconde=请前往接待处领取奖品'
+					})   
+				   }	
+					// #endif
+					
+					
+				
 				}else if(index==2){//科技量产中心
 					if(this.activityInfo && this.activityInfo.modelPath){
+						
 						this.pageStatus=2;
+					
+					
 					}else{
 						this.pageStatus=3;
+						
+						
 					}
 				}else if(index==3){ //寻宝大作战
 					this.pageStatus=5;
@@ -307,14 +375,22 @@
 				let that=this;
 				uni.scanCode({
 				    success: function (res) {
-						console.log("扫描寻宝二维码",res)
-						that.wwjResultImg="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/"+res.result
-						//扫码成功，如果未完成寻宝，则扫描夹娃娃机
-						that.getActivityInfo();
-						if(!that.activityInfo.hasTreasure){
-							that.pageStatus=6;
+						// console.log("扫描寻宝二维码",res.result,res.result.indexOf(".jpg"))
+						if(res.result && (res.result.indexOf('.png')>-1|| res.result.indexOf(".jpg")>-1)){
+							that.wwjResultImg="https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/car/"+res.result
+							//扫码成功，如果未完成寻宝，则扫描夹娃娃机
+							that.getActivityInfo();
+							if(!that.activityInfo.hasTreasure){
+								that.pageStatus=6;
+							}
+						}else{
+							that.$toast('无效二维码')
 						}
-				    }
+						
+					},
+					fail:function(err){
+						that.$toast(err)
+					}
 				});
 			},
 			//扫描娃娃机
@@ -323,12 +399,15 @@
 				uni.scanCode({
 					success: function (res) {
 						that.wwjStart(res.result)
+					},
+					fail:function(err){
+						that.$toast(err)
 					}
 				});
 			},
 			async wwjStart(result){
 				//启动娃娃机
-				let {code,data} = await api.wwjStart({
+				let {code,msg,data} = await api.wwjStart({
 					activityId:this.activityId,
 					deviceId:result
 				})
@@ -337,7 +416,7 @@
 					that.getActivityInfo();
 					this.pageStatus=5
 				} else {
-					this.$toast(data.msg)
+					this.$toast(msg)
 				}
 				console.log("启动娃娃机",code,data)
 			},
@@ -349,8 +428,29 @@
 					this.$toast('请先完成任务！')
 				}
 				
+			},
+			changPaheS(index){
+				console.log(index)
+				// #ifndef MP-TOUTIAO
+					this.pageStatus = index
+			
+				// #endif
+				// #ifdef MP-TOUTIAO
+				if(index == 4){
+				
+				uni.navigateTo({
+					url:'/pages/wawaerwei?val=' + this.technologyCode.val
+				})	
+				}
+				// #endif
+			
+				
+				
+				
+				
 			}
 		}
+		
 	}
 </script>
 <style lang="less">
@@ -581,8 +681,15 @@
 			.star-btn{
 				width: 276rpx;
 				height: 276rpx;
-				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/start.png') no-repeat center/100%;
+				background: url('https://www1.pcauto.com.cn/zt/gz20210712/changan/wawaji/images/start_bg.png') no-repeat center/100%;
 				margin: 40rpx auto 0;
+				display: flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+				text-align:center;
+				font-size: 38rpx;
+				color: #fff;
 			}
 		}
 	}

@@ -46,7 +46,7 @@
 				<view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
 					热销车型
 				</view>
-				<scroll-view scroll-x show-scrollbar class="hotCar">
+				<scroll-view scroll-x="true" show-scrollbar class="hotCar">
 					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
 						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
@@ -306,11 +306,15 @@
 					}
 				})
 		
-			// // #ifdef MP-WEIXIN
-			// if(this.$refs && this.$refs.cmSwiper){
-			//     this.$refs.cmSwiper.dosetData(this.pageData.banners)	
-			// }
-			//  // #endif
+			// #ifndef MP-WEIXIN
+			
+			 let index = this.pageData.banners.findIndex(item=>item.miniUrl.indexOf('banH=true') !== -1)
+			  console.log(index)
+			 if(index != -1){
+				 this.pageData.banners.splice(index,1)
+			 }
+			
+			 // #endif
 			 this.sgList = this.pageData.heatSgList
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
 			},
@@ -491,78 +495,92 @@
 				let item = data
 				// console.log('dadad' + JSON.stringify(item))
 				switch(item.redirectType) {
-				  case 0: {
-				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
-				      let url = '/pages/lbActivity?id=' + item.id
-				      uni.navigateTo({
-				        url
-				      })
-				    }else{
-				      let url = '/pages/activity?id=' + item.id
-				      uni.navigateTo({
-				        url
-				      })
-				    }
-				    break;
-				  }
-				  case 1: {
-				    if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http" ) {
-				      uni.navigateTo({
-				        url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
-				      })
-				    }
-				    break;
-				  }
-				  case 2: {
-					if(item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36'){
-						// 说明是自己的小程序
-						uni.navigateTo({
-						  url: item.miniUrl
-						})
-						// #ifndef MP-WEIXIN
-						if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
-							this.$toast('请在微信搜索本小程序参与')
+					case 0: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
 						}
-						// #endif
-						return
-					}	
-					// #ifndef MP-WEIXIN
-					this.$toast('请在微信搜索本小程序参与')
-					// #endif
-					 // #ifdef MP-WEIXIN
-				      uni.navigateToMiniProgram({
-				        appId: item.appId,
-				        path: item.miniUrl,
-				        success: res => {
-				          // 打开成功
-				          console.log("打开成功", res);
-				        },
-				        fail: err => {
-				          console.log("打开失败", err);
-				          uni.showToast({
-				            title: "跳转小程序失败",
-				            icon: "none"
-				          })
-				        },
-				        // envVersion: 'trial'
-				      });
-					  // #endif
-				    break;
-				  }
-				  default: {
-				    if(item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity'){
-				      let url = '/pages/lbActivity?id=' + item.id
-				      uni.navigateTo({
-				        url
-				      })
-				    }else{
-				      let url = '/pages/activity?id=' + item.id
-				      uni.navigateTo({
-				        url
-				      })
-				    }
-				    break;
-				  }
+						break;
+					}
+					case 1: {
+						api.fetchActivityVisit({
+							'activityId': item.id
+						})
+						if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http") {
+							uni.navigateTo({
+								url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
+							})
+						}
+						break;
+					}
+					case 2: {
+						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							// 说明是自己的小程序
+							uni.navigateTo({
+								url: item.miniUrl
+							})
+							// #ifndef MP-WEIXIN
+							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+								this.$toast('请在微信搜索本小程序参与')
+							}
+							// #endif
+						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 ){
+							   // 跳转到本喜爱但不是活动页
+							   api.fetchActivityVisit({
+							   	'activityId': item.id
+							   })
+						   }	
+							return
+						}else{
+							api.fetchActivityVisit({
+								'activityId': item.id
+							})
+							
+							// #ifndef MP-WEIXIN
+							this.$toast('请在微信搜索本小程序参与')
+							// #endif
+							// #ifdef MP-WEIXIN
+							uni.navigateToMiniProgram({
+								appId: item.appId,
+								path: item.miniUrl,
+								success: res => {
+									// 打开成功
+									console.log("打开成功", res);
+								},
+								fail: err => {
+									console.log("打开失败", err);
+									uni.showToast({
+										title: "跳转小程序失败",
+										icon: "none"
+									})
+								},
+								// envVersion: 'trial'
+							});
+							// #endif
+						}
+						break;
+					}
+					default: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						}
+						break;
+					}
 				}
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
@@ -805,12 +823,18 @@
 				width: 700rpx;
 				overflow: hidden;
 				white-space: nowrap;
+				/*  #ifndef  MP-WEIXIN */
+				height: 180rpx;
+			   flex-direction :column;
+				/*  #endif  */	
+				
 
 				.hotCarItem {
 					display: inline-block;
 					width: 210rpx;
 					align-items: center;
 					margin-right: 16rpx;
+					white-space: nowrap;
 
 					.img {
 						width: 210rpx;

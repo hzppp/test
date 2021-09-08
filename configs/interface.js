@@ -4,8 +4,10 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
-const version = 1005;
+const CUR_ENV = ENV.RELEASE;
+const version = 1023;
+
+
 
 // 正式域名
 var DOMAIN_R = {
@@ -50,12 +52,14 @@ const config = {
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
 
 	api: {
+		
+		login:  `${DOMAIN.changan}/api/xcx/user/login`,
 		// #ifdef MP-WEIXIN
 		// 手机号解密
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/decryptPhone`,
 		// 保存用户信息
 		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/decryptInfo`,
-		 login:  `${DOMAIN.changan}/api/xcx/user/login`,
+		
 		// #endif
 		
 		// #ifdef MP-TOUTIAO
@@ -63,7 +67,6 @@ const config = {
 		decryptPhone: `${DOMAIN.changan}/api/xcx/user/dy/decryptPhone`,
 		// 保存用户信息
 		 saveWXuserInfo: `${DOMAIN.changan}/api/xcx/user/dy/decryptInfo`,
-		 login:  `${DOMAIN.changan}/api/xcx/user/dy/login`,
 		// #endif
 		// 获取区域
 		getRegion: `${DOMAIN.host}/api/audi/base/getRegion`,
@@ -172,8 +175,6 @@ const config = {
 		allCityList:`${DOMAIN.changan}/api/xcx/base/allCities`,
 		//获取车系对比
 		fetchVSserials: `${DOMAIN.pcauto}/s/pcauto/price/v1/serialsCompare.xsp`,
-		//获取经销商列表
-		fetchdealersList:`${DOMAIN.changan}/api/xcx/base/getDealers`,
 		// 获取省份
 		fetchProvinceList: `${DOMAIN.changan}/api/xcx/base/provinces`,
 		// 根据省份id获取城市
@@ -202,8 +203,8 @@ const config = {
 		postYuYueDrive: `${DOMAIN.changan}/api/xcx/behavior/driver/clue`,
 		//计算器获取车系
 		calcSerial: `${DOMAIN.csbHost}/interface/iphone/atom/price/serial_group_basic_json.jsp`,
-		//计算器获取车型
-		calcModel: `${DOMAIN.csbHost}/interface/iphone/model_list_v3.jsp`,
+		//计算器获取车型 
+		calcModel: `${DOMAIN.csbHost}/price/api/v1/serialgroup/model_list_v3`,
 		// 获取验证码
 		fetchCode: `${DOMAIN.changan}/api/xcx/base/senMsg`,
 		// 获取省份和城市的级联列表
@@ -270,6 +271,21 @@ const config = {
 		wwjStart: `${DOMAIN.changan}/api/xcx/wawaji/start`,
 		// 娃娃机-二维码核销
 		wwjVerify: `${DOMAIN.changan}/api/xcx/wawaji/verify`,
+		// 生成微信二维码
+		createWxQrCode: `${DOMAIN.changan}/api/xcx/base/createWxQrCode`,
+		// 订阅消息
+		subscribe: `${DOMAIN.changan}/api/xcx/subscribe/add`,
+		//检查是否订阅
+		checkSubscribe:`${DOMAIN.changan}/api/xcx/subscribe/check`,
+		//开红包
+		openRed:`${DOMAIN.changan}/api/xcx/redPacket/open`,
+		//开红包记录
+		redRecord:`${DOMAIN.changan}/api/xcx/redPacket/record`,
+		//开红包状态
+		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`
+		
+		
+		
 	},
 	getAPI(key) {
 		let url;

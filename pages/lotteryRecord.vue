@@ -95,6 +95,11 @@ name: "lotteryRecord",
         top: 110rpx;
         color: #fa8845;
         font-size: 32rpx;
+		text-overflow: ellipsis;
+	     white-space: nowrap;
+		 overflow: hidden;
+		 width: 500rpx;
+		
       }
       .time{
         position: absolute;
