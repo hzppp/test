@@ -176,7 +176,7 @@ export default {
 				if (isNaN(item.distance) ) {
 				    item.distance = 0;
 				}
-				console.log(item.name,item.distance)	
+				// console.log(item.name,item.distance)	
 				}else{
 					item.distance  = Infinity
 				}
