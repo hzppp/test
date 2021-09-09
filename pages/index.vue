@@ -178,8 +178,11 @@
 
 				fontLoaded: false,
 				timeOutEvent: '',
-				nearDealer:{
-					
+				nearDealer:{},
+				currentCity:{
+					cityId:'',
+					proId:'',
+					name:''
 				}
 			}
 		},
@@ -395,6 +398,9 @@
 				    			'市', '') == city.replace('市', ''))
 								 // console.log('this.provinceList',crtLocationCityItem)
 							cityId = crtLocationCityItem.id
+							this.currentCity.cityId = cityId
+							this.currentCity.proId = crtLocationProvinceItem.id
+							this.currentCity.name = crtLocationCityItem.name
 							const {code,data} = await api.fetchDealerListByCityId({cityId})
 							if(code === 1 && data.length) {
 							  this.dealersList = distance.sortDealersByDistance(data)
@@ -541,6 +547,10 @@
 				},
 				goYuyue(){
 					console.log('预约试驾')
+					 var nearDealer = JSON.stringify(this.nearDealer);
+					uni.navigateTo({
+						url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
+					})
 				},
 				goVr() {
 					// #ifdef MP-WEIXIN

@@ -1,16 +1,12 @@
 <template> 
     <view>
 	<userBand @loginSuccess='getStoragePhone' ></userBand>
-    <view class="yuyue" v-if="serialData.id">
+    <view class="yuyue" v-if="currentDealer.id">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
         <view class="content">
             <view class="title">预约试驾</view>
-            <view class="list models">
-                <view class="list-title">车型</view>
-                <view class="select" @tap="goChooseSerial">{{currentCaraSerial}}</view>
-                <view class="arrow"></view>
-            </view>
+  
             <view class="list models">
                 <view class="list-title">城市</view>
                 <view class="select" @tap="goChooseCity">{{currentCity.name}}</view>
@@ -29,6 +25,11 @@
                 </view>
                 <view class="arrow" v-show="currentDealer.name"></view>
             </view>
+			<view class="list models">
+			    <view class="list-title">车型</view>
+			    <view class="select" @tap="goChooseSerial">{{currentCaraSerial}}</view>
+			    <view class="arrow"></view>
+			</view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
                 <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
@@ -87,9 +88,7 @@ const COUNTDOWN = 60
                 // cityIndex: 71, //城市默认下标(广州)
                 dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
-
-                serialId:'', //参数车系id
-				
+				gochoiseCity:false,
 				show:false,
 
                 serialData: {},// 车系详情
@@ -110,21 +109,27 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
-                this.reqDealersList(n.id)  
+				if(this.gochoiseCity){
+				 this.reqDealersList(n.id)  	
+				}
+                
             },
             currentRegion(n) {
-                this.reqDealersList(this.currentCity.id,n.id)  
+				if(this.gochoiseCity){
+				   this.reqDealersList(this.currentCity.id,n.id)  
+				}
+            
             },
-			serialId(n){
-				 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
-			}			
+			
+			currentDealer(n){
+				// 
+				this.reqSerialScreenList()
+			}
+				
 
         },
         onShow() {
-			if(this.show && this.serialId){
-				 this.reqSerialDetail(this.serialId)
-				 this.show = false
-			}
+		
 			 // console.log('22222options :>> ', this.serialId);
             this.checkInfo()
         },
@@ -137,17 +142,13 @@ const COUNTDOWN = 60
 			// #endif
 			
             this.getStoragePhone()
-            this.serialId = options.serialId || ""
-			if(this.serialId == ""){
-				this.reqSerialScreenList();
-			}
+
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
 				console.log('currentDealer',this.currentDealer)
 			}
 			
-			
-			
+
 			
 			if(options.cityId) {
                 await distance.getLocation()
@@ -162,21 +163,14 @@ const COUNTDOWN = 60
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
         },
         methods: {
 			// 获取车型信息
 			async reqSerialScreenList() {
-			    try {
-			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
-			        if(code === 1) {
-			          this.serialId = data[0].pcSerialGroupId
-					  console.log(this.serialId,data[0])
-					  this.reqSerialDetail(this.serialId )
-			        }
-			    } catch (error) {
-			        console.error(error)
-			    }
+			   let data =  api.listByDealer({dealerId:this.currentDealer.id})
+			   this.serialList
+				
+				
 			},
             getStoragePhone() {
 				console.log('登录成功触发')
@@ -224,27 +218,7 @@ const COUNTDOWN = 60
                 this.currentRegion = {}
             },
 
-            //获取车系详情
-            async reqSerialDetail(sgId) {
-				if(!sgId){
-				  return
-				}
-                try {
-                    uni.showLoading({
-                        title: '正在加载...',
-                        mask:true
-                    })
-                    const {code,data} = await api.fetchSerialDetail({sgId})
-                    if(code ===1) {
-                        this.serialData = data
-                        this.currentCaraSerial = data.name
-                    }
-                } catch (error) {
-                    console.error(error)
-                } finally {
-                    uni.hideLoading()
-                }
-            },
+    
             //获取验证码
             async getCode() {
                 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
@@ -295,12 +269,12 @@ const COUNTDOWN = 60
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
                         provinceId:this.currentCity.provinceId,
-                        serialGroupId:this.serialId,
+                        serialGroupId:this.serialData.id,
                         source:2,
                         sourceId:1,
                         smsCode:this.codeNum,
                         dealerId:this.currentDealer.id || "",
-                        sourceId:this.serialId
+                        sourceId:this.serialData.id
                     })
                     if(res.code === 1) {
 						// #ifdef MP-WEIXIN
@@ -341,19 +315,21 @@ const COUNTDOWN = 60
 				}
                 // /this.currentCity.id
                 uni.navigateTo({
-                  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}&serialId=${this.serialId}`
+                  url: `/pages/ChooseDealer?cityId=${this.currentCity.id}&dealersId=${this.currentDealer.id}&districtId=${this.currentRegion.id}`
                 })
             },
             //选择城市
             goChooseCity(){
                 // this.currentDealer = {}
                 // this.currentRegion = {}
+				this.gochoiseCity = true
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name
                 })
             },
             //选择地区
             goChooseRegion(){
+				this.gochoiseCity = true
                 if(!this.currentCity.name) {
                     return uni.showToast({
                         title:"请先选择城市",
@@ -368,19 +344,19 @@ const COUNTDOWN = 60
             //选择车系
             goChooseSerial() {
                 uni.navigateTo({
-                    url: "/pages/ChooseSerial?type=yuyue"
+                    url: `/pages/ChooseSerial?type=yuyue&dealersId=${this.currentDealer.id}`
                 })
             },
             //获取经销商列表
             async reqDealersList(cityId,districtId) {
                 try {
-					let pcSerialGroupId = this.serialId;
+
                     uni.showLoading({
                         title: '正在加载...',
                         mask:true
 			        })
                     if(!districtId) {
-                        const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId})
                         if(code === 1 && data.length) {
                             this.dealersList = distance.sortDealersByDistance(data)
                             this.currentDealer = this.dealersList[0]
@@ -388,7 +364,7 @@ const COUNTDOWN = 60
                             // this.currentDealer = {}
                         }
                     }else {
-                        const {code,data} = await api.fetchDealerListByCityId({cityId,districtId,pcSerialGroupId})
+                        const {code,data} = await api.fetchDealerListByCityId({cityId,districtId})
                         if(code === 1 && data.length) {
                           this.dealersList = distance.sortDealersByDistance(data)
                           this.currentDealer = this.dealersList[0]
