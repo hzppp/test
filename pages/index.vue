@@ -71,8 +71,8 @@
 						src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealMore.png"></image>
 				</view >
 
-				<view class="actItem vrCar">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
+				<view class="actItem dealCar">
+					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/NearDealer.png" class="img" mode="aspectFill"></image>
 				</view>
 				<view class="hotNearDelFooter">
 					<view class="hotNearDelFooterTitle">{{nearDealer.name}}</view>
@@ -85,7 +85,7 @@
 							<view>{{nearDealer.distance | formatThousand}}</view>
 							
 						</view>
-						<view @tap = "goPhone()" class="foottwo">
+						<view @tap = "goPhone()" class="foottwo" v-if="this.nearDealer.phone && this.nearDealer.phone.length > 0">
 							<image class="hotNearDelFootericon right"
 								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
 							<view> 打电话</view>
@@ -372,7 +372,6 @@
 	                let  cityId;
 					let  pro;
 					let  city;
-					let pcSerialGroupId = '24393'
 					//  产品需求是有定位显示定位，没有定位显示选择
 					let currentLocation = app.globalData.currentLocation
 					if(currentLocation.wxPosition.provider == 'default'){
@@ -396,7 +395,7 @@
 				    			'市', '') == city.replace('市', ''))
 								 // console.log('this.provinceList',crtLocationCityItem)
 							cityId = crtLocationCityItem.id
-							const {code,data} = await api.fetchDealerListByCityId({cityId,pcSerialGroupId})
+							const {code,data} = await api.fetchDealerListByCityId({cityId})
 							if(code === 1 && data.length) {
 							  this.dealersList = distance.sortDealersByDistance(data)
 							  this.nearDealer = this.dealersList[0]
@@ -439,7 +438,6 @@
 					this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[
 						0]
 					await this.getPageData()
-
 					// 改变默认定位省市
 					let currentLocation = app.globalData.currentLocation
 					currentLocation.selectedCityData.isChange = true
@@ -447,6 +445,7 @@
 					currentLocation.selectedCityData.pro = this.crtProvinceItem.name
 					currentLocation.selectedCityData.cityId = this.crtCityItem.id
 					currentLocation.selectedCityData.city = this.crtCityItem.name
+					this.getNearDealer()
 				},
 				bindMultiPickerColumnChange(e) {
 					let {
@@ -517,10 +516,28 @@
 					console.log('去更多经销商	')
 				},
 				goDealer(){
-					console.log('去经销商')
+					console.log('去经销商',this.nearDealer)
+					if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY ){
+						uni.navigateTo({
+							url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+						})
+					}
 				},
 				goPhone(){
 					console.log('获取电话')
+					if(this.nearDealer.phone && this.nearDealer.phone.length > 0){
+					uni.makePhoneCall({
+					    phoneNumber: this.nearDealer.phone,
+						success(res) {
+						     // 调用成功 makePhoneCall:ok
+						     console.log("调用成功", res.errMsg);
+						   },
+						 fail(res) {
+						     this.$toast(res.errMsg)
+						   },  
+					});	
+					}
+				
 				},
 				goYuyue(){
 					console.log('预约试驾')
@@ -1075,7 +1092,16 @@
 					transform: translate(-50%, -50%);
 				}
 			}
-
+			.dealCar{
+				position: relative;
+				
+				.img {
+					display: inline-block;
+					width: 686rpx;
+					height: 360rpx;
+					border-radius: 20rpx;
+				}
+			}
 			.vrCar {
 				position: relative;
 

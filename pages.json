@@ -339,7 +339,8 @@
 			"path": "pages/map",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 				
 			}
 		}
