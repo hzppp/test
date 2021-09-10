@@ -8,7 +8,7 @@
         <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
           <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
             <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="heightFix" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>  
+              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>  
             </view>  
           </view>  
         </view>  
@@ -317,7 +317,7 @@
         }  
         .canvas-item-con-img{  
             height:260rpx;  
-            width:200rpx;
+            // width:200rpx;
             will-change: transform; 
             display: block;
         }  
