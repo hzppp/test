@@ -519,7 +519,11 @@
 					}
 				},
 				goMoreDel() {
-					console.log('去更多经销商	')
+					console.log('去更多经销商	',this.currentCity)
+					var nearDealer = JSON.stringify(this.currentCity);
+					uni.navigateTo({
+						url: `/pages/moreDealer?currentCity=${nearDealer}`
+					})
 				},
 				goDealer(){
 					console.log('去经销商',this.nearDealer)
