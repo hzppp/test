@@ -374,36 +374,21 @@
 				if (this.lotteryActInfo.prizeList.length) {
 					 var turnNum = 1 / this.lotteryActInfo.prizeList.length*360;  // 文字旋转 turn 值
 					this.lotteryActInfo.prizeList.forEach((item, index) => {
-						if (this.isIOS) {
-							this.prizes.push({
-								title: '',
-								background: '#c3ecff',
-								fonts: [{
-									text: '',
-									top: '18%'
-								}],
-								imgs: [{
-									src: item.picUrl.trim(),
-									width: '100%',
-									height: '100%',
-									top: '1rpx'
-									// src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
-									//src: `https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_${item.prizeCode}.png `, width: '100%', height: '100%', top: '1rpx'
-								}],
-								turn: index * turnNum + 'deg',lineTurn: index * turnNum + turnNum / 2 + 'deg'
-							})
-						} else {
-							this.prizes.push({
-								title: item.name,
-								background: '#F9F9D5',
-								fonts: [{
-									text: item.name,
-									top: '18%',
-									fontColor: 'red'
-								}],
-								turn: index * turnNum + 'deg',lineTurn: index * turnNum + turnNum / 2 + 'deg'
-							})
-						}
+						this.prizes.push({
+							title: '',
+							background: '#c3ecff',
+							fonts: [{
+								text: '',
+								top: '18%'
+							}],
+							imgs: [{
+								src: item.picUrl.trim(),
+								width: '100%',
+								height: '100%',
+								top: '1rpx'
+							}],
+							turn: index * turnNum + 'deg',lineTurn: index * turnNum + turnNum / 2 + 'deg'
+						})
 
 						if (index == this.lotteryActInfo.prizeList.length - 1) {
 							uni.hideLoading()
