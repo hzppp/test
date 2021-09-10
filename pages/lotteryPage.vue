@@ -381,7 +381,12 @@
 				// 
 				if (this.lotteryActInfo.prizeList.length) {
 					 var turnNum = 1 / this.lotteryActInfo.prizeList.length*360;  // 文字旋转 turn 值
+					 
 					this.lotteryActInfo.prizeList.forEach((item, index) => {
+						let url = item.picUrl.trim()
+						if (url.indexOf('http:') > -1) {
+							url = url.replace('http:', 'https:')
+						}
 						this.prizes.push({
 							title: '',
 							background: '#c3ecff',
@@ -390,7 +395,7 @@
 								top: '18%'
 							}],
 							imgs: [{
-								src: item.picUrl.trim().replace('http:','https:'),
+								src: url,
 								width: '100%',
 								height: '100%',
 								top: '1rpx'
