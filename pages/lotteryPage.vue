@@ -48,7 +48,7 @@
 						<!-- 微信转盘 -->
 						<!--  #ifdef MP-WEIXIN  -->	
 						<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-							:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
+							:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle"  @start="startCallBack"
 							@end="endCallBack" :showDialogL="showDialogL" />
 						<!-- #endif -->	
 
