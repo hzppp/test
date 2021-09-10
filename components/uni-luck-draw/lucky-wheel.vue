@@ -108,11 +108,6 @@
         }
       }
     },
-    watch:{
-      animationData(val){
-        console.log(val);
-      }
-    },
     mounted () {
       this.initLucky()
     },
