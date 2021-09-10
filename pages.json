@@ -351,6 +351,15 @@
 				"enablePullDownRefresh": false
 				
 			}
+		},
+		{
+			"path": "pages/moreDealer",
+			"style": {
+				"navigationBarTitleText": "更多门店",
+				"enablePullDownRefresh": false
+				
+				
+			}
 		}
 		
 		

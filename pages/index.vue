@@ -74,23 +74,23 @@
 				<view class="actItem dealCar">
 					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/NearDealer.png" class="img" mode="aspectFill"></image>
 				</view>
-				<view class="hotNearDelFooter">
-					<view class="hotNearDelFooterTitle">{{nearDealer.name}}</view>
-					<view class="hotNearDelFooterLocation">{{nearDealer.address}}</view>
-					<view class="hotNearDelFooterView">
+				<view class="hotNDelF">
+					<view class="hotNDelFTitle">{{nearDealer.name}}</view>
+					<view class="hotNDelFLocation">{{nearDealer.address}}</view>
+					<view class="hotNDelFView">
 						<view @tap = "goDealer()" class="footone">
-							<image class="hotNearDelFootericon"
+							<image class="hotNDelFicon"
 								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealLocation.png"></image>
 							
 							<view>{{nearDealer.distance | formatThousand}}</view>
 							
 						</view>
 						<view @tap = "goPhone()" class="foottwo" v-if="this.nearDealer.phone && this.nearDealer.phone.length > 0">
-							<image class="hotNearDelFootericon right"
+							<image class="hotNDelFicon right"
 								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
 							<view> 打电话</view>
 						</view>
-						<view class="hotNearDelFooterBtn" @tap="goYuyue()">预约试驾</view>
+						<view class="hotNDelFBtn" @tap="goYuyue()">预约试驾</view>
 					</view>
 				</view>
 
@@ -983,18 +983,18 @@
 				margin-left: 15rpx;
 			}
 
-			.hotNearDelFooter {
-				.hotNearDelFooterTitle{
+			.hotNDelF {
+				.hotNDelFTitle{
 					color:#3C4650 ;
 					font-size: 32rpx;
 					margin: 24rpx 0rpx;
 				}
-				.hotNearDelFooterLocation{
+				.hotNDelFLocation{
 					color:#999999;
 					font-size: 24rpx;
 					
 				}
-				.hotNearDelFooterView {
+				.hotNDelFView {
 					color: #3C4650;
 					font-size: 24rpx;
 					margin-top: 15rpx;
@@ -1015,7 +1015,7 @@
 						line-height: 56rpx;
 					}
 
-					.hotNearDelFootericon {
+					.hotNDelFicon {
 						// display: block;
 						margin: auto  9rpx;
 						width: 32rpx;
@@ -1025,7 +1025,7 @@
 					.right{
 						margin-left: 40rpx;
 					}
-					.hotNearDelFooterBtn{
+					.hotNDelFBtn{
 						position: absolute;
 						right:32rpx;
 						width: 160rpx;
