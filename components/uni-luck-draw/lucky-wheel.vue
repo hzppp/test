@@ -8,7 +8,7 @@
         <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
           <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
             <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>  
+              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" ></image>  
             </view>  
           </view>  
         </view>  
@@ -109,7 +109,9 @@
       }
     },
     mounted () {
+      // #ifdef MP-WEIXIN
       this.initLucky()
+      // #endif
     },
     watch: {
       blocks (newData) {
@@ -219,7 +221,12 @@
           return;
         }
         app.globalData.isRotating = true
+        // #ifdef MP-WEIXIN
         this.$lucky.startCallback()
+        // #endif
+        // #ifndef MP-WEIXIN
+        this.$emit('start')
+        // #endif
       },
       init () {
         this.$lucky.init({})
@@ -277,44 +284,43 @@
 		.lottery-canvas{
 		    width:100%;
 		    height: 100%;
-            position: absolute;
-            left:50%;
-            top: 50%;
-            transform: translate(-50%,-50%);
-            overflow: hidden;
-            border-radius: 100%;
-        }
+        position: absolute;
+        left:50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        overflow: hidden;
+        border-radius: 100%;
+    }
 		.canvas-list {  
-            position: absolute;  
-            left: 0;  
-            top: 0;  
-            width: inherit;  
-            height: inherit;  
-            z-index: 9999;  
-        } 
-        .canvas-item {  
-            position: absolute;  
-            left: 0;  
-            top: 0;  
-            width: 100%;  
-            height: 100%;  
+      position: absolute;  
+      left: 0;  
+      top: 0;  
+      width: inherit;  
+      height: inherit;  
+      z-index: 998;  
+    } 
+    .canvas-item {  
+      position: absolute;  
+      left: 0;  
+      top: 0;  
+      width: 100%;  
+      height: 100%;  
 		}  
 		.canvas-item-con {  
-            position: relative;  
-            display: block;  
-            margin: 0 auto;  
-            text-align: center;  
-            -webkit-transform-origin: 50% 260rpx;  
-            transform-origin: 50% 260rpx;  
-            display: flex;  
-            flex-direction: column;  
-            align-items: center;  
-        }  
-        .canvas-item-con-img{  
-            height:260rpx;  
-            // width:200rpx;
-            will-change: transform; 
-            display: block;
-        }  
+      position: relative;  
+      display: block;  
+      margin: 0 auto;  
+      text-align: center;  
+      -webkit-transform-origin: 50% 260rpx;  
+      transform-origin: 50% 260rpx;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+    }  
+    .canvas-item-con-img{  
+        height:260rpx;  
+        // width:200rpx;
+        display: block;
+    }  
 	}
 </style>
