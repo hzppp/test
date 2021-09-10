@@ -2,19 +2,19 @@
 <view class="lucky-wheel-container">
     <!-- 抖音抽奖转盘 -->
 
-    <!-- #ifdef MP-TOUTIAO -->
-    <view class="lottery-canvas-container" :animation="animationData">
+    <!-- #ifndef MP-WEIXIN -->
+    <view class="lottery-canvas-container" :style="{transform:'rotate('+runDeg+'deg)'}">
       <view class="lottery-canvas">
         <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
           <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
             <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="heightFix" @load="e => imgBindload(e, 'prizes', index2, 0)"></image>  
+              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>  
             </view>  
           </view>  
         </view>  
       </view>
     </view> 
-    <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay" style="z-index: 999;">
+    <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay">
     <!-- #endif -->
 
     <!-- #ifdef MP-WEIXIN -->
@@ -39,6 +39,9 @@
         </div>
 
       </view>
+
+
+
       <!-- #endif -->
     </view>
 </template>
@@ -98,11 +101,16 @@
         type: Boolean,
         default: false
       },
-      animationData:{
-        type: Object,
+      runDeg:{
+        type: Number,
         default: () => {
-          return {}
+          return 0
         }
+      }
+    },
+    watch:{
+      animationData(val){
+        console.log(val);
       }
     },
     mounted () {
@@ -269,7 +277,8 @@
 		height: 520rpx;
 		margin:0 auto;
 		top: 326rpx;
-		position: relative;
+    position: relative;
+    transition: transform  4000ms ease;
 		.lottery-canvas{
 		    width:100%;
 		    height: 100%;
@@ -307,9 +316,10 @@
             align-items: center;  
         }  
         .canvas-item-con-img{  
-            width:260rpx;  
-            height:260rpx; 
+            height:260rpx;  
+            // width:200rpx;
             will-change: transform; 
+            display: block;
         }  
 	}
 </style>
