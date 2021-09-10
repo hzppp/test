@@ -45,14 +45,16 @@
 						</swiper>
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
-
-					 <LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
-						@end="endCallBack" :showDialogL="showDialogL" />
+						<!-- 微信转盘 -->
+						<!--  #ifdef MP-WEIXIN  -->	
+						<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
+							:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
+							@end="endCallBack" :showDialogL="showDialogL" />
+						<!-- #endif -->	
 
 						<!-- 头条转盘 -->
 						<!--  #ifndef MP-WEIXIN  -->
-						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
+						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
 						<!-- #endif -->
 
 						<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
@@ -500,18 +502,7 @@
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
-				// //创建动画  
-				// var animationRun = uni.createAnimation({  
-				// 	duration: duration,  
-				// 	timingFunction: 'ease'  
-				// })  
-				// animationRun.rotate(this.runDeg).step();  
-				// this.animationData= animationRun.export();  
-				// let animationObj = {
-				// 	transform:'rotate('+this.runDeg+'deg)',
-				// 	transition:`transform ${duration} ease`
-				// }
-				// console.log("抖音中奖动画",animationObj)
+	
 				//动画结束后弹出中奖弹窗
 				setTimeout(function () {  
 					this.endCallBack()
