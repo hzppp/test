@@ -459,7 +459,7 @@
 						this.$refs.luckyWheel.play()
 						// #endif
 
-						// #ifdef MP-TOUTIAO
+						// #ifndef MP-WEIXIN
 						this.run(index)
 						// #endif
 

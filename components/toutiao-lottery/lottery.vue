@@ -1,6 +1,6 @@
 <template>  
     <view class="lottery">  
-        <view class="lottery-canvas-container" :animation="animationData">
+        <view class="lottery-canvas-container" :style="{transform:'rotate('+runDeg+'deg)'}">
             <view class="lottery-canvas">
                 <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
                 <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
@@ -25,10 +25,10 @@
                 type: Array,
                 default: () => []
             },
-            animationData:{
-                type: Object,
+            runDeg:{
+                type: Number,
                 default: () => {
-                return {}
+                    return 0
                 }
             }
         },
@@ -87,7 +87,7 @@
             top: 0;  
             width: inherit;  
             height: inherit;  
-            z-index: 9999;  
+            z-index: 998;  
         } 
         .canvas-item {  
             position: absolute;  
@@ -110,7 +110,6 @@
         .canvas-item-con-img{  
             width:260rpx;  
             height:260rpx; 
-            will-change: transform; 
         }  
     }
     .lucky-wheel-btn {
