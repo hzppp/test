@@ -2,7 +2,7 @@
 <view class="lucky-wheel-container">
     <!-- 抖音抽奖转盘 -->
 
-    <!-- #ifndef MP-WEIXIN -->
+    <!-- #ifdef MP-TOUTIAO -->
     <view class="lottery-canvas-container" :animation="animationData">
       <view class="lottery-canvas">
         <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
