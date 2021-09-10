@@ -45,13 +45,19 @@
 						</swiper>
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
+
 					 <LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :animationData="animationData" @start="startCallBack"
+						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
 						@end="endCallBack" :showDialogL="showDialogL" />
 
-					<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
-						:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-						@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
+						<!-- 头条转盘 -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
+						<!-- #endif -->
+
+						<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
+							:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
+							@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
 					<view class="choiceTime">
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
@@ -192,6 +198,7 @@
 <script>
 	import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
 	import LuckyGrid from '@/components/uni-luck-draw/lucky-grid'
+	import lottery from '@/components/toutiao-lottery/lottery'
 	import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 	const app = getApp()
 	import api from '@/public/api/index'
@@ -209,7 +216,8 @@
 			pageTopCommon,
 			userBand,
 			LuckyGrid,
-			pageTop
+			pageTop,
+			lottery
 		},
 		data() {
 			return {
@@ -382,7 +390,7 @@
 								top: '18%'
 							}],
 							imgs: [{
-								src: item.picUrl.trim(),
+								src: item.picUrl.trim().replace('http:','https:'),
 								width: '100%',
 								height: '100%',
 								top: '1rpx'
@@ -444,6 +452,7 @@
 						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
+						// res.data.id
 						let index = this.matchIndex(res.data.id) //中奖索引
 						console.log('中奖索引', index)
 						// #ifdef MP-WEIXIN
@@ -452,7 +461,6 @@
 
 						// #ifdef MP-TOUTIAO
 						this.run(index)
-						console.log(1111111111111111112)
 						// #endif
 
 						
@@ -464,7 +472,7 @@
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							this.$children[2].stop(index)
+							// this.$children[2].stop(index)
 							// #endif
 
 
@@ -487,13 +495,18 @@
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
-				//创建动画  
-				var animationRun = uni.createAnimation({  
-					duration: duration,  
-					timingFunction: 'ease'  
-				})  
-				animationRun.rotate(this.runDeg).step();  
-				this.animationData= animationRun.export();  
+				// //创建动画  
+				// var animationRun = uni.createAnimation({  
+				// 	duration: duration,  
+				// 	timingFunction: 'ease'  
+				// })  
+				// animationRun.rotate(this.runDeg).step();  
+				// this.animationData= animationRun.export();  
+				// let animationObj = {
+				// 	transform:'rotate('+this.runDeg+'deg)',
+				// 	transition:`transform ${duration} ease`
+				// }
+				// console.log("抖音中奖动画",animationObj)
 				//动画结束后弹出中奖弹窗
 				setTimeout(function () {  
 					this.endCallBack()
@@ -1505,7 +1518,7 @@
 						text-align: center;
 						line-height: 215rpx;
 						font-weight: bold;
-
+						color: #fff;
 					}
 
 					&.gotPrize {
@@ -1526,6 +1539,7 @@
 						top: 130rpx;
 						left: 50%;
 						transform: translateX(-50%);
+						color: #ffffff;
 					}
 
 					.amountBox {

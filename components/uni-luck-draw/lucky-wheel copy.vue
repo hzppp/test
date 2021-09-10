@@ -3,12 +3,13 @@
     <!-- 抖音抽奖转盘 -->
 
     <!-- #ifndef MP-WEIXIN -->
-    <view class="lottery-canvas-container" :style="{transform:'rotate('+runDeg+'deg)'}">
+    <view class="lottery-canvas-container" :animation="animationData">
       <view class="lottery-canvas">
         <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
-          <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
-            <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="heightFix" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>  
+          <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2"  :style="[{transform:'rotate('+iteml.turn+')',backgroundImage:'url('+iteml.imgs[0].src+')'}]">  
+            <view class="canvas-item-con">  
+
+              <!-- <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" style="z-index: 999;"></image>   -->
             </view>  
           </view>  
         </view>  
@@ -101,16 +102,11 @@
         type: Boolean,
         default: false
       },
-      runDeg:{
-        type: Number,
+      animationData:{
+        type: Object,
         default: () => {
-          return 0
+          return {}
         }
-      }
-    },
-    watch:{
-      animationData(val){
-        console.log(val);
       }
     },
     mounted () {
@@ -277,8 +273,7 @@
 		height: 520rpx;
 		margin:0 auto;
 		top: 326rpx;
-    position: relative;
-    transition: transform  4000ms ease;
+		position: relative;
 		.lottery-canvas{
 		    width:100%;
 		    height: 100%;
@@ -296,6 +291,8 @@
             width: inherit;  
             height: inherit;  
             z-index: 9999;  
+            width:100%;
+            height: 100%;
         } 
         .canvas-item {  
             position: absolute;  
@@ -314,6 +311,9 @@
             display: flex;  
             flex-direction: column;  
             align-items: center;  
+            background-repeat: no-repeat;
+            background-size: auto 100%;
+            background-position: center;
         }  
         .canvas-item-con-img{  
             height:260rpx;  
