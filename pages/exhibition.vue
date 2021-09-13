@@ -42,6 +42,16 @@
 		  title: '云展厅'
 		})	
 		},
+		onShareAppMessage() {
+			 let title = '长安云车展'
+			 let path = `pages/exhibition`
+			 let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg'
+			 return {
+			 	title: title,
+			 	path: path,
+			 	imageUrl: imageUrl
+			 }
+		},
 		methods: {
 			async getcity() {
 				await distance.getLocation()
