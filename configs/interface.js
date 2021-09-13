@@ -284,7 +284,8 @@ const config = {
 		//开红包状态
 		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`,
 		//根据经销商查询车系
-		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`
+		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
+		
 		
 	
 		

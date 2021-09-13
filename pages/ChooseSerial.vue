@@ -52,9 +52,15 @@ import api from '@/public/api/index'
         },
         methods: {
 			async reqSerialScreenListbyDealer() {
-			   let data =  api.listByDealer({dealerId:this.currentDealer.id})
-			   
-			   
+			     
+			      	let res = await api.listByDealer({
+			      		dealerId: this.dealersId
+			      	})
+			      	if (res.code == 1) {
+			      		let dealer = res.data.dealer
+			      		this.serialData = res.data.serialGroups
+			      	} 
+			      
 			},
             async reqSerialScreenList() {
                 try {
@@ -77,6 +83,10 @@ import api from '@/public/api/index'
    
 					if(this.dealersId && this.dealersId.length > 0){
 						// 回填
+						
+						
+						
+						
 						
 					}else{
 						let pages = getCurrentPages();  //获取所有页面栈实例列表

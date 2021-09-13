@@ -520,9 +520,9 @@
 				},
 				goMoreDel() {
 					console.log('去更多经销商	',this.currentCity)
-					var nearDealer = JSON.stringify(this.currentCity);
+					// var nearDealer = JSON.stringify(this.currentCity);
 					uni.navigateTo({
-						url: `/pages/moreDealer?currentCity=${nearDealer}`
+						url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
 					})
 				},
 				goDealer(){

@@ -15,7 +15,7 @@
             <view class="list models">
                 <view class="list-title">地区</view>
                 <view class="select" @tap="goChooseRegion">{{currentRegion.name}}</view>
-                <i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
+                <!-- <i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i> -->
                 <view class="arrow"></view>
             </view>
             <view class="list models">
@@ -25,11 +25,17 @@
                 </view>
                 <view class="arrow" v-show="currentDealer.name"></view>
             </view>
+			<picker @change="bindMultiPickerChange" :value="selectIndex"
+				mode="multiSelector" :range="[serialGroups]" range-key="name">
 			<view class="list models">
-			    <view class="list-title">车型</view>
-			    <view class="select" @tap="goChooseSerial">{{currentCaraSerial}}</view>
+			
+					<view class="list-title">车型</view>
+					<view class="select">{{serialData.name}}</view>
+				
+			
 			    <view class="arrow"></view>
 			</view>
+			</picker>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
                 <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
@@ -82,18 +88,21 @@ const COUNTDOWN = 60
                 title: 'picker',
                 // cityList: [], //城市列表
                 dealersList: [], //经销商列表
-
-                currentCaraSerial: '', //当前的车系名字
                 test: '默认全局城市广州test',
                 // cityIndex: 71, //城市默认下标(广州)
                 dealersIndex:0, //经销商下标
                 isAllSelect: false, //信息是否已经全部完成
 				gochoiseCity:false,
 				show:false,
-
+                serialGroups:[], // 车系列表
                 serialData: {},// 车系详情
                 
-                currentCity:{}, //当前选择的城市
+                currentCity:{
+					name:'',
+					proId:'',
+					id:'',
+					countryId:''
+				}, //当前选择的城市
 
                 currentDealer: {}, //当前经销商
 
@@ -110,7 +119,7 @@ const COUNTDOWN = 60
         watch: {
             currentCity(n) {
 				if(this.gochoiseCity){
-				 this.reqDealersList(n.id)  	
+				   this.reqDealersList(n.id)  	
 				}
                 
             },
@@ -129,9 +138,8 @@ const COUNTDOWN = 60
 
         },
         onShow() {
-		
-			 // console.log('22222options :>> ', this.serialId);
-            this.checkInfo()
+
+            // this.checkInfo()
         },
         async onLoad(options) {
             // console.log('111111options :>> ', options);
@@ -145,32 +153,44 @@ const COUNTDOWN = 60
 
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
-				console.log('currentDealer',this.currentDealer)
+				this.reqSerialScreenList()
+				console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
-			
 
-			
-			if(options.cityId) {
-                await distance.getLocation()
-                const cityData = app.globalData.currentLocation.selectedCityData
-                this.$set(this.currentCity,'provinceId',options.proId?options.proId:cityData.proId )
-                this.$set(this.currentCity,'id',options.cityId)
-                this.$set(this.currentCity,'name',decodeURI(options.cityName))
-            }else {
-                await distance.getLocation()
-                const cityData = app.globalData.currentLocation.selectedCityData
-                this.$set(this.currentCity,'id',cityData.cityId )
-                this.$set(this.currentCity,'name',cityData.city )
-                this.$set(this.currentCity,'provinceId',cityData.proId )
-            }
         },
         methods: {
-			// 获取车型信息
 			async reqSerialScreenList() {
-			   let data =  api.listByDealer({dealerId:this.currentDealer.id})
-			   this.serialList
-				
-				
+			    try{
+			    	let res = await api.listByDealer({
+			    		dealerId: this.currentDealer.id
+			    	})
+			    	if (res.code == 1) {
+			    		let dealer = res.data.dealer
+			    		console.log('经销商id', dealer)
+			    		this.currentCity.proId = dealer.provinceId
+			    		this.currentCity.name = dealer.city
+			    		this.currentCity.id = dealer.cityId
+			    		this.currentCity.countryId = dealer.countryId;
+			    		this.serialGroups = res.data.serialGroups
+						this.currentRegion.name = dealer.country
+						this.currentRegion.id = dealer.countryId
+			    		
+						this.serialData = res.data.serialGroups[0]?res.data.serialGroups[0]:{}
+						
+						console.log('经销商id', this.serialData)
+			    	} else {
+			    		this.currentCity.proId = '1000000022'
+			    		this.currentCity.name = '重庆市'
+			    		this.currentCity.id = '1000000262'
+			    		this.currentCity.countryId = '1000002813'
+			    	}
+			    }catch(e){
+			    	this.currentCity.proId = '1000000022'
+			    	this.currentCity.name = '重庆市'
+			    	this.currentCity.id = '1000000262'
+			    	this.currentCity.countryId = '1000002813'
+			    }
+			
 			},
             getStoragePhone() {
 				console.log('登录成功触发')
@@ -268,8 +288,8 @@ const COUNTDOWN = 60
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
-                        provinceId:this.currentCity.provinceId,
-                        serialGroupId:this.serialData.id,
+                        provinceId:this.currentCity.proId,
+                        serialGroupId:this.serialData.pcSerialGroupId,
                         source:2,
                         sourceId:1,
                         smsCode:this.codeNum,
@@ -391,6 +411,13 @@ const COUNTDOWN = 60
                 // this.dealersIndex = e.target.value
                 this.checkInfo()
             },
+			bindMultiPickerChange(e){
+				let {
+					detail
+				} = e
+				this.serialData = this.serialGroups[detail.value[0]]
+				console.log('serialData',this.serialData)
+			}
         },
     }
 </script>

@@ -7,17 +7,17 @@
 				<view class="select-city1">{{crtregionItem.name}}</view>
 			</picker>
 		</view>
-		<view class="tabv" v-for="(item,index) in dealList" :key="index">
+		<view class="tabv" v-for="(item,index) in dealerList" :key="index">
 			<view class="hotNDelFTitle">{{item.name}}</view>
 			<view class="hotNDelFLocation">{{item.address}}</view>
 			<view class="hotNDelFView">
-				<view @tap="goDealer()" class="footone">
+				<view @tap="goDealer(item)" class="footone">
 					{{item.distance | formatThousand}}
 				</view>
-				<view @tap="goPhone()" class="foottwo" v-if="item.phone && item.phone.length > 0">
+				<view @tap="goPhone(item)" class="foottwo" v-if="item.phone && item.phone.length > 0">
 					打电话
 				</view>
-				<view class="hotNDelFBtn" @tap="goYuyue()">预约试驾</view>
+				<view class="hotNDelFBtn" @tap="goYuyue(item)">预约试驾</view>
 			</view>
 		</view>
 	</view>
@@ -25,32 +25,24 @@
 
 <script>
 	import api from '@/public/api/index'
+	import distance from '@/units/distance'
 	export default {
 		data() {
 			return {
 				currentCity: { //传过来的最近门店定位
 					cityId: '',
 					proId: '',
-					name: ''
+					name: '',
+					countryId: ''
 				},
+				nearDealerId: '',
 				crtProvinceItem: {},
 				crtCityItem: {},
 				crtregionItem: {},
 				cityList: [],
 				provinceList: [],
 				regionList: [],
-				dealList: [{
-					name: '123',
-					address: '12312312312',
-					phone: '15093186368',
-					distance: '12.23'
-
-				}, {
-					name: '123',
-					address: '12312312312',
-					phone: '2312312',
-					distance: '12.23'
-				}, ]
+				dealerList: []
 			}
 		},
 		computed: {
@@ -72,6 +64,14 @@
 				return [provinceIndex, cityIndex]
 			}
 		},
+		watch: {
+			crtregionItem(item) {
+				console.log('asda',this.crtCityItem,this.crtregionItem)
+				this.reqDealerListByCityId(this.crtCityItem.id, this.crtregionItem.id)
+			}
+		},
+
+
 		filters: {
 			formatThousand(num) {
 				if (num) {
@@ -86,19 +86,37 @@
 
 			},
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			uni.setBackgroundColor({
 				backgroundColor: '#F6F7F8', // 窗口的背景色为白色
 			})
-			if (options.currentCity) {
-				this.currentCity = JSON.parse(options.currentCity)
-				console.log('currentCity', this.currentCity)
-			}
+			this.nearDealerId = options.nearDealer
+			await this.getlistByDealer()
 			this.reqProvinceCityList()
 		},
 		methods: {
+			async getlistByDealer() {
+				let res = await api.listByDealer({
+					dealerId: this.nearDealerId
+				})
+				if (res.code == 1) {
+					let dealer = res.data.dealer
+					this.currentCity.proId = dealer.provinceId
+					this.currentCity.name = dealer.city
+					this.currentCity.cityId = dealer.cityId
+					this.currentCity.countryId = dealer.countryId;
+					
+
+				} else {
+					this.currentCity.proId = '1000000022'
+					this.currentCity.name = '重庆市'
+					this.currentCity.cityId = '1000000262'
+					this.currentCity.countryId = '1000002813'
+				}
+
+			},
 			async bindMultiPickerChange(e) {
-					console.log(e)
+				console.log(e)
 				let {
 					detail
 				} = e
@@ -106,8 +124,9 @@
 				this.cityList = this.crtProvinceItem.cities
 				this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[
 					0]
-			    this.crtregionItem = this.regionList[detail.value[2]] ? this.regionList[detail.value[2]] : this.regionList[0]
-			
+				this.crtregionItem = this.regionList[detail.value[2]] ? this.regionList[detail.value[2]] : this
+					.regionList[0]
+				console.log('asda',this.crtCityItem,this.crtregionItem)
 
 			},
 
@@ -118,15 +137,17 @@
 				} = e
 				if (detail.column == 0) {
 					this.cityList = this.provinceList[detail.value].cities
+					this.crtCityItem = this.cityList[0]
+					this.reqRegionByCityId(this.crtCityItem.id)
 				}
-				
-				if(detail.column == 1){
+
+				if (detail.column == 1) {
 					// 城市变
-				  this.crtCityItem = this.cityList[detail.value]
-                  this.reqRegionByCityId(this.crtCityItem.id)
+					this.crtCityItem = this.cityList[detail.value]
+					this.reqRegionByCityId(this.crtCityItem.id)
 				}
-				
-				
+
+
 			},
 			async reqProvinceCityList() {
 				try {
@@ -165,15 +186,69 @@
 					})
 					if (code === 1) {
 						this.regionList = data
-						console.log('data :>> ', data);
+						let index = this.regionList.findIndex(item => item.id == this.currentCity.countryId)
+						if (index == -1) {
+							index = 0
+						}
+						this.crtregionItem = this.regionList[index]
 					}
 				} catch (error) {
 					console.error(error)
 				} finally {
 					uni.hideLoading()
 				}
-			}
-		}
+			},
+			// 根据城市id请求经销商
+			async reqDealerListByCityId(cityId = '', districtId = '') {
+				try {
+					const res = await api.fetchDealerListByCityId({
+						cityId,
+						districtId,
+					})
+					if (res.code == 1) {
+						this.dealerList = distance.sortDealersByDistance(res.data)
+
+					}
+				} catch (err) {
+					
+					console.error(err)
+				}
+			},
+			goDealer(nearDealer){
+				console.log('去经销商',this.nearDealer)
+				if(nearDealer && nearDealer.lngX && nearDealer.lngY ){
+					uni.navigateTo({
+						url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
+					})
+				}
+			},
+			goPhone(nearDealer){
+				console.log('获取电话')
+				if(nearDealer.phone && nearDealer.phone.length > 0){
+				uni.makePhoneCall({
+				    phoneNumber: nearDealer.phone,
+					success(res) {
+					     // 调用成功 makePhoneCall:ok
+					     console.log("调用成功", res.errMsg);
+					   },
+					 fail(res) {
+					     this.$toast(res.errMsg)
+					   },  
+				});	
+				}
+			
+			},
+			goYuyue(nearDealer){
+				console.log('预约试驾')
+				 var nearDealer = JSON.stringify(nearDealer);
+				uni.navigateTo({
+					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}`
+				})
+			},
+		},
+
+
+
 
 	}
 </script>
