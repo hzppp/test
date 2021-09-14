@@ -74,7 +74,8 @@
 
 		filters: {
 			formatThousand(num) {
-				if (num) {
+				console.log(num)
+				if (num != undefined && num != Infinity) {
 					if (num > 1000) {
 						return (num / 1000).toFixed(2) + 'km'
 					} else {
