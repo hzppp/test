@@ -943,7 +943,6 @@
 
 		.hotAct {
 			margin-top: 30rpx;
-
 			.hotTab {
 				font-size: 34rpx;
 				// font-weight: bold;
@@ -955,19 +954,22 @@
 				// font-weight: bold;
 				margin-bottom: 10rpx;
 				display: inline;
+				
 
 			}
 
 			.hotmore {
 				position: absolute;
+			    margin-top: 10rpx;
 				right: 40rpx;
 				color: #999999;
 				font-size: 24rpx;
 				display: inline-flex;
-				text-align: center;
-				height: 24rpx;
-				line-height: 24rpx;
-				// background-color: red;
+				
+				// text-align: center;
+				// height: 24rpx;
+				// line-height: 24rpx;
+			
 
 			}
 
