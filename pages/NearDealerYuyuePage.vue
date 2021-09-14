@@ -130,10 +130,10 @@ const COUNTDOWN = 60
             
             },
 			
-			currentDealer(n){
-				// 
-				this.reqSerialScreenList()
-			}
+			// currentDealer(n){
+			// 	// 
+			// 	this.reqSerialScreenList()
+			// }
 				
 
         },
