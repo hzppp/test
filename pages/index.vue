@@ -85,7 +85,7 @@
 							<view>{{nearDealer.distance | formatThousand}}</view>
 							
 						</view>
-						<view @tap = "goPhone()" class="foottwo" v-if="this.nearDealer.phone && this.nearDealer.phone.length > 0">
+						<view @tap = "goPhone()" class="foottwo" v-if="nearDealer.phone && nearDealer.phone.length > 0">
 							<image class="hotNDelFicon right"
 								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
 							<view> 打电话</view>
