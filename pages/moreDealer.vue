@@ -87,9 +87,7 @@
 			},
 		},
 		async onLoad(options) {
-			uni.setBackgroundColor({
-				backgroundColor: '#F6F7F8', // 窗口的背景色为白色
-			})
+			
 			this.nearDealerId = options.nearDealer
 			await this.getlistByDealer()
 			this.reqProvinceCityList()
