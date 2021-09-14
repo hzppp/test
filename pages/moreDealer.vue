@@ -215,7 +215,7 @@
 			},
 			goDealer(nearDealer){
 				console.log('去经销商',this.nearDealer)
-				if(nearDealer && nearDealer.lngX && nearDealer.lngY ){
+				if(nearDealer && nearDealer.lngX && nearDealer.lngY &&  nearDealer.distance  != undefined && nearDealer.distance  != Infinity){
 					uni.navigateTo({
 						url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
 					})
