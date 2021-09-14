@@ -59,9 +59,11 @@
 				if (this.crtProvinceItem && this.crtProvinceItem.cities) {
 					cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
 				}
+				let dealerIndex = this.regionList.findIndex(item=> item.id == this.crtregionItem.id)
 				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
 				cityIndex = cityIndex > -1 ? cityIndex : 0
-				return [provinceIndex, cityIndex]
+				dealerIndex = dealerIndex > -1 ? dealerIndex : 0
+				return [provinceIndex, cityIndex,dealerIndex]
 			}
 		},
 		watch: {
