@@ -43,7 +43,7 @@
 		})	
 		},
 		onShareAppMessage() {
-			 let title = '长安云车展'
+			 let title = '长安云展厅'
 			 let path = `pages/exhibition`
 			 let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg'
 			 return {

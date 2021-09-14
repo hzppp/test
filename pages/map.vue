@@ -5,9 +5,9 @@
 				<map id='map' style="width: 750rpx; height: 100vh;" :latitude="latitude" :longitude="longitude"
 					:markers="covers" clickable='true' @markertap='tapMap()'>
 				</map>
-				<view class="back" @tap='back()'>
-					<image src=".."></image>
+				 <view class="back" @tap='back()' :style="'top:' +  height  + 'px'">
 				</view>
+			
 			</view>
 		</view>
 	</view>
@@ -22,7 +22,8 @@
 				latitude: 23.12463,
 				longitude: 113.36199,
 				des: '',
-				covers: []
+				covers: [],
+				height:0
 			}
 		},
 
@@ -40,6 +41,14 @@
 
 			}
 			this.covers.push(dic)
+			
+			
+			
+			let {bottom,height,left,right,top,width
+				} = uni.getMenuButtonBoundingClientRect()
+			 console.log({bottom,height,left,right,top,width
+				})
+			this.height = height + top - 13;
 		},
 
 		methods: {
@@ -90,21 +99,26 @@
 
 <style lang="less">
 	@import  '@/static/less/public.less';
-  .back{
-	width: 26rpx;
-	height: 26rpx;
-	border-left: 4rpx solid #000;
-	border-top: 4rpx solid #000;
-	.pa(30rpx,68rpx);
-	transform: translate(0%,-50%) rotate(-45deg);
-	&.back-btn-white{color:#fff;}
-	&:after{
-	    display: block;
-	    content: "";
-	    width:180%;
-	    height: 180%;
-	    .pa(-40%,-40%);
-	    z-index: 9999;
+	.back1{
+		 .pa(0rpx,0rpx);
+		 width: 100rpx;
 	}
+  .back{
+	 
+     width: 26rpx;
+    height: 26rpx;
+    border-left: 4rpx solid #000;
+    border-top: 4rpx solid #000;
+    .pa(30rpx,50%);
+    transform: translate(0%,-50%) rotate(-45deg);
+	&.back-btn-white{color:#fff;}
+    &:after{
+        display: block;
+        content: "";
+        width:180%;
+        height: 180%;
+        .pa(-40%,-40%);
+        z-index: 9999;
+    }
 	}
 </style>
