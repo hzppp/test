@@ -323,13 +323,7 @@
 				console.log('indexCity===========', newVal)
 			}
 		},
-		async onLoad(options) {
-				// let sgList = await api.getSgList().then(res => {
-				// 	console.log('sssssssss', res)
-				// 	return res.code == 1 && res.data ? res.data : []
-				// })
-				// this.sgList = [...sgList]	
-			},
+		async onLoad(options) {	},
 			onUnload() {},
 			onShareAppMessage() {
 				let title = '长安云车展'
@@ -360,11 +354,8 @@
 
 					// #ifndef MP-WEIXIN
 
-					let index = this.pageData.banners.findIndex(item => item.miniUrl.indexOf('banH=true') !== -1)
-					console.log(index)
-					if (index != -1) {
-						this.pageData.banners.splice(index, 1)
-					}
+				let array = this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1)
+				this.pageData.banners = array
 
 					// #endif
 					this.sgList = this.pageData.heatSgList
