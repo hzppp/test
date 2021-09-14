@@ -147,7 +147,13 @@
 					this.crtCityItem = this.cityList[detail.value]
 					this.reqRegionByCityId(this.crtCityItem.id)
 				}
-
+				// #ifdef MP-WEIXIN
+				if(detail.column == 1){
+				  wx.aldstat.sendEvent('更多门店页点击选择城市')
+				}else if(detail.column == 2){
+				wx.aldstat.sendEvent('更多门店页点击选择地区')
+				}
+                 // #endif
 
 			},
 			async reqProvinceCityList() {
@@ -217,6 +223,9 @@
 			},
 			goDealer(nearDealer){
 				console.log('去经销商',this.nearDealer)
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击导航')
+				// #endif
 				if(nearDealer && nearDealer.lngX && nearDealer.lngY &&  nearDealer.distance  != undefined && nearDealer.distance  != Infinity){
 					uni.navigateTo({
 						url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
@@ -225,6 +234,9 @@
 			},
 			goPhone(nearDealer){
 				console.log('获取电话')
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击打电话')
+				// #endif
 				if(nearDealer.phone && nearDealer.phone.length > 0){
 				uni.makePhoneCall({
 				    phoneNumber: nearDealer.phone,
@@ -241,6 +253,9 @@
 			},
 			goYuyue(nearDealer){
 				console.log('预约试驾')
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击预约试驾')
+				// #endif
 				 var nearDealer = JSON.stringify(nearDealer);
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}`

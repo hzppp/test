@@ -2,9 +2,17 @@
 	<view>
 		<view class="page-body">
 			<view class="page-section page-section-gap">
+				<!--  #ifndef MP-TOUTIAO  -->
 				<map id='map' style="width: 750rpx; height: 100vh;" :latitude="latitude" :longitude="longitude"
 					:markers="covers" clickable='true' @markertap='tapMap()'>
 				</map>
+				<!-- #endif -->
+				<!--  #ifdef MP-TOUTIAO  -->
+				<map id='map' style="width: 750rpx; height: 1624rpx;" :latitude="latitude" :longitude="longitude"
+					:markers="covers" clickable='true' @markertap='tapMap()'>
+				</map>
+				<!-- #endif -->
+				
 				 <view class="back" @tap='back()' :style="'top:' +  height  + 'px'">
 				</view>
 			
@@ -38,6 +46,7 @@
 				'iconPath': '../../../static/images/location.png',
 				'width': 64,
 				'height': 64,
+				
 
 			}
 			this.covers.push(dic)
@@ -48,7 +57,7 @@
 				} = uni.getMenuButtonBoundingClientRect()
 			 console.log({bottom,height,left,right,top,width
 				})
-			this.height = height + top - 13;
+			this.height = height + top - 13;		
 		},
 
 		methods: {
