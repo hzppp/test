@@ -240,7 +240,7 @@
 				activityMemoArr: [],
 				shareTitle: '',
 				shareUrl: '',
-				isIOS: true,
+				isIOS: false, 
 				lotteryType: '',
 				shareURL: '',
 				sharePosterPic: '',

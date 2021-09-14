@@ -47,10 +47,13 @@ export default {
         return {
             serialData: {}, //车系详情
             ids:'', //车系对应的前两个车型的id集合字符串，
-            serialId: "" //车系id
+            serialId: "" ,//车系id
+			id:''
         }
     },
     onLoad(options) {
+		console.log(options)
+		this.id = options.id
         this.reqSerialDetail(options.id)
     },
 	methods: {
@@ -123,7 +126,17 @@ export default {
                 console.error(error)
             }
         },
-	}
+	},
+	onShareAppMessage() {
+		let title = this.serialData.name
+		let path = `pages/LookCar?id=${this.id}`
+		let imageUrl = this.serialData.picCoverUrl
+		return {
+			title: title,
+			path: path,
+			imageUrl: imageUrl
+		}
+	},
 }
 </script>
 
