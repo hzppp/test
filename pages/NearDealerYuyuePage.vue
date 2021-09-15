@@ -118,6 +118,7 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
+				console.log(n)
 				if(this.gochoiseCity){
 				   this.reqDealersList(n.id)  	
 				}
@@ -288,7 +289,7 @@ const COUNTDOWN = 60
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
-                        provinceId:this.currentCity.proId,
+                        provinceId:this.currentCity.proId || this.currentCity.provinceId ,
                         serialGroupId:this.serialData.pcSerialGroupId,
                         source:2,
                         sourceId:1,
