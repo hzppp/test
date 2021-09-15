@@ -341,7 +341,7 @@ const COUNTDOWN = 60
             //选择城市
             goChooseCity(){
                 // this.currentDealer = {}
-                // this.currentRegion = {}
+                this.currentRegion = {}
 				this.gochoiseCity = true
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name

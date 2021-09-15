@@ -63,6 +63,7 @@
 				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
 				cityIndex = cityIndex > -1 ? cityIndex : 0
 				dealerIndex = dealerIndex > -1 ? dealerIndex : 0
+				console.log('坐标地址是',provinceIndex, cityIndex,dealerIndex)
 				return [provinceIndex, cityIndex,dealerIndex]
 			}
 		},
@@ -117,7 +118,7 @@
 
 			},
 			async bindMultiPickerChange(e) {
-				console.log(e)
+				console.log('bindMultiPickerChange',e)
 				let {
 					detail
 				} = e
@@ -131,21 +132,22 @@
 
 			},
 
-			bindMultiPickerColumnChange(e) {
-				console.log(e)
+		 	bindMultiPickerColumnChange(e) {
+				console.log('bindMultiPickerColumnChange',e)
 				let {
 					detail
 				} = e
 				if (detail.column == 0) {
+					this.crtProvinceItem = this.provinceList[detail.value] 
 					this.cityList = this.provinceList[detail.value].cities
 					this.crtCityItem = this.cityList[0]
-					this.reqRegionByCityId(this.crtCityItem.id)
+				  	this.reqRegionByCityId(this.crtCityItem.id)
 				}
 
 				if (detail.column == 1) {
 					// 城市变
 					this.crtCityItem = this.cityList[detail.value]
-					this.reqRegionByCityId(this.crtCityItem.id)
+			 	     this.reqRegionByCityId(this.crtCityItem.id)
 				}
 				// #ifdef MP-WEIXIN
 				if(detail.column == 1){
@@ -154,7 +156,19 @@
 				wx.aldstat.sendEvent('更多门店页点击选择地区')
 				}
                  // #endif
-
+				 
+				 // 错误情况处理
+				let cityIndex = -1
+				 if (this.crtProvinceItem && this.crtProvinceItem.cities) {
+				 	cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+				 }
+				 console.log(this.crtProvinceItem,this.crtCityItem)
+				 if(cityIndex == -1){
+					 console.log('出错了 数据矫正下')
+					 this.cityList = this.crtProvinceItem.cities
+					 this.crtCityItem = this.cityList[0]
+					 this.reqRegionByCityId(this.crtCityItem.id)
+				 }
 			},
 			async reqProvinceCityList() {
 				try {
