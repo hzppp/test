@@ -85,7 +85,7 @@
 							<view>{{nearDealer.distance | formatThousand}}</view>
 							
 						</view>
-						<view @tap = "goPhone()" class="foottwo" v-if="this.nearDealer.phone && this.nearDealer.phone.length > 0">
+						<view @tap = "goPhone()" class="foottwo" v-if="nearDealer.phone && nearDealer.phone.length > 0">
 							<image class="hotNDelFicon right"
 								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
 							<view> 打电话</view>
@@ -510,6 +510,9 @@
 					}
 				},
 				goMoreDel() {
+					// #ifdef MP-WEIXIN
+					wx.aldstat.sendEvent('首页最近门店点击查看更多')
+					// #endif
 					console.log('去更多经销商	',this.currentCity)
 					// var nearDealer = JSON.stringify(this.currentCity);
 					uni.navigateTo({
@@ -517,6 +520,9 @@
 					})
 				},
 				goDealer(){
+					// #ifdef MP-WEIXIN
+					wx.aldstat.sendEvent('首页最近门店点击导航')
+					// #endif
 					console.log('去经销商',this.nearDealer)
 					if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
 						uni.navigateTo({
@@ -525,6 +531,9 @@
 					}
 				},
 				goPhone(){
+					// #ifdef MP-WEIXIN
+					wx.aldstat.sendEvent('首页最近门店点击打电话')
+					// #endif
 					console.log('获取电话')
 					if(this.nearDealer.phone && this.nearDealer.phone.length > 0){
 					uni.makePhoneCall({
@@ -541,6 +550,9 @@
 				
 				},
 				goYuyue(){
+					// #ifdef MP-WEIXIN
+					wx.aldstat.sendEvent('首页最近门店点击预约试驾')
+					// #endif
 					console.log('预约试驾')
 					 var nearDealer = JSON.stringify(this.nearDealer);
 					uni.navigateTo({

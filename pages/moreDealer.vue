@@ -59,9 +59,12 @@
 				if (this.crtProvinceItem && this.crtProvinceItem.cities) {
 					cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
 				}
+				let dealerIndex = this.regionList.findIndex(item=> item.id == this.crtregionItem.id)
 				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
 				cityIndex = cityIndex > -1 ? cityIndex : 0
-				return [provinceIndex, cityIndex]
+				dealerIndex = dealerIndex > -1 ? dealerIndex : 0
+				console.log('坐标地址是',provinceIndex, cityIndex,dealerIndex)
+				return [provinceIndex, cityIndex,dealerIndex]
 			}
 		},
 		watch: {
@@ -115,7 +118,7 @@
 
 			},
 			async bindMultiPickerChange(e) {
-				console.log(e)
+				console.log('bindMultiPickerChange',e)
 				let {
 					detail
 				} = e
@@ -129,24 +132,43 @@
 
 			},
 
-			bindMultiPickerColumnChange(e) {
-				console.log(e)
+		 	bindMultiPickerColumnChange(e) {
+				console.log('bindMultiPickerColumnChange',e)
 				let {
 					detail
 				} = e
 				if (detail.column == 0) {
+					this.crtProvinceItem = this.provinceList[detail.value] 
 					this.cityList = this.provinceList[detail.value].cities
 					this.crtCityItem = this.cityList[0]
-					this.reqRegionByCityId(this.crtCityItem.id)
+				  	this.reqRegionByCityId(this.crtCityItem.id)
 				}
 
 				if (detail.column == 1) {
 					// 城市变
 					this.crtCityItem = this.cityList[detail.value]
-					this.reqRegionByCityId(this.crtCityItem.id)
+			 	     this.reqRegionByCityId(this.crtCityItem.id)
 				}
-
-
+				// #ifdef MP-WEIXIN
+				if(detail.column == 1){
+				  wx.aldstat.sendEvent('更多门店页点击选择城市')
+				}else if(detail.column == 2){
+				wx.aldstat.sendEvent('更多门店页点击选择地区')
+				}
+                 // #endif
+				 
+				 // 错误情况处理
+				let cityIndex = -1
+				 if (this.crtProvinceItem && this.crtProvinceItem.cities) {
+				 	cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
+				 }
+				 console.log(this.crtProvinceItem,this.crtCityItem)
+				 if(cityIndex == -1){
+					 console.log('出错了 数据矫正下')
+					 this.cityList = this.crtProvinceItem.cities
+					 this.crtCityItem = this.cityList[0]
+					 this.reqRegionByCityId(this.crtCityItem.id)
+				 }
 			},
 			async reqProvinceCityList() {
 				try {
@@ -215,6 +237,9 @@
 			},
 			goDealer(nearDealer){
 				console.log('去经销商',this.nearDealer)
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击导航')
+				// #endif
 				if(nearDealer && nearDealer.lngX && nearDealer.lngY &&  nearDealer.distance  != undefined && nearDealer.distance  != Infinity){
 					uni.navigateTo({
 						url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
@@ -223,6 +248,9 @@
 			},
 			goPhone(nearDealer){
 				console.log('获取电话')
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击打电话')
+				// #endif
 				if(nearDealer.phone && nearDealer.phone.length > 0){
 				uni.makePhoneCall({
 				    phoneNumber: nearDealer.phone,
@@ -239,6 +267,9 @@
 			},
 			goYuyue(nearDealer){
 				console.log('预约试驾')
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('更多门店页点击预约试驾')
+				// #endif
 				 var nearDealer = JSON.stringify(nearDealer);
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}`

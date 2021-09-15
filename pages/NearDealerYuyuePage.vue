@@ -118,6 +118,7 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
+				console.log(n)
 				if(this.gochoiseCity){
 				   this.reqDealersList(n.id)  	
 				}
@@ -130,10 +131,10 @@ const COUNTDOWN = 60
             
             },
 			
-			currentDealer(n){
-				// 
-				this.reqSerialScreenList()
-			}
+			// currentDealer(n){
+			// 	// 
+			// 	this.reqSerialScreenList()
+			// }
 				
 
         },
@@ -288,7 +289,7 @@ const COUNTDOWN = 60
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
                         mobile:this.phoneNum,
-                        provinceId:this.currentCity.proId,
+                        provinceId:this.currentCity.proId || this.currentCity.provinceId ,
                         serialGroupId:this.serialData.pcSerialGroupId,
                         source:2,
                         sourceId:1,
@@ -341,7 +342,7 @@ const COUNTDOWN = 60
             //选择城市
             goChooseCity(){
                 // this.currentDealer = {}
-                // this.currentRegion = {}
+                this.currentRegion = {}
 				this.gochoiseCity = true
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name
