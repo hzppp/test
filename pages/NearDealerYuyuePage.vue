@@ -25,15 +25,13 @@
                 </view>
                 <view class="arrow" v-show="currentDealer.name"></view>
             </view>
-			<picker @change="bindMultiPickerChange" :value="selectIndex"
-				mode="multiSelector" :range="[serialGroups]" range-key="name">
+			  <picker @change="bindMultiPickerChange" :value="index" :range="serialGroups"  range-key="name">   
+		<!-- 	<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+				mode="multiSelector" :range="[serialGroups]" range-key="name"> -->
 			<view class="list models">
-			
 					<view class="list-title">车型</view>
 					<view class="select">{{serialData.name}}</view>
-				
-			
-			    <view class="arrow"></view>
+			        <view class="arrow"></view>
 			</view>
 			</picker>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
@@ -420,6 +418,7 @@ const COUNTDOWN = 60
                 this.checkInfo()
             },
 			bindMultiPickerChange(e){
+				console.log(e)
 				let {
 					detail
 				} = e
