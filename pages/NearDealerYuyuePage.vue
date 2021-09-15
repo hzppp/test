@@ -138,6 +138,13 @@ const COUNTDOWN = 60
 				
 
         },
+		computed: {
+			selectIndex() {
+				let index = this.serialGroups.findIndex(item => item.id == this.serialData.item )
+				console.log('坐标地址是',index)
+				return [index]
+			}
+		},
         onShow() {
 
             // this.checkInfo()
@@ -310,7 +317,7 @@ const COUNTDOWN = 60
                         return uni.showToast({
                             title:res.msg,
                             icon:"none",
-							duration:2000
+							duration:500
 							
                         })
                     }
@@ -319,7 +326,7 @@ const COUNTDOWN = 60
                 }finally {
 					setTimeout(() => {
 						uni.hideLoading()
-					}, 2000)
+					}, 500)
                     
                 }
             },
@@ -416,6 +423,7 @@ const COUNTDOWN = 60
 				let {
 					detail
 				} = e
+				console.log(e)
 				this.serialData = this.serialGroups[detail.value[0]]
 				console.log('serialData',this.serialData)
 			}
