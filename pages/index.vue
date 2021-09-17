@@ -71,7 +71,7 @@
 						src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealMore.png"></image>
 				</view >
 
-				<view class="actItem dealCar">
+				<view class="actItem dealCar" @tap="goYuyue()">
 					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/NearDealer.png" class="img" mode="aspectFill"></image>
 				</view>
 				<view class="hotNDelF">
@@ -525,8 +525,20 @@
 					// #endif
 					console.log('去经销商',this.nearDealer)
 					if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
-						uni.navigateTo({
-							url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+						// uni.navigateTo({
+						// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+						// })
+						uni.openLocation({
+						  'latitude':Number(this.nearDealer.lngY),
+						  'longitude':Number(this.nearDealer.lngX),
+						  'name':this.nearDealer.name,
+						  scale: 18,
+						  success(sus) {
+						  	console.log(sus)
+						  },
+						  fail(res) {
+						  	console.log(res)
+						  }
 						})
 					}
 				},
