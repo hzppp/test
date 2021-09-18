@@ -1186,6 +1186,22 @@ module.exports = {
 		})
 		return data
 	},
+	
+	listByDealer: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('listByDealer'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+	
+	
+	
+	
 
 	
 }

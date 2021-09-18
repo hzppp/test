@@ -45,13 +45,19 @@
 						</swiper>
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
-					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" @start="startCallBack"
+
+					 <LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
+						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
 						@end="endCallBack" :showDialogL="showDialogL" />
 
-					<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
-						:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-						@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
+						<!-- 头条转盘 -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
+						<!-- #endif -->
+
+						<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
+							:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
+							@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
 					<view class="choiceTime">
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
@@ -192,6 +198,7 @@
 <script>
 	import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
 	import LuckyGrid from '@/components/uni-luck-draw/lucky-grid'
+	import lottery from '@/components/toutiao-lottery/lottery'
 	import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 	const app = getApp()
 	import api from '@/public/api/index'
@@ -209,7 +216,8 @@
 			pageTopCommon,
 			userBand,
 			LuckyGrid,
-			pageTop
+			pageTop,
+			lottery
 		},
 		data() {
 			return {
@@ -232,7 +240,7 @@
 				activityMemoArr: [],
 				shareTitle: '',
 				shareUrl: '',
-				isIOS: true,
+				isIOS: false, 
 				lotteryType: '',
 				shareURL: '',
 				sharePosterPic: '',
@@ -257,8 +265,9 @@
 				canvasshow: true,
 				grid: {},
 				canvasShow: false,
-				startIng:false
-				
+				startIng:false,
+				runDeg:0,
+				animationData:{}
 
 
 			}
@@ -286,6 +295,8 @@
 
 			if (this.lotteryType == 'Vouchers') {
 				this.title = '购车代金券'
+			}else if (this.lotteryType == 'grid'){
+			     this.title = '盲盒抽奖'
 			}
 
 
@@ -371,36 +382,28 @@
 			} else {
 				// 
 				if (this.lotteryActInfo.prizeList.length) {
+					 var turnNum = 1 / this.lotteryActInfo.prizeList.length*360;  // 文字旋转 turn 值
+					 
 					this.lotteryActInfo.prizeList.forEach((item, index) => {
-						if (this.isIOS) {
-							this.prizes.push({
-								title: '',
-								background: '#c3ecff',
-								fonts: [{
-									text: '',
-									top: '18%'
-								}],
-								imgs: [{
-									src: item.picUrl.trim(),
-									width: '100%',
-									height: '100%',
-									top: '1rpx'
-									// src: `../../static/images/prize_${item.prizeCode}.png`, width: '100%', height: '100%', top: '1rpx'
-									//src: `https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/prize_${item.prizeCode}.png `, width: '100%', height: '100%', top: '1rpx'
-								}]
-							})
-						} else {
-							this.prizes.push({
-								title: item.name,
-								background: '#F9F9D5',
-								fonts: [{
-									text: item.name,
-									top: '18%',
-									fontColor: 'red'
-								}]
-
-							})
+						let url = item.picUrl.trim()
+						if (url.indexOf('http:') > -1) {
+							url = url.replace('http:', 'https:')
 						}
+						this.prizes.push({
+							title: '',
+							background: '#c3ecff',
+							fonts: [{
+								text: '',
+								top: '18%'
+							}],
+							imgs: [{
+								src: url,
+								width: '100%',
+								height: '100%',
+								top: '1rpx'
+							}],
+							turn: index * turnNum + 'deg',lineTurn: index * turnNum + turnNum / 2 + 'deg'
+						})
 
 						if (index == this.lotteryActInfo.prizeList.length - 1) {
 							uni.hideLoading()
@@ -442,6 +445,7 @@
 					return
 				}
 				this.startIng = true
+				
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -455,16 +459,18 @@
 						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
+						// res.data.id
+						let index = this.matchIndex(res.data.id) //中奖索引
+						console.log('中奖索引', index)
 						// #ifdef MP-WEIXIN
 						this.$refs.luckyWheel.play()
 						// #endif
 
-						// #ifdef MP-TOUTIAO
-						this.$children[2].play()
+						// #ifndef MP-WEIXIN
+						this.run(index)
 						// #endif
 
-						let index = this.matchIndex(res.data.id) //中奖索引
-						console.log('中奖索引', index)
+						
 						// 缓慢停止游戏
 						setTimeout(() => {
 							// 缓慢停止游戏
@@ -473,7 +479,7 @@
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							this.$children[2].stop(index)
+							// this.$children[2].stop(index)
 							// #endif
 
 
@@ -489,6 +495,29 @@
 					}
 				})
 
+			},
+			run(index){
+				var runNum = 8;//旋转8周  
+				var duration = 4000;//时长 
+				// 旋转角度  
+				this.runDeg = this.runDeg || 0;  
+				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
+				// //创建动画  
+				// var animationRun = uni.createAnimation({  
+				// 	duration: duration,  
+				// 	timingFunction: 'ease'  
+				// })  
+				// animationRun.rotate(this.runDeg).step();  
+				// this.animationData= animationRun.export();  
+				// let animationObj = {
+				// 	transform:'rotate('+this.runDeg+'deg)',
+				// 	transition:`transform ${duration} ease`
+				// }
+				// console.log("抖音中奖动画",animationObj)
+				//动画结束后弹出中奖弹窗
+				setTimeout(function () {  
+					this.endCallBack()
+				}.bind(this), duration);  
 			},
 			matchIndex(id) {
 				let res;
@@ -516,6 +545,9 @@
 				this.GirdShowDialogL = false
 			},
 			goLotteryDetail(id) {
+				if(this.startIng){
+					return
+				}
 				this.closeDialog()
 				setTimeout(() => {
 					let url = `/pages/lotteryDetail?id=${id}`;
@@ -525,6 +557,9 @@
 				}, 100)
 			},
 			golotteryRecord() {
+				if(this.startIng){
+					return
+				}
 				this.closeDialog();
 				let url = '/pages/lotteryRecord';
 				uni.navigateTo({
@@ -532,6 +567,9 @@
 				})
 			},
 			goInviteRecord() {
+				if(this.startIng){
+					return
+				}
 				let url = `/pages/inviteRecord?activityId=${this.activityId}`;
 				uni.navigateTo({
 					url
@@ -665,6 +703,7 @@
 				});
 				console.log('中奖了', this.lotteryRes)
 			},
+			
 			gridEnd(prize) {
 				// 奖品详情
 				this.showDia()
@@ -808,6 +847,9 @@
 				this.$refs.popup.close()
 			},
 			shareHB() {
+				if(this.startIng){
+					return
+				}
 
 				this.GirdShowDialogL = false
 				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
@@ -1495,7 +1537,7 @@
 						text-align: center;
 						line-height: 215rpx;
 						font-weight: bold;
-
+						color: #fff;
 					}
 
 					&.gotPrize {
@@ -1516,6 +1558,7 @@
 						top: 130rpx;
 						left: 50%;
 						transform: translateX(-50%);
+						color: #ffffff;
 					}
 
 					.amountBox {
