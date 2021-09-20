@@ -295,6 +295,8 @@
 
 			if (this.lotteryType == 'Vouchers') {
 				this.title = '购车代金券'
+			}else if (this.lotteryType == 'grid'){
+			     this.title = '盲盒抽奖'
 			}
 
 
@@ -542,7 +544,10 @@
 				this.showDialogL = false;
 				this.GirdShowDialogL = false
 			},
-			goLotteryDetail(id) {
+			goLotteryDetail(id) {				
+				if(this.startIng){
+					return
+				}
 				this.closeDialog()
 				setTimeout(() => {
 					let url = `/pages/lotteryDetail?id=${id}`;
@@ -552,6 +557,9 @@
 				}, 100)
 			},
 			golotteryRecord() {
+				if(this.startIng){
+					return
+				}
 				this.closeDialog();
 				let url = '/pages/lotteryRecord';
 				uni.navigateTo({
@@ -559,6 +567,9 @@
 				})
 			},
 			goInviteRecord() {
+				if(this.startIng){
+					return
+				}
 				let url = `/pages/inviteRecord?activityId=${this.activityId}`;
 				uni.navigateTo({
 					url
@@ -836,7 +847,9 @@
 				this.$refs.popup.close()
 			},
 			shareHB() {
-
+				if(this.startIng){
+					return
+				}
 				this.GirdShowDialogL = false
 				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
 					encodeURIComponent(this.sharePosterPic)
