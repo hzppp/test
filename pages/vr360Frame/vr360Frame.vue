@@ -74,7 +74,7 @@
 		    
 			let imageUrl = this.imageurl
 			return {
-				title: title,
+			    title: '【云展厅】'  +  title,
 				path: path,
 				imageUrl: imageUrl
 			}
