@@ -31,7 +31,7 @@
 			"style": {
 				"navigationBarTitleText": "云展厅",
 				// #ifdef MP-WEIXIN
-				"navigationStyle": "custom",
+				// "navigationStyle": "custom",
 				// #endif
 				"enablePullDownRefresh": false
 				// "pageOrientation": "landscape",
