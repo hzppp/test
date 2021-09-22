@@ -13,7 +13,7 @@
 							<view class="name">
 								<open-data type="userNickName"></open-data>
 								<!--  #ifdef MP-TOUTIAO  -->
-										<view>{{name}}</view>
+										<template>{{name}}</template>
 								<!-- #endif -->
 								
 							</view>
