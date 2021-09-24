@@ -31,10 +31,10 @@
             </view>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo()" v-model="phoneNum" maxlength="11" />
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
-            <view class="list models">
+            <view class="list models" v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
                 <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
@@ -105,7 +105,8 @@ const COUNTDOWN = 60
                 getPhoneBtn: false,
                 isFocus:false,
                 isNoData:false,
-				TOUTIAO:''
+				TOUTIAO:'',
+				smsCodeShow: false
             }
         },
         watch: {
@@ -117,8 +118,11 @@ const COUNTDOWN = 60
             },
 			serialId(n){
 				 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
-			}			
-
+			},
+			phoneNum(n){
+			  this.checkInfo()
+			}
+		   
         },
         onShow() {
 			if(this.show && this.serialId){
@@ -206,11 +210,20 @@ const COUNTDOWN = 60
 			},
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
-                    this.isAllSelect = true
-                }else {
-                    this.isAllSelect = false
-                }
+				if (this.phoneNum.length == 11 && this.phoneNum != uni.getStorageSync('userPhone')) {
+					this.smsCodeShow = true
+				} else {
+					this.smsCodeShow = false
+				}
+			   if(this.phoneNum  && this.currentCity.id && ((this.phoneNum != uni.getStorageSync('userPhone') && this.codeNum) || this
+					.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id) {
+			       this.isAllSelect = true
+			   }else {
+			       this.isAllSelect = false
+			   }
+			    
+				
+
             },
             cleanRegion() {
                 this.currentRegion = {}
@@ -272,7 +285,7 @@ const COUNTDOWN = 60
                     title:"请输入正确的手机号码",
                     icon:"none"
                 })
-                if(!this.codeNum) return uni.showToast({
+                if(!this.codeNum && this.smsCodeShow) return uni.showToast({
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
@@ -388,6 +401,7 @@ const COUNTDOWN = 60
                             this.currentDealer = {}
                         }
                     }
+					this.checkInfo()
                 } catch (error) {
                     console.error(error)
                 }finally {

@@ -26,7 +26,7 @@
             </view>
             <!-- 手机号E -->
             <!-- 验证码S -->
-            <view class="list models">
+            <view class="list models"  v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
                 <input class="select" placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
@@ -120,7 +120,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
                 isNoData:false,
 				zijie:'',
-				TOUTIAO:''
+				TOUTIAO:'',
+				smsCodeShow: false
             }
         },
         watch: {
@@ -137,7 +138,11 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 			 this.serialId = n
 			 this.reqSerialDetail(this.serialId)
 			 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
+			},
+			phoneNum(n){
+			  this.checkInfo()
 			}
+			
 
         },
         onShow() {
@@ -292,13 +297,27 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
-                    this.isAllSelect = true
-                    console.log('true :>> ', true);
-                }else {
-                    this.isAllSelect = false
-                    console.log('false :>> ', false);
-                }
+    //             if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
+    //                 this.isAllSelect = true
+    //                 console.log('true :>> ', true);
+    //             }else {
+    //                 this.isAllSelect = false
+    //                 console.log('false :>> ', false);
+    //             }
+				
+				if (this.phoneNum.length == 11 && this.phoneNum != uni.getStorageSync('userPhone')) {
+					this.smsCodeShow = true
+				  } else {
+					this.smsCodeShow = false
+				 }
+				if(this.phoneNum  && this.currentCity.id && ((this.phoneNum != uni.getStorageSync('userPhone') && this.codeNum) || this
+									.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id) {
+				    this.isAllSelect = true
+				}else {
+				    this.isAllSelect = false
+				}
+				 
+				
             },
             //选择城市
             goChooseCity(){
@@ -330,7 +349,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     title:"请输入正确的手机号码",
                     icon:"none"
                 })
-                if(!this.codeNum) return uni.showToast({
+                if(!this.codeNum && this.smsCodeShow) return uni.showToast({
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
@@ -407,6 +426,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                             this.currentDealer = {}
                         }
                     }
+				  this.checkInfo()
                 } catch (error) {
                     console.error(error)
                 }finally {
