@@ -45,18 +45,12 @@
 						</swiper>
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
-<!-- 
-					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
-						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
-						@end="endCallBack" :showDialogL="showDialogL" /> -->
 
-						<!-- 头条转盘 -->
-						<!--  #ifndef MP-WEIXIN  -->
-						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
-						<!-- #endif -->
-						<!-- <LuckyGrid width="555rpx" height="685rpx" ref="luckyGrid"  @end="gridEnd"></LuckyGrid> -->
 						
-						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/>
+						
+						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
+						
+						
 						<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize"  @end="gridEnd"/>
 					<view class="choiceTime">
 						您还有
@@ -197,8 +191,8 @@
 </template>
 <!--lottery_bg.png-->
 <script>
-	import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
-	import LuckyGrid from '@/components/uni-luck-draw/lucky-grid'
+	// import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
+	// import LuckyGrid from '@/components/uni-luck-draw/lucky-grid'
 	import MysteryPrize from '@/components/mystery-prize/mystery-prize'
 	import lottery from '@/components/toutiao-lottery/lottery'
 	import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
@@ -214,10 +208,10 @@
 	export default {
 		name: "lotteryPage",
 		components: {
-			LuckyWheel,
+			// LuckyWheel,
 			pageTopCommon,
 			userBand,
-			LuckyGrid,
+			// LuckyGrid,
 			MysteryPrize,
 			pageTop,
 			lottery
@@ -438,7 +432,7 @@
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
 			
-				
+			
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
@@ -467,12 +461,15 @@
 						// res.data.id
 						let index = this.matchIndex(res.data.id) //中奖索引
 						console.log('中奖索引', index)
+						
+						this.run(index)
+						
 						// #ifdef MP-WEIXIN
-						this.$refs.luckyWheel.play()
+						// this.$refs.luckyWheel.play()
 						// #endif
 
 						// #ifndef MP-WEIXIN
-						this.run(index)
+						// this.run(index)
 						// #endif
 
 						
@@ -480,7 +477,7 @@
 						setTimeout(() => {
 							// 缓慢停止游戏
 							// #ifdef MP-WEIXIN
-							this.$refs.luckyWheel.stop(index)
+							// this.$refs.luckyWheel.stop(index)
 							// #endif
 
 							// #ifdef MP-TOUTIAO
@@ -507,18 +504,7 @@
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
-				// //创建动画  
-				// var animationRun = uni.createAnimation({  
-				// 	duration: duration,  
-				// 	timingFunction: 'ease'  
-				// })  
-				// animationRun.rotate(this.runDeg).step();  
-				// this.animationData= animationRun.export();  
-				// let animationObj = {
-				// 	transform:'rotate('+this.runDeg+'deg)',
-				// 	transition:`transform ${duration} ease`
-				// }
-				// console.log("抖音中奖动画",animationObj)
+	
 				//动画结束后弹出中奖弹窗
 				setTimeout(function () {  
 					this.endCallBack()
@@ -631,12 +617,12 @@
 			},
 			// 盲盒抽奖
 			async gridStart() {
-				console.log('children',this.$children)
+				// console.log('children',this.$children)
 				
 				
 				this.lotteryResindex == 999
 				this.selectPrizesURL = ''
-				this.initGirdData()
+				// this.initGirdData()
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
