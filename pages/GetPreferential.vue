@@ -28,7 +28,7 @@
             <!-- 验证码S -->
             <view class="list models"  v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
-                <input class="select" placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" />
+                <input class="select" :focus="isFocus1" placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
@@ -117,7 +117,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 getPhoneBtn: false,
 
                 isFocus:false,
-
+				isFocus1:false,
                 isNoData:false,
 				zijie:'',
 				TOUTIAO:'',
@@ -140,6 +140,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 			 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
 			},
 			phoneNum(n){
+			  if(n.length > 11){
+				  this.phoneNum = n.substring(0,11)
+			  }
 			  this.checkInfo()
 			}
 			
@@ -345,6 +348,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             },
             //立即预约
             async yuYue() {
+				console.log(this.phoneNum,reg.test(this.phoneNum))
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
                     icon:"none"
@@ -377,6 +381,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     })
                     console.log('res :>> ', res);
                     if(res.code === 1) {
+						this.isFocus1 = false
+						this.isFocus = false
 						 // #ifdef MP-WEIXIN
 						 this.$refs.pop.isShow = true
 						// #endif
@@ -394,7 +400,9 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 } catch (error) {
                     console.error(error)
                 }finally {
-                    uni.hideLoading()
+                   setTimeout(() => {
+                   	uni.hideLoading()
+                   }, 2000)
                 }
             },
             //获取经销商列表

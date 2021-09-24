@@ -36,7 +36,7 @@
             </view>
             <view class="list models" v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
-                <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
+                <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" :focus="isFocus1" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
@@ -104,6 +104,7 @@ const COUNTDOWN = 60
 
                 getPhoneBtn: false,
                 isFocus:false,
+				isFocus1:false,
                 isNoData:false,
 				TOUTIAO:'',
 				smsCodeShow: false
@@ -308,6 +309,8 @@ const COUNTDOWN = 60
                         sourceId:this.serialId
                     })
                     if(res.code === 1) {
+						this.isFocus1 = false
+						this.isFocus = false
 						// #ifdef MP-WEIXIN
 						 this.$refs.pop.isShow = true
 						// #endif
