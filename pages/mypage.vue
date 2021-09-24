@@ -11,7 +11,10 @@
 					<view class="info">
 						<view class="name_info">
 							<view class="name">
-								<open-data type="userNickName"></open-data>
+								<!--  #ifdef MP-WEIXIN  -->
+										<open-data type="userNickName"></open-data>
+								<!-- #endif -->
+								
 								<!--  #ifdef MP-TOUTIAO  -->
 										<template>{{name}}</template>
 								<!-- #endif -->
