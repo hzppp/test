@@ -46,7 +46,7 @@
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
 
-					 <LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
+					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
 						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
 						@end="endCallBack" :showDialogL="showDialogL" />
 
@@ -54,10 +54,10 @@
 						<!--  #ifndef MP-WEIXIN  -->
 						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
 						<!-- #endif -->
-
-						<LuckyGrid v-if="lotteryType == 'grid'" ref="luckyGrid" :rows="grid.rows" :cols="grid.cols"
-							:blocks="grid.blocks" width="560rpx" height="685rpx" :prizes="grid.prizes" :button="grid.button"
-							@start="gridStart" @end="gridEnd" :showDialogL="GirdShowDialogL" />
+						<!-- <LuckyGrid width="555rpx" height="685rpx" ref="luckyGrid"  @end="gridEnd"></LuckyGrid> -->
+						
+						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
+						<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize"  @end="gridEnd"/>
 					<view class="choiceTime">
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
@@ -135,6 +135,7 @@
 			</view>
 		</view>
 
+		<!-- 抽奖结果 -->
 		<view class="girdDialog" v-if="showDialogL && lotteryType == 'grid'" @touchmove.stop.prevent>
 			<view class="dialogContainer">
 				<block v-if="lotteryRes.id>1&&lotteryRes.price">
@@ -198,6 +199,7 @@
 <script>
 	import LuckyWheel from '@/components/uni-luck-draw/lucky-wheel'
 	import LuckyGrid from '@/components/uni-luck-draw/lucky-grid'
+	import MysteryPrize from '@/components/mystery-prize/mystery-prize'
 	import lottery from '@/components/toutiao-lottery/lottery'
 	import pageTopCommon from '@/components/pageTopCommon/pageTopCommon'
 	const app = getApp()
@@ -216,6 +218,7 @@
 			pageTopCommon,
 			userBand,
 			LuckyGrid,
+			MysteryPrize,
 			pageTop,
 			lottery
 		},
@@ -626,7 +629,9 @@
 			},
 			// 盲盒抽奖
 			async gridStart() {
-				console.log(this.$children)
+				console.log('children',this.$children)
+				
+				
 				this.lotteryResindex == 999
 				this.selectPrizesURL = ''
 				this.initGirdData()
@@ -655,12 +660,12 @@
 						return
 					} else if (res.code === 1) {
 						// #ifdef MP-WEIXIN
-						this.$refs.luckyGrid.play()
+						this.$refs.mysteryPrize.play()
 						// #endif
 
 						// #ifdef MP-TOUTIAO
-						if (this.$refs.luckyGrid) {
-							this.$refs.luckyGrid.play(num)
+						if (this.$refs.mysteryPrize) {
+							this.$refs.mysteryPrize.play(num)
 						} else {
 							this.$children[3].play(num)
 						}
@@ -679,12 +684,12 @@
 							// 缓慢停止游戏
 							// #ifdef MP-WEIXIN
 
-							this.$refs.luckyGrid.stop(num)
+							this.$refs.mysteryPrize.stop(num)
 							// #endif
 
 							// #ifdef MP-TOUTIAO
-							if (this.$refs.luckyGrid) {
-								this.$refs.luckyGrid.stop(num)
+							if (this.$refs.mysteryPrize) {
+								this.$refs.mysteryPrize.stop(num)
 							} else {
 								this.$children[3].stop(num)
 							}
@@ -705,6 +710,7 @@
 			},
 			
 			gridEnd(prize) {
+				
 				// 奖品详情
 				this.showDia()
 			},

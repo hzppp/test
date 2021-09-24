@@ -1,267 +1,140 @@
 <template>
-	<view v-if="isShow" :class="showDialogL ? 'lucky-box hideWheel':'lucky-box'" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
-    <canvas id="lucky-grid" canvas-id="lucky-grid" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"></canvas>
-    <!-- #ifdef APP-PLUS -->
-    <view v-if="btnShow">
-      <view class="lucky-grid-btn" v-for="(btn, index) in btns" :key="index" @click="toPlay(btn)" :style="{
-        top: btn.top + 'px',
-        left: btn.left + 'px',
-        width: btn.width + 'px',
-        height: btn.height + 'px',
-      }"></view>
-    </view>
-    <!-- #endif -->
-    <!-- #ifndef APP-PLUS -->
-    <view v-if="btnShow">
-      <cover-view class="lucky-grid-btn" v-for="(btn, index) in btns" :key="index" @click="toPlay(btn)" :style="{
-        top: btn.top + 'px',
-        left: btn.left + 'px',
-        width: btn.width + 'px',
-        height: btn.height + 'px',
-      }"></cover-view>
-    </view>
-    <!-- #endif -->
-    <div class="lucky-imgs">
-      <div v-for="(prize, index) in prizes" :key="index">
-        <div v-if="prize.imgs">
-          <div v-for="(img, i) in prize.imgs" :key="i">
-            <image :src="img.src" @load="e => imgBindload(e, 'prizes', index, i)"></image>
-            <image :src="img.activeSrc" @load="e => imgBindloadActive(e, 'prizes', index, i)"></image>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="lucky-imgs">
-      <div v-for="(btn, index) in buttons" :key="index">
-        <div v-if="btn.imgs">
-          <image v-for="(img, i) in btn.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'buttons', index, i)"></image>
-        </div>
-      </div>
-    </div>
-    <div class="lucky-imgs">
-      <span v-if="button && button.imgs">
-        <image v-for="(img, i) in button.imgs" :key="i" :src="img.src" @load="e => imgBindloadBtn(e, 'button', i)"></image>
-      </span>
-    </div>
-  </view>
+	<view class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
+		<view class="grid-box">
+			<image v-for="item in 6" :src="item === selectIndex ? imgsrc[0] : imgsrc[1]"></image>
+		</view>
+	</view>
 </template>
 
 <script>
-  import { changeUnits, resolveImage } from '@/lottery/utils.js'
-  import { LuckyGrid } from '@/lottery/lucky-canvas'
-  export default {
-    name: 'lucky-grid',
-    data () {
-      return {
-        isShow: false,
-        boxWidth: 100,
-        boxHeight: 100,
-        dpr: 1,
-        transformStyle: '',
-        btns: [],
-        btnShow: false,
-      }
-    },
-    props: {
-      width: {
-        type: String,
-        default: '600rpx'
-      },
-      height: {
-        type: String,
-        default: '600rpx'
-      },
-      cols: {
-        type: [String, Number],
-        default: 3,
-      },
-      rows: {
-        type: [String, Number],
-        default: 3,
-      },
-      blocks: {
-        type: Array,
-        default: () => []
-      },
-      prizes: {
-        type: Array,
-        default: () => []
-      },
-      buttons: {
-        type: Array,
-        default: () => []
-      },
-      button: {
-        type: Object,
-        default: undefined
-      },
-      defaultConfig: {
-        type: Object,
-        default: () => {
-          return {}
-        }
-      },
-      defaultStyle: {
-        type: Object,
-        default: () => {
-          return {}
-        }
-      },
-	  showDialogL: {
-	    type: Boolean,
-	    default: false
-	  },
-      activeStyle: {
-        type: Object,
-        default: () => {
-          return {}
-        }
-      }
-    },
-    mounted () {
-      this.initLucky()
-    },
-    watch: {
-      cols (newData) {
-        this.$lucky && (this.$lucky.cols = newData)
-      },
-      rows (newData) {
-        this.$lucky && (this.$lucky.rows = newData)
-      },
-      blocks (newData) {
-        this.$lucky && (this.$lucky.blocks = newData)
-      },
-      prizes (newData) {
-        this.$lucky && (this.$lucky.prizes = newData)
-      },
-      buttons (newData) {
-        this.$lucky && (this.$lucky.buttons = newData)
-      },
-      button (newData) {
-        this.$lucky && (this.$lucky.button = newData)
-      },
-      defaultStyle (newData) {
-        this.$lucky && (this.$lucky.defaultStyle = newData)
-      },
-      defaultConfig (newData) {
-        this.$lucky && (this.$lucky.defaultConfig = newData)
-      },
-      activeStyle (newData) {
-        this.$lucky && (this.$lucky.activeStyle = newData)
-      },
-    },
-    methods: {
-      async imgBindload (res, name, index, i) {
-        const img = this[name][index].imgs[i]
-        resolveImage(res, img)
-      },
-      async imgBindloadActive (res, name, index, i) {
-        const img = this[name][index].imgs[i]
-        resolveImage(res, img, 'activeSrc', '$activeResolve')
-      },
-      async imgBindloadBtn (res, name, i) {
-        const img = this[name].imgs[i]
-        resolveImage(res, img)
-      },
-      initLucky () {
-        const dpr = this.dpr = uni.getSystemInfoSync().pixelRatio
-        this.boxWidth = changeUnits(this.width)
-        this.boxHeight = changeUnits(this.height)
-        const compute = (len) => (len * dpr - len) / (len * dpr) * (dpr / 2) * 100
-        this.transformStyle = `scale(${1 / dpr}) translate(
-          ${-compute(this.boxWidth * dpr)}%, ${-compute(this.boxHeight * dpr)}%
-        )`
-        this.isShow = true
-        this.$nextTick(() => this.draw())
-      },
-      draw () {
-        const _this = this
-        const ctx = this.ctx = uni.createCanvasContext('lucky-grid', this)
-        const $lucky = this.$lucky = new LuckyGrid({
-          // #ifdef H5 || APP-PLUS
-          flag: 'UNI-H5',
-          // #endif
-          // #ifdef MP
-          flag: 'UNI-MP',
-          // #endif
-          dpr: 1,
-          ctx: this.ctx,
-          width: this.width,
-          height: this.height,
-          // #ifdef H5
-          rAF: requestAnimationFrame,
-          // #endif
-          setTimeout: setTimeout,
-          clearTimeout: clearTimeout,
-          setInterval: setInterval,
-          clearInterval: clearInterval,
-          unitFunc: (num, unit) => changeUnits(num + unit),
-          afterDraw: function () {
-            ctx.draw()
-          },
-          afterInit: function () {
-            [..._this.$props.buttons, _this.$props.button].forEach((btn, index) => {
-              if (!btn) return
-              const [left, top, width, height] = this.getGeometricProperty([
-                btn.x,
-                btn.y,
-                btn.col || 1,
-                btn.row || 1
-              ])
-              _this.btns[index] = { top, left, width, height }
-            })
-            _this.$forceUpdate()
-          },
-        }, {
-          ...this.$props,
-          start: (...rest) => {
-            this.$emit('start', ...rest)
-          },
-          end: (...rest) => {
-            this.$emit('end', ...rest)
-          },
-        })
-        this.btnShow = true
-      },
-      toPlay (btn) {
-        this.$lucky.startCallback(btn)
-      },
-      init () {
-        this.$lucky.init({})
-      },
-      play (...rest) {
-        this.$lucky.play(...rest)
-      },
-      stop (...rest) {
-        this.$lucky.stop(...rest)
-      },
-    },
-  }
+	import { changeUnits } from '@/lottery/utils.js'
+	export default {
+		name:"lucky-grid",
+		props: {
+		  width: {
+		    type: String,
+		    default: '600rpx'
+		  },
+		  height: {
+		    type: String,
+		    default: '600rpx'
+		  },
+		},
+		data() {
+			return {
+				boxWidth: 100,
+				boxHeight: 100,
+				selectIndex: -1,
+				imgsrc:[
+					'../../static/images/girdSelect.png',
+					'../../static/images/gird.png'
+				],
+				prize: '',
+				runcount: 0,
+				luck: ''
+			};
+		},
+		mounted () {
+		  this.init()
+			
+		},
+		methods: {
+			init () {
+				this.boxWidth = changeUnits(this.width)
+				this.boxHeight = changeUnits(this.height)
+				this.runcount = 0
+				this.selectIndex = -1
+				
+			},
+			play () {
+				
+				this.runcount = 0	
+				this.luck = ''
+
+				this.luck = setInterval( ()=>{ 
+					console.log('real rlay')
+					if (this.runcount <=4) {
+						this.run(5)
+					} else if (this.runcount <= 8) {
+						clearInterval(this.luck)
+						this.luck = setInterval( ()=>{ 
+							if (this.runcount > 8) {
+								clearInterval(this.luck)
+								this.luck = setInterval( ()=>{ 
+									this.run(5) 
+									},35 )
+							}
+							this.run(5) 
+						},50 )
+					} 
+				},60 )
+					
+				
+				  
+			},
+			run (max) {
+				this.runcount++
+				if (this.selectIndex > max) {
+					this.selectIndex = 0
+				} else {
+					// console.log(this.selectIndex)
+					this.selectIndex = this.selectIndex + 1
+				}
+				
+			},
+			stop (num) {
+				
+				
+				setTimeout(() => {
+					clearInterval(this.luck)
+					
+					this.luck = setInterval( ()=>{ 
+						this.run(5) 
+						
+					},70 )
+					setTimeout(()=>{
+						if (this.selectIndex === num) {
+							clearInterval(this.luck)
+						} else {
+							var waitNum = setInterval(() => {
+								if (this.selectIndex === num) {
+									this.$emit('end')
+									clearInterval(this.luck)
+									clearInterval(waitNum)
+								}
+							},100)
+						}
+					},80*6)
+					
+					
+				},1500)
+
+			},
+			
+		}
+	}
 </script>
 
-<style scoped>
-  .lucky-box {
+<style scoped lang="scss">
+	.lucky-box {
     position: relative;
     overflow: hidden;
-	margin: 0 auto;
-	top: 344rpx;
-	/* background: #007AFF; */
+		margin: 0 auto;
+		top: 344rpx;
   }
-  .lucky-box canvas {
-    position: absolute;
-    pointer-events: none;
-  }
-  .lucky-grid-btn {
-    position: absolute;
-    background: #FFFFFF;
-    border-radius: 0;
-  }
-  .lucky-imgs {
-    width: 0;
-    height: 0;
-    visibility: hidden;
-  }
-  .hideWheel {
-    top: -11111rpx;
-  }
+	.grid-box {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		image {
+			flex: 33.33%;
+			height: 33.9%;
+			margin-top: 10.7%;
+			&:nth-child(n+4) {
+				margin-top: 9%;
+			}
+		}
+	}
 </style>
