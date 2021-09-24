@@ -45,10 +45,10 @@
 						</swiper>
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
-
+<!-- 
 					<LuckyWheel v-if="lotteryType != 'grid'" ref="luckyWheel" width="520rpx" height="520rpx"
 						:blocks="blocks" :prizes="prizes" :defaultStyle="defaultStyle" :runDeg="runDeg" @start="startCallBack"
-						@end="endCallBack" :showDialogL="showDialogL" />
+						@end="endCallBack" :showDialogL="showDialogL" /> -->
 
 						<!-- 头条转盘 -->
 						<!--  #ifndef MP-WEIXIN  -->
@@ -56,7 +56,7 @@
 						<!-- #endif -->
 						<!-- <LuckyGrid width="555rpx" height="685rpx" ref="luckyGrid"  @end="gridEnd"></LuckyGrid> -->
 						
-						<!-- <lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/> -->
+						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :animationData="animationData" @start="startCallBack"/>
 						<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize"  @end="gridEnd"/>
 					<view class="choiceTime">
 						您还有
@@ -437,6 +437,8 @@
 		methods: {
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
+			
+				
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
