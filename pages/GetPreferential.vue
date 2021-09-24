@@ -28,7 +28,7 @@
             <!-- 验证码S -->
             <view class="list models"  v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
-                <input class="select" :focus="isFocus1" placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" />
+                <input class="select"  placeholder="请输入验证码"  @input="checkInfo" v-model="codeNum" android:focusable="true" android:focusableInTouchMode="true" />
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
@@ -117,7 +117,6 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 getPhoneBtn: false,
 
                 isFocus:false,
-				isFocus1:false,
                 isNoData:false,
 				zijie:'',
 				TOUTIAO:'',
@@ -365,7 +364,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     uni.showLoading({
                         title: '正在加载...',
                         mask:true
-                    })                    
+                    })				
                     const res = await api.submitClue({
                         areaId:this.currentRegion.id || "",
                         cityId:this.currentCity.id,
@@ -381,8 +380,6 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                     })
                     console.log('res :>> ', res);
                     if(res.code === 1) {
-						this.isFocus1 = false
-						this.isFocus = false
 						 // #ifdef MP-WEIXIN
 						 this.$refs.pop.isShow = true
 						// #endif
