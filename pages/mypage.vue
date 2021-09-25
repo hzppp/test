@@ -50,11 +50,13 @@
 			</view>
 
 			<view class="box">
-				<view class="box-list list2" @tap="toMyicon">
-					<view class="p1">我的金币</view>
-					<view class="right isApprove"></view>
-				</view>
-				<view class="line"></view>
+				<!--  #ifndef MP-TOUTIAO  -->
+					<view class="box-list list2" @tap="toMyicon">
+						<view class="p1">我的金币</view>
+						<view class="right isApprove"></view>
+					</view>
+					<view class="line"></view>
+				<!-- #endif -->
 				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
 					<view class="right isApprove"></view>
@@ -72,11 +74,11 @@
 				
 				
 				<!--  #ifdef MP-TOUTIAO  -->
-					<view class="line"></view>
+			<!-- 		<view class="line"></view>
 					<view class="box-list list5" @tap="tomSuggestion">
 						<view class="p1">意见反馈</view>
 						<view class="right isApprove"></view>
-					</view>
+					</view> -->
 				<!-- #endif -->
 				<!--  #ifndef MP-TOUTIAO  -->
 					<view class="line"></view>
