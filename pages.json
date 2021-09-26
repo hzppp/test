@@ -336,6 +336,15 @@
 			}
 		},
 		{
+			"path": "pages/map",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+				
+			}
+		},
+		{
 			"path": "pages/NearDealerYuyuePage",
 			"style": {
 				"navigationBarTitleText": "预约试驾",

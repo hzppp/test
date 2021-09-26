@@ -303,7 +303,7 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
             //选择城市
             goChooseCity(){
                 // this.currentDealer = {}
-                this.currentRegion = {}
+                // this.currentRegion = {}
                 uni.navigateTo({
 					url: "/pages/ChooseCity"
 				})
