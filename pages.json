@@ -334,6 +334,32 @@
 				"enablePullDownRefresh": false
 				
 			}
+		},
+		{
+			"path": "pages/map",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+				
+			}
+		},
+		{
+			"path": "pages/NearDealerYuyuePage",
+			"style": {
+				"navigationBarTitleText": "预约试驾",
+				"enablePullDownRefresh": false
+				
+			}
+		},
+		{
+			"path": "pages/moreDealer",
+			"style": {
+				"navigationBarTitleText": "更多门店",
+				"enablePullDownRefresh": false
+				
+				
+			}
 		}
 		
 		

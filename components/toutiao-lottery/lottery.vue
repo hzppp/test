@@ -5,7 +5,7 @@
                 <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
                 <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
                     <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-                    <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="heightFix" @load="e => imgBindload()"></image>  
+                    <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload()"></image>  
                     </view>  
                 </view>  
                 </view>  
@@ -70,7 +70,8 @@
 		height: 520rpx;
 		margin:0 auto;
 		top: 326rpx;
-		position: relative;
+        position: relative;
+        transition: transform  4000ms ease;
 		.lottery-canvas{
 		    width:100%;
 		    height: 100%;
@@ -108,7 +109,6 @@
             align-items: center;  
         }  
         .canvas-item-con-img{  
-            width:260rpx;  
             height:260rpx; 
         }  
     }
@@ -121,7 +121,5 @@
         height: 219rpx;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        /*background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png) center no-repeat;*/
-        background-size: 100%;
     }
 </style>
