@@ -37,8 +37,8 @@
 					:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
 					<view class="lotteryList">
 						<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true"
-							:circular="true" :duration="500" :interval="2000" :autoplay="true">
-							<swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords"
+							:circular="true" :duration="500" :interval="2000" :autoplay="autoplay">
+							<swiper-item @touchmove.stop='stopTouchMove' v-for="(item,index) in lotteryActInfo.winnerRecords"
 								:key="index">
 								<view class="item">{{item}}</view>
 							</swiper-item>
@@ -46,12 +46,12 @@
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
 
-						
-						
-						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
-						
-						
-						<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize"  @end="gridEnd"/>
+					<!-- 转盘抽奖 -->
+					<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
+					
+					<!-- 盲盒抽奖 -->
+					<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize" :winPrizeUrl="winPrizeUrl" @end="gridEnd"/>
+
 					<view class="choiceTime">
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
@@ -264,12 +264,13 @@
 				canvasShow: false,
 				startIng:false,
 				runDeg:0,
-				animationData:{}
-
-
+				animationData:{},
+				winPrizeUrl:"",
+				autoplay:false
 			}
 		},
 		onShow() {
+			this.autoplay = true
 			app.globalData.isRotating = false;
 		},
 		async onLoad(options) {
@@ -374,7 +375,7 @@
 			this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a, b) => a.prizeCode - b.prizeCode)
 			// console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
 			if (this.lotteryType == 'grid') {
-				this.initGirdData()
+				// this.initGirdData()
 				uni.hideLoading()
 			} else {
 				// 
@@ -428,7 +429,14 @@
 				imageUrl: this.shareUrl
 			}
 		},
+		onHide() {
+			this.autoplay = false
+		},
 		methods: {
+			//禁止用户手动滑动
+			stopTouchMove(){
+				return true;
+			},
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
 			
@@ -457,35 +465,13 @@
 						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
-						// res.data.id
 						let index = this.matchIndex(res.data.id) //中奖索引
-						console.log('中奖索引', index)
-						
-						this.run(index)
-						
-						// #ifdef MP-WEIXIN
-						// this.$refs.luckyWheel.play()
-						// #endif
-
-						// #ifndef MP-WEIXIN
-						// this.run(index)
-						// #endif
-
-						
 						// 缓慢停止游戏
 						setTimeout(() => {
-							// 缓慢停止游戏
-							// #ifdef MP-WEIXIN
-							// this.$refs.luckyWheel.stop(index)
-							// #endif
-
-							// #ifdef MP-TOUTIAO
-							// this.$children[2].stop(index)
-							// #endif
-
-
+							this.run(index)
 						}, 500)
 						return res.data
+
 					} else if (res.code == 0) {
 						uni.showToast({
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
@@ -499,7 +485,7 @@
 			},
 			run(index){
 				var runNum = 8;//旋转8周  
-				var duration = 3000;//时长 
+				var duration = 4000;//时长 
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
@@ -616,12 +602,15 @@
 			},
 			// 盲盒抽奖
 			async gridStart() {
-				// console.log('children',this.$children)
 				
-				
+				this.winPrizeUrl = ""
 				this.lotteryResindex == 999
-				this.selectPrizesURL = ''
-				// this.initGirdData()
+
+				if(this.startIng){
+					return
+				}
+				this.startIng = true
+
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
@@ -632,7 +621,7 @@
 					app.globalData.isRotating = false;
 					return
 				}
-				this.startIng = true
+				
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -658,22 +647,18 @@
 						}
 						// #endif
 
-						let index = this.matchIndex(res.data.id) //中奖索引
-						console.log('中奖索引', index)
+						// 中奖索引
 						var num = Math.round(Math.random() * 5)
 						this.lotteryResindex = num
-						this.dawSelectV(this.lotteryResindex, res)
-
+						
+						
 						// 缓慢停止游戏
 						setTimeout(() => {
-
 							console.log('num' + num)
 							// 缓慢停止游戏
 							// #ifdef MP-WEIXIN
-
 							this.$refs.mysteryPrize.stop(num)
 							// #endif
-
 							// #ifdef MP-TOUTIAO
 							if (this.$refs.mysteryPrize) {
 								this.$refs.mysteryPrize.stop(num)
@@ -697,8 +682,8 @@
 			},
 			
 			gridEnd(prize) {
-				
 				// 奖品详情
+				
 				this.showDia()
 			},
 			isReq(j, i) {
@@ -819,7 +804,9 @@
 			},
 			showDia() {
 				this.startIng = false
-				this.initGirdData()
+				
+				this.winPrizeUrl = this.lotteryRes.picUrl
+				console.log("winPrizeUrl",this.winPrizeUrl)
 				setTimeout(() => {
 					app.globalData.isRotating = false;
 					this.showDialogL = true;
