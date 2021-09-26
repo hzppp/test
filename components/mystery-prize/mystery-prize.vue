@@ -1,7 +1,7 @@
 <template>
 	<view class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
 		<view class="grid-box">
-			<image v-for="item in 6" :src="item === selectIndex ? imgsrc[0] : imgsrc[1]"></image>
+			<image v-for="(item,index) in 6" :src="item === selectIndex ? imgsrc[0] : imgsrc[1]" :key="index"></image>
 		</view>
 	</view>
 </template>

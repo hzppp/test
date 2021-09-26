@@ -432,7 +432,6 @@
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
 			
-			
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
@@ -500,7 +499,7 @@
 			},
 			run(index){
 				var runNum = 8;//旋转8周  
-				var duration = 4000;//时长 
+				var duration = 3000;//时长 
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
