@@ -307,13 +307,11 @@
 				})
 		
 			// #ifndef MP-WEIXIN
-			
-			 let index = this.pageData.banners.findIndex(item=>item.miniUrl.indexOf('banH=true') !== -1)
-			  console.log(index)
-			 if(index != -1){
-				 this.pageData.banners.splice(index,1)
-			 }
-			
+			console.log(this.pageData.banners)
+			let array = this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1 )
+			let array1 = array.filter(item=>item.redirectUrl.indexOf('banH=true') == -1)
+			this.pageData.banners = array1
+			console.log(this.pageData.banners)
 			 // #endif
 			 this.sgList = this.pageData.heatSgList
 				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';

@@ -19,7 +19,7 @@
 					</view>
 				</block>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector"
-					:range="[provinceList, cityList]" :range-key="'name'"
+					:range="[provinceList, cities]" :range-key="'name'"
 					:class="'input-view city-input ' + (showProvinceCityText == '请选择省市' ? 'placeholder':'')"
 					:value="selectIndex">
 					<view>{{showProvinceCityText}}</view>
@@ -141,7 +141,7 @@
 				from: "",
 				serialList: [],
 				provinceList: [],
-				cityList: [],
+				cities: [],
 				districtList: [],
 				dealerList: [],
 				crtSerialItem: {}, // 当前选择的车系
@@ -209,8 +209,8 @@
 			selectIndex() {
 				let provinceIndex = this.provinceList.findIndex(item => item.id == this.crtProvinceItem.id)
 				let cityIndex = -1
-				if (this.crtProvinceItem.cityList) {
-					cityIndex = this.crtProvinceItem.cityList.findIndex(item => item.id == this.crtCityItem.id)
+				if (this.crtProvinceItem.cities) {
+					cityIndex = this.crtProvinceItem.cities.findIndex(item => item.id == this.crtCityItem.id)
 				}
 				provinceIndex = provinceIndex > -1 ? provinceIndex : 0
 				cityIndex = cityIndex > -1 ? cityIndex : 0
@@ -228,17 +228,19 @@
 			}
 		},
 		methods: {
-			formShow(name, from = "", obj = {}, title) {
+			  async formShow(name, from = "", obj = {}, title) {
 				this.popName = name
 				this.from = from
 				this.currentObj = obj
 				this.title = title
 				this.smsCode = ''
-				this.provinceList = this.currentObj.regionList
-				this.cityList = this.provinceList[0].cityList
+				// this.provinceList = this.currentObj.regionList
+				// this.cities = this.provinceList[0].cities
 				this.serialList = this.currentObj.serialGroupList
-				this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+			    this.crtSerialItem = this.serialList.length ? this.serialList[0] : {},
+				await this.reqProvincecities()
 				this.getpreClue()
+				
 			},
 			doPy() {
 				uni.navigateTo({
@@ -413,8 +415,8 @@
 					detail
 				} = e
 				this.crtProvinceItem = this.provinceList[detail.value[0]]
-				this.cityList = this.crtProvinceItem.cityList
-				this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
+				this.cities = this.crtProvinceItem.cities
+				this.crtCityItem = this.cities[detail.value[1]] ? this.cities[detail.value[1]] : this.cities[0]
 				this.reqDistrictListByCityId(this.crtCityItem.id)
 				this.reqDealerListByCityId(this.crtCityItem.id)
 			},
@@ -423,7 +425,7 @@
 					detail
 				} = e
 				if (detail.column == 0) {
-					this.cityList = this.provinceList[detail.value].cityList
+					this.cities = this.provinceList[detail.value].cities
 				}
 			},
 			getValue(name, e) {
@@ -645,6 +647,24 @@
 			showToast(title = "", duration = 1500) {
 				this.$toast(title, 'none', duration);
 			},
+			// 请求省份和城市的级联列表
+			async reqProvincecities() {
+					try {
+						const res = await api.fetchProvinceCityList()
+						if (res.code == 1) {
+							this.provinceList = res.data
+							 console.log(this.provinceList)
+							if (this.provinceList && this.provinceList.length) {
+								this.cities = this.provinceList[0].cities
+							}
+							
+						}
+					} catch (err) {
+						this.$toast('获取省份和城市信息失败', 'none', 1500);
+						console.error(err)
+					}
+				
+			},
 			async getpreClue() {
 				// 手机号码
 				this.phone = uni.getStorageSync('userPhone');
@@ -658,13 +678,14 @@
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
 				if (currentLocation) {
+					console.log(this.provinceList)
 					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
 						'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
-						const crtLocationCityItem = crtLocationProvinceItem.cityList.find(item => item.name.replace(
+						const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
 							'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
 						this.crtProvinceItem = crtLocationProvinceItem
-						this.cityList = this.crtProvinceItem.cityList
+						this.cities = this.crtProvinceItem.cities
 						this.crtCityItem = crtLocationCityItem
 						this.reqDistrictListByCityId(this.crtCityItem.id)
 						this.reqDealerListByCityId(this.crtCityItem.id)
