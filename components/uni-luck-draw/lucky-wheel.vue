@@ -1,49 +1,25 @@
 <template>
-<view class="lucky-wheel-container">
-    <!-- 抖音抽奖转盘 -->
-
+  <view v-if="isShow" :class="showDialogL ? 'lucky-box hideWheel':'lucky-box'" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
+    <canvas 
+      id="lucky-wheel" 
+      canvas-id="lucky-wheel" 
+      :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"
+    ></canvas>
     <!-- #ifndef MP-WEIXIN -->
-    <view class="lottery-canvas-container" :style="{transform:'rotate('+runDeg+'deg)'}">
-      <view class="lottery-canvas">
-        <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
-          <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
-            <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-              <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload(e, 'prizes', index2, 0)" ></image>  
-            </view>  
-          </view>  
-        </view>  
-      </view>
-    </view> 
-    <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay">
+   <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay" style="z-index: 999;">
     <!-- #endif -->
-
     <!-- #ifdef MP-WEIXIN -->
-      <view v-if="isShow" :class="showDialogL ? 'lucky-box hideWheel':'lucky-box'" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
-        <canvas 
-          id="lucky-wheel" 
-          canvas-id="lucky-wheel" 
-          :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }"
-        ></canvas>
-        <!-- #ifndef MP-WEIXIN -->
-      <image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay" style="z-index: 999;">
-        <!-- #endif -->
-        <!-- #ifdef MP-WEIXIN -->
-        <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
-        <!-- #endif -->
-        <div class="lucky-imgs">
-          <div v-for="(prize, index) in prizes" :key="index">
-            <div v-if="prize.imgs">
-              <image v-for="(img, i) in prize.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'prizes', index, i)"></image>
-            </div>
-          </div>
+    <cover-image class="lucky-wheel-btn" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/handleDraw.png" @click="toPlay"/>
+    <!-- #endif -->
+    <div class="lucky-imgs">
+      <div v-for="(prize, index) in prizes" :key="index">
+        <div v-if="prize.imgs">
+          <image v-for="(img, i) in prize.imgs" :key="i" :src="img.src" @load="e => imgBindload(e, 'prizes', index, i)"></image>
         </div>
+      </div>
+    </div>
 
-      </view>
-
-
-
-      <!-- #endif -->
-    </view>
+  </view>
 </template>
 
 <script>
@@ -100,18 +76,10 @@
       showDialogL: {
         type: Boolean,
         default: false
-      },
-      runDeg:{
-        type: Number,
-        default: () => {
-          return 0
-        }
       }
     },
     mounted () {
-      // #ifdef MP-WEIXIN
       this.initLucky()
-      // #endif
     },
     watch: {
       blocks (newData) {
@@ -139,13 +107,10 @@
     methods: {
       async imgBindload (res, name, index, i) {
         const img = this[name][index].imgs[i]
-
-        this.isLoadedNum+=1;
-
-        // #ifdef MP-WEIXIN
         resolveImage(res, img).then(()=>{
+          this.isLoadedNum+=1;
         })
-        // #endif
+   
       },
       initLucky () {
         const dpr = this.dpr = uni.getSystemInfoSync().pixelRatio
@@ -221,12 +186,7 @@
           return;
         }
         app.globalData.isRotating = true
-        // #ifdef MP-WEIXIN
         this.$lucky.startCallback()
-        // #endif
-        // #ifndef MP-WEIXIN
-        this.$emit('start')
-        // #endif
       },
       init () {
         this.$lucky.init({})
@@ -241,7 +201,7 @@
   }
 </script>
 
-<style scoped lang="less">
+<style scoped>
   .lucky-box {
     position: relative;
     overflow: hidden;
@@ -272,55 +232,4 @@
   .hideWheel {
     top: -11111rpx;
   }
-
-  // 抖音转盘样式
-	.lottery-canvas-container{
-		width:520rpx;
-		height: 520rpx;
-		margin:0 auto;
-		top: 326rpx;
-    position: relative;
-    transition: transform  4000ms ease;
-		.lottery-canvas{
-		    width:100%;
-		    height: 100%;
-        position: absolute;
-        left:50%;
-        top: 50%;
-        transform: translate(-50%,-50%);
-        overflow: hidden;
-        border-radius: 100%;
-    }
-		.canvas-list {  
-      position: absolute;  
-      left: 0;  
-      top: 0;  
-      width: inherit;  
-      height: inherit;  
-      z-index: 998;  
-    } 
-    .canvas-item {  
-      position: absolute;  
-      left: 0;  
-      top: 0;  
-      width: 100%;  
-      height: 100%;  
-		}  
-		.canvas-item-con {  
-      position: relative;  
-      display: block;  
-      margin: 0 auto;  
-      text-align: center;  
-      -webkit-transform-origin: 50% 260rpx;  
-      transform-origin: 50% 260rpx;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-    }  
-    .canvas-item-con-img{  
-        height:260rpx;  
-        // width:200rpx;
-        display: block;
-    }  
-	}
 </style>

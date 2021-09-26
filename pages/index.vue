@@ -10,18 +10,17 @@
 			</view>
 		</pageTopCity>
 		<!--  #ifndef MP-TOUTIAO  -->
-		<viewTabBar :current="0"></viewTabBar>
+			<viewTabBar :current="0"></viewTabBar>
 		<!-- #endif -->
 		<testDrive aldEventName="首页预约试驾点击"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
-		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else>
-		</image>
+		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
 		<view class="content">
-			<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
+		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
 				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
-			<!-- 	<view class="linkCont" v-if="false">
+		<!-- 	<view class="linkCont" v-if="false">
 				<view class="linkContL"> -->
-			<!-- 					<view class="article linkItem" @tap="goArtList">
+<!-- 					<view class="article linkItem" @tap="goArtList">
 						<view class="title">发现</view>
 						<view class="info">探索更多精彩</view>
 						<image class="img" lazy-load
@@ -62,40 +61,6 @@
 					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
 				</view>
 			</view>
-			<view class="hotAct">
-				<view class="hotTabMore" >
-					最近门店
-				</view>
-				<view class="hotmore" @tap="goMoreDel()">查看更多
-					<image class="hotmoreImg"
-						src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealMore.png"></image>
-				</view >
-
-				<view class="actItem dealCar" @tap="goYuyue()">
-					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/NearDealer.png" class="img" mode="aspectFill"></image>
-				</view>
-				<view class="hotNDelF">
-					<view class="hotNDelFTitle">{{nearDealer.name}}</view>
-					<view class="hotNDelFLocation">{{nearDealer.address}}</view>
-					<view class="hotNDelFView">
-						<view @tap = "goDealer()" class="footone">
-							<image class="hotNDelFicon"
-								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealLocation.png"></image>
-							
-							<view>{{nearDealer.distance | formatThousand}}</view>
-							
-						</view>
-						<view @tap = "goPhone()" class="foottwo" v-if="nearDealer.phone && nearDealer.phone.length > 0">
-							<image class="hotNDelFicon right"
-								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
-							<view> 打电话</view>
-						</view>
-						<view class="hotNDelFBtn" @tap="goYuyue()">预约试驾</view>
-					</view>
-				</view>
-
-			</view>
-
 			<view class="hotAct" v-if="pageData.list.length">
 				<view class="hotTab">
 					精选
@@ -177,13 +142,7 @@
 				testUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
 
 				fontLoaded: false,
-				timeOutEvent: '',
-				nearDealer:{},
-				currentCity:{
-					cityId:'',
-					proId:'',
-					name:''
-				}
+				timeOutEvent:''
 			}
 		},
 		computed: {
@@ -206,18 +165,6 @@
 			}
 		},
 		filters: {
-			formatThousand (num) {
-			    if(num != undefined && num != Infinity){
-					if(num > 1000){
-						 return (num / 1000).toFixed(2)  + 'km'
-					}else{
-						return num + 'm'
-					}
-				}else{
-					return '无法获取距离'
-				}
-			  
-			},
 			actType(type) {
 				switch (type) {
 					case 1: {
@@ -269,7 +216,7 @@
 
 		},
 		onHide() {
-			clearTimeout(this.timeOutEvent);
+			clearTimeout(this.timeOutEvent); 
 		},
 		async onShow(options) {
 			await distance.getLocation()
@@ -292,521 +239,418 @@
 				// const resData = (await this.getCityId()) || [1000000022,1000000022]
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
-				this.getNearDealer()
 			}
-			clearInterval(this.timeOutEvent)
+			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
-				console.log('开始及时')
-				// #ifdef MP-WEIXIN
-				if (this.$refs.cmSwiper && this.pageData.banners && this.pageData.banners.length > 0) {
-					// console.log(this.$refs.cmSwiper)
-					this.$refs.cmSwiper.moveRight()
-				}
-				// #endif
-				
-				// #ifdef MP-TOUTIAO
-				if (this.$children[2] && this.pageData.banners && this.pageData.banners.length > 0) {
-					// console.log(this.$refs.cmSwiper)
-					this.$children[2].moveRight()
-				}
-				// #endif
-			}, 4000); //这里设置定时
-	
-
-
-	},
-	watch: {
+			  console.log('开始及时')
+			  
+			  // #ifdef MP-WEIXIN
+			 if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
+			   // console.log(this.$refs.cmSwiper)
+			   this.$refs.cmSwiper.moveRight()
+			 }
+			 }, 4000); //这里设置定时
+			  // #endif
+			  
+			  
+			  // #ifdef MP-TOUTIAO
+			  if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
+			    // console.log(this.$refs.cmSwiper)
+			    this.$children[2].moveRight()
+			  }
+			  }, 4000); //这里设置定
+			  // #endif
+			  
+			  
+		
+			
+			
+		},
+		watch: {
 			indexCity: function(newVal) {
 				console.log('indexCity===========', newVal)
 			}
 		},
-		async onLoad(options) {	},
-			onUnload() {},
-			onShareAppMessage() {
-				let title = '长安云车展'
-				let path = `pages/authorization?to=index`
-				if (app.globalData.salesId) {
-					path += `&salesId=${app.globalData.salesId}`
-				}
-				let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/share.jpeg'
-				return {
-					title: title,
-					path: path,
-					imageUrl: imageUrl
+		async onLoad(options) {
+			// let sgList = await api.getSgList().then(res => {
+			// 	console.log('sssssssss', res)
+			// 	return res.code == 1 && res.data ? res.data : []
+			// })
+			// this.sgList = [...sgList]	
+		},
+		onUnload() {},
+		onShareAppMessage() {
+			let title = '长安云车展'
+			let path = `pages/authorization?to=index`
+			if (app.globalData.salesId) {
+				path += `&salesId=${app.globalData.salesId}`
+			}
+			let imageUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/share.jpeg'
+			return {
+				title: title,
+				path: path,
+				imageUrl: imageUrl
+			}
+		},
+		methods: {
+			async getPageData() {
+				const cityId = this.crtCityItem.id
+				const cityCode = this.crtCityItem.code
+				this.pageData = await api.getHomepageData({
+					cityId: cityId,
+					cityCode: cityCode
+				}).then(res => {
+					return res.code == 1 ? res.data : {
+						banners: [],
+						list: []
+					}
+				})
+		
+			// #ifndef MP-WEIXIN
+			
+			 let index = this.pageData.banners.findIndex(item=>item.miniUrl.indexOf('banH=true') !== -1)
+			  console.log(index)
+			 if(index != -1){
+				 this.pageData.banners.splice(index,1)
+			 }
+			
+			 // #endif
+			 this.sgList = this.pageData.heatSgList
+				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
+			},
+			// 请求省份和城市的级联列表
+			async reqProvinceCityList() {
+				try {
+					const res = await api.fetchProvinceCityList()
+					if (res.code == 1) {
+						this.provinceList = res.data
+						if (this.provinceList && this.provinceList.length) {
+							this.cityList = this.provinceList[0].cities
+						}
+					}
+				} catch (err) {
+					this.$toast('获取省份和城市信息失败', 'none', 1500);
+					console.error(err)
 				}
 			},
-			methods: {
-				async getPageData() {
-					const cityId = this.crtCityItem.id
-					const cityCode = this.crtCityItem.code
-					this.pageData = await api.getHomepageData({
-						cityId: cityId,
-						cityCode: cityCode
+			async bindMultiPickerChange(e) {
+				let {
+					detail
+				} = e
+				this.crtProvinceItem = this.provinceList[detail.value[0]]
+				this.cityList = this.crtProvinceItem.cities
+				this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[0]
+				await this.getPageData()
+
+				// 改变默认定位省市
+				let currentLocation = app.globalData.currentLocation
+				currentLocation.selectedCityData.isChange = true
+				currentLocation.selectedCityData.proId = this.crtProvinceItem.id
+				currentLocation.selectedCityData.pro = this.crtProvinceItem.name
+				currentLocation.selectedCityData.cityId = this.crtCityItem.id
+				currentLocation.selectedCityData.city = this.crtCityItem.name
+			},
+			bindMultiPickerColumnChange(e) {
+				let {
+					detail
+				} = e
+				if (detail.column == 0) {
+					this.cityList = this.provinceList[detail.value].cities
+				}
+			},
+			async getCityId() {
+				let currentLocation = app.globalData.currentLocation
+				if (currentLocation) {
+					let pro = currentLocation.selectedCityData.pro || currentLocation.cityData.pro
+					let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
+
+					const provinceList = await this.reqProvinceList()
+					console.log('sdsdsd', provinceList)
+					const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市',
+						'') == pro.replace('省', '').replace('市', ''))
+					if (crtLocationProvinceItem) {
+						const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
+						const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == city.replace(
+							'市', ''))
+						if (crtLocationCityItem) {
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.crtCityItem = crtLocationCityItem
+							console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
+							return [crtLocationProvinceItem.id, crtLocationCityItem.id]
+						}
+					}
+				}
+			},
+			// 请求所有的省份
+			async reqProvinceList() {
+				let res = [];
+				try {
+					res = await api.fetchProvinceList().then(res => {
+						return res.code == 1 ? res.data : []
+					})
+					console.log('rrr', res)
+					return res
+				} catch (err) {
+					this.showToast('获取省份信息失败')
+					console.error(err)
+					return res
+				}
+			},
+			// 根据省份id请求城市
+			async reqCityListByProvinceId(provinceId) {
+				let res = []
+				try {
+					res = await api.fetchCityListByProvinceId({
+						provinceId
 					}).then(res => {
-						return res.code == 1 ? res.data : {
-							banners: [],
-							list: []
-						}
+						return res.code == 1 ? res.data : []
 					})
-
-					// #ifndef MP-WEIXIN
-
-				let array = this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1)
-				this.pageData.banners = array
-
-					// #endif
-					this.sgList = this.pageData.heatSgList
-					// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
-				}, 
+					console.log('ccc', res)
+					return res
+				} catch (err) {
+					this.showToast('获取城市信息失败')
+					console.error(err)
+					return res
+				}
+			},
+			goVr() {
+				// #ifdef MP-WEIXIN
+				 wx.aldstat.sendEvent('云展厅点击')
+				 uni.navigateTo({
+				 	url: '/pages/exhibition'
+				 })
+				// #endif
 				
-			async getNearDealer(){
-	                let  cityId;
-					let  pro;
-					let  city;
-					//  产品需求是有定位显示定位，没有定位显示选择
-					let currentLocation = app.globalData.currentLocation
-					if(currentLocation.wxPosition.provider == 'default'){
-						// 说明没有定位
-						let  selectcityData = currentLocation.selectedCityData
-						if(selectcityData){
-							city = selectcityData.city
-							pro  =  selectcityData.pro
-						}
-					}else{
-					   city = currentLocation.cityData.city;     
-					   pro  =  currentLocation.cityData.pro
-					}
-					// console.log('provinceList',city,pro)
-				    if (city&&pro) {
-				    	const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
-				    		'市', '') == pro.replace('省', '').replace('市', ''))
-							
-				    	if (crtLocationProvinceItem) {
-				    		const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
-				    			'市', '') == city.replace('市', ''))
-								 // console.log('this.provinceList',crtLocationCityItem)
-							cityId = crtLocationCityItem.id
-							this.currentCity.cityId = cityId
-							this.currentCity.proId = crtLocationProvinceItem.id
-							this.currentCity.name = crtLocationCityItem.name
-							const {code,data} = await api.fetchDealerListByCityId({cityId})
-							if(code === 1 && data.length) {
-							  this.dealersList = distance.sortDealersByDistance(data)
-							  this.nearDealer = this.dealersList[0]
-							}else {
-							    this.nearDealer = {}
-							}
-				    	
-				    	}
-				    }
-				   
-				   console.log('provinceList',this.nearDealer)
-			
-			
-					
-					
-				},
+				// #ifdef MP-TOUTIAO
+				uni.switchTab({
+				   url: '/pages/exhibition'
+				})
+				// #endif
 				
 				
-				// 请求省份和城市的级联列表
-				async reqProvinceCityList() {
-					try {
-						const res = await api.fetchProvinceCityList()
-						if (res.code == 1) {
-							this.provinceList = res.data
-							if (this.provinceList && this.provinceList.length) {
-								this.cityList = this.provinceList[0].cities
-							}
-						}
-					} catch (err) {
-						this.$toast('获取省份和城市信息失败', 'none', 1500);
-						console.error(err)
-					}
-				},
-				async bindMultiPickerChange(e) {
-					let {
-						detail
-					} = e
-					this.crtProvinceItem = this.provinceList[detail.value[0]]
-					this.cityList = this.crtProvinceItem.cities
-					this.crtCityItem = this.cityList[detail.value[1]] ? this.cityList[detail.value[1]] : this.cityList[
-						0]
-					await this.getPageData()
-					// 改变默认定位省市
-					let currentLocation = app.globalData.currentLocation
-					currentLocation.selectedCityData.isChange = true
-					currentLocation.selectedCityData.proId = this.crtProvinceItem.id
-					currentLocation.selectedCityData.pro = this.crtProvinceItem.name
-					currentLocation.selectedCityData.cityId = this.crtCityItem.id
-					currentLocation.selectedCityData.city = this.crtCityItem.name
-					this.getNearDealer()
-				},
-				bindMultiPickerColumnChange(e) {
-					let {
-						detail
-					} = e
-					if (detail.column == 0) {
-						this.cityList = this.provinceList[detail.value].cities
-					}
-				},
-				async getCityId() {
-					let currentLocation = app.globalData.currentLocation
-					if (currentLocation) {
-						let pro = currentLocation.selectedCityData.pro || currentLocation.cityData.pro
-						let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
-
-						const provinceList = await this.reqProvinceList()
-						console.log('sdsdsd', provinceList)
-						const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace(
-							'市',
-							'') == pro.replace('省', '').replace('市', ''))
-						if (crtLocationProvinceItem) {
-							const cityList = await this.reqCityListByProvinceId(crtLocationProvinceItem.id)
-							const crtLocationCityItem = cityList.find(item => item.name.replace('市', '') == city
-								.replace(
-									'市', ''))
-							if (crtLocationCityItem) {
-								this.crtProvinceItem = crtLocationProvinceItem
-								this.crtCityItem = crtLocationCityItem
-								console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
-								return [crtLocationProvinceItem.id, crtLocationCityItem.id]
-							}
-						}
-					}
-				},
-				// 请求所有的省份
-				async reqProvinceList() {
-					let res = [];
-					try {
-						res = await api.fetchProvinceList().then(res => {
-							return res.code == 1 ? res.data : []
+				
+			},
+			handleLinkHot(type, id, status, sourceId,liveSoureId) {
+				// type = 3
+				// id = 48965835
+				// status = 'verticalLive'
+				// status = 1
+				//type:1资讯，2活动，3直播
+				//status:1直播中，2预告，3回放
+				console.log('type,id,status', type, id, status, typeof(type))
+				switch (type) {
+					case 1: {
+						// #ifdef MP-WEIXIN
+						wx.aldstat.sendEvent('精选资讯点击')
+						// #endif
+						uni.navigateTo({
+							url: `/pages/article?articleId=${id}`
 						})
-						console.log('rrr', res)
-						return res
-					} catch (err) {
-						this.showToast('获取省份信息失败')
-						console.error(err)
-						return res
+						break;
 					}
-				},
-				// 根据省份id请求城市
-				async reqCityListByProvinceId(provinceId) {
-					let res = []
-					try {
-						res = await api.fetchCityListByProvinceId({
-							provinceId
-						}).then(res => {
-							return res.code == 1 ? res.data : []
-						})
-						console.log('ccc', res)
-						return res
-					} catch (err) {
-						this.showToast('获取城市信息失败')
-						console.error(err)
-						return res
-					}
-				},
-				goMoreDel() {
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('首页最近门店点击查看更多')
-					// #endif
-					console.log('去更多经销商	',this.currentCity)
-					// var nearDealer = JSON.stringify(this.currentCity);
-					uni.navigateTo({
-						url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
-					})
-				},
-				goDealer(){
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('首页最近门店点击导航')
-					// #endif
-					console.log('去经销商',this.nearDealer)
-					if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
+					case 2: {
+						// #ifdef MP-WEIXIN
+						wx.aldstat.sendEvent('精选活动点击')
+						// #endif
 						// uni.navigateTo({
-						// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+						// 	url: `/pages/activity?id=${id}`
 						// })
-						uni.openLocation({
-						  'latitude':Number(this.nearDealer.lngY),
-						  'longitude':Number(this.nearDealer.lngX),
-						  'name':this.nearDealer.name,
-						  scale: 18,
-						  success(sus) {
-						  	console.log(sus)
-						  },
-						  fail(res) {
-						  	console.log(res)
-						  }
-						})
+						this.getActData(id)
+						break;
 					}
-				},
-				goPhone(){
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('首页最近门店点击打电话')
-					// #endif
-					console.log('获取电话')
-					if(this.nearDealer.phone && this.nearDealer.phone.length > 0){
-					uni.makePhoneCall({
-					    phoneNumber: this.nearDealer.phone,
-						success(res) {
-						     // 调用成功 makePhoneCall:ok
-						     console.log("调用成功", res.errMsg);
-						   },
-						 fail(res) {
-						     this.$toast(res.errMsg)
-						   },  
-					});	
+					case 3: {
+						// #ifdef MP-WEIXIN
+						wx.aldstat.sendEvent('精选直播点击')
+						// #endif
+						switch (status) {
+							case 0: {
+								uni.navigateTo({
+									url: `/pages/liveDetail?liveId=${sourceId}`
+								})
+								break;
+							}
+							case 1: {
+								this.goMP(id, 'verticalLive', liveSoureId)
+								break;
+							}
+							case 2: {
+								uni.navigateTo({
+									url: `/pages/liveDetail?liveId=${sourceId}`
+								})
+								break;
+							}
+							case 3: {
+								this.goMP(id, 'verticalPlayback', liveSoureId)
+								break;
+							}
+						}
+						break;
 					}
-				
-				},
-				goYuyue(){
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('首页最近门店点击预约试驾')
-					// #endif
-					console.log('预约试驾')
-					 var nearDealer = JSON.stringify(this.nearDealer);
-					uni.navigateTo({
-						url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
-					})
-				},
-				goVr() {
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('云展厅点击')
-					uni.navigateTo({
-						url: '/pages/exhibition'
-					})
-					// #endif
-
-					// #ifdef MP-TOUTIAO
-					uni.switchTab({
-						url: '/pages/exhibition'
-					})
-					// #endif
-
-
-
-				},
-				handleLinkHot(type, id, status, sourceId, liveSoureId) {
-					// type = 3
-					// id = 48965835
-					// status = 'verticalLive'
-					// status = 1
-					//type:1资讯，2活动，3直播
-					//status:1直播中，2预告，3回放
-					console.log('type,id,status', type, id, status, typeof(type))
-					switch (type) {
-						case 1: {
-							// #ifdef MP-WEIXIN
-							wx.aldstat.sendEvent('精选资讯点击')
-							// #endif
+				}
+			},
+			async getActData(contentId){
+			    let {
+					data = {}
+				} = await api.getActivityContent(contentId);
+				let item = data
+				// console.log('dadad' + JSON.stringify(item))
+				switch(item.redirectType) {
+					case 0: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
 							uni.navigateTo({
-								url: `/pages/article?articleId=${id}`
+								url
 							})
-							break;
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
 						}
-						case 2: {
-							// #ifdef MP-WEIXIN
-							wx.aldstat.sendEvent('精选活动点击')
-							// #endif
-							// uni.navigateTo({
-							// 	url: `/pages/activity?id=${id}`
-							// })
-							this.getActData(id)
-							break;
-						}
-						case 3: {
-							// #ifdef MP-WEIXIN
-							wx.aldstat.sendEvent('精选直播点击')
-							// #endif
-							switch (status) {
-								case 0: {
-									uni.navigateTo({
-										url: `/pages/liveDetail?liveId=${sourceId}`
-									})
-									break;
-								}
-								case 1: {
-									this.goMP(id, 'verticalLive', liveSoureId)
-									break;
-								}
-								case 2: {
-									uni.navigateTo({
-										url: `/pages/liveDetail?liveId=${sourceId}`
-									})
-									break;
-								}
-								case 3: {
-									this.goMP(id, 'verticalPlayback', liveSoureId)
-									break;
-								}
-							}
-							break;
-						}
+						break;
 					}
-				},
-				async getActData(contentId) {
-					let {
-						data = {}
-					} = await api.getActivityContent(contentId);
-					let item = data
-					// console.log('dadad' + JSON.stringify(item))
-					switch (item.redirectType) {
-						case 0: {
-							if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-								let url = '/pages/lbActivity?id=' + item.id
-								uni.navigateTo({
-									url
-								})
-							} else {
-								let url = '/pages/activity?id=' + item.id
-								uni.navigateTo({
-									url
-								})
-							}
-							break;
+					case 1: {
+						api.fetchActivityVisit({
+							'activityId': item.id
+						})
+						if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http") {
+							uni.navigateTo({
+								url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
+							})
 						}
-						case 1: {
+						break;
+					}
+					case 2: {
+						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							// 说明是自己的小程序
+							uni.navigateTo({
+								url: item.miniUrl
+							})
+							// #ifndef MP-WEIXIN
+							if(item.miniUrl && item.miniUrl.substr(0,3) == 'cxd'){
+								this.$toast('请在微信搜索本小程序参与')
+							}
+							// #endif
+						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 ){
+							   // 跳转到本喜爱但不是活动页
+							   api.fetchActivityVisit({
+							   	'activityId': item.id
+							   })
+						   }	
+							return
+						}else{
 							api.fetchActivityVisit({
 								'activityId': item.id
 							})
-							if (item.duibaUrl && item.duibaUrl.substring(0, 4) == "http") {
-								uni.navigateTo({
-									url: `/pages/webview?webURL=${encodeURIComponent(item.duibaUrl)}`,
-								})
-							}
-							break;
-						}
-						case 2: {
-							if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
-								// 说明是自己的小程序
-								uni.navigateTo({
-									url: item.miniUrl
-								})
-								// #ifndef MP-WEIXIN
-								if (item.miniUrl && item.miniUrl.substr(0, 3) == 'cxd') {
-									this.$toast('请在微信搜索本小程序参与')
-								}
-								// #endif
-								if (item.miniUrl.indexOf('lbActivity') == -1 && item.miniUrl.indexOf('activity') == -
-									1) {
-									// 跳转到本喜爱但不是活动页
-									api.fetchActivityVisit({
-										'activityId': item.id
+							
+							// #ifndef MP-WEIXIN
+							this.$toast('请在微信搜索本小程序参与')
+							// #endif
+							// #ifdef MP-WEIXIN
+							uni.navigateToMiniProgram({
+								appId: item.appId,
+								path: item.miniUrl,
+								success: res => {
+									// 打开成功
+									console.log("打开成功", res);
+								},
+								fail: err => {
+									console.log("打开失败", err);
+									uni.showToast({
+										title: "跳转小程序失败",
+										icon: "none"
 									})
-								}
-								return
-							} else {
-								api.fetchActivityVisit({
-									'activityId': item.id
-								})
-
-								// #ifndef MP-WEIXIN
-								this.$toast('请在微信搜索本小程序参与')
-								// #endif
-								// #ifdef MP-WEIXIN
-								uni.navigateToMiniProgram({
-									appId: item.appId,
-									path: item.miniUrl,
-									success: res => {
-										// 打开成功
-										console.log("打开成功", res);
-									},
-									fail: err => {
-										console.log("打开失败", err);
-										uni.showToast({
-											title: "跳转小程序失败",
-											icon: "none"
-										})
-									},
-									// envVersion: 'trial'
-								});
-								// #endif
-							}
-							break;
+								},
+								// envVersion: 'trial'
+							});
+							// #endif
 						}
-						default: {
-							if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-								let url = '/pages/lbActivity?id=' + item.id
-								uni.navigateTo({
-									url
-								})
-							} else {
-								let url = '/pages/activity?id=' + item.id
-								uni.navigateTo({
-									url
-								})
-							}
-							break;
-						}
+						break;
 					}
-				},
-				goMP(id, type, sourceId) { //跳转pcauto+
-					const oUrl =
-						`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
-					console.log('oUrl', oUrl)
-					// #ifndef MP-WEIXIN
-					this.$toast('请在微信搜索本小程序参与')
-					// #endif
-					// #ifdef MP-WEIXIN
-					uni.navigateToMiniProgram({
-						appId: 'wxa860d5a996074dbb',
-						path: oUrl,
-						success: res => {
-							// 打开成功
-							console.log("打开成功", res);
-						},
-						fail: err => {
-							console.log(err);
-						},
-						// envVersion: 'trial'
-					});
-					// #endif
-				},
-				goArtList() {
-					uni.navigateTo({
-						url: `/pages/articleListPage`
-					})
-				},
-				goCalc() {
-					uni.navigateTo({
-						url: `/pages/ChooseSerial?type=calc`
-					})
-				},
-				goTestDrive() {
-					uni.navigateTo({
-						url: `/pages/ChooseSerial`
-					})
-				},
-				goActDetail(id) {
-					uni.navigateTo({
-						url: '/pages/activity?id=50'
-					})
-				},
-				goLookCar(item) {
-					// #ifdef MP-WEIXIN
-					wx.aldstat.sendEvent('热销车型点击')
-					// #endif
-					uni.navigateTo({
-						url: `/pages/LookCar?id=${item.pcSerialGroupId}`
-					})
-				},
-				goArticlePage() {
-					uni.navigateTo({
-						url: `/pages/articleListPage`
-					})
-				},
-				getUserInfo(e) {
-					wx.getUserProfile({
-						desc: '完善用户信息',
-						success: (res) => {
-
-						},
-						complete: (res) => {
-
+					default: {
+						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
+							let url = '/pages/lbActivity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
+						} else {
+							let url = '/pages/activity?id=' + item.id
+							uni.navigateTo({
+								url
+							})
 						}
-					})
+						break;
+					}
 				}
+			},
+			goMP(id, type, sourceId) { //跳转pcauto+
+				const oUrl =
+					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
+				console.log('oUrl', oUrl)
+				// #ifndef MP-WEIXIN
+				this.$toast('请在微信搜索本小程序参与')
+				// #endif
+				 // #ifdef MP-WEIXIN
+				uni.navigateToMiniProgram({
+					appId: 'wxa860d5a996074dbb',
+					path: oUrl,
+					success: res => {
+						// 打开成功
+						console.log("打开成功", res);
+					},
+					fail: err => {
+						console.log(err);
+					},
+					// envVersion: 'trial'
+				});
+			     // #endif
+			},
+			goArtList() {
+				uni.navigateTo({
+					url: `/pages/articleListPage`
+				})
+			},
+			goCalc() {
+				uni.navigateTo({
+					url: `/pages/ChooseSerial?type=calc`
+				})
+			},
+			goTestDrive() {
+				uni.navigateTo({
+					url: `/pages/ChooseSerial`
+				})
+			},
+			goActDetail(id) {
+				uni.navigateTo({
+					url: '/pages/activity?id=50'
+				})
+			},
+			goLookCar(item) {
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('热销车型点击')
+				// #endif
+				uni.navigateTo({
+					url: `/pages/LookCar?id=${item.pcSerialGroupId}`
+				})
+			},
+			goArticlePage() {
+				uni.navigateTo({
+					url: `/pages/articleListPage`
+				})
+			},
+			getUserInfo(e) {
+				wx.getUserProfile({
+					desc: '完善用户信息',
+					success: (res) => {
 
+					},
+					complete: (res) => {
+
+					}
+				})
 			}
+
+		}
 	}
 </script>
 
@@ -851,12 +695,11 @@
 		border-radius: 10px;
 		margin-left: 37rpx;
 	}
-
 	.index {
 		// padding-top: 16rpx;
 		overflow-x: hidden;
 		// font-family: PingFang SC;
-		color: #3C4650;
+		color: #3C4650;		
 	}
 
 	.ovh {
@@ -870,12 +713,11 @@
 	.shadow {
 		box-shadow: 5px 5px 17px rgba(0, 0, 0, 0.3);
 	}
-
 	.content {
-		padding: 0 32rpx 150rpx;
+		padding: 0 32rpx 150rpx;	
 		/*  #ifndef  MP-WEIXIN */
-		padding: 0 32rpx 20rpx;
-		/*  #endif  */
+		 padding: 0 32rpx 20rpx;	
+		/*  #endif  */	
 
 		.bannerTop {
 			width: 100%;
@@ -964,102 +806,12 @@
 
 		.hotAct {
 			margin-top: 30rpx;
+
 			.hotTab {
 				font-size: 34rpx;
 				// font-weight: bold;
 				margin-bottom: 10rpx;
 			}
-
-			.hotTabMore {
-				font-size: 34rpx;
-				// font-weight: bold;
-				margin-bottom: 10rpx;
-				display: inline;
-				
-
-			}
-
-			.hotmore {
-				position: absolute;
-			    margin-top: 10rpx;
-				right: 40rpx;
-				color: #999999;
-				font-size: 24rpx;
-				display: inline-flex;
-				
-				// text-align: center;
-				// height: 24rpx;
-				// line-height: 24rpx;
-			
-
-			}
-
-			.hotmoreImg {
-				width: 8rpx;
-				height: 16rpx;
-				margin: auto;
-				margin-left: 15rpx;
-			}
-
-			.hotNDelF {
-				.hotNDelFTitle{
-					color:#3C4650 ;
-					font-size: 32rpx;
-					margin: 24rpx 0rpx;
-				}
-				.hotNDelFLocation{
-					color:#999999;
-					font-size: 24rpx;
-					
-				}
-				.hotNDelFView {
-					color: #3C4650;
-					font-size: 24rpx;
-					margin-top: 15rpx;
-					display: flex;
-					flex-direction: row;
-					height: 56rpx;
-					line-height: 56rpx;
-				   	.footone{
-					    display: flex;
-						flex-direction: row;
-						height: 56rpx;
-						line-height: 56rpx;
-					}
-					.foottwo{
-						display: flex;
-						flex-direction: row;
-						height: 56rpx;
-						line-height: 56rpx;
-					}
-
-					.hotNDelFicon {
-						// display: block;
-						margin: auto  9rpx;
-						width: 32rpx;
-						height: 32rpx;
-						
-					}
-					.right{
-						margin-left: 40rpx;
-					}
-					.hotNDelFBtn{
-						position: absolute;
-						right:32rpx;
-						width: 160rpx;
-						height: 56rpx;
-						font-size:24rpx ;
-						color: #FFFFFF;
-						line-height: 56rpx;
-						text-align: center;
-						background: #ff9632;
-						border-radius: 28px;
-					}
-				}
-
-
-			}
-
 
 			.actItem {
 				margin: 15rpx 0 30rpx 0;
@@ -1073,9 +825,9 @@
 				white-space: nowrap;
 				/*  #ifndef  MP-WEIXIN */
 				height: 180rpx;
-				flex-direction: column;
-				/*  #endif  */
-
+			   flex-direction :column;
+				/*  #endif  */	
+				
 
 				.hotCarItem {
 					display: inline-block;
@@ -1120,16 +872,7 @@
 					transform: translate(-50%, -50%);
 				}
 			}
-			.dealCar{
-				position: relative;
-				
-				.img {
-					display: inline-block;
-					width: 686rpx;
-					height: 360rpx;
-					border-radius: 20rpx;
-				}
-			}
+
 			.vrCar {
 				position: relative;
 
@@ -1236,4 +979,7 @@
 			}
 		}
 	}
+	
+
+	
 </style>

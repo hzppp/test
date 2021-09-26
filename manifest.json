@@ -82,8 +82,8 @@
         "appid" : "ttf56383de6a5b35b901",
         "setting" : {
             "minified" : true,
-            "postcss" : false,
-            "es6" : false
+            "postcss" : true,
+            "es6" : true
         }
     },
     "uniStatistics" : {
