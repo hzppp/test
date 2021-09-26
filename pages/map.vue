@@ -1,6 +1,26 @@
 <template>
 	<view>
-	
+		<view class="page-body">
+			<view class="page-section page-section-gap">
+				<!--  #ifndef MP-TOUTIAO  -->
+				<map id='map' style="width: 750rpx; height: 100vh;" :latitude="latitude" :longitude="longitude"
+					:markers="covers" clickable='true' @markertap='tapMap()'>
+				</map>
+				<!-- #endif -->
+				<!--  #ifdef MP-TOUTIAO  -->
+				<map v-if="!Redmi" id='map' style="width:750rpx; height: 100vh;" :latitude="latitude"
+					:longitude="longitude" :markers="covers" clickable='true' @markertap='tapMap()' callout>
+				</map>
+
+				<map id='map' :style="'width:750rpx; height:' + screenH + 'px;'" :latitude="latitude"
+					:longitude="longitude" :markers="covers" clickable='true' @markertap='tapMap()' callout>
+				</map>
+				<!-- #endif -->
+				<view class="back" @tap='back()' :style="'top:' +  height  + 'px'">
+				</view>
+
+			</view>
+		</view>
 	</view>
 </template>
 

@@ -315,7 +315,7 @@ const COUNTDOWN = 60
                         return uni.showToast({
                             title:res.msg,
                             icon:"none",
-							duration:500
+							duration:2000
 							
                         })
                     }
@@ -324,7 +324,7 @@ const COUNTDOWN = 60
                 }finally {
 					setTimeout(() => {
 						uni.hideLoading()
-					}, 500)
+					}, 2000)
                     
                 }
             },
@@ -347,7 +347,7 @@ const COUNTDOWN = 60
             //选择城市
             goChooseCity(){
                 // this.currentDealer = {}
-                this.currentRegion = {}
+                // this.currentRegion = {}
                 uni.navigateTo({
                     url: "/pages/ChooseCity?name="+ this.currentCity.name
                 })
