@@ -10,6 +10,7 @@
           <view class="detail" @tap="goDetail(item.id)">查看详情 ></view>
         </view>
       </view>
+      <view class="no-more" v-if="noMore">没有更多了</view>
     </view>
     <block v-else>
       <view style="height:145rpx;"></view>
@@ -32,7 +33,10 @@ name: "lotteryRecord",
  components:{userBand},
   data() {
     return {
-      dataList: []
+      dataList: [],
+      pageSize:20,
+      pageNum:1,
+      noMore:false
     }
   },
   filters: {
@@ -40,6 +44,12 @@ name: "lotteryRecord",
       return time ? time.substr(0,time.length-3) : time;
     },
   },
+  onReachBottom() {
+    if(!this.noMore){
+      this.getRecordList()
+    }
+			
+	},
   methods:{
     goDetail(id) {
       //
@@ -50,18 +60,27 @@ name: "lotteryRecord",
     golottery() {
       uni.navigateBack()
     },
+    async getRecordList(){
+      let {pageNum,pageSize}=this
+      let {data} = await api.getlotteryRecordList({pageNum,pageSize})
+      if(data.code == 1){
+        uni.hideLoading()
+        if(data.hasNext){
+          this.pageNum++
+        }else{
+          this.noMore=true;
+        }
+        this.dataList = [...this.dataList, ...data.rows]
+      }
+    }
   },
   async onLoad() {
     uni.showLoading({
       title: '正在加载...'
     })
-    // await login.checkLogin(api)
-    this.dataList = await api.getlotteryRecordList({}).then(res => {
-      console.log('rrrrrr',res)
-      uni.hideLoading()
-      return res.code == 1 && res.data ? res.data.rows : []
-    })
-  }
+    this.getRecordList()
+  },
+ 
 }
 </script>
 
@@ -122,7 +141,11 @@ name: "lotteryRecord",
   .setbg(610rpx, 312rpx, 'articleList-none-data-icon2.png');
   margin: 40rpx auto 0;
 }
-
+.no-more{
+  color:#666;
+  padding:10rpx 0;
+  text-align: center;
+}
 .none-text {
   .seth(126rpx, 28rpx, #999);
   .tc;
