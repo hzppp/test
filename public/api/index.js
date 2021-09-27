@@ -942,12 +942,13 @@ module.exports = {
 		})
 		return data
 	},
-	getlotteryRecordList: async () => {
+	getlotteryRecordList: async (para) => {
 		let {
 			data
 		} = await request({
 			url: domain.getAPI('lotteryRecordList'),
 			method: "GET",
+			data: para,
 		})
 		return data
 	},

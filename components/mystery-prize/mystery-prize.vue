@@ -93,17 +93,15 @@
 						this.run(5) 
 					},70 )
 					setTimeout(()=>{
-						if (this.selectIndex === num) {
-							clearInterval(this.luck)
-						} else {
-							var waitNum = setInterval(() => {
-								if (this.selectIndex === num) {
-									this.$emit('end')
-									clearInterval(this.luck)
-									clearInterval(waitNum)
-								}
-							},100)
-						}
+						var waitNum = setInterval(() => {
+							if (this.selectIndex === num) {
+								console.log("stop end")
+								this.$emit('end')
+								clearInterval(this.luck)
+								clearInterval(waitNum)
+							}
+						},100)
+					
 					},80*6)
 				},1500)
 

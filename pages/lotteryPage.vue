@@ -440,7 +440,6 @@
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					console.log('点击抽奖按钮触发')
 					app.globalData.isRotating = false;
 					return
 				}
@@ -601,11 +600,6 @@
 				this.winPrizeUrl = ""
 				this.lotteryResindex == 999
 
-				if(this.startIng){
-					return
-				}
-				this.startIng = true
-
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
@@ -616,7 +610,11 @@
 					app.globalData.isRotating = false;
 					return
 				}
-				
+
+				if(this.startIng){
+					return
+				}
+				this.startIng = true
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -650,18 +648,12 @@
 						// 缓慢停止游戏
 						setTimeout(() => {
 							console.log('num' + num)
-							// 缓慢停止游戏
-							// #ifdef MP-WEIXIN
-							this.$refs.mysteryPrize.stop(num)
-							// #endif
-							// #ifdef MP-TOUTIAO
 							if (this.$refs.mysteryPrize) {
 								this.$refs.mysteryPrize.stop(num)
 							} else {
 								this.$children[3].stop(num)
 							}
-							// #endif
-
+							console.log('stop')
 						}, 500)
 						return res.data
 					} else if (res.code == 0) {
@@ -678,7 +670,7 @@
 			
 			gridEnd(prize) {
 				// 奖品详情
-				
+				console.log("gridEnd")
 				this.showDia()
 			},
 			showDia() {
