@@ -434,17 +434,13 @@
 			},
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
-				if(this.startIng){
-					return
-				}
-				this.startIng = true
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					this.startIng = false;
+					app.globalData.isRotating = false;
 					return
 				}
 				// 先开始旋转
@@ -457,7 +453,7 @@
 							title: res.msg,
 							icon: "none"
 						})
-						this.startIng = false;
+						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
 						let index = this.matchIndex(res.data.id) //中奖索引
@@ -472,11 +468,11 @@
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
 							icon: "none"
 						})
-						this.startIng = false;
+						app.globalData.isRotating = false;
 						return
 					}
 				}).catch (e =>{
-					this.startIng = false;
+					app.globalData.isRotating = false;
 					uni.showToast({
 						title: '网络连接错误，请稍后再试',
 						icon: "none"
@@ -509,7 +505,7 @@
 			// 抽奖结束触发回调
 			endCallBack(prize) {
 				// 奖品详情
-				this.startIng = false
+				app.globalData.isRotating = false
 				this.showDialogL = true;
 				this.GirdShowDialogL = true
 				this.lotteryActInfo.chanceCount--;
@@ -519,7 +515,7 @@
 				this.GirdShowDialogL = false
 			},
 			goLotteryDetail(id) {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				this.closeDialog()
@@ -531,7 +527,7 @@
 				}, 100)
 			},
 			golotteryRecord() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				this.closeDialog();
@@ -541,7 +537,7 @@
 				})
 			},
 			goInviteRecord() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				let url = `/pages/inviteRecord?activityId=${this.activityId}`;
@@ -606,17 +602,17 @@
 				if (!this.$refs.mysteryPrize) {
 					return;
 				}
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
-				this.startIng = true
+				app.globalData.isRotating = true
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					this.startIng = false;
+					app.globalData.isRotating = false;
 					return
 				}
 
@@ -631,7 +627,7 @@
 							title: res.msg,
 							icon: "none"
 						})
-						this.startIng = false;
+						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
 
@@ -651,11 +647,11 @@
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
 							icon: "none"
 						})
-						this.startIng = false;
+						app.globalData.isRotating = false;
 						return
 					}
 				}).catch (e =>{
-					this.startIng = false;
+					app.globalData.isRotating = false;
 					uni.showToast({
 						title: '网络连接错误，请稍后再试',
 						icon: "none"
@@ -671,7 +667,7 @@
 			showDia() {
 				this.winPrizeUrl = this.lotteryRes.picUrl
 				setTimeout(() => {
-					this.startIng = false
+					app.globalData.isRotating = false
 					this.showDialogL = true;
 					this.GirdShowDialogL = true
 					this.lotteryActInfo.chanceCount--;
@@ -689,7 +685,7 @@
 				this.$refs.popup.close()
 			},
 			shareHB() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 
@@ -707,7 +703,7 @@
 			
 			async refChangBtn(){
 				
-				if(!this.startIng){
+				if(!app.globalData.isRotating){
 				uni.showLoading({
 					title:'加载中'
 				})

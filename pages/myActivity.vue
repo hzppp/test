@@ -256,7 +256,13 @@
 					obj.typeText = typeText
 					obj.typeClass = typeClass
 				}
+				
+
+				// #ifndef MP-WEIXIN
+					rows = rows.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.duibaUrl.indexOf('banH=true') == -1)
+				 // #endif
 				this.activityList = [...this.activityList, ...rows]
+				
 				console.log('activityList', this.activityList)
 			},
 
