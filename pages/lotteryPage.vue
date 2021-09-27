@@ -39,7 +39,7 @@
 					<view class="lotteryList">
 						<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true"
 							:circular="true" :duration="500" :interval="2000" :autoplay="autoplay">
-							<swiper-item @touchmove.stop='stopTouchMove' v-for="(item,index) in lotteryActInfo.winnerRecords"
+							<swiper-item @touchmove.stop='stopTouchMove' @touchstart.stop='stopTouchMove' v-for="(item,index) in lotteryActInfo.winnerRecords"
 								:key="index">
 								<view class="item">{{item}}</view>
 							</swiper-item>
@@ -426,7 +426,7 @@
 		methods: {
 			//背景图片加载事件
 			imgBindload () {
-                this.bgImgLoaded = true;
+				this.bgImgLoaded = true;
             },
 			//禁止用户手动滑动
 			stopTouchMove(){
@@ -434,19 +434,19 @@
 			},
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
+				if(this.startIng){
+					return
+				}
+				this.startIng = true
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					app.globalData.isRotating = false;
+					this.startIng = false;
 					return
 				}
-				if(this.startIng){
-					return
-				}
-				this.startIng = true
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -457,7 +457,7 @@
 							title: res.msg,
 							icon: "none"
 						})
-						app.globalData.isRotating = false;
+						this.startIng = false;
 						return
 					} else if (res.code === 1) {
 						let index = this.matchIndex(res.data.id) //中奖索引
@@ -472,9 +472,15 @@
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
 							icon: "none"
 						})
-						app.globalData.isRotating = false;
+						this.startIng = false;
 						return
 					}
+				}).catch (e =>{
+					this.startIng = false;
+					uni.showToast({
+						title: '网络连接错误，请稍后再试',
+						icon: "none"
+					})
 				})
 
 			},
@@ -504,11 +510,9 @@
 			endCallBack(prize) {
 				// 奖品详情
 				this.startIng = false
-				app.globalData.isRotating = false;
 				this.showDialogL = true;
 				this.GirdShowDialogL = true
 				this.lotteryActInfo.chanceCount--;
-				console.log(prize)
 			},
 			closeDialog() {
 				this.showDialogL = false;
@@ -599,22 +603,24 @@
 				
 				this.winPrizeUrl = ""
 				this.lotteryResindex == 999
-
+				if (!this.$refs.mysteryPrize) {
+					return;
+				}
+				if(this.startIng){
+					return
+				}
+				this.startIng = true
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					console.log('点击抽奖按钮触发')
-					app.globalData.isRotating = false;
+					this.startIng = false;
 					return
 				}
 
-				if(this.startIng){
-					return
-				}
-				this.startIng = true
+				
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -625,35 +631,19 @@
 							title: res.msg,
 							icon: "none"
 						})
-						app.globalData.isRotating = false;
+						this.startIng = false;
 						return
 					} else if (res.code === 1) {
-						// #ifdef MP-WEIXIN
-						this.$refs.mysteryPrize.play()
-						// #endif
 
-						// #ifdef MP-TOUTIAO
-						if (this.$refs.mysteryPrize) {
-							this.$refs.mysteryPrize.play(num)
-						} else {
-							this.$children[3].play(num)
-						}
-						// #endif
-
+						this.$refs.mysteryPrize.play(num)
 						// 中奖索引
 						var num = Math.round(Math.random() * 5)
 						this.lotteryResindex = num
 						
-						
 						// 缓慢停止游戏
 						setTimeout(() => {
 							console.log('num' + num)
-							if (this.$refs.mysteryPrize) {
-								this.$refs.mysteryPrize.stop(num)
-							} else {
-								this.$children[3].stop(num)
-							}
-							console.log('stop')
+							this.$refs.mysteryPrize.stop(num)
 						}, 500)
 						return res.data
 					} else if (res.code == 0) {
@@ -661,11 +651,16 @@
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
 							icon: "none"
 						})
-						app.globalData.isRotating = false;
+						this.startIng = false;
 						return
 					}
-				});
-				console.log('中奖了', this.lotteryRes)
+				}).catch (e =>{
+					this.startIng = false;
+					uni.showToast({
+						title: '网络连接错误，请稍后再试',
+						icon: "none"
+					})
+				})
 			},
 			
 			gridEnd(prize) {
@@ -674,10 +669,9 @@
 				this.showDia()
 			},
 			showDia() {
-				this.startIng = false
 				this.winPrizeUrl = this.lotteryRes.picUrl
 				setTimeout(() => {
-					app.globalData.isRotating = false;
+					this.startIng = false
 					this.showDialogL = true;
 					this.GirdShowDialogL = true
 					this.lotteryActInfo.chanceCount--;
