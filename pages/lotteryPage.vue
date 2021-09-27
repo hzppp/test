@@ -96,9 +96,11 @@
 				<view class="tips">
 					<view class="contentBody">
 						<view class="title titleK">抽奖说明</view>
-						<scroll-view scroll-y="true" class="contentTips">
-							<text>{{activityMemoArr}}</text>
-						</scroll-view>
+						<view class="contentTips-outer">
+							<scroll-view scroll-y="true" class="contentTips">
+								<text>{{activityMemoArr}}</text>
+							</scroll-view>
+						</view>
 					</view>
 				</view>
 
@@ -1121,7 +1123,7 @@
 
 			.list {
 				padding: 0 32rpx 20rpx;
-				background: #eef1f5;
+				position: relative;
 				margin-bottom: 20rpx;
 
 				.invite {
@@ -1309,17 +1311,21 @@
 					padding: 40rpx 20rpx 30rpx;
 					background: #ffffff;
 					border-radius: 10rpx;
-
-					.contentTips {
+					.contentTips-outer{
 						max-height: 406rpx;
-						width: 646rpx;
-						overflow: scroll;
-						border-radius: 10rpx;
-						background: #eef1f5;
 						padding: 30rpx 10rpx 30rpx 20rpx;
+						box-sizing: border-box;
+						width: 646rpx;
+						background: #eef1f5;
+						border-radius: 10rpx;
+					}
+					.contentTips {
+						width: 100%;
+						height: 346rpx;
+						overflow: scroll;
 						font-size: 28rpx;
 						line-height: 54rpx;
-						box-sizing: border-box;
+						
 						text{
 							padding-right:15rpx;
 							display: block;
@@ -1332,19 +1338,17 @@
 
 						}
 
-						/*定义滚动条轨道 内阴影+圆角*/
-						::-webkit-scrollbar-track {
-							-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-							box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-							border-radius: 5rpx;
-							background-color:#FFFFFF;
-						}
+						// /*定义滚动条轨道 内阴影+圆角*/
+						// ::-webkit-scrollbar-track {
+						// 	-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+						// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+						// 	border-radius: 5rpx;
+						// 	background-color:#FFFFFF;
+						// }
 
 						/*定义滑块 内阴影+圆角*/
 						::-webkit-scrollbar-thumb {
 							border-radius: 5rpx;
-							-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-							box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 							background-color:#dee0e2; /*滚动条的颜色*/
 						}
 					}
