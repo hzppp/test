@@ -242,29 +242,23 @@
 			}
 			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
-			  console.log('开始及时')
+				console.log('开始及时')
+			  	// #ifdef MP-WEIXIN
+				if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
+				// console.log(this.$refs.cmSwiper)
+				this.$refs.cmSwiper.moveRight()
+				}
+				// #endif
+
+			}, 4000); //这里设置定时
 			  
-			  // #ifdef MP-WEIXIN
-			 if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
-			   // console.log(this.$refs.cmSwiper)
-			   this.$refs.cmSwiper.moveRight()
-			 }
-			 }, 4000); //这里设置定时
-			  // #endif
+			// #ifdef MP-TOUTIAO
+			if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
+				// console.log(this.$refs.cmSwiper)
+				this.$children[2].moveRight()
+			}
+			// #endif
 			  
-			  
-			  // #ifdef MP-TOUTIAO
-			  if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
-			    // console.log(this.$refs.cmSwiper)
-			    this.$children[2].moveRight()
-			  }
-			  }, 4000); //这里设置定
-			  // #endif
-			  
-			  
-		
-			
-			
 		},
 		watch: {
 			indexCity: function(newVal) {
@@ -305,16 +299,18 @@
 						list: []
 					}
 				})
-		
-			// #ifndef MP-WEIXIN
-			console.log(this.pageData.banners)
-			let array = this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1 )
-			let array1 = array.filter(item=>item.redirectUrl.indexOf('banH=true') == -1)
-			this.pageData.banners = array1
-			console.log(this.pageData.banners)
-			 // #endif
-			 this.sgList = this.pageData.heatSgList
-				// this.pageData.bannerActivity.picUrl = 'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/1.png';
+
+				//抖音小程序隐藏特定活动
+				// #ifndef MP-WEIXIN
+					console.log("pageData",this.pageData)
+					let array = this.pageData.banners.length>0 ? this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.redirectUrl.indexOf('banH=true') == -1):[]
+					this.pageData.banners = array
+					//精选活动
+					let list = this.pageData.list.length>0 ? this.pageData.list.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.redirectUrl.indexOf('banH=true') == -1):[]
+					this.pageData.list = list
+				// #endif
+				this.sgList = this.pageData.heatSgList
+				console.log("过滤后的pageData",this.pageData)
 			},
 			// 请求省份和城市的级联列表
 			async reqProvinceCityList() {

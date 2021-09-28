@@ -158,14 +158,17 @@
 				}
 
 			}
-			cs = cs.substr(0, cs.length - 1)
+			this.cs = cs.substr(0, cs.length - 1)
 			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			if(this.lotteryType == 'Vouchers'){
-				this.formShowTitle = '领取代金券'
-				this.shareURL = `/pages/lbActivity?${cs}`
-			}else{
-			this.shareURL = `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}`	
+			if(wxUserInfo){
+				if(this.lotteryType == 'Vouchers'){
+					this.formShowTitle = '领取代金券'
+					this.shareURL = `/pages/lbActivity?${this.cs}`
+				}else{
+					this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+				}
 			}
+			
 			
 
 			console.log('shareurl', this.shareURL)
@@ -254,7 +257,7 @@
 				let clueInfo = await api.getClueInfo({
 					activityId: this.activityId
 				})
-				if (clueInfo) {
+				if (clueInfo && clueInfo.data) {
 					let isApply = clueInfo.data.isApply
 					this.isApply = isApply;
 					if(isApply && !this.isActStart){
@@ -262,7 +265,7 @@
 					}
 					
 					
-					console.log('isApply' , isApply,this.activityType,this.isActStart)
+					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart)
 					//是否提交过
 					if (isApply == 1 && this.activityType == "" && this.isActStart) {
 						if(this.lotteryType == 'Vouchers'){
@@ -272,11 +275,11 @@
 							
 							})
 						}else{
-						uni.reLaunch({
-							url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-								.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-						
-						})	
+							uni.reLaunch({
+								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+							
+							})	
 						}
 						
 					}
@@ -365,7 +368,6 @@
 				wx.aldstat.sendEvent('活动分享点击')
 			},
 			async getPhoneNumber(e) {
-				console.log('eeeeee', e)
 				let {
 					detail = {}
 				} = e
@@ -425,7 +427,18 @@
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
-			
+				
+				let wxUserInfo = uni.getStorageSync('wxUserInfo')
+				console.log("getData wxUserInfo",wxUserInfo)
+				this.phone = wxUserInfo.mobile
+				if(wxUserInfo){
+					if(this.lotteryType == 'Vouchers'){
+						this.formShowTitle = '领取代金券'
+						this.shareURL = `/pages/lbActivity?${this.cs}`
+					}else{
+						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+					}
+				}
 				
 			},
 			shareChoise() {

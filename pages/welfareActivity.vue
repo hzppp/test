@@ -327,6 +327,7 @@
 					}
 					case 2: {
 						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							console.log("item.miniUrl",item.miniUrl)
 							// 说明是自己的小程序
 							uni.navigateTo({
 								url: item.miniUrl
