@@ -87,18 +87,24 @@ import api from '@/public/api/index.js'
 			  uni.showLoading({
 			  	title:'登录中'
 			  })
-			let data =   await	login.userBind(api,detail.encryptedData,detail.iv)
-	        let token  =  uni.getStorageSync('session-3rd')
-	        console.log('userBand token'+token)
-	        if(!token){
-	          this.isShow = true
-			  this.$toast('登录失败,请稍后重试')
-	        }else{
-	           this.isShow = false
-	        }
-			uni.hideLoading()
-			this.$emit('loginSuccess')
-			uni.hideLoading()
+			  
+			  if(detail.encryptedData &&  detail.iv){
+				let data =   await	login.userBind(api,detail.encryptedData,detail.iv)
+				let token  =  uni.getStorageSync('session-3rd')
+				console.log('userBand token'+token)
+				if(!token){
+					this.isShow = true
+					this.$toast('登录失败,请稍后重试')
+				}else{
+					this.isShow = false
+				}
+				uni.hideLoading()
+				this.$emit('loginSuccess')
+				uni.hideLoading()
+			  }else{
+				  this.$toast('登录失败,请重试')
+			  }
+			
 			  
 			},
 			stop() {
