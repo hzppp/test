@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE;
-const version = 1029;
+const version = 1030;
 
 
 
@@ -18,7 +18,7 @@ var DOMAIN_R = {
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
 	UPC:'https://upc2.pc.com.cn',
-	mystore:'https://cloud.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.html?biz=69&isShare=true&source=react'
+	mystore:'https://cloud.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
 
 //测试环境域名
@@ -32,7 +32,7 @@ var DOMAIN_T = {
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
 	UPC:'https://qa-upc2.pc.com.cn',
-	mystore:'https://ssl.mall.changan.com.cn/caecapp/main/index.html#points-mall/points-index.htm'
+	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
 
 
