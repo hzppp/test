@@ -65,7 +65,11 @@
             "minified" : true
         },
         "usingComponents" : true,
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用于推荐附近长安汽车线下服务中心，提升服务体验"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
