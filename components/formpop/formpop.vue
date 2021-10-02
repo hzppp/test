@@ -683,18 +683,36 @@
 					ifding = false
 				}
 				if (currentLocation && ifding) {
-					console.log(this.provinceList)
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
-						'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-					if (crtLocationProvinceItem) {
-						const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
-							'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-						this.crtProvinceItem = crtLocationProvinceItem
-						this.cities = this.crtProvinceItem.cities
-						this.crtCityItem = crtLocationCityItem
-						this.reqDistrictListByCityId(this.crtCityItem.id)
-						this.reqDealerListByCityId(this.crtCityItem.id)
-					}
+					if(this.currentObj && this.currentObj.noDistanceDeal){
+						// 子维要求有这个参数 就一直出定位
+						console.log('currentLocation',currentLocation)
+						const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+							'市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+						if (crtLocationProvinceItem) {
+							const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
+								'市', '') == currentLocation.cityData.city.replace('市', ''))
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.cities = this.crtProvinceItem.cities
+							this.crtCityItem = crtLocationCityItem
+							console.log(this.crtProvinceItem.name,this.crtCityItem.name)
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+							this.reqDealerListByCityId(this.crtCityItem.id)
+						}
+					}else{
+						console.log('currentLocation',currentLocation)
+						const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+							'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+						if (crtLocationProvinceItem) {
+							const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
+								'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.cities = this.crtProvinceItem.cities
+							this.crtCityItem = crtLocationCityItem
+							console.log(this.crtProvinceItem.name,this.crtCityItem.name)
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+							this.reqDealerListByCityId(this.crtCityItem.id)
+						}
+					}					
 				}
 				this.isShowFormPop = true
 			},
