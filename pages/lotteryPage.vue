@@ -35,10 +35,11 @@
 			<template v-else>
 				<view :class="lotteryType != 'grid'?'luckyWheel':'LuckyGrid'"
 					:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
+					<image :src="lotteryActInfo.activityPic" @load="e => imgBindload()"  class="lottery-bg"></image>
 					<view class="lotteryList">
 						<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true"
-							:circular="true" :duration="500" :interval="2000" :autoplay="true">
-							<swiper-item @touchmove.stop v-for="(item,index) in lotteryActInfo.winnerRecords"
+							:circular="true" :duration="500" :interval="2000" :autoplay="autoplay">
+							<swiper-item @touchmove.stop='stopTouchMove' @touchstart.stop='stopTouchMove' v-for="(item,index) in lotteryActInfo.winnerRecords"
 								:key="index">
 								<view class="item">{{item}}</view>
 							</swiper-item>
@@ -46,12 +47,12 @@
 					</view>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
 
-						
-						
-						<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
-						
-						
-						<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize"  @end="gridEnd"/>
+					<!-- 转盘抽奖 -->
+					<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
+					
+					<!-- 盲盒抽奖 -->
+					<MysteryPrize v-if="lotteryType == 'grid'"  width="555rpx" height="685rpx" ref="mysteryPrize" :winPrizeUrl="winPrizeUrl" @end="gridEnd"/>
+
 					<view class="choiceTime">
 						您还有
 						<view class="times">{{lotteryActInfo.chanceCount || 0}}</view>
@@ -95,9 +96,11 @@
 				<view class="tips">
 					<view class="contentBody">
 						<view class="title titleK">抽奖说明</view>
-						<scroll-view scroll-y="true" class="contentTips">
-							<text>{{activityMemoArr}}</text>
-						</scroll-view>
+						<view class="contentTips-outer">
+							<scroll-view scroll-y="true" class="contentTips">
+								<text>{{activityMemoArr}}</text>
+							</scroll-view>
+						</view>
 					</view>
 				</view>
 
@@ -185,7 +188,7 @@
 				style="margin-top: 100rpx;width: 90px;height: 117px;position:fixed;left:100%;"></canvas>
 		</view>
 
-
+		<view class="loading" v-if="!bgImgLoaded"></view>
 
 	</view>
 </template>
@@ -264,12 +267,14 @@
 				canvasShow: false,
 				startIng:false,
 				runDeg:0,
-				animationData:{}
-
-
+				animationData:{},
+				winPrizeUrl:"",
+				autoplay:false,
+				bgImgLoaded:false
 			}
 		},
 		onShow() {
+			this.autoplay = true
 			app.globalData.isRotating = false;
 		},
 		async onLoad(options) {
@@ -350,8 +355,6 @@
 				// this.activityMemoArr =this.lotteryActInfo.activityMemo.split(/[\s\n]/)
 				this.activityMemoArr = this.lotteryActInfo.activityMemo.replace('/n', '/r/s')
 			}
-			uni.hideLoading()
-			
 
 			this.lotteryActInfo.winnerRecords.reverse()
 
@@ -374,8 +377,8 @@
 			this.lotteryActInfo.prizeList = this.lotteryActInfo.prizeList.sort((a, b) => a.prizeCode - b.prizeCode)
 			// console.log("lotteryActInfo11111111111111111111111111111",this.lotteryActInfo);
 			if (this.lotteryType == 'grid') {
-				this.initGirdData()
 				uni.hideLoading()
+				
 			} else {
 				// 
 				if (this.lotteryActInfo.prizeList.length) {
@@ -387,18 +390,7 @@
 							url = url.replace('http:', 'https:')
 						}
 						this.prizes.push({
-							title: '',
-							background: '#c3ecff',
-							fonts: [{
-								text: '',
-								top: '18%'
-							}],
-							imgs: [{
-								src: url,
-								width: '100%',
-								height: '100%',
-								top: '1rpx'
-							}],
+							src: url,
 							turn: index * turnNum + 'deg',lineTurn: index * turnNum + turnNum / 2 + 'deg'
 						})
 
@@ -428,22 +420,29 @@
 				imageUrl: this.shareUrl
 			}
 		},
+		onHide() {
+			this.autoplay = false
+		},
 		methods: {
+			//背景图片加载事件
+			imgBindload () {
+				this.bgImgLoaded = true;
+            },
+			//禁止用户手动滑动
+			stopTouchMove(){
+				return true;
+			},
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
-			
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					console.log('点击抽奖按钮触发')
 					app.globalData.isRotating = false;
 					return
 				}
-				this.startIng = true
-				
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -457,35 +456,13 @@
 						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
-						// res.data.id
 						let index = this.matchIndex(res.data.id) //中奖索引
-						console.log('中奖索引', index)
-						
-						this.run(index)
-						
-						// #ifdef MP-WEIXIN
-						// this.$refs.luckyWheel.play()
-						// #endif
-
-						// #ifndef MP-WEIXIN
-						// this.run(index)
-						// #endif
-
-						
 						// 缓慢停止游戏
 						setTimeout(() => {
-							// 缓慢停止游戏
-							// #ifdef MP-WEIXIN
-							// this.$refs.luckyWheel.stop(index)
-							// #endif
-
-							// #ifdef MP-TOUTIAO
-							// this.$children[2].stop(index)
-							// #endif
-
-
+							this.run(index)
 						}, 500)
 						return res.data
+
 					} else if (res.code == 0) {
 						uni.showToast({
 							title: '本次抽奖异常，已保留抽奖机会，请稍后再试',
@@ -494,12 +471,18 @@
 						app.globalData.isRotating = false;
 						return
 					}
+				}).catch (e =>{
+					app.globalData.isRotating = false;
+					uni.showToast({
+						title: '网络连接错误，请稍后再试',
+						icon: "none"
+					})
 				})
 
 			},
 			run(index){
 				var runNum = 8;//旋转8周  
-				var duration = 3000;//时长 
+				var duration = 4000;//时长 
 				// 旋转角度  
 				this.runDeg = this.runDeg || 0;  
 				this.runDeg = this.runDeg + (360 - this.runDeg % 360) + (360 * runNum - index * (360 / this.lotteryActInfo.prizeList.length))  
@@ -522,20 +505,17 @@
 			// 抽奖结束触发回调
 			endCallBack(prize) {
 				// 奖品详情
-				this.startIng = false
-				console.log('抽奖结束触发回调')
-				app.globalData.isRotating = false;
+				app.globalData.isRotating = false
 				this.showDialogL = true;
 				this.GirdShowDialogL = true
 				this.lotteryActInfo.chanceCount--;
-				console.log(prize)
 			},
 			closeDialog() {
 				this.showDialogL = false;
 				this.GirdShowDialogL = false
 			},
 			goLotteryDetail(id) {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				this.closeDialog()
@@ -547,7 +527,7 @@
 				}, 100)
 			},
 			golotteryRecord() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				this.closeDialog();
@@ -557,7 +537,7 @@
 				})
 			},
 			goInviteRecord() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 				let url = `/pages/inviteRecord?activityId=${this.activityId}`;
@@ -616,23 +596,27 @@
 			},
 			// 盲盒抽奖
 			async gridStart() {
-				// console.log('children',this.$children)
 				
-				
+				this.winPrizeUrl = ""
 				this.lotteryResindex == 999
-				this.selectPrizesURL = ''
-				// this.initGirdData()
+				if (!this.$refs.mysteryPrize) {
+					return;
+				}
+				if(app.globalData.isRotating){
+					return
+				}
+				app.globalData.isRotating = true
 				if (!this.lotteryActInfo.chanceCount) {
 					// chanceCount
 					uni.showToast({
 						title: '您的机会已经用完啦~',
 						icon: "none"
 					})
-					console.log('点击抽奖按钮触发')
 					app.globalData.isRotating = false;
 					return
 				}
-				this.startIng = true
+
+				
 				// 先开始旋转
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
@@ -646,42 +630,16 @@
 						app.globalData.isRotating = false;
 						return
 					} else if (res.code === 1) {
-						// #ifdef MP-WEIXIN
-						this.$refs.mysteryPrize.play()
-						// #endif
 
-						// #ifdef MP-TOUTIAO
-						if (this.$refs.mysteryPrize) {
-							this.$refs.mysteryPrize.play(num)
-						} else {
-							this.$children[3].play(num)
-						}
-						// #endif
-
-						let index = this.matchIndex(res.data.id) //中奖索引
-						console.log('中奖索引', index)
+						this.$refs.mysteryPrize.play(num)
+						// 中奖索引
 						var num = Math.round(Math.random() * 5)
 						this.lotteryResindex = num
-						this.dawSelectV(this.lotteryResindex, res)
-
+						
 						// 缓慢停止游戏
 						setTimeout(() => {
-
 							console.log('num' + num)
-							// 缓慢停止游戏
-							// #ifdef MP-WEIXIN
-
 							this.$refs.mysteryPrize.stop(num)
-							// #endif
-
-							// #ifdef MP-TOUTIAO
-							if (this.$refs.mysteryPrize) {
-								this.$refs.mysteryPrize.stop(num)
-							} else {
-								this.$children[3].stop(num)
-							}
-							// #endif
-
 						}, 500)
 						return res.data
 					} else if (res.code == 0) {
@@ -692,142 +650,29 @@
 						app.globalData.isRotating = false;
 						return
 					}
-				});
-				console.log('中奖了', this.lotteryRes)
+				}).catch (e =>{
+					app.globalData.isRotating = false;
+					uni.showToast({
+						title: '网络连接错误，请稍后再试',
+						icon: "none"
+					})
+				})
 			},
 			
 			gridEnd(prize) {
-				
 				// 奖品详情
+				console.log("gridEnd")
 				this.showDia()
 			},
-			isReq(j, i) {
-				if (j < 1) {
-					return i == this.lotteryResindex
-				} else {
-					return (i + 1 + j * 2) == this.lotteryResindex
-				}
-			},
-			initGirdData() {
-				let array = [];
-				for (var i = 0; i <= 1; i++) {
-					for (var j = 0; j <= 2; j++) {
-						if (this.isReq(i, j) && this.lotteryResindex != 999 && this.selectPrizesURL) {
-							array.push({
-								x: j,
-								y: i,
-								background: '#296f92',
-								fonts: [{
-									text: '',
-									top: 20
-								}],
-								imgs: [{
-									activeSrc: this.selectPrizesURL,
-									width: '176rpx',
-									height: '230rpx',
-									top: '50rpx',
-									src: this.selectPrizesURL,
-
-
-								}]
-							})
-
-						} else {
-							array.push({
-								x: j,
-								y: i,
-								background: '#296f92',
-								fonts: [{
-									text: '',
-									top: 20
-								}],
-								imgs: [{
-									activeSrc: require('../static/images/girdSelect.png'),
-									width: '176rpx',
-									height: '230rpx',
-									top: '50rpx',
-									src: require('../static/images/gird.png'),
-
-
-
-								}]
-							})
-
-						}
-
-					}
-
-				}
-
-				this.grid = {
-					rows: 2,
-					cols: 3,
-					blocks: [{
-						padding: '5px',
-						borderRadius: 10
-					}],
-					prizes: array
-				}
-
-				// console.log(JSON.stringify(this.grid))
-
-			},
-
-			dawSelectV(index, res) {
-				let item = res.data
-				var that = this
-				console.log('开始下载', item.picUrl.trim())
-				uni.downloadFile({
-					url: item.picUrl.trim(),
-					success: function(res) {
-						that.canvasShow = true
-						const context = uni.createCanvasContext('myCanvas')
-						console.log('下载成功', res)
-						// that.imageURL = res.tempFilePath
-						context.save()
-						context.beginPath()
-						context.drawImage('../static/images/girdOpen.png', 0, 0, 90, 117)
-						context.drawImage(res.tempFilePath, 26.5, 37.5, 36.5, 47)
-						context.restore()
-						//绘制图片
-						context.draw(false, that.selectRefV());
-
-					},
-					fail(res) {
-						that.canvasShow = false
-						console.log('下载失败', res)
-
-					}
-				})
-			},
-			selectRefV() {
-				setTimeout(() => {
-					var that = this
-					uni.canvasToTempFilePath({
-						canvasId: 'myCanvas',
-						success: function(res) {
-							console.log('绘制', res);
-							that.selectPrizesURL = res.tempFilePath;
-						},
-						fail: function(res) {
-							console.log('绘制', res);
-
-						}
-					})
-				}, 500)
-
-			},
 			showDia() {
-				this.startIng = false
-				this.initGirdData()
+				this.winPrizeUrl = this.lotteryRes.picUrl
 				setTimeout(() => {
-					app.globalData.isRotating = false;
+					app.globalData.isRotating = false
 					this.showDialogL = true;
 					this.GirdShowDialogL = true
 					this.lotteryActInfo.chanceCount--;
 				}, 500)
 			},
-
 			shareChoise() {
 
 				this.GirdShowDialogL = true
@@ -840,7 +685,7 @@
 				this.$refs.popup.close()
 			},
 			shareHB() {
-				if(this.startIng){
+				if(app.globalData.isRotating){
 					return
 				}
 
@@ -858,7 +703,7 @@
 			
 			async refChangBtn(){
 				
-				if(!this.startIng){
+				if(!app.globalData.isRotating){
 				uni.showLoading({
 					title:'加载中'
 				})
@@ -925,7 +770,7 @@
 	}
 	.container {
 		position: relative;
-      
+		background: #eef1f5;
 		.vouchers {
             overflow: hidden;
 			background: #FA8845;
@@ -1260,7 +1105,7 @@
 
 			.list {
 				padding: 0 32rpx 20rpx;
-				background: #eef1f5;
+				position: relative;
 				margin-bottom: 20rpx;
 
 				.invite {
@@ -1434,8 +1279,7 @@
 
 			.tips {
 				padding: 0 32rpx 20rpx;
-				background: #ffffff;
-
+				box-sizing: border-box;
 				.title {
 					color: #ed2c2c;
 					text-align: center;
@@ -1449,36 +1293,45 @@
 					padding: 40rpx 20rpx 30rpx;
 					background: #ffffff;
 					border-radius: 10rpx;
-
-					.contentTips {
+					.contentTips-outer{
 						max-height: 406rpx;
+						padding: 30rpx 10rpx 30rpx 20rpx;
+						box-sizing: border-box;
 						width: 646rpx;
-						overflow: scroll;
-						border-radius: 10rpx;
 						background: #eef1f5;
-						padding: 30rpx 20rpx 30rpx 20rpx;
+						border-radius: 10rpx;
+					}
+					.contentTips {
+						width: 100%;
+						height: 346rpx;
+						overflow: scroll;
 						font-size: 28rpx;
 						line-height: 54rpx;
-
+						
+						text{
+							padding-right:15rpx;
+							display: block;
+						}
 						/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 						::-webkit-scrollbar {
-							width: 16upx !important;
-							height: 16upx !important;
-							background-color: #eef1f5;
+							width: 10rpx !important;
+							height: 51rpx !important;
+							color:  #dee0e2;
+
 						}
 
-						/*定义滚动条轨道 内阴影+圆角*/
-						::-webkit-scrollbar-track {
-							// -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-							//  border-radius: 10px;
-							//  background-color: #1806a3;
-						}
+						// /*定义滚动条轨道 内阴影+圆角*/
+						// ::-webkit-scrollbar-track {
+						// 	-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+						// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+						// 	border-radius: 5rpx;
+						// 	background-color:#FFFFFF;
+						// }
 
 						/*定义滑块 内阴影+圆角*/
 						::-webkit-scrollbar-thumb {
-							border-radius: 10px;
-							//  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-							background-color: #dee0e2;
+							border-radius: 5rpx;
+							background-color:#dee0e2; /*滚动条的颜色*/
 						}
 					}
 				}
@@ -1897,5 +1750,20 @@
 
 
 
+	}
+	.lottery-bg{
+		position: absolute;
+		left:0;
+		top: 0;
+		visibility: hidden;
+		opacity: 0;
+	}
+	.loading{
+		position: fixed;
+		z-index: 999;
+		left:0;
+		top: 0;
+		width: 100%;
+		height: 100%;
 	}
 </style>

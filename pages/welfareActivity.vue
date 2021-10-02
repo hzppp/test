@@ -327,6 +327,7 @@
 					}
 					case 2: {
 						if (item.appId == 'wxe6ffa5dceb3b003b' || item.appId == 'wxb36fb5205e5afb36') {
+							console.log("item.miniUrl",item.miniUrl)
 							// 说明是自己的小程序
 							uni.navigateTo({
 								url: item.miniUrl
@@ -430,6 +431,16 @@
 							}
 							obj.typeText = typeText
 						}
+						// #ifndef MP-WEIXIN
+							rows = rows.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.duibaUrl.indexOf('banH=true') == -1)
+							console.log("过滤后的rows",rows)
+							if(rows.length<4){
+								this.activityList = [...this.activityList, ...rows]
+								console.log('activityList', this.activityList)
+								this.getactivity()
+								return;
+							}
+						// #endif
 						this.activityList = [...this.activityList, ...rows]
 
 						console.log('activityList', this.activityList)

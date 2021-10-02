@@ -5,7 +5,7 @@
                 <view class="canvas-list" v-show="isLoadedNum == prizes.length">  
                 <view class="canvas-item" v-for="(iteml,index2) in prizes" :key="index2">  
                     <view class="canvas-item-con" :style="[{transform:'rotate('+iteml.turn+')'}]">  
-                    <image class="canvas-item-con-img" :src="iteml.imgs[0].src" mode="aspectFit" @load="e => imgBindload()"></image>  
+                    <image class="canvas-item-con-img" :src="iteml.src" mode="aspectFit" @load="e => imgBindload()"></image>  
                     </view>  
                 </view>  
                 </view>  

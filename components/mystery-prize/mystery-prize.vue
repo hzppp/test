@@ -1,7 +1,10 @@
 <template>
 	<view class="lucky-box" :style="{ width: boxWidth + 'px', height: boxHeight + 'px' }">
 		<view class="grid-box">
-			<image v-for="(item,index) in 6" :src="item === selectIndex ? imgsrc[0] : imgsrc[1]" :key="index"></image>
+			<view :class="['grid-box-image',{'grid-box-end':winPrizeUrl && item === selectIndex}]" v-for="(item,index) in 6" :key="index">
+				<image :src="item === selectIndex ? winPrizeUrl ? imgsrc[2] : imgsrc[0] : imgsrc[1]" ></image>
+				<image :src="winPrizeUrl" v-if="winPrizeUrl && item === selectIndex" class="win-pic"></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -11,6 +14,10 @@
 	export default {
 		name:"lucky-grid",
 		props: {
+		  winPrizeUrl: {
+			type: String,
+		    default: ''
+		  },
 		  width: {
 		    type: String,
 		    default: '600rpx'
@@ -27,17 +34,20 @@
 				selectIndex: -1,
 				imgsrc:[
 					'../../static/images/girdSelect.png',
-					'../../static/images/gird.png'
+					'../../static/images/gird.png',
+					'../../static/images/girdOpen.png'
 				],
 				prize: '',
 				runcount: 0,
-				luck: ''
+				luck: '',
+				prizeMoveEnd:false,
 			};
 		},
 		mounted () {
 		  this.init()
 			
 		},
+		
 		methods: {
 			init () {
 				this.boxWidth = changeUnits(this.width)
@@ -83,17 +93,15 @@
 						this.run(5) 
 					},70 )
 					setTimeout(()=>{
-						if (this.selectIndex === num) {
-							clearInterval(this.luck)
-						} else {
-							var waitNum = setInterval(() => {
-								if (this.selectIndex === num) {
-									this.$emit('end')
-									clearInterval(this.luck)
-									clearInterval(waitNum)
-								}
-							},100)
-						}
+						var waitNum = setInterval(() => {
+							if (this.selectIndex === num) {
+								console.log("stop end")
+								this.$emit('end')
+								clearInterval(this.luck)
+								clearInterval(waitNum)
+							}
+						},100)
+					
 					},80*6)
 				},1500)
 
@@ -116,13 +124,28 @@
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
-		image {
+		.grid-box-image {
 			flex: 33.33%;
 			height: 33.9%;
 			margin-top: 10.7%;
+			position: relative;
 			&:nth-child(n+4) {
 				margin-top: 9%;
 			}
+			image{
+				width: 100%;
+				height: 100%;
+			}
+			.win-pic{
+				position: absolute;
+				width: 45%;
+				height: 45%;
+				object-fit: cover;
+				left:50%;
+				top:55%;
+				transform:translate(-50%,-50%)
+			}
 		}
+
 	}
 </style>
