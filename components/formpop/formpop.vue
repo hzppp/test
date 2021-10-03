@@ -11,11 +11,11 @@
 				<block>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'"
-						:class="'input-view auto-input ' + (showSerialText == '请选择车系' ? 'placeholder':'')">
+						:class="'input-view auto-input ' + (showSerialText == '请选择车型' ? 'placeholder':'')">
 						<view>{{showSerialText}}</view>
 					</picker>
-					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无车系')">
-						<view>暂无车系</view>
+					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无车型')">
+						<view>暂无车型</view>
 					</view>
 				</block>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector"
@@ -144,7 +144,7 @@
 				cities: [],
 				districtList: [],
 				dealerList: [],
-				crtSerialItem: {}, // 当前选择的车系
+				crtSerialItem: {}, // 当前选择的车型
 				crtProvinceItem: {}, // 当前选择的省份
 				crtCityItem: {}, // 当前选择的城市
 				crtDistrictItem: {}, // 当前选择的地区项
@@ -186,7 +186,7 @@
 
 		computed: {
 			showSerialText() {
-				let text = '请选择车系'
+				let text = '请选择车型'
 				if (this.crtSerialItem.id) {
 					text = this.crtSerialItem.name
 				}
@@ -238,7 +238,7 @@
 				// this.cities = this.provinceList[0].cities
 				this.serialList = this.currentObj.serialGroupList
 				if(this.currentObj && this.currentObj.noSer){
-					 // 不自动选车系
+					 // 不自动选车型
 				}else{
 				  this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
 				}
@@ -464,7 +464,7 @@
 				let source, sourceId
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
-				console.log('车系', this.crtSerialItem)
+				console.log('车型', this.crtSerialItem)
 				console.log('来源', ly)
 				console.log('来源对象', lydx)
 				if (ly == 'coupon') {
@@ -606,7 +606,7 @@
 			ifcanSubmit() {
 				let isphone = this.isPoneAvailable(this.phone)
 				if (!this.crtSerialItem.id) {
-					// this.showToast('请选择车系')
+					// this.showToast('请选择车型')
 					return false
 				}
 				if (!this.crtProvinceItem.id) {
