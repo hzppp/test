@@ -237,7 +237,11 @@
 				// this.provinceList = this.currentObj.regionList
 				// this.cities = this.provinceList[0].cities
 				this.serialList = this.currentObj.serialGroupList
-			    this.crtSerialItem = this.serialList.length ? this.serialList[0] : {},
+				if(this.currentObj && this.currentObj.noSer){
+					 // 不自动选车系
+				}else{
+				  this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+				}
 				await this.reqProvincecities()
 				this.getpreClue()
 				
@@ -762,7 +766,7 @@
 								}
 								if(regionShow){ //要根据定位出区域
 								let index = this.districtList.findIndex(item => item.name.replace('区', '').replace(
-							'县', '') == cityData.region.replace('区', '').replace('县', ''))
+							'县', '').replace('市', '') == cityData.region.replace('区', '').replace('县', '').replace('市', ''))
 							console.log('匹配到了',index)
 							  if(index != -1){
 								  num = index
@@ -786,6 +790,9 @@
 				// this.crtDealerItem = {}
 				try {
 					let pcSerialGroupId = this.crtSerialItem.pcSerialGroupId
+					if(!pcSerialGroupId){
+						return
+					}
 					const res = await api.fetchDealerListByCityId({
 						cityId,
 						districtId,
