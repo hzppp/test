@@ -11,11 +11,11 @@
 				<block>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'"
-						:class="'input-view auto-input ' + (showSerialText == '请选择车系' ? 'placeholder':'')">
+						:class="'input-view auto-input ' + (showSerialText == '请选择车型' ? 'placeholder':'')">
 						<view>{{showSerialText}}</view>
 					</picker>
-					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无车系')">
-						<view>暂无车系</view>
+					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无车型')">
+						<view>暂无车型</view>
 					</view>
 				</block>
 				<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector"
@@ -144,7 +144,7 @@
 				cities: [],
 				districtList: [],
 				dealerList: [],
-				crtSerialItem: {}, // 当前选择的车系
+				crtSerialItem: {}, // 当前选择的车型
 				crtProvinceItem: {}, // 当前选择的省份
 				crtCityItem: {}, // 当前选择的城市
 				crtDistrictItem: {}, // 当前选择的地区项
@@ -186,7 +186,7 @@
 
 		computed: {
 			showSerialText() {
-				let text = '请选择车系'
+				let text = '请选择车型'
 				if (this.crtSerialItem.id) {
 					text = this.crtSerialItem.name
 				}
@@ -237,7 +237,11 @@
 				// this.provinceList = this.currentObj.regionList
 				// this.cities = this.provinceList[0].cities
 				this.serialList = this.currentObj.serialGroupList
-			    this.crtSerialItem = this.serialList.length ? this.serialList[0] : {},
+				if(this.currentObj && this.currentObj.noSer){
+					 // 不自动选车型
+				}else{
+				  this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+				}
 				await this.reqProvincecities()
 				this.getpreClue()
 				
@@ -460,7 +464,7 @@
 				let source, sourceId
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
-				console.log('车系', this.crtSerialItem)
+				console.log('车型', this.crtSerialItem)
 				console.log('来源', ly)
 				console.log('来源对象', lydx)
 				if (ly == 'coupon') {
@@ -602,7 +606,7 @@
 			ifcanSubmit() {
 				let isphone = this.isPoneAvailable(this.phone)
 				if (!this.crtSerialItem.id) {
-					// this.showToast('请选择车系')
+					// this.showToast('请选择车型')
 					return false
 				}
 				if (!this.crtProvinceItem.id) {
@@ -677,19 +681,42 @@
 				await distance.getLocation()
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
-				if (currentLocation) {
-					console.log(this.provinceList)
-					const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
-						'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
-					if (crtLocationProvinceItem) {
-						const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
-							'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
-						this.crtProvinceItem = crtLocationProvinceItem
-						this.cities = this.crtProvinceItem.cities
-						this.crtCityItem = crtLocationCityItem
-						this.reqDistrictListByCityId(this.crtCityItem.id)
-						this.reqDealerListByCityId(this.crtCityItem.id)
-					}
+				let ifding = true 
+				if(currentLocation.wxPosition.provider && currentLocation.wxPosition.provider == 'default'){
+					// 没有开启定位不出默认
+					ifding = false
+				}
+				if (currentLocation && ifding) {
+					if(this.currentObj && this.currentObj.noDistanceDeal){
+						// 子维要求有这个参数 就一直出定位
+						console.log('currentLocation',currentLocation)
+						const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+							'市', '') == currentLocation.cityData.pro.replace('省', '').replace('市', ''))
+						if (crtLocationProvinceItem) {
+							const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
+								'市', '') == currentLocation.cityData.city.replace('市', ''))
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.cities = this.crtProvinceItem.cities
+							this.crtCityItem = crtLocationCityItem
+							console.log(this.crtProvinceItem.name,this.crtCityItem.name)
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+							this.reqDealerListByCityId(this.crtCityItem.id)
+						}
+					}else{
+						console.log('currentLocation',currentLocation)
+						const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+							'市', '') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
+						if (crtLocationProvinceItem) {
+							const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
+								'市', '') == currentLocation.selectedCityData.city.replace('市', ''))
+							this.crtProvinceItem = crtLocationProvinceItem
+							this.cities = this.crtProvinceItem.cities
+							this.crtCityItem = crtLocationCityItem
+							console.log(this.crtProvinceItem.name,this.crtCityItem.name)
+							this.reqDistrictListByCityId(this.crtCityItem.id)
+							this.reqDealerListByCityId(this.crtCityItem.id)
+						}
+					}					
 				}
 				this.isShowFormPop = true
 			},
@@ -722,24 +749,29 @@
 						this.districtList.push(...res.data)
 						console.log('this.districtList',this.districtList)
 						let num = Math.floor(Math.random()*(this.districtList.length ))
-						// 根据定位出区
-						let currentLocation = app.globalData.currentLocation
-						if(currentLocation){
-							let  cityData = currentLocation.cityData 
-							// console.log('cityData',cityData,currentLocation.selectedCityData)
-							let regionShow = true
-							if(currentLocation.selectedCityData.isChange){// 改过
-								if(cityData.city.replace('市', '') != currentLocation.selectedCityData.city.replace('市', '')){ // 切改了城市不同了
-									regionShow = false
+						if(this.currentObj && this.currentObj.noDistanceDeal){
+							// 不根据位置出经销商 随机城市下面的一家，所以先不出地区
+							console.log('随机出区',num)
+						}else{
+							// 根据定位出区
+							let currentLocation = app.globalData.currentLocation
+							if(currentLocation){
+								let  cityData = currentLocation.cityData 
+								// console.log('cityData',cityData,currentLocation.selectedCityData)
+								let regionShow = true
+								if(currentLocation.selectedCityData.isChange){// 改过
+									if(cityData.city.replace('市', '') != currentLocation.selectedCityData.city.replace('市', '')){ // 切改了城市不同了
+										regionShow = false
+									}
 								}
-							}
-							if(regionShow){ //要根据定位出区域
-							let index = this.districtList.findIndex(item => item.name.replace('区', '').replace(
-						'县', '') == cityData.region.replace('区', '').replace('县', ''))
-						console.log('匹配到了',index)
-						  if(index != -1){
-							  num = index
-						  }
+								if(regionShow){ //要根据定位出区域
+								let index = this.districtList.findIndex(item => item.name.replace('区', '').replace(
+							'县', '').replace('市', '') == cityData.region.replace('区', '').replace('县', '').replace('市', ''))
+							console.log('匹配到了',index)
+							  if(index != -1){
+								  num = index
+							  }
+								}
 							}
 						}
 						this.crtDistrictItem = this.districtList[num]
@@ -758,15 +790,26 @@
 				// this.crtDealerItem = {}
 				try {
 					let pcSerialGroupId = this.crtSerialItem.pcSerialGroupId
+					if(!pcSerialGroupId){
+						return
+					}
 					const res = await api.fetchDealerListByCityId({
 						cityId,
 						districtId,
 						pcSerialGroupId
 					})
 					if (res.code == 1) {
-						this.dealerList =distance.sortDealersByDistance(res.data) 
-						if (this.dealerList && this.dealerList.length) { 
-							this.crtDealerItem = this.dealerList[0]
+						if(this.currentObj && this.currentObj.noDistanceDeal){
+							this.dealerList = res.data
+							if (this.dealerList && this.dealerList.length) { 
+								console.log('经销商随机数',this.dealerList.length,Math.floor(Math.random() * this.dealerList.length))
+								this.crtDealerItem = this.dealerList[Math.floor(Math.random() * this.dealerList.length)]
+							}
+						}else{
+							this.dealerList =distance.sortDealersByDistance(res.data)
+							if (this.dealerList && this.dealerList.length) { 
+								this.crtDealerItem = this.dealerList[0]
+							}
 						}
 					}
 				} catch (err) {
