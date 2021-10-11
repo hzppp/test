@@ -51,7 +51,7 @@
 							placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
 					<!-- #endif -->
 					<!--  #ifdef MP-TOUTIAO  -->
-						<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
+						<input type="text" :always-embed="true" :value="phone" placeholder="请授权手机号码"
 							placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11" disabled="true"></input>
 					<!-- #endif -->
 					
