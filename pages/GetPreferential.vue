@@ -21,7 +21,12 @@
             <!-- 手机号S -->
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<!--  #ifndef MP-TOUTIAO  -->
+					<input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+				<!-- #endif -->
+				<!--  #ifdef MP-TOUTIAO  -->
+					<input class="select" :focus="isFocus" v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" disabled="true"/>
+				<!-- #endif -->
 				<button  class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
             <!-- 手机号E -->

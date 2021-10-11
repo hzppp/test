@@ -46,8 +46,16 @@
 						maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view> -->
 				<view class="input-view mobile-input">
-					<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
-						placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
+					<!--  #ifndef MP-TOUTIAO  -->
+						<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
+							placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11"></input>
+					<!-- #endif -->
+					<!--  #ifdef MP-TOUTIAO  -->
+						<input type="text" :always-embed="true" :value="phone" placeholder="请填写您的手机号码"
+							placeholder-class="placeholder" @input="getValue('phone',$event)" maxlength="11" disabled="true"></input>
+					<!-- #endif -->
+					
+			
 				</view>
 				<view class="lbactivityphoto" v-if="from == 'lbactivity'">报名手机号需要跟购车手机号一致哦~~</view>
 				<view class="input-view mobile-input sms-code-input" v-if="smsCodeShow">
