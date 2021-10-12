@@ -355,7 +355,7 @@
 					   city = currentLocation.cityData.city;     
 					   pro  =  currentLocation.cityData.pro
 					}
-					// console.log('provinceList',city,pro)
+					console.log('provinceList',city,pro)
 				    if (city&&pro) {
 				    	const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
 				    		'市', '') == pro.replace('省', '').replace('市', ''))
@@ -416,6 +416,8 @@
 				currentLocation.selectedCityData.pro = this.crtProvinceItem.name
 				currentLocation.selectedCityData.cityId = this.crtCityItem.id
 				currentLocation.selectedCityData.city = this.crtCityItem.name
+				this.getNearDealer()
+				
 			},
 			bindMultiPickerColumnChange(e) {
 				let {
