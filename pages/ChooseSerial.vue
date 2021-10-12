@@ -1,6 +1,6 @@
 <template>
   <view class="choose-serial">
-    <view class="serial-item" v-for="(item,index) in serialData" :key="index" @tap="goSerialDetail(item)">
+    <view class="serial-item" v-for="(item,index) in serialData" :key="index" @tap="goSerialDetail(item.pcSerialGroupId)">
         <image mode="widthFix" :src="item.pcSerialGroupPic" />
 		<view class="dec">
 			<view class="title">
@@ -27,8 +27,7 @@ import api from '@/public/api/index'
                 leftSerialId:"", //左边车系id
                 rightSerialId:"", //右边车系id
                 pages:"",
-                type:"",
-				dealersId:""
+                type:""
             }
         },
         onLoad(options) {
@@ -41,27 +40,9 @@ import api from '@/public/api/index'
             this.type = options.type || ""
             this.leftSerialId = options.leftSerialId || ""
             this.rightSerialId = options.rightSerialId || ""
-			this.dealersId = options.dealersId || ""
-			console.log('dealersId',this.dealersId)
-			if(this.dealersId && this.dealersId.length > 0){
-				this.reqSerialScreenListbyDealer()
-			}else{
-			    this.reqSerialScreenList()	
-			}
-           
+            this.reqSerialScreenList()
         },
         methods: {
-			async reqSerialScreenListbyDealer() {
-			     
-			      	let res = await api.listByDealer({
-			      		dealerId: this.dealersId
-			      	})
-			      	if (res.code == 1) {
-			      		let dealer = res.data.dealer
-			      		this.serialData = res.data.serialGroups
-			      	} 
-			      
-			},
             async reqSerialScreenList() {
                 try {
                     const {code,data} = await api.fetchSerialScreenList({showPrice:1})
@@ -73,46 +54,40 @@ import api from '@/public/api/index'
                 }
             },
             //ID 是左边车系 ， this.serialid是右边车系
-            goSerialDetail(item) {
+            goSerialDetail(id) {
                 if(this.type === "calc") {
                     return  uni.navigateTo({
-                        url:`/pages/ChooseModels?type=calc&single=true&serialId=${item.pcSerialGroupId}`
+                        url:`/pages/ChooseModels?type=calc&single=true&serialId=${id}`
                     })
 					 return
                 }else if(this.type === "yuyue") {
-   
-					if(this.dealersId && this.dealersId.length > 0){
-						// 回填
-						
-						
-						
-						
-						
-					}else{
-						let pages = getCurrentPages();  //获取所有页面栈实例列表
-						let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-						prevPage.$vm.serialId = item.pcSerialGroupId;   //修改上一页data里面的searchVal参数值为1211
-						prevPage.$vm.show  = true; 
-						uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
-						    delta: 1
-						});
-						 return	
-					}
-		
+     //                return  uni.redirectTo({
+     //                    url:`/pages/YuyuePage?serialId=${id}`
+     //                })
+					// console.log('asdasdsadas')
+					let pages = getCurrentPages();  //获取所有页面栈实例列表
+					let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
+					prevPage.$vm.serialId = id;   //修改上一页data里面的searchVal参数值为1211
+					prevPage.$vm.show  = true; 
+					uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
+					    delta: 1
+					});
+					 return
+					
                 }
                 if(this.pages) {
 				    if(this.pages == 'GetPreferential'){
 						let pages = getCurrentPages();  //获取所有页面栈实例列表
 						let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-						prevPage.$vm.serialId = item.pcSerialGroupId;   //修改上一页data里面的searchVal参数值为1211
+						prevPage.$vm.serialId = id;   //修改上一页data里面的searchVal参数值为1211
 						// prevPage.$vm.show  = true; 
 						uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
 						    delta: 1
 						});
 					}else{
-					this.$store.commit('changModel',item.pcSerialGroupId)
+					this.$store.commit('changModel',id)
 					return  uni.redirectTo({
-					    url:`/pages/${this.pages}?serialId=${item.pcSerialGroupId}`
+					    url:`/pages/${this.pages}?serialId=${id}`
 					})	
 					}
 					 return
@@ -122,7 +97,7 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${id}&rightSerialId=${this.serialId}`
                         // })
-                        if(this.serialId == item.pcSerialGroupId) {
+                        if(this.serialId == id) {
                             return  uni.showToast({
                                 icon: 'none',
                                 title: '该车型已在对比列表中，请选择另一款车型',
@@ -130,7 +105,7 @@ import api from '@/public/api/index'
                         }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-                        prevPage.$vm.leftSerialId = item.pcSerialGroupId;   //修改上一页data里面的searchVal参数值为1211
+                        prevPage.$vm.leftSerialId = id;   //修改上一页data里面的searchVal参数值为1211
                         uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
                             delta: 1
                         });
@@ -138,7 +113,7 @@ import api from '@/public/api/index'
                         // uni.redirectTo({
                         //     url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                         // })
-                        if(this.serialId == item.pcSerialGroupId) {
+                        if(this.serialId == id) {
                             return  uni.showToast({
                                 icon: 'none',
                                 title: '该车型已在对比列表中，请选择另一款车型',
@@ -146,7 +121,7 @@ import api from '@/public/api/index'
                         }
                         let pages = getCurrentPages();  //获取所有页面栈实例列表
                         let prevPage = pages[ pages.length - 2 ];  //上一页页面实例
-                        prevPage.$vm.rightSerialId = item.pcSerialGroupId;   //修改上一页data里面的searchVal参数值为1211
+                        prevPage.$vm.rightSerialId = id;   //修改上一页data里面的searchVal参数值为1211
                         uni.navigateBack({  //uni.navigateTo跳转的返回，默认1为返回上一级
                             delta: 1
                         });
@@ -154,18 +129,18 @@ import api from '@/public/api/index'
                     return
                 }
                 if(this.vs) {
-                    if(item.pcSerialGroupId == this.serialId) {
+                    if(id == this.serialId) {
                         return  uni.showToast({
                             icon: 'none',
                             title: '该车型已在对比列表中，请选择另一款车型',
                         })
                     }
                     uni.redirectTo({
-                        url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${item.pcSerialGroupId}`
+                        url:`/pages/carSerialsVS?leftSerialId=${this.serialId}&rightSerialId=${id}`
                     })
                 }else {
                     uni.redirectTo({
-                        url:`/pages/LookCar?id=${item.pcSerialGroupId}`
+                        url:`/pages/LookCar?id=${id}`
                     })
                 }
             }

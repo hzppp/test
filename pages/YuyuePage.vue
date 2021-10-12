@@ -148,18 +148,10 @@ const COUNTDOWN = 60
 			if(this.serialId == ""){
 				this.reqSerialScreenList();
 			}
-			if(options.nearDealer){
-				this.currentDealer = JSON.parse(options.nearDealer)
-				console.log('currentDealer',this.currentDealer)
-			}
-			
-			
-			
-			
-			if(options.cityId) {
+            if(options.cityId) {
                 await distance.getLocation()
                 const cityData = app.globalData.currentLocation.selectedCityData
-                this.$set(this.currentCity,'provinceId',options.proId?options.proId:cityData.proId )
+                this.$set(this.currentCity,'provinceId',cityData.proId )
                 this.$set(this.currentCity,'id',options.cityId)
                 this.$set(this.currentCity,'name',decodeURI(options.cityName))
             }else {
@@ -401,7 +393,7 @@ const COUNTDOWN = 60
                             this.dealersList = distance.sortDealersByDistance(data)
                             this.currentDealer = this.dealersList[0]
                         }else {
-                            // this.currentDealer = {}
+                            this.currentDealer = {}
                         }
                     }else {
                         const {code,data} = await api.fetchDealerListByCityId({cityId,districtId,pcSerialGroupId})
@@ -409,7 +401,7 @@ const COUNTDOWN = 60
                           this.dealersList = distance.sortDealersByDistance(data)
                           this.currentDealer = this.dealersList[0]
                         }else {
-                            // this.currentDealer = {}
+                            this.currentDealer = {}
                         }
                     }
 					this.checkInfo()

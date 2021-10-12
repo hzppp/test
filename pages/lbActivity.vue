@@ -127,6 +127,7 @@
 				lotteryType: '', //转盘类型
 				actSelect: '' ,// 玩法（0   线下   1 线上抽奖  2 both）
 				formShowTitle:'我要参与抽奖'
+				
 			}
 		},
 		mixins: [shouquan],
@@ -207,7 +208,15 @@
 				this.content.actSelect = this.actSelect
 				this.content.activityType = this.activityType
 				this.content.isActStart = this.isActStart
-
+				if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dDis=1') != -1 && !this.sourceUserId){
+					// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
+					console.log('不定位经销商',this.content.miniUrl.indexOf('dDis=1' != -1))
+					this.content.noDistanceDeal = true
+				} 
+				if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dSer=1') != -1){
+					console.log('不自动车车系')
+					this.content.noSer = true
+				} 
 			} catch (err) {
 				console.error(err)
 			} finally {

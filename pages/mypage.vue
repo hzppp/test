@@ -52,7 +52,7 @@
 			<view class="box">
 				<!--  #ifndef MP-TOUTIAO  -->
 					<view class="box-list list2" @tap="toMyicon">
-						<view class="p1">我的金币</view>
+						<view class="p1">积分商城</view>
 						<view class="right isApprove"></view>
 					</view>
 					<view class="line"></view>

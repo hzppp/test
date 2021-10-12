@@ -57,15 +57,19 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxb36fb5205e5afb36",
+        "appid" : "wxe6ffa5dceb3b003b",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,
             "postcss" : true,
-            "minified" : false
+            "minified" : true
         },
         "usingComponents" : true,
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用于推荐附近长安汽车线下服务中心，提升服务体验"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -78,8 +82,8 @@
         "appid" : "ttf56383de6a5b35b901",
         "setting" : {
             "minified" : true,
-            "postcss" : false,
-            "es6" : false
+            "postcss" : true,
+            "es6" : true
         }
     },
     "uniStatistics" : {
