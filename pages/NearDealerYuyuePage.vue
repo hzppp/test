@@ -25,15 +25,13 @@
                 </view>
                 <view class="arrow" v-show="currentDealer.name"></view>
             </view>
-			<picker @change="bindMultiPickerChange" :value="selectIndex"
-				mode="multiSelector" :range="[serialGroups]" range-key="name">
+			  <picker @change="bindMultiPickerChange" :value="index" :range="serialGroups"  range-key="name">   
+		<!-- 	<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+				mode="multiSelector" :range="[serialGroups]" range-key="name"> -->
 			<view class="list models">
-			
 					<view class="list-title">车型</view>
 					<view class="select">{{serialData.name}}</view>
-				
-			
-			    <view class="arrow"></view>
+			        <view class="arrow"></view>
 			</view>
 			</picker>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
@@ -138,6 +136,13 @@ const COUNTDOWN = 60
 				
 
         },
+		computed: {
+			selectIndex() {
+				let index = this.serialGroups.findIndex(item => item.id == this.serialData.item )
+				console.log('坐标地址是',index)
+				return [index]
+			}
+		},
         onShow() {
 
             // this.checkInfo()
@@ -310,7 +315,7 @@ const COUNTDOWN = 60
                         return uni.showToast({
                             title:res.msg,
                             icon:"none",
-							duration:2000
+							duration:500
 							
                         })
                     }
@@ -319,7 +324,7 @@ const COUNTDOWN = 60
                 }finally {
 					setTimeout(() => {
 						uni.hideLoading()
-					}, 2000)
+					}, 500)
                     
                 }
             },
@@ -413,9 +418,11 @@ const COUNTDOWN = 60
                 this.checkInfo()
             },
 			bindMultiPickerChange(e){
+				console.log(e)
 				let {
 					detail
 				} = e
+				console.log(e)
 				this.serialData = this.serialGroups[detail.value[0]]
 				console.log('serialData',this.serialData)
 			}

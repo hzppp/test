@@ -16,32 +16,6 @@
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
 		<view class="content">
-		<!-- 	<image v-if="pageData.bannerActivity&&pageData.bannerActivity.picUrl" class="bannerTop"
-				:src="pageData.bannerActivity.picUrl" @tap="goActDetail(pageData.bannerActivity.id)"></image> -->
-		<!-- 	<view class="linkCont" v-if="false">
-				<view class="linkContL"> -->
-<!-- 					<view class="article linkItem" @tap="goArtList">
-						<view class="title">发现</view>
-						<view class="info">探索更多精彩</view>
-						<image class="img" lazy-load
-							src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/findArticle.png"></image>
-					</view>
-				</view>
-				<view class="linkContR">
-					<view class="testDrive linkItem rItem" @tap="goTestDrive">
-						<view class="title">预约试驾</view>
-						<view class="info">试驾快人一步</view>
-						<image class="img" lazy-load
-							src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDriveIcon.png"></image>
-					</view>
-					<view class="calculation linkItem rItem" @tap="goCalc">
-						<view class="title">购车计算</view>
-						<view class="info">价格一目了然</view>
-						<image class="img" lazy-load
-							src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/cal.png"></image>
-					</view>
-				</view>
-			</view> -->
 			<view class="hotAct">
 				<view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
 					热销车型
@@ -60,6 +34,40 @@
 				<view class="actItem vrCar" @tap="goVr">
 					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/vrCar.jpg" class="img"></image>
 				</view>
+			</view>
+			
+			<view class="hotAct">
+				<view class="hotTabMore" >
+					最近门店
+				</view>
+				<view class="hotmore" @tap="goMoreDel()">查看更多
+					<image class="hotmoreImg"
+						src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealMore.png"></image>
+				</view >
+			
+				<view class="actItem dealCar" @tap="goYuyue()">
+					<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/NearDealer.png" class="img" mode="aspectFill"></image>
+				</view>
+				<view class="hotNDelF">
+					<view class="hotNDelFTitle">{{nearDealer.name}}</view>
+					<view class="hotNDelFLocation">{{nearDealer.address}}</view>
+					<view class="hotNDelFView">
+						<view @tap = "goDealer()" class="footone">
+							<image class="hotNDelFicon"
+								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealLocation.png"></image>
+							
+							<view>{{nearDealer.distance | formatThousand}}</view>
+							
+						</view>
+						<view @tap = "goPhone()" class="foottwo" v-if="nearDealer.phone && nearDealer.phone.length > 0">
+							<image class="hotNDelFicon right"
+								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealPhone.png"></image>
+							<view> 打电话</view>
+						</view>
+						<view class="hotNDelFBtn" @tap="goYuyue()">预约试驾</view>
+					</view>
+				</view>
+			
 			</view>
 			<view class="hotAct" v-if="pageData.list.length">
 				<view class="hotTab">
@@ -140,9 +148,14 @@
 					list: []
 				},
 				testUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F018c1c57c67c990000018c1b78ef9a.png&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623756249&t=81ceea2ac01c237a71a3587b2482151a',
-
+                nearDealer:{},
 				fontLoaded: false,
-				timeOutEvent:''
+				timeOutEvent:'',
+				currentCity:{
+					cityId:'',
+					proId:'',
+					name:''
+				}
 			}
 		},
 		computed: {
@@ -165,6 +178,18 @@
 			}
 		},
 		filters: {
+			formatThousand (num) {
+			    if(num != undefined && num != Infinity){
+					if(num > 1000){
+						 return (num / 1000).toFixed(2)  + 'km'
+					}else{
+						return num + 'm'
+					}
+				}else{
+					return '无法获取距离'
+				}
+			  
+			},
 			actType(type) {
 				switch (type) {
 					case 1: {
@@ -239,6 +264,7 @@
 				// const resData = (await this.getCityId()) || [1000000022,1000000022]
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
+				this.getNearDealer()
 			}
 			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
@@ -312,6 +338,53 @@
 				this.sgList = this.pageData.heatSgList
 				console.log("过滤后的pageData",this.pageData)
 			},
+			async getNearDealer(){
+			        let  cityId;
+					let  pro;
+					let  city;
+					//  产品需求是有定位显示定位，没有定位显示选择
+					let currentLocation = app.globalData.currentLocation
+					if(currentLocation.wxPosition.provider == 'default'){
+						// 说明没有定位
+						let  selectcityData = currentLocation.selectedCityData
+						if(selectcityData){
+							city = selectcityData.city
+							pro  =  selectcityData.pro
+						}
+					}else{
+					   city = currentLocation.cityData.city;     
+					   pro  =  currentLocation.cityData.pro
+					}
+					// console.log('provinceList',city,pro)
+				    if (city&&pro) {
+				    	const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
+				    		'市', '') == pro.replace('省', '').replace('市', ''))
+							
+				    	if (crtLocationProvinceItem) {
+				    		const crtLocationCityItem = crtLocationProvinceItem.cities.find(item => item.name.replace(
+				    			'市', '') == city.replace('市', ''))
+								 // console.log('this.provinceList',crtLocationCityItem)
+							cityId = crtLocationCityItem.id
+							this.currentCity.cityId = cityId
+							this.currentCity.proId = crtLocationProvinceItem.id
+							this.currentCity.name = crtLocationCityItem.name
+							const {code,data} = await api.fetchDealerListByCityId({cityId})
+							if(code === 1 && data.length) {
+							  this.dealersList = distance.sortDealersByDistance(data)
+							  this.nearDealer = this.dealersList[0]
+							}else {
+							    this.nearDealer = {}
+							}
+				    	
+				    	}
+				    }
+				   
+				   console.log('provinceList',this.nearDealer)
+			
+			
+					
+					
+				},
 			// 请求省份和城市的级联列表
 			async reqProvinceCityList() {
 				try {
@@ -406,6 +479,68 @@
 					console.error(err)
 					return res
 				}
+			},
+			goMoreDel() {
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('首页最近门店点击查看更多')
+				// #endif
+				console.log('去更多经销商	',this.currentCity)
+				// var nearDealer = JSON.stringify(this.currentCity);
+				uni.navigateTo({
+					url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
+				})
+			},
+			goDealer(){
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('首页最近门店点击导航')
+				// #endif
+				console.log('去经销商',this.nearDealer)
+				if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
+					// uni.navigateTo({
+					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+					// })
+					uni.openLocation({
+					  'latitude':Number(this.nearDealer.lngY),
+					  'longitude':Number(this.nearDealer.lngX),
+					  'name':this.nearDealer.name,
+					  scale: 18,
+					  success(sus) {
+					  	console.log(sus)
+					  },
+					  fail(res) {
+					  	console.log(res)
+					  }
+					})
+				}
+			},
+			goPhone(){
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('首页最近门店点击打电话')
+				// #endif
+				console.log('获取电话')
+				if(this.nearDealer.phone && this.nearDealer.phone.length > 0){
+				uni.makePhoneCall({
+				    phoneNumber: this.nearDealer.phone,
+					success(res) {
+					     // 调用成功 makePhoneCall:ok
+					     console.log("调用成功", res.errMsg);
+					   },
+					 fail(res) {
+					     this.$toast(res.errMsg)
+					   },  
+				});	
+				}
+			
+			},
+			goYuyue(){
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('首页最近门店点击预约试驾')
+				// #endif
+				console.log('预约试驾',this.nearDealer)
+				 var nearDealer = JSON.stringify(this.nearDealer);
+				uni.navigateTo({
+					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
+				})
 			},
 			goVr() {
 				// #ifdef MP-WEIXIN
@@ -800,12 +935,102 @@
 
 		.hotAct {
 			margin-top: 30rpx;
-
 			.hotTab {
 				font-size: 34rpx;
 				// font-weight: bold;
 				margin-bottom: 10rpx;
 			}
+
+			.hotTabMore {
+				font-size: 34rpx;
+				// font-weight: bold;
+				margin-bottom: 10rpx;
+				display: inline;
+				
+
+			}
+
+			.hotmore {
+				position: absolute;
+			    margin-top: 10rpx;
+				right: 40rpx;
+				color: #999999;
+				font-size: 24rpx;
+				display: inline-flex;
+				
+				// text-align: center;
+				// height: 24rpx;
+				// line-height: 24rpx;
+			
+
+			}
+
+			.hotmoreImg {
+				width: 8rpx;
+				height: 16rpx;
+				margin: auto;
+				margin-left: 15rpx;
+			}
+
+			.hotNDelF {
+				.hotNDelFTitle{
+					color:#3C4650 ;
+					font-size: 32rpx;
+					margin: 24rpx 0rpx;
+				}
+				.hotNDelFLocation{
+					color:#999999;
+					font-size: 24rpx;
+					
+				}
+				.hotNDelFView {
+					color: #3C4650;
+					font-size: 24rpx;
+					margin-top: 15rpx;
+					display: flex;
+					flex-direction: row;
+					height: 56rpx;
+					line-height: 56rpx;
+				   	.footone{
+					    display: flex;
+						flex-direction: row;
+						height: 56rpx;
+						line-height: 56rpx;
+					}
+					.foottwo{
+						display: flex;
+						flex-direction: row;
+						height: 56rpx;
+						line-height: 56rpx;
+					}
+
+					.hotNDelFicon {
+						// display: block;
+						margin: auto  9rpx;
+						width: 32rpx;
+						height: 32rpx;
+						
+					}
+					.right{
+						margin-left: 40rpx;
+					}
+					.hotNDelFBtn{
+						position: absolute;
+						right:32rpx;
+						width: 160rpx;
+						height: 56rpx;
+						font-size:24rpx ;
+						color: #FFFFFF;
+						line-height: 56rpx;
+						text-align: center;
+						background: #ff9632;
+						border-radius: 28px;
+					}
+				}
+
+
+			}
+
 
 			.actItem {
 				margin: 15rpx 0 30rpx 0;
@@ -819,9 +1044,9 @@
 				white-space: nowrap;
 				/*  #ifndef  MP-WEIXIN */
 				height: 180rpx;
-			   flex-direction :column;
-				/*  #endif  */	
-				
+				flex-direction: column;
+				/*  #endif  */
+
 
 				.hotCarItem {
 					display: inline-block;
@@ -866,7 +1091,16 @@
 					transform: translate(-50%, -50%);
 				}
 			}
-
+			.dealCar{
+				position: relative;
+				
+				.img {
+					display: inline-block;
+					width: 686rpx;
+					height: 360rpx;
+					border-radius: 20rpx;
+				}
+			}
 			.vrCar {
 				position: relative;
 
@@ -972,6 +1206,7 @@
 				}
 			}
 		}
+		
 	}
 	
 
