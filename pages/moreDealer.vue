@@ -241,8 +241,14 @@
 				wx.aldstat.sendEvent('更多门店页点击导航')
 				// #endif
 				if(nearDealer && nearDealer.lngX && nearDealer.lngY &&  nearDealer.distance  != undefined && nearDealer.distance  != Infinity){
-					uni.navigateTo({
-						url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
+					// uni.navigateTo({
+					// 	url:`/pages/map?latitude=${nearDealer.lngY}&longitude=${nearDealer.lngX}&des=${nearDealer.name}`
+					// })
+					uni.openLocation({
+					  'latitude':Number(nearDealer.lngY),
+					  'longitude':Number(nearDealer.lngX),
+					  'name':nearDealer.name,
+					  scale: 18
 					})
 				}
 			},
