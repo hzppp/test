@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE;
-const version = 1033;
+const version = 1034;
 
 
 
@@ -282,7 +282,9 @@ const config = {
 		//开红包记录
 		redRecord:`${DOMAIN.changan}/api/xcx/redPacket/record`,
 		//开红包状态
-		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`
+		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`,
+		//根据经销商查询车系
+		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
 		
 		
 		

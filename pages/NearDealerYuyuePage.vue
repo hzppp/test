@@ -25,25 +25,28 @@
                 </view>
                 <view class="arrow" v-show="currentDealer.name"></view>
             </view>
-			<picker @change="bindMultiPickerChange" :value="selectIndex"
-				mode="multiSelector" :range="[serialGroups]" range-key="name">
+			  <picker @change="bindMultiPickerChange" :value="index" :range="serialGroups"  range-key="name">   
+		<!-- 	<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="selectIndex"
+				mode="multiSelector" :range="[serialGroups]" range-key="name"> -->
 			<view class="list models">
-			
 					<view class="list-title">车型</view>
 					<view class="select">{{serialData.name}}</view>
-				
-			
-			    <view class="arrow"></view>
+			        <view class="arrow"></view>
 			</view>
 			</picker>
             <view class="list models" android:focusable="true" android:focusableInTouchMode="true">
                 <view class="list-title">手机号</view>
-                <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo" v-model="phoneNum" maxlength="11" />
+              <!--  #ifndef MP-TOUTIAO  -->
+              	 <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请输入11位手机号码" @input="checkInfo()" v-model="phoneNum" maxlength="11"/>
+              <!-- #endif -->
+              <!--  #ifdef MP-TOUTIAO  -->
+              	 <input class="select" :always-embed="true" :focus="isFocus"  v-if="getPhoneBtn == true ||  TOUTIAO == 'TOUTIAO'" pattern="[0-9]*" placeholder="请授权手机号码" @input="checkInfo()" v-model="phoneNum" maxlength="11" disabled="true"/>
+              <!-- #endif -->
 				<button class="getPhoneBtn" v-if="getPhoneBtn == false && TOUTIAO != 'TOUTIAO'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber($event)">您的手机号码（点击授权免手写）</button>
             </view>
-            <view class="list models">
+            <view class="list models" v-if="smsCodeShow">
                 <view class="list-title">验证码</view>
-                <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo" />
+                <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo"/>
                 <view class="get-code" v-if="timeDownFalg" @tap="getCode">{{isFirst?"获取验证码":"重新发送"}}</view>
                 <view class="downcount" v-else>{{downNum}}s</view>
             </view>
@@ -113,7 +116,8 @@ const COUNTDOWN = 60
                 getPhoneBtn: false,
                 isFocus:false,
                 isNoData:false,
-				TOUTIAO:''
+				TOUTIAO:'',
+				smsCodeShow: false
             }
         },
         watch: {
@@ -131,6 +135,12 @@ const COUNTDOWN = 60
             
             },
 			
+			phoneNum(n){
+			if(n.length > 11){
+				 this.phoneNum = n.substring(0,11)
+			}
+			  this.checkInfo()
+			}
 			// currentDealer(n){
 			// 	// 
 			// 	this.reqSerialScreenList()
@@ -138,9 +148,15 @@ const COUNTDOWN = 60
 				
 
         },
+		computed: {
+			selectIndex() {
+				let index = this.serialGroups.findIndex(item => item.id == this.serialData.item )
+				console.log('坐标地址是',index)
+				return [index]
+			}
+		},
         onShow() {
-
-            // this.checkInfo()
+            this.checkInfo()
         },
         async onLoad(options) {
             // console.log('111111options :>> ', options);
@@ -185,6 +201,7 @@ const COUNTDOWN = 60
 			    		this.currentCity.id = '1000000262'
 			    		this.currentCity.countryId = '1000002813'
 			    	}
+					this.checkInfo()
 			    }catch(e){
 			    	this.currentCity.proId = '1000000022'
 			    	this.currentCity.name = '重庆市'
@@ -229,11 +246,18 @@ const COUNTDOWN = 60
 			},
             //检测信息是否齐全
             checkInfo() {
-                if(this.phoneNum && this.codeNum && this.currentCity.id && this.currentDealer.id) {
-                    this.isAllSelect = true
-                }else {
-                    this.isAllSelect = false
-                }
+			if (this.phoneNum.length == 11 && this.phoneNum != uni.getStorageSync('userPhone')) {
+								this.smsCodeShow = true
+							} else {
+								this.smsCodeShow = false
+							}
+			if(this.phoneNum  && this.currentCity.id && ((this.phoneNum != uni.getStorageSync('userPhone') && this.codeNum) || this
+								.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id) {
+			    this.isAllSelect = true
+			}else {
+			    this.isAllSelect = false
+			}
+			 
             },
             cleanRegion() {
                 this.currentRegion = {}
@@ -275,10 +299,10 @@ const COUNTDOWN = 60
                     title:"请输入正确的手机号码",
                     icon:"none"
                 })
-                if(!this.codeNum) return uni.showToast({
-                    title:"请输入正确的验证码",
-                    icon:"none"
-                })
+               if(!this.codeNum && this.smsCodeShow) return uni.showToast({
+                   title:"请输入正确的验证码",
+                   icon:"none"
+               })
             
                 try {
                     uni.showLoading({
@@ -310,7 +334,7 @@ const COUNTDOWN = 60
                         return uni.showToast({
                             title:res.msg,
                             icon:"none",
-							duration:2000
+							duration:500
 							
                         })
                     }
@@ -319,7 +343,7 @@ const COUNTDOWN = 60
                 }finally {
 					setTimeout(() => {
 						uni.hideLoading()
-					}, 2000)
+					}, 500)
                     
                 }
             },
@@ -413,9 +437,11 @@ const COUNTDOWN = 60
                 this.checkInfo()
             },
 			bindMultiPickerChange(e){
+				console.log(e)
 				let {
 					detail
 				} = e
+				console.log(e)
 				this.serialData = this.serialGroups[detail.value[0]]
 				console.log('serialData',this.serialData)
 			}
