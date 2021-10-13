@@ -282,7 +282,9 @@ const config = {
 		//开红包记录
 		redRecord:`${DOMAIN.changan}/api/xcx/redPacket/record`,
 		//开红包状态
-		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`
+		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`,
+		//查询用户基本信息
+		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`
 		
 		
 		

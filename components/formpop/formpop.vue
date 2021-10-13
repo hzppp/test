@@ -482,6 +482,9 @@
 				} else if (ly == 'dealer') {
 					source = 3
 					sourceId = lydx.id || lydx.dealerId
+				} else if (ly == 'marathon') {
+					source = 5
+					sourceId = lydx.id
 				}
 				if (!this.ifcanSubmit()) {
 					return
@@ -561,6 +564,9 @@
 					}
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
+					} else if(ly === 'marathon') {
+						popname = ''
+						this.isShowFormPop = false
 					} else {
 						popname = 'form-success-pop'
 					}
