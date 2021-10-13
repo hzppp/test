@@ -1187,12 +1187,12 @@ module.exports = {
 		})
 		return data
 	},
-	
-	listByDealer: async (para) => {
+
+	checkInStatus: async (para) => {
 		let {
 			data
 		} = await request({
-			url: domain.getAPI('listByDealer'),
+			url: domain.getAPI('checkInStatus'),
 			method: "GET",
 			data: para
 			
@@ -1200,9 +1200,15 @@ module.exports = {
 		return data
 	},
 	
-	
-	
-	
-
-	
+	checkIn: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('checkIn'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
 }

@@ -134,8 +134,8 @@ export default {
     async checkLogin(api) {
 		
 		//yuchen 测试 
-		// this.removeSessionKey()
-	   // this.setSessionKey("j8AtsfeLnWnBA1yNIjv5HnQQPvDrE6Rw")
+	   // this.setSessionKey("ACONaxlTf6PaKadoxQkcOVeYG4g8LBBD")
+		
 		
 		await this.checkExpireTime(api)
 		// 先判断微信  session 是否有效

@@ -360,10 +360,13 @@
 				
 				
 			}
+		},
+		{
+			"path": "pages/serviceCode",
+			"style": {
+				
+			}
 		}
-		
-		
-		
 		
 	],
 	"tabBar": {
