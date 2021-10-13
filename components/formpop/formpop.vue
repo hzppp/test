@@ -134,6 +134,13 @@
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
+		<!-- 签到成功 -->
+		<view class="checkin-success-pop" v-if="popName == 'checkin-success-pop'">
+			<view class="success-icon"></view>
+			<view class="p1">签到成功</view>
+			<text class="p2">可以参与抽奖啦</text>
+			<view class="look-coupon-btn" @tap="toDraw">去抽奖</view>
+		</view>
 	</view>
 </template>
 
@@ -238,26 +245,34 @@
 		methods: {
 			  async formShow(name, from = "", obj = {}, title) {
 				this.popName = name
-				this.from = from
-				this.currentObj = obj
-				this.title = title
-				this.smsCode = ''
-				// this.provinceList = this.currentObj.regionList
-				// this.cities = this.provinceList[0].cities
-				this.serialList = this.currentObj.serialGroupList
-				if(this.currentObj && this.currentObj.noSer){
-					 // 不自动选车型
+				if(this.popName == 'checkin-success-pop'){
+					this.isShowFormPop = true;
 				}else{
-				  this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+					this.from = from
+					this.currentObj = obj
+					this.title = title
+					this.smsCode = ''
+					// this.provinceList = this.currentObj.regionList
+					// this.cities = this.provinceList[0].cities
+					
+					this.serialList = this.currentObj.serialGroupList
+					if(this.currentObj && this.currentObj.noSer){
+						// 不自动选车型
+					}else{
+					this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+					}
+					await this.reqProvincecities()
+					this.getpreClue()
 				}
-				await this.reqProvincecities()
-				this.getpreClue()
-				
 			},
 			doPy() {
 				uni.navigateTo({
 					url: '/pages/changanPy'
 				})
+			},
+			//去抽奖
+			toDraw(){
+				this.$emit('subSuccess','draw')
 			},
 			closeBtnClick() {
 				if (this.from == 'activity') {

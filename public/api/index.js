@@ -1188,5 +1188,27 @@ module.exports = {
 		return data
 	},
 
+	checkInStatus: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('checkInStatus'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
 	
+	checkIn: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('checkIn'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
 }
