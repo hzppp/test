@@ -2,6 +2,7 @@
 	<view class="cq_marathon" :style="{ paddingBottom: activityStatus != 1 ? 0 + 'rpx' : paddingBottm + 'rpx' }">
 		<userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand>
 		<view class="activity" v-if="soureDone">
+			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth" style="top: 128rpx"></button>
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动'" :noShowHouse="!!(isApply == 0)">
 			</page-top>
@@ -9,7 +10,7 @@
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
 				<!-- 被邀请页面 -->
-				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 1 && phone">
+				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 0">
 					<view class="be_invite_bg">
 						<image class="invite_avatar" :src="sourceUserAvatar" mode="widthFix"></image>
 						<view class="instructions invite_name_wrap"
@@ -17,7 +18,7 @@
 							>邀请你报名,快来报名吧~</view
 						>
 						<template>
-							<button v-if="phone" class="btn sign_up" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+							<button v-if="!phone" class="btn sign_up" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
 							<button v-else class="btn sign_up" @click="formShow()">报名活动</button>
 						</template>
 					</view>
@@ -26,7 +27,7 @@
 				<view class="inviteInfo" v-else-if="isApply === 0 && activityStatus == 1">
 					<view class="instructions">你还没有报名,报名后才可以参与哦~</view>
 					<template>
-						<button v-if="phone" class="btn onApply" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+						<button v-if="!phone" class="btn onApply" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
 						<button v-else class="btn onApply" @click="formShow()">报名活动</button>
 					</template>
 				</view>
@@ -82,7 +83,7 @@
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
 				<template>
-					<button v-if="phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+					<button v-if="!phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
 					<view v-else class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
 						isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
 					}}</view>
