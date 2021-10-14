@@ -144,11 +144,8 @@ export default {
 	mixins: [shouquan],
 	async onLoad(options) {
 		await login.checkLogin(api)
-		this.lotteryType = options.lotteryType
 		this.sourceUserId = options.sourceUserId || ""
 		this.activityId = options.id || ""
-		this.activityType = options.type || ""
-		this.actSelect = options.actSelect || ""
 		this.nums = options.nums || 0
 
 		// 分享用
@@ -161,7 +158,7 @@ export default {
 		this.cs = cs.substr(0, cs.length - 1)
 		let wxUserInfo = uni.getStorageSync("wxUserInfo")
 		if (wxUserInfo) {
-			this.shareURL = `/pages/cqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}`
+			this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}`
 		}
 		if (app.Interval) {
 			clearInterval(app.Interval)
@@ -379,24 +376,6 @@ export default {
 			this.sourceUserId = ""
 			this.activityId && this.getFission()
 			this.$toast("报名成功,快去参与活动吧~", "none", 2000)
-		},
-		getData() {
-			// 访问活动 记录活动访问次数
-			api.fetchActivityVisit({
-				activityId: this.activityId,
-			})
-
-			let wxUserInfo = uni.getStorageSync("wxUserInfo")
-
-			this.phone = wxUserInfo.mobile
-			if (wxUserInfo) {
-				if (this.lotteryType == "Vouchers") {
-					this.formShowTitle = "领取代金券"
-					this.shareURL = `/pages/lbActivity?${this.cs}`
-				} else {
-					this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`
-				}
-			}
 		},
 		changURl(url) {
 			//D=69&L=G&P=W&A=1&O=66
