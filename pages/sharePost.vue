@@ -301,17 +301,27 @@
 						canvasId: 'myCanvas',
 						success: function(res) {
 							console.log('绘制', res);
-							wx.saveImageToPhotosAlbum({
-								filePath: res.tempFilePath,
-								success(res) {
-									that.$toast('保存成功')
-									console.log(res.errMsg)
+							uni.authorize({
+								scope: 'scope.writePhotosAlbum',
+								success() {
+									uni.saveImageToPhotosAlbum({
+										filePath: res.tempFilePath,
+										success(res) {
+											that.$toast('保存成功')
+											console.log(res.errMsg)
+										},
+										fail(err) {
+											that.$toast('保存失败请稍后再试')
+											console.log(err)
+										}
+									})
 								},
-								fail(err) {
-									that.$toast('保存失败请稍后再试')
-									console.log(err)
+								fail: function(res) {
+									console.log('保存到相册授权失败', res);
+
 								}
 							})
+							
 						},
 						fail: function(res) {
 							console.log('绘制', res);
