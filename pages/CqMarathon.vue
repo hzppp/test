@@ -1,6 +1,6 @@
 <template>
 	<view class="cq_marathon" :style="{ paddingBottom: activityStatus != 1 ? 0 + 'rpx' : paddingBottm + 'rpx' }">
-		<!-- <userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand> -->
+		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<!-- <page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动' " :noShowHouse="sourceUserId">
