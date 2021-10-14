@@ -360,6 +360,15 @@
 				
 				
 			}
+		},
+		{
+			"path": "pages/CqMarathon",
+			"style": {
+				"navigationBarTitleText": "抽奖活动",
+				"enablePullDownRefresh": false
+				
+				
+			}
 		}
 		
 		
