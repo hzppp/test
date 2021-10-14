@@ -1,6 +1,6 @@
 <template>
 	<view class="cq_marathon" :style="{ paddingBottom: activityStatus != 1 ? 0 + 'rpx' : paddingBottm + 'rpx' }">
-		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
+		<!-- <userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand> -->
 		<view class="activity" v-if="soureDone">
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<!-- <page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动' " :noShowHouse="sourceUserId">
@@ -56,40 +56,40 @@
 					<view class="btn finish">活动已结束</view>
 				</view>
 			</view>
-		</view>
-		<image class="content-image" :src="ruleImg" mode="widthFix" lazy-load="false"></image>
-		<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1">
-			<view class="instructions" v-if="isApply == 1">
-				<!-- 已经邀请的人 -->
-				<view class="invitered">
-					<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
-						<image class="invitered__avatar" :src="item.wxHead"></image>
+			<image class="content-image" :src="ruleImg" mode="widthFix" lazy-load="false"></image>
+			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1">
+				<view class="instructions" v-if="isApply == 1">
+					<!-- 已经邀请的人 -->
+					<view class="invitered">
+						<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
+							<image class="invitered__avatar" :src="item.wxHead"></image>
+						</view>
 					</view>
+					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
+					<view class="invitered_count" v-if="nums - inviteCount > 0">还差{{ nums - inviteCount }}位好友报名即可达标</view>
 				</view>
-				<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
-				<view class="invitered_count" v-if="nums - inviteCount > 0">还差{{ nums - inviteCount }}位好友报名即可达标</view>
+				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
+				<view class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
+					isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
+				}}</view>
 			</view>
-			<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
-			<view class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
-				isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
-			}}</view>
-		</view>
-		<uni-popup ref="popup" type="bottom">
-			<view class="shareBtnBackV">
-				<view class="shareBtnV">
-					<view class="shareBtn" @tap="shareHB()">
-						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png"> </image>
-						<view class="text">海报分享</view>
+			<uni-popup ref="popup" type="bottom">
+				<view class="shareBtnBackV">
+					<view class="shareBtnV">
+						<view class="shareBtn" @tap="shareHB()">
+							<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png"> </image>
+							<view class="text">海报分享</view>
+						</view>
+						<button class="shareBtn" open-type="share">
+							<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png"> </image>
+							<view class="text1">分享微信好友</view>
+						</button>
 					</view>
-					<button class="shareBtn" open-type="share">
-						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png"> </image>
-						<view class="text1">分享微信好友</view>
-					</button>
+					<view class="line"></view>
+					<button @tap="shareCancle()">取消</button>
 				</view>
-				<view class="line"></view>
-				<button @tap="shareCancle()">取消</button>
-			</view>
-		</uni-popup>
+			</uni-popup>
+		</view>
 	</view>
 </template>
 
@@ -379,31 +379,6 @@ export default {
 			this.sourceUserId = ""
 			this.activityId && this.getFission()
 			this.$toast("报名成功,快去参与活动吧~", "none", 2000)
-		},
-		changURl(url) {
-			//D=69&L=G&P=W&A=1&O=66
-			if (url.indexOf("D") != -1) {
-				// 新
-				url = url.replace("P", "type")
-				url = url.replace("L", "lotteryType")
-				url = url.replace("D", "id")
-				url = url.replace("G", "grid")
-				url = url.replace("W", "wawaji")
-				url = url.replace("A", "actSelect")
-				url = url.replace("O", "sourceUserId")
-				url = url.replace("V", "Vouchers")
-			} else {
-				// 旧
-				//dd=69&ll=gg&tt=ww&aa=1&ss=66
-				url = url.replace("tt", "type")
-				url = url.replace("ll", "lotteryType")
-				url = url.replace("dd", "id")
-				url = url.replace("gg", "grid")
-				url = url.replace("ww", "wawaji")
-				url = url.replace("aa", "actSelect")
-				url = url.replace("ss", "sourceUserId")
-			}
-			return url
 		},
 	},
 }
