@@ -3,25 +3,32 @@
 		<userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand>
 		<view class="activity" v-if="soureDone">
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
-			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动'" :noShowHouse="!!(isApply == 0)"> </page-top>
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动'" :noShowHouse="!!(isApply == 0)">
+			</page-top>
 			<form-pop ref="formpop" @subSuccess="subSuccess()"></form-pop>
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
 				<!-- 被邀请页面 -->
-				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 0">
+				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 1 && phone">
 					<view class="be_invite_bg">
 						<image class="invite_avatar" :src="sourceUserAvatar" mode="widthFix"></image>
 						<view class="instructions invite_name_wrap"
 							><text class="source_user_name">{{ sourceUserName }}</text
 							>邀请你报名,快来报名吧~</view
 						>
-						<view class="btn sign_up" @click="formShow()">报名活动</view>
+						<template>
+							<button v-if="phone" class="btn sign_up" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+							<button v-else class="btn sign_up" @click="formShow()">报名活动</button>
+						</template>
 					</view>
 				</view>
 				<!-- 未报名 -->
 				<view class="inviteInfo" v-else-if="isApply === 0 && activityStatus == 1">
 					<view class="instructions">你还没有报名,报名后才可以参与哦~</view>
-					<view class="btn onApply" @click="formShow()">报名活动</view>
+					<template>
+						<button v-if="phone" class="btn onApply" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+						<button v-else class="btn onApply" @click="formShow()">报名活动</button>
+					</template>
 				</view>
 				<!-- 已报名 -->
 				<view class="inviteInfo" v-else-if="isApply === 1 && activityStatus == 1">
@@ -56,6 +63,7 @@
 				</view>
 			</view>
 			<image class="content-image" :src="ruleImg" mode="widthFix" lazy-load="false"></image>
+			<!-- 底部按钮区域S -->
 			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1">
 				<view class="instructions" v-if="isApply == 1">
 					<!-- 已经邀请的人 -->
@@ -73,10 +81,14 @@
 					<view class="invitered_count" v-if="nums - inviteCount > 0">还差{{ nums - inviteCount }}位好友报名即可达标</view>
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
-				<view class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
-					isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
-				}}</view>
+				<template>
+					<button v-if="phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+					<view v-else class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
+						isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
+					}}</view>
+				</template>
 			</view>
+			<!-- 底部按钮区域E -->
 			<uni-popup ref="popup" type="bottom">
 				<view class="shareBtnBackV">
 					<view class="shareBtnV">
@@ -254,6 +266,22 @@ export default {
 		}
 	},
 	methods: {
+		async getPhoneNumber(e) {
+			let { detail = {} } = e
+			if (detail.iv) {
+				try {
+					let { data } = await api.decryptPhone(detail.encryptedData, detail.iv)
+					if (data && data.phoneNumber) {
+						uni.setStorageSync("userPhone", data.phoneNumber)
+						this.phone = data.phoneNumber
+					}
+				} catch (err) {
+					this.$toast("手机号码授权失败", "none", 1500)
+					console.error(err)
+				}
+			}
+			this.formShow()
+		},
 		/**
 		 * @param {String} sTime
 		 * @param {String} eTime
@@ -276,6 +304,7 @@ export default {
 				const { code, data } = await api.getClueInfo({ activityId: this.activityId })
 				if (code == 1 && data) {
 					this.isApply = data.isApply
+					console.log("🚩CqMarathon @ ❨279❩🌸,%c 判断用户是否留资过:", "color:#f6e75a", JSON.parse(JSON.stringify(data)))
 				}
 			} catch (error) {
 				console.error(error)
@@ -302,6 +331,7 @@ export default {
 					type,
 				})
 				if (code == 1 && data) {
+					console.log("🚩CqMarathon @ ❨322❩🌸,%c 邀请人信息:", "color:#f6e75a", JSON.parse(JSON.stringify(data)))
 					if (data.nickName.length > 6) {
 						this.sourceUserName = data.nickName.substring(0, 6) + "..."
 					} else {
@@ -436,14 +466,14 @@ export default {
 		padding: 0 50rpx;
 		.invitered {
 			overflow: hidden;
-			margin-left:-18.75rpx;
-			margin-right:-18.75rpx;
+			margin-left: -18.75rpx;
+			margin-right: -18.75rpx;
 		}
 		.invitered_item {
 			width: 100rpx;
 			height: 100rpx;
 			float: left;
-			padding:0 18.75rpx;
+			padding: 0 18.75rpx;
 			margin-bottom: 30rpx;
 		}
 		.invitered_count {
@@ -503,8 +533,8 @@ export default {
 	.bottom_sigin_text {
 		color: #7f7f7f;
 	}
-	.instructions{
-		padding:0 20rpx;
+	.instructions {
+		padding: 0 20rpx;
 	}
 }
 .content-image {
