@@ -1,10 +1,9 @@
 <template>
 	<view class="cq_marathon" :style="{ paddingBottom: activityStatus != 1 ? 0 + 'rpx' : paddingBottm + 'rpx' }">
-		<!-- <userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand> -->
+		<userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand>
 		<view class="activity" v-if="soureDone">
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
-			<!-- <page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动' " :noShowHouse="sourceUserId">
-			</page-top> -->
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动'" :noShowHouse="!!(isApply == 0)"> </page-top>
 			<form-pop ref="formpop" @subSuccess="subSuccess()"></form-pop>
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
@@ -61,7 +60,12 @@
 				<view class="instructions" v-if="isApply == 1">
 					<!-- 已经邀请的人 -->
 					<view class="invitered">
-						<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
+						<view
+							class="invitered_item"
+							v-for="(item, index) in inviteredList.slice(0, 5)"
+							@click="!!!item.userId && shareChoise()"
+							:key="index"
+						>
 							<image class="invitered__avatar" :src="item.wxHead"></image>
 						</view>
 					</view>
@@ -373,7 +377,14 @@ export default {
 		shareBtnClick() {
 			wx.aldstat.sendEvent("活动分享点击")
 		},
-
+		getData() {
+			// 访问活动 记录活动访问次数
+			api.fetchActivityVisit({
+				activityId: this.activityId,
+			})
+			let wxUserInfo = uni.getStorageSync("wxUserInfo")
+			this.phone = wxUserInfo.mobile
+		},
 		subSuccess() {
 			this.isApply = 1
 			this.sourceUserId = ""
