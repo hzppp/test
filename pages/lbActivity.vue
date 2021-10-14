@@ -355,7 +355,7 @@
 					this.getCheckInStatus();
 					this.$refs.formpop.formShow('checkin-success-pop') 
 				}else{
-
+					that.$toast(res.msg)
 				}
 			},
 			actSelect1() {
