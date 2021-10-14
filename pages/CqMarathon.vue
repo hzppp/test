@@ -9,7 +9,7 @@
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
 				<!-- 被邀请页面 -->
-				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1">
+				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 0">
 					<view class="be_invite_bg">
 						<image class="invite_avatar" :src="sourceUserAvatar" mode="widthFix"></image>
 						<view class="instructions invite_name_wrap"
