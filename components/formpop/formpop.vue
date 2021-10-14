@@ -481,7 +481,7 @@
 				} else if (ly == 'activity' && lydx.from != 'lbactivity') {
 					source = 1
 					sourceId = lydx.id
-				} else if (ly = 'lbactivity' || lydx.from == 'lbactivity') {
+				} else if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
 					source = 5
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
@@ -497,6 +497,7 @@
 				if (!this.ifcanSubmit()) {
 					return
 				}
+
 				let pam = {
 					mobile: this.phone,
 					name: this.name,
