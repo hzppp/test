@@ -30,12 +30,14 @@
 						<!-- 已经邀请的人的头像 -->
 						<view class="invitered">
 							<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
-								<image class="invitered__avatar" :src="item.avatarUrl"></image>
+								<image class="invitered__avatar" :src="item.wxHead"></image>
 							</view>
 						</view>
 						<view class="invitered_count">已有{{ inviteCount }}位好友报名></view>
 					</view>
-					<view class="btn" @click="isComplete !== 1 && shareChoise()">{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}</view>
+					<view class="btn" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
+						isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名"
+					}}</view>
 				</view>
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
@@ -61,10 +63,11 @@
 				<!-- 已经邀请的人 -->
 				<view class="invitered">
 					<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
-						<image class="invitered__avatar" :src="item.avatarUrl"></image>
+						<image class="invitered__avatar" :src="item.wxHead"></image>
 					</view>
 				</view>
-				<view class="invitered_count">已有{{ inviteCount }}位好友报名</view>
+				<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
+				<view class="invitered_count" v-if="nums - inviteCount > 0">还差{{ nums - inviteCount }}位好友报名即可达标</view>
 			</view>
 			<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
 			<view class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
@@ -313,7 +316,7 @@ export default {
 			try {
 				//邀请记录list
 				let tempArr = []
-				let emptyObj = { avatarUrl: this.default_avatar }
+				let emptyObj = { wxHead: this.default_avatar }
 				let nums = this.nums
 				const res = await api.getInviteRecordList({
 					pageNo: 1,
