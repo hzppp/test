@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
+const CUR_ENV = ENV.RELEASE;
 const version = 1034;
 
 
@@ -27,8 +27,8 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	// changan:"https://tccar.pcauto.com.cn",
-	changan:'https://devqd-changan.pcauto.com.cn',
+	changan:"https://tccar.pcauto.com.cn",
+	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
 	UPC:'https://qa-upc2.pc.com.cn',
@@ -285,12 +285,8 @@ const config = {
 		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`,
 		//根据经销商查询车系
 		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
-		//活动扫码签到
-		checkIn:`${DOMAIN.changan}/api/xcx/activity/checkIn`,
-		//查询用户的活动签到状态
-		checkInStatus:`${DOMAIN.changan}/api/xcx/activity/checkIn/status`,
-		// 客服url
-		serversCode: `${DOMAIN.changan}/wap/#/serversCode`,
+		
+		
 		
 	},
 	getAPI(key) {

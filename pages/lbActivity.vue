@@ -29,7 +29,7 @@
 					<button class="over-btn" hover-class="none">活动已结束</button>
 				</view>
 				<view class="type-a" v-else>
-					<template v-if="activityType && activityType=='wawaji' || activityType=='checkIn'">
+					<template v-if="activityType && activityType=='wawaji'">
 						<template v-if="isApply && actSelect == 2 && isActStart ">
 							<view class="enroll-btn actSelectOneBtn" @click="actSelect1()">
 								<view class="selectTitle1">车展现场活动</view>
@@ -54,28 +54,14 @@
 							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
-							
 							<template v-if="!isActStart && isApply">
 								<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
 							</template>
 							<template v-else>
-
-									<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-										@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
-									<template v-else>
-										<!-- 如果是到店签到活动 -->
-										<template v-if="activityType=='checkIn'">
-											<!-- 如果未留咨，则取留咨 -->
-											<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply && !ischeckIn">报名活动</button>
-											<!-- 如果已经留咨但未签到 ，则取扫码签到 -->
-											<button class="enroll-btn enroll-btn2" @tap="scanCode" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
-											<!-- 如果已经留咨且已签到 ，则去抽奖 -->
-											<button class="enroll-btn enroll-btn2" @tap="formShow" v-if="isApply && ischeckIn">去抽奖</button>
-										</template>	
-										<button class="enroll-btn enroll-btn2" @tap="formShow"
-										v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
-									</template>
-											
+								<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+									@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+								<button class="enroll-btn enroll-btn2" @tap="formShow"
+									v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
 							</template>
 						</template>
 					</template>
@@ -138,7 +124,6 @@
 				isActStart: false,
 				shareURL: '',
 				isApply: 0, //是否留咨过
-				ischeckIn:0, //是否签到
 				lotteryType: '', //转盘类型
 				actSelect: '' ,// 玩法（0   线下   1 线上抽奖  2 both）
 				formShowTitle:'我要参与抽奖'
@@ -204,12 +189,7 @@
 				} = await api.getActivityContent(this.activityId)
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
-				//是否留咨
 				this.getFission()
-				//如果是到店签到活动，判断是否签到
-				if(this.activityType == "checkIn"){
-					this.getCheckInStatus()
-				}
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
@@ -248,7 +228,6 @@
 			})
 
 		},
-		
 		onHide() {
 			if (app.Interval) {
 				clearInterval(app.Interval)
@@ -275,21 +254,20 @@
 			}
 		},
 		methods: {
-			//到店签到活动，判断是否签到
-			async getCheckInStatus(){
-				let checkInStatus = await api.checkInStatus({activityId: this.activityId})
-				console.log("checkInStatus",checkInStatus)
-				if (checkInStatus && checkInStatus.code==1 && checkInStatus.data) {
-					this.ischeckIn = checkInStatus.data.status==1?true:false
-				}
-			},
 			async getFission() {
+				console.log(1)
+				// let {
+				// 	data,
+				// 	code
+				// } = await api.getFission({
+				// 	activityId: this.activityId
+				// })
+				
 				let clueInfo = await api.getClueInfo({
 					activityId: this.activityId
 				})
 				if (clueInfo && clueInfo.data) {
 					let isApply = clueInfo.data.isApply
-					// for 本地测试
 					this.isApply = isApply;
 					if(isApply && !this.isActStart){
 						this.formShowTitle = "已报名,活动未开始"
@@ -332,32 +310,6 @@
 				this.soureDone = true
 
 			},
-			//扫码签到
-			async scanCode(){
-				let that=this;
-				uni.scanCode({
-				    success: function (res) {
-						//调用签到接口
-						if(res.result){
-							that.checkIn(res.result)
-						}	
-					},
-					fail:function(err){
-						that.$toast(err)
-					}
-				});
-			},
-			//活动扫码签到
-			async checkIn(code){
-				let res = await api.checkIn({code})
-				if(res.code==1){
-					//弹出签到成功弹窗
-					this.getCheckInStatus();
-					this.$refs.formpop.formShow('checkin-success-pop') 
-				}else{
-
-				}
-			},
 			actSelect1() {
 				uni.navigateTo({
 					url: `/pages/wawaji?activityId=${this.content.id}`
@@ -378,7 +330,7 @@
 				wx.aldstat.sendEvent('报名活动')
 				// #endif
 				console.log("this.isApply", this.isApply)
-				if (this.activityType == 'wawaji' || this.activityType == 'checkIn') {
+				if (this.activityType == 'wawaji') {
 					if (!this.isApply) {
 						// #ifdef MP-WEIXIN
 						this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
@@ -391,12 +343,12 @@
 						if (this.actSelect == 1) {
 							uni.reLaunch({
 								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL) + "&activityType="+this.activityType
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							})
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL) + "&activityType="+this.activityType
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							})
 						} else {
 							uni.navigateTo({
@@ -476,12 +428,8 @@
 				return number > 9 ? number : '0' + number
 			},
 			
-			subSuccess(type){
-				if(type=='draw'){
-					this.formShow()
-				}else{
-					this.getFission()
-				}
+			subSuccess(){
+				this.getFission()
 			},
 			getData() {
 				// 访问活动 记录活动访问次数
