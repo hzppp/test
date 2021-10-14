@@ -1,10 +1,10 @@
 <template>
 	<view class="cq_marathon" :style="{ paddingBottom: activityStatus != 1 ? 0 + 'rpx' : paddingBottm + 'rpx' }">
-		<!-- <userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand> -->
+		<userBand :cancleShow="sourceUserId" @loginSuccess="getData"></userBand>
 		<view class="activity" v-if="soureDone">
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
-			<!-- <page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动' " :noShowHouse="sourceUserId">
-			</page-top> -->
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动' " :noShowHouse="sourceUserId">
+			</page-top>
 			<form-pop ref="formpop" @subSuccess="subSuccess()"></form-pop>
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
@@ -420,16 +420,20 @@ export default {
 		color: #00c0ff;
 	}
 	.instructions {
-		width: 100%;
 		text-align: center;
 		color: #7f7f7f;
+		padding: 0 50rpx;
 		.invitered {
-			display: flex;
-			justify-content: flex-start;
-			flex-wrap: wrap;
-			width: 100%;
+			overflow: hidden;
+			margin-left:-18.75rpx;
+			margin-right:-18.75rpx;
 		}
 		.invitered_item {
+			width: 100rpx;
+			height: 100rpx;
+			float: left;
+			padding:0 18.75rpx;
+			margin-bottom: 30rpx;
 		}
 		.invitered_count {
 			// margin-top: 40rpx;
@@ -438,7 +442,7 @@ export default {
 			overflow: hidden;
 			width: 100rpx;
 			height: 100rpx;
-			margin: 0 0 30rpx 31rpx;
+			margin: 0 0 30rpx 0rpx;
 			background-color: #fff;
 			border-radius: 50%;
 			border: #f8884d 2rpx solid;
@@ -449,7 +453,7 @@ export default {
 		}
 	}
 	.btn {
-		width: calc(100% - 40rpx);
+		width: 650rpx;
 		height: 92rpx;
 		margin: 0 auto;
 		margin-top: 29rpx;
@@ -464,6 +468,10 @@ export default {
 		&.onApply {
 			background-color: #ee2758;
 			margin-top: 20rpx;
+			width: 688rpx;
+			height: 88rpx;
+			line-height: 88rpx;
+			border-radius: 44rpx;
 		}
 		&.sign_up {
 			background-color: #ee2758;
@@ -483,6 +491,9 @@ export default {
 	box-sizing: border-box;
 	.bottom_sigin_text {
 		color: #7f7f7f;
+	}
+	.instructions{
+		padding:0 20rpx;
 	}
 }
 .content-image {
