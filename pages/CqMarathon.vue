@@ -363,7 +363,7 @@ export default {
 				let nums = this.nums
 				const res = await api.getInviteRecordList({
 					pageNo: 1,
-					pageSize: nums,
+					pageSize: 9999,
 					activityId: this.activityId,
 				})
 				let row = res.rows || []
@@ -379,6 +379,7 @@ export default {
 					this.isComplete = true
 				}
 				this.inviteCount = row.length
+				console.log('🚩CqMarathon @ ❨382❩🌸,%c 已经被邀请的人数:','color:#f6e75a', JSON.parse(JSON.stringify(row)))
 				this.inviteredList = tempArr
 			} catch (error) {
 				console.error(error)
