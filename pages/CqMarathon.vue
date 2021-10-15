@@ -375,7 +375,7 @@ export default {
 					// 有邀请的人 && 替换默认的图
 					tempArr.splice(0, row.length, ...row)
 				}
-				if (row.length == nums) {
+				if (row.length >= nums) {
 					this.isComplete = true
 				}
 				this.inviteCount = row.length
