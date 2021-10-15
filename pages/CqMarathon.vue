@@ -25,7 +25,7 @@
 				</view>
 				<!-- 未报名 -->
 				<view class="inviteInfo" v-else-if="isApply === 0 && activityStatus == 1">
-					<view class="instructions">你还没有报名,报名后才可以参与哦~</view>
+					<view class="instructions did_not_sign_up">你还没有报名,报名后才可以参与哦~</view>
 					<template>
 						<button v-if="!phone" class="btn onApply" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
 						<button v-else class="btn onApply" @click="formShow()">报名活动</button>
@@ -37,20 +37,25 @@
 						<!-- 已经邀请的人的头像 -->
 						<view class="invitered">
 							<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
-								<image class="invitered__avatar" :src="item.wxHead"></image>
+								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
 							</view>
 						</view>
-						<view class="invitered_count">已有{{ inviteCount }}位好友报名></view>
+						<template>
+							<view class="invitered_count" v-if="inviteCount > 0">已有{{ inviteCount }}位好友报名></view>
+							<view class="invitered_count" v-else>邀请好友报名可参与门票抽奖哦~</view>
+						</template>
 					</view>
-					<view class="btn" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
-						isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名"
-					}}</view>
+					<view
+						:class="['btn', isComplete ? '' : 'not_up_to_standard']"
+						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
+						>{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}</view
+					>
 				</view>
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
 					<view class="instructions">
 						<view>朋友你来早啦,活动还为开始哦~</view>
-						<view>活动时间:{{ activityTimeRang }}</view>
+						<view class="start_time">活动时间:{{ activityTimeRang }}</view>
 					</view>
 					<view class="btn finish">活动未开始</view>
 				</view>
@@ -68,18 +73,21 @@
 			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1">
 				<view class="instructions" v-if="isApply == 1">
 					<!-- 已经邀请的人 -->
-					<view class="invitered">
+					<view class="invitered" v-if="inviteCount > 0">
 						<view
 							class="invitered_item"
 							v-for="(item, index) in inviteredList.slice(0, 5)"
 							@click="!!!item.userId && shareChoise()"
 							:key="index"
 						>
-							<image class="invitered__avatar" :src="item.wxHead"></image>
+							<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
 						</view>
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
-					<view class="invitered_count" v-if="nums - inviteCount > 0">还差{{ nums - inviteCount }}位好友报名即可达标</view>
+					<template>
+						<view class="invitered_count" v-if="inviteCount == 0">邀请好友报名可参与门票抽奖哦~</view>
+						<view class="invitered_count" v-else>还差{{ nums - inviteCount }}位好友报名即可达标</view>
+					</template>
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
 				<template>
@@ -432,6 +440,7 @@ export default {
 	min-height: 100vh;
 	background-color: #f5f5f5;
 	padding-bottom: 0;
+	font-size: 24rpx;
 }
 .inviteInfo {
 	width: 100%;
@@ -487,11 +496,20 @@ export default {
 			margin: 0 0 30rpx 0rpx;
 			background-color: #fff;
 			border-radius: 50%;
-			border: #f8884d 2rpx solid;
 			box-sizing: border-box;
+			&.had_border {
+				border: #f8884d 2rpx solid;
+			}
 		}
 		&.invite_name_wrap {
 			margin-top: 30rpx;
+			font-size: 30rpx;
+		}
+		.did_not_sign_up {
+			font-size: 30rpx;
+		}
+		.start_time {
+			font-size: 32rpx;
 		}
 	}
 	.btn {
@@ -521,6 +539,9 @@ export default {
 		}
 		&.finish {
 			background-color: #9a9a9a;
+		}
+		&.not_up_to_standard {
+			background-color: #ee2758;
 		}
 	}
 }
