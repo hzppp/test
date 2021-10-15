@@ -54,14 +54,14 @@
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
 					<view class="instructions">
-						<view>朋友你来早啦,活动还为开始哦~</view>
+						<view class="not_started">朋友你来早啦,活动还未开始哦~</view>
 						<view class="start_time">活动时间:{{ activityTimeRang }}</view>
 					</view>
 					<view class="btn finish">活动未开始</view>
 				</view>
 				<!-- 活动已经结束 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 2">
-					<view class="instructions">
+					<view class="instructions finished">
 						<view>朋友你来晚啦,活动已经结束了</view>
 						<view>答应我下一个活动一定要早点来看我哦~</view>
 					</view>
@@ -70,7 +70,7 @@
 			</view>
 			<image class="content-image" :src="ruleImg" mode="widthFix" lazy-load="false"></image>
 			<!-- 底部按钮区域S -->
-			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1">
+			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1 && !isComplete">
 				<view class="instructions" v-if="isApply == 1">
 					<!-- 已经邀请的人 -->
 					<view class="invitered" v-if="inviteCount > 0">
@@ -505,11 +505,17 @@ export default {
 			margin-top: 30rpx;
 			font-size: 30rpx;
 		}
+		&.finished {
+			font-size: 30rpx;
+		}
 		.did_not_sign_up {
 			font-size: 30rpx;
 		}
 		.start_time {
 			font-size: 32rpx;
+		}
+		.not_started {
+			font-size: 28rpx;
 		}
 	}
 	.btn {
@@ -539,6 +545,7 @@ export default {
 		}
 		&.finish {
 			background-color: #9a9a9a;
+			width: 568rpx;
 		}
 		&.not_up_to_standard {
 			background-color: #ee2758;
