@@ -298,8 +298,8 @@ export default {
 				this.queryingUserInfor()
 			}
 			this.getInviteredInfo()
-			this.headBg = data.picUrl
-			this.ruleImg = data.detailPic
+			this.headBg = data.detailPic
+			this.ruleImg = data.activityPic
 			this.phone = uni.getStorageSync("userPhone")
 			this.content = data || {}
 			console.log("🚩CqMarathon.vue @ ❨227❩🌸,%c this.content:", "color:#f6e75a", this.content)
