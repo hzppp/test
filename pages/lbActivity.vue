@@ -59,16 +59,15 @@
 								<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
 							</template>
 							<template v-else>
-
 									<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
 										@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
 									<template v-else>
 										<!-- 如果是到店签到活动 -->
 										<template v-if="activityType=='checkIn'">
 											<!-- 如果未留咨，则取留咨 -->
-											<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply && !ischeckIn">报名活动</button>
+											<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply">报名活动</button>
 											<!-- 如果已经留咨但未签到 ，则取扫码签到 -->
-											<button class="enroll-btn enroll-btn2" @tap="scanCode" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
+											<button class="enroll-btn enroll-btn2 enroll-btn-gray" @tap="scanCode" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
 											<!-- 如果已经留咨且已签到 ，则去抽奖 -->
 											<button class="enroll-btn enroll-btn2" @tap="formShow" v-if="isApply && ischeckIn">去抽奖</button>
 										</template>	
@@ -165,6 +164,7 @@
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType = options.type || ''
+			console.log("activityType",this.activityType)
 			this.actSelect = options.actSelect || ''
 			// 分享用
 			let cs = ''
@@ -355,7 +355,7 @@
 					this.getCheckInStatus();
 					this.$refs.formpop.formShow('checkin-success-pop') 
 				}else{
-					that.$toast(res.msg)
+					this.$toast(res.msg)
 				}
 			},
 			actSelect1() {
@@ -476,7 +476,7 @@
 				return number > 9 ? number : '0' + number
 			},
 			
-			subSuccess(type){
+			async subSuccess(type){
 				if(type=='draw'){
 					this.formShow()
 				}else{
@@ -702,10 +702,11 @@
 				border-radius: 44rpx;
 				
 				&.enroll-btn2 {
-					width: 420rpx;
-						
+					width: 420rpx;	
 				}
-				
+				&.enroll-btn-gray{
+					background: #9e9e9e;
+				}
 				
 			}
 			.enroll-btn3 {

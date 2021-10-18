@@ -244,6 +244,7 @@
 		},
 		methods: {
 			  async formShow(name, from = "", obj = {}, title) {
+				  console.log("obj",obj)
 				this.popName = name
 				if(this.popName == 'checkin-success-pop'){
 					this.isShowFormPop = true;
@@ -535,7 +536,7 @@
 				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
-					console.log(ly + data)
+					console.log("成功留资",ly ,lydx.from,lydx.activityType)
 					if ((ly == 'lbactivity' || lydx.from == 'lbactivity') && lydx.isActStart) {
 						if (lydx.activityType == 'wawaji') {
 							if (lydx.actSelect == 0) {
@@ -564,6 +565,8 @@
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 										.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
 								})
+							}else if(lydx.activityType == 'checkIn'){
+								this.popName = 'checkin-success-pop'
 							} else {
 								uni.reLaunch({
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
@@ -574,6 +577,12 @@
 						}
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity' 
+
+						if(lydx.activityType == 'checkIn'){
+							this.$emit('subSuccess')
+							
+						}
+						
 						//跳转抽奖
 						// this.popName = 'lbactivity'
 						// let url = '/pages/lotteryPage?activityId=' + lydx.id
