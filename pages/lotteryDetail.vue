@@ -47,7 +47,7 @@ export default {
   name: "lotteryDetail",
   data() {
     return {
-      detailInfo: {},
+      detailInfo: {}
     }
   },
   filters: {
@@ -92,8 +92,7 @@ export default {
         uni.navigateTo({
             url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
         })
-     
-      }      
+      }         
   }
 }
 </script>

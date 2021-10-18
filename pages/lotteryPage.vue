@@ -180,6 +180,14 @@
 
 		</uni-popup>
 
+
+
+		<!-- 绘图用 -->
+		<view style="position: absolute; top: 10px;z-index:-1 ; visibility: hidden;">
+			<canvas v-if="canvasshow" id="myCanvas" canvas-id="myCanvas"
+				style="margin-top: 100rpx;width: 90px;height: 117px;position:fixed;left:100%;"></canvas>
+		</view>
+
 		<view class="loading" v-if="!bgImgLoaded"></view>
 
 	</view>
@@ -234,7 +242,6 @@
 				shareUrl: '',
 				isIOS: false, 
 				lotteryType: '',
-				activityType:"",
 				shareURL: '',
 				sharePosterPic: '',
 				buttons: [{
@@ -284,7 +291,6 @@
 			// #endif
 			this.shareURL = decodeURIComponent(options.shareURL)
 			this.lotteryType = options.lotteryType
-			this.activityType = options.activityType
 			this.showDialogL = false;
 			this.GirdShowDialogL = false;
 			this.prizes = []
@@ -351,7 +357,7 @@
 			}
 
 			this.lotteryActInfo.winnerRecords.reverse()
-			
+
 			if (!(this.lotteryActInfo.isApply)) {
 				//跳到留资页
 				console.log('this.lotteryActInfo.isApply', this.lotteryActInfo.isApply)
@@ -361,7 +367,6 @@
 					title: '您暂未留资',
 					icon: "none"
 				})
-				return;
 				setTimeout(() => {
 					uni.reLaunch({
 						url
@@ -1463,6 +1468,7 @@
 							box-sizing: border-box;
 							color: #FFF4CC;
 						}
+
 						&.right {
 							right: 30rpx;
 							border: #FFF4CC 1px;

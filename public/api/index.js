@@ -1187,7 +1187,34 @@ module.exports = {
 		})
 		return data
 	},
-
+	
+	/**
+	 * 获取用户基本信息
+	 * @param {Object} para
+	 * @param {Number} para.id 用户id 
+	 * @param {Number} para.type 登录类型: 1微信 2抖音 3支付宝
+	 */
+	 queryingUserInfor: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('queryingUserInfor'),
+			method: "GET",
+			data: para
+		})
+		return data
+	},
+	listByDealer: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('listByDealer'),
+			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
 	checkInStatus: async (para) => {
 		let {
 			data
@@ -1211,4 +1238,9 @@ module.exports = {
 		})
 		return data
 	},
+	
+	
+	
+
+	
 }

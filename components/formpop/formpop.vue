@@ -254,7 +254,6 @@
 					this.smsCode = ''
 					// this.provinceList = this.currentObj.regionList
 					// this.cities = this.provinceList[0].cities
-					
 					this.serialList = this.currentObj.serialGroupList
 					if(this.currentObj && this.currentObj.noSer){
 						// 不自动选车型
@@ -496,7 +495,7 @@
 				} else if (ly == 'activity' && lydx.from != 'lbactivity') {
 					source = 1
 					sourceId = lydx.id
-				} else if (ly = 'lbactivity' || lydx.from == 'lbactivity') {
+				} else if (ly == 'lbactivity' || lydx.from == 'lbactivity') {
 					source = 5
 					sourceId = lydx.id
 				} else if (ly == 'serial') {
@@ -505,10 +504,14 @@
 				} else if (ly == 'dealer') {
 					source = 3
 					sourceId = lydx.id || lydx.dealerId
+				} else if (ly == 'marathon') {
+					source = 5
+					sourceId = lydx.id
 				}
 				if (!this.ifcanSubmit()) {
 					return
 				}
+
 				let pam = {
 					mobile: this.phone,
 					name: this.name,
@@ -584,6 +587,9 @@
 					}
 					if (ly == 'coupon') {
 						popname = 'coupon-success-pop'
+					} else if(ly === 'marathon') {
+						popname = ''
+						this.isShowFormPop = false
 					} else {
 						popname = 'form-success-pop'
 					}
