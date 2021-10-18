@@ -120,26 +120,26 @@
 				<view class="instructions" v-if="isApply == 1">
 					<view class="invitered">
 						<!--  #ifdef MP-WEIXIN  -->
-						<view
-							class="invitered_item"
-							v-for="(item, index) in inviteredList.slice(0, 5)"
-							@click="!!!item.userId && shareChoise()"
-							:key="index"
-						>
-							<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+						<view v-if="content.sharePosterPic">
+							<view
+								class="invitered_item"
+								v-for="(item, index) in inviteredList.slice(0, 5)"
+								@click="!!!item.userId && shareChoise()"
+								:key="index"
+							>
+								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+							</view>
 						</view>
-						<!-- #endif -->
-						<!--  #ifndef MP-WEIXIN  -->
-						<button
-							class="invitered_item btn_share"
-							v-for="(item, index) in inviteredList.slice(0, 5)"
-							@click="!!!item.userId && shareBtnClick()"
-							:key="index"
-							hover-class="none"
-							:open-type="[!!!item.userId ? 'share' : '']"
-						>
-							<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
-						</button>
+						<view v-else>
+							<button
+								class="invitered_item btn_share"
+								v-for="(item, index) in inviteredList.slice(0, 5)"
+								:key="index"
+								:open-type="[!!!item.userId ? 'share' : '']"
+							>
+								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+							</button>
+						</view>
 						<!-- #endif -->
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
@@ -152,9 +152,14 @@
 				<!--  #ifdef MP-WEIXIN  -->
 				<template>
 					<button v-if="!phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
-					<view v-else class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
-						isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
-					}}</view>
+					<button
+						v-else
+						class="btn bottom"
+						:open-type="[content.sharePosterPic ? '' : 'share']"
+						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
+					>
+						{{ isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
+					</button>
 				</template>
 				<!-- #endif -->
 
@@ -296,7 +301,9 @@ export default {
 			let nowDate = new Date().getTime()
 			let startTime = new Date(data.startTime.replace(/-/g, "/")).getTime()
 			let endTime = new Date(data.endTime.replace(/-/g, "/")).getTime()
-
+			console.log("🚩CqMarathon @ ❨299❩🌸,%c nowDate:", "color:#f6e75a", nowDate)
+			console.log("🚩CqMarathon.vue @ ❨300❩🌸,%c startTime:", "color:#f6e75a", startTime)
+			console.log("🚩CqMarathon.vue @ ❨301❩🌸,%c endTime:", "color:#f6e75a", endTime)
 			if (startTime > nowDate) {
 				this.activityStatus = 0
 			} else if (endTime < nowDate) {
