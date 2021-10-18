@@ -144,7 +144,7 @@
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
 					<template>
-						<view class="invitered_count" @click="goInviteRecord">还差{{ nums - inviteCount  }}位好友报名即可达标</view>
+						<view class="invitered_count" @click="goInviteRecord">还差{{ nums - inviteCount }}位好友报名即可达标</view>
 					</template>
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
@@ -289,11 +289,23 @@ export default {
 			this.activityId && this.getFission()
 			let { data = {} } = await api.getActivityContent(this.activityId)
 			!data && (data = {})
-			if (!!data && data.status == 0) {
+			if (!!data) {
 				this.activityTimeRang = this.formatTime(data.startTime, data.endTime)
 			}
 
-			this.activityStatus = data.status
+			let nowDate = new Date().getTime()
+			let startTime = new Date(data.startTime.replace(/-/g, "/")).getTime()
+			let endTime = new Date(data.endTime.replace(/-/g, "/")).getTime()
+
+			if (startTime > nowDate) {
+				this.activityStatus = 0
+			} else if (endTime < nowDate) {
+				this.activityStatus = 2
+			} else {
+				this.activityStatus = 1
+			}
+
+			// this.activityStatus = data.status
 			if (options.sourceUserId) {
 				this.queryingUserInfor()
 			}
@@ -632,7 +644,7 @@ export default {
 			align-items: center;
 			justify-content: center;
 			._sp {
-				font-size:30rpx;
+				font-size: 30rpx;
 				margin-left: 10rpx;
 			}
 		}
