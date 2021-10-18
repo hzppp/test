@@ -662,7 +662,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 ){
+						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
 							   // 跳转到本喜爱但不是活动页
 							   api.fetchActivityVisit({
 							   	'activityId': item.id
