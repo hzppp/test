@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE;
-const version = 1034;
+const CUR_ENV = ENV.TEST;
+const version = 1033;
 
 
 
@@ -272,7 +272,7 @@ const config = {
 		// 娃娃机-二维码核销
 		wwjVerify: `${DOMAIN.changan}/api/xcx/wawaji/verify`,
 		// 生成微信二维码
-		createWxQrCode: `${DOMAIN.changan}/api/xcx/base/createWxQrCode`,
+		createWxQrCode: `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode`,
 		// 订阅消息
 		subscribe: `${DOMAIN.changan}/api/xcx/subscribe/add`,
 		//检查是否订阅
@@ -285,6 +285,9 @@ const config = {
 		redStatus:`${DOMAIN.changan}/api/xcx/redPacket/status`,
 		//根据经销商查询车系
 		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
+		//查询用户基本信息
+		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`
+		
 		
 		
 		

@@ -57,7 +57,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxe6ffa5dceb3b003b",
+        "appid" : "wxb36fb5205e5afb36",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,
@@ -82,8 +82,8 @@
         "appid" : "ttf56383de6a5b35b901",
         "setting" : {
             "minified" : true,
-            "postcss" : true,
-            "es6" : true
+            "postcss" : false,
+            "es6" : false
         }
     },
     "uniStatistics" : {

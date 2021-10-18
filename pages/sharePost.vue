@@ -135,8 +135,10 @@
 
 			async drawWxQrCode() {
 				var that = this  
-				let page = 'pages/lbActivity'
-				this.scene1 =this.scene1.replace('/pages/lbActivity?','')
+				let page = this.scene1.split('?')[0]
+				page = page.slice(0,1) == '/' ? page.substring(1,page.length):page;
+				
+				this.scene1 =this.scene1.split('?')[1]
 				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
 				
 				{
@@ -147,7 +149,7 @@
 					let arr = item.split('=')
 					if(arr){
 						console.log('array',arr[0],arr[1])
-						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' ){
+						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' || page.indexOf('CqMarathon')){
 						  dic[arr[0]] = arr[1]	
 						}
 					}
@@ -166,16 +168,22 @@
 				this.scene1 =this.scene1.replace('grid','G')
 				this.scene1 =this.scene1.replace('wawaji','W')
 				this.scene1 =this.scene1.replace('actSelect','A')
-				this.scene1 =this.scene1.replace('sourceUserId','O')
+				this.scene1 =this.scene1.replace('sourceUserId','O')	
 				this.scene1 =this.scene1.replace('Vouchers','V')
 				// this.scene1 = 'dd=169&ll=gg&型=ww&aa=1&ss=72160'
-				console.log(this.scene1,this.scene1.length)
+				//pages/CqMarathon 分享测试用
+				// if(page == 'pages/CqMarathon' && domain.getCurrentEnv() == 1){
+				// 	page="pages/authorization"
+				// 	this.scene1+='&to=CqMarathon'
+				// }
+				console.log("this.scene1",this.scene1,this.scene1.length)
 				let scene = encodeURIComponent(this.scene1)
-				console.log('scene',scene,scene.length)
-				let url = `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
-				if (domain.getCurrentEnv() == 1) {
-					url = `https://tccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
-				}
+				console.log('scene',scene,page)
+				let url = `${domain.getAPI('createWxQrCode')}?scene=${scene}&page=${page}`
+				// let url = `https://ccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
+				// if (domain.getCurrentEnv() == 1) {
+				// 	url = `https://tccar.pcauto.com.cn/api/xcx/base/createWxQrCode?scene=${scene}&page=${page}`
+				// }
 				uni.downloadFile({
 					url: url,
 					success: function(res) {
@@ -293,17 +301,27 @@
 						canvasId: 'myCanvas',
 						success: function(res) {
 							console.log('绘制', res);
-							wx.saveImageToPhotosAlbum({
-								filePath: res.tempFilePath,
-								success(res) {
-									that.$toast('保存成功')
-									console.log(res.errMsg)
+							uni.authorize({
+								scope: 'scope.writePhotosAlbum',
+								success() {
+									uni.saveImageToPhotosAlbum({
+										filePath: res.tempFilePath,
+										success(res) {
+											that.$toast('保存成功')
+											console.log(res.errMsg)
+										},
+										fail(err) {
+											that.$toast('保存失败请稍后再试')
+											console.log(err)
+										}
+									})
 								},
-								fail(err) {
-									that.$toast('保存失败请稍后再试')
-									console.log(err)
+								fail: function(res) {
+									console.log('保存到相册授权失败', res);
+
 								}
 							})
+							
 						},
 						fail: function(res) {
 							console.log('绘制', res);
