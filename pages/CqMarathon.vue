@@ -82,7 +82,7 @@
 					<!--  #ifdef MP-WEIXIN  -->
 					<view>
 						<button
-							:open-type="[content.sharePosterPic ? '' : 'share']"
+							:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 							:class="['btn', isComplete ? '' : 'not_up_to_standard']"
 							@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
 						>
@@ -155,7 +155,7 @@
 					<button
 						v-else
 						class="btn bottom"
-						:open-type="[content.sharePosterPic ? '' : 'share']"
+						:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
 					>
 						{{ isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
@@ -510,6 +510,7 @@ export default {
 			// #ifdef MP-WEIXIN
 			this.content.sharePosterPic && this.$refs.popup.open("bottom")
 			// #endif
+			console.log('shareChoise')
 		},
 
 		// 分享好友关闭
