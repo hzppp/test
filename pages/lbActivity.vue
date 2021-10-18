@@ -9,7 +9,7 @@
 			</page-top>
 			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
 
-			<template v-if="activityType=='wawaji'">
+			<template v-if="activityType=='wawaji' || activityType=='checkIn'">
 				<view class="title">{{content.name}}</view>
 				<view class="date" v-if="content && isActStart && !isActEnded">
 					离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view

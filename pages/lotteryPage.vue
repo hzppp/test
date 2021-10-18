@@ -114,7 +114,7 @@
 						<view class="przie-name">{{lotteryRes.name}}</view>
 					</view>
 					<view class="tFoot">
-						<button :class="['left',activityType!='checkIn'?'':'btn1']" @tap="goLotteryDetail(lotteryRes.lotteryId)">查看详情</button>
+						<button :class="['left',activityType!='checkIn'?'':'btn1 btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'查看详情':'查看中奖纪录'}}</button>
 						<button class="right" @tap="closeDialog" v-if="activityType!='checkIn'">继续抽奖</button>
 					</view>
 				</block>
@@ -142,8 +142,8 @@
 						<view class="przie-name">{{lotteryRes.name}}</view>
 					</view>
 					<view class="tFoot">
-						<button class="left" @tap="goLotteryDetail(lotteryRes.lotteryId)"></button>
-						<button class="right" @tap="closeDialog"></button>
+						<button :class="['left',activityType!='checkIn'?'':'btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'':'查看中奖纪录'}}</button>
+						<button class="right" @tap="closeDialog"  v-if="activityType!='checkIn'"></button>
 					</view>
 				</block>
 				<block v-else>
@@ -1477,7 +1477,11 @@
 							background: linear-gradient(-90deg, #FFDF6C, #FFF4CC);
 							color: #ED2C2C;
 						}
-
+						&.btn-yellow{
+							border: #FFF4CC 1px;
+							background: linear-gradient(-90deg, #FFDF6C, #FFF4CC);
+							color: #ED2C2C;
+						}
 						&.btn1 {
 							width: 420rpx;
 							height: 80rpx;
@@ -1656,14 +1660,23 @@
 							// background: linear-gradient(-90deg, #FFDF6C, #FFF4CC);
 							// color: #ED2C2C;
 						}
-
+						&.btn-yellow{
+							bottom: 40rpx !important;
+							width: 247rpx;
+							height: 91rpx;
+							left: 50%;
+							transform: translateX(-50%);
+							border: #FFF4CC 1px;
+							background: linear-gradient(-90deg, #FFDF6C, #FFF4CC);
+							color: #ED2C2C;
+						}
 						&.btn1 {
 							bottom: 40rpx !important;
 							width: 431rpx;
 							height: 91rpx;
 							left: 50%;
 							.setbg(431rpx, 91rpx, 'lottory_nextgo.png');
-							transform: translateX(-50%);
+							
 						}
 					}
 				}
