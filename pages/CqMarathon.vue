@@ -566,7 +566,7 @@ export default {
 	.instructions {
 		text-align: center;
 		color: #7f7f7f;
-		padding: 0 50rpx;
+		// padding: 0 50rpx;
 		.invitered {
 			overflow: hidden;
 			margin-left: -18.75rpx;
@@ -616,7 +616,7 @@ export default {
 			font-size: 30rpx;
 		}
 		.start_time {
-			font-size: 31rpx;
+			font-size: 32rpx;
 		}
 		.not_started {
 			font-size: 28rpx;
