@@ -99,7 +99,7 @@
 				</view>
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
-					<view class="instructions">
+					<view class="instructions no_padding">
 						<view class="not_started">朋友你来早啦,活动还未开始哦~</view>
 						<view class="start_time">活动时间:{{ activityTimeRang }}</view>
 					</view>
@@ -566,7 +566,10 @@ export default {
 	.instructions {
 		text-align: center;
 		color: #7f7f7f;
-		// padding: 0 50rpx;
+		padding: 0 50rpx;
+		&.no_padding {
+			padding: 0;
+		}
 		.invitered {
 			overflow: hidden;
 			margin-left: -18.75rpx;
