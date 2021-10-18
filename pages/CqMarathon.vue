@@ -36,20 +36,66 @@
 					<view class="instructions">
 						<!-- 已经邀请的人的头像 -->
 						<view class="invitered">
-							<view class="invitered_item" v-for="(item, index) in inviteredList" @click="!!!item.userId && shareChoise()" :key="index">
-								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+							<!--  #ifdef MP-WEIXIN  -->
+							<view v-if="content.sharePosterPic">
+								<view
+									class="invitered_item"
+									v-for="(item, index) in inviteredList"
+									@click="!!!item.userId && shareChoise()"
+									:key="index"
+								>
+									<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+								</view>
 							</view>
+							<view v-else>
+								<button
+									class="invitered_item btn_share"
+									v-for="(item, index) in inviteredList"
+									:key="index"
+									:open-type="[!!!item.userId ? 'share' : '']"
+								>
+									<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+								</button>
+							</view>
+							<!-- #endif -->
+
+							<!--  #ifndef MP-WEIXIN  -->
+							<button
+								class="invitered_item btn_share"
+								v-for="(item, index) in inviteredList"
+								@click="!!!item.userId && shareBtnClick()"
+								:key="index"
+								hover-class="none"
+								:open-type="[!!!item.userId ? 'share' : '']"
+							>
+								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+							</button>
+							<!-- #endif -->
 						</view>
 						<template>
-							<view class="invitered_count" v-if="inviteCount > 0">已有{{ inviteCount }}位好友报名></view>
+							<view class="invitered_count" v-if="inviteCount > 0" @click="goInviteRecord"
+								>已有{{ inviteCount }}位好友报名 <text class="_sp">»</text></view
+							>
 							<view class="invitered_count" v-else>邀请好友报名可参与门票抽奖哦~</view>
 						</template>
 					</view>
-					<view
-						:class="['btn', isComplete ? '' : 'not_up_to_standard']"
-						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
-						>{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}</view
-					>
+					<!--  #ifdef MP-WEIXIN  -->
+					<view>
+						<button
+							:open-type="[content.sharePosterPic ? '' : 'share']"
+							:class="['btn', isComplete ? '' : 'not_up_to_standard']"
+							@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
+						>
+							{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+						</button>
+					</view>
+					<!-- #endif -->
+
+					<!--  #ifndef MP-WEIXIN  -->
+					<button :class="['btn', isComplete ? '' : 'not_up_to_standard']" hover-class="none" open-type="share" @click="shareBtnClick">
+						{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+					</button>
+					<!-- #endif -->
 				</view>
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
@@ -72,8 +118,8 @@
 			<!-- 底部按钮区域S -->
 			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1 && !isComplete">
 				<view class="instructions" v-if="isApply == 1">
-					<!-- 已经邀请的人 -->
-					<view class="invitered" v-if="inviteCount > 0">
+					<view class="invitered">
+						<!--  #ifdef MP-WEIXIN  -->
 						<view
 							class="invitered_item"
 							v-for="(item, index) in inviteredList.slice(0, 5)"
@@ -82,20 +128,51 @@
 						>
 							<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
 						</view>
+						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<button
+							class="invitered_item btn_share"
+							v-for="(item, index) in inviteredList.slice(0, 5)"
+							@click="!!!item.userId && shareBtnClick()"
+							:key="index"
+							hover-class="none"
+							:open-type="[!!!item.userId ? 'share' : '']"
+						>
+							<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+						</button>
+						<!-- #endif -->
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
 					<template>
-						<view class="invitered_count" v-if="inviteCount == 0">邀请好友报名可参与门票抽奖哦~</view>
-						<view class="invitered_count" v-else>还差{{ nums - inviteCount }}位好友报名即可达标</view>
+						<view class="invitered_count" @click="goInviteRecord">还差{{ nums - inviteCount  }}位好友报名即可达标</view>
 					</template>
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
+
+				<!--  #ifdef MP-WEIXIN  -->
 				<template>
 					<button v-if="!phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
 					<view v-else class="btn bottom" @click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()">{{
 						isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动"
 					}}</view>
 				</template>
+				<!-- #endif -->
+
+				<!--  #ifndef MP-WEIXIN  -->
+				<template>
+					<button v-if="!phone" class="btn bottom" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">报名活动</button>
+					<button
+						v-if="isApply == 1"
+						:class="['btn bottom', isComplete ? '' : 'not_up_to_standard']"
+						hover-class="none"
+						open-type="share"
+						@click="shareBtnClick"
+					>
+						{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+					</button>
+					<button v-else class="btn onApply" @click="formShow()">报名活动</button>
+				</template>
+				<!-- #endif -->
 			</view>
 			<!-- 底部按钮区域E -->
 			<uni-popup ref="popup" type="bottom">
@@ -212,6 +289,7 @@ export default {
 			this.ruleImg = data.detailPic
 			this.phone = uni.getStorageSync("userPhone")
 			this.content = data || {}
+			console.log("🚩CqMarathon.vue @ ❨227❩🌸,%c this.content:", "color:#f6e75a", this.content)
 			if (this.sourceUserId) {
 				this.content.sourceUserId = this.sourceUserId
 			}
@@ -275,6 +353,14 @@ export default {
 		}
 	},
 	methods: {
+		// 邀请列表
+		goInviteRecord() {
+			let url = `/pages/inviteRecord?activityId=${this.activityId}`
+			uni.navigateTo({
+				url,
+			})
+		},
+
 		async getPhoneNumber(e) {
 			let { detail = {} } = e
 			if (detail.iv) {
@@ -379,8 +465,8 @@ export default {
 					this.isComplete = true
 				}
 				this.inviteCount = row.length
-				console.log('🚩CqMarathon @ ❨382❩🌸,%c 已经被邀请的人数:','color:#f6e75a', JSON.parse(JSON.stringify(row)))
-				this.inviteredList = tempArr
+				this.inviteredList = tempArr.slice(0, nums)
+				console.log("🚩CqMarathon @ ❨382❩🌸,%c 已经被邀请的人数:", "color:#f6e75a", JSON.parse(JSON.stringify(row)))
 			} catch (error) {
 				console.error(error)
 			} finally {
@@ -389,7 +475,9 @@ export default {
 
 		// 分享好友选择
 		shareChoise() {
-			this.$refs.popup.open("bottom")
+			// #ifdef MP-WEIXIN
+			this.content.sharePosterPic && this.$refs.popup.open("bottom")
+			// #endif
 		},
 
 		// 分享好友关闭
@@ -412,6 +500,10 @@ export default {
 			wx.aldstat.sendEvent("报名活动")
 			// #endif
 			this.$refs.formpop.formShow("form", "marathon", this.content, "报名活动")
+
+			// #ifdef MP-TOUTIAO
+			this.$children[2].formShow("form", "marathon", this.content, "报名活动")
+			// #endif
 		},
 		// 分享按钮被点击
 		shareBtnClick() {
@@ -486,9 +578,20 @@ export default {
 			float: left;
 			padding: 0 18.75rpx;
 			margin-bottom: 30rpx;
+			&.btn_share {
+				width: auto;
+				background-color: transparent;
+			}
 		}
 		.invitered_count {
 			// margin-top: 40rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			._sp {
+				font-size:30rpx;
+				margin-left: 10rpx;
+			}
 		}
 		.invitered__avatar {
 			overflow: hidden;
@@ -513,7 +616,7 @@ export default {
 			font-size: 30rpx;
 		}
 		.start_time {
-			font-size: 32rpx;
+			font-size: 31rpx;
 		}
 		.not_started {
 			font-size: 28rpx;
