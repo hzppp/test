@@ -1663,7 +1663,8 @@
 						&.btn-yellow{
 							bottom: 40rpx !important;
 							width: 247rpx;
-							height: 91rpx;
+							height: 80rpx;
+							line-height: 80rpx;
 							left: 50%;
 							transform: translateX(-50%);
 							border: #FFF4CC 1px;
@@ -1676,7 +1677,7 @@
 							height: 91rpx;
 							left: 50%;
 							.setbg(431rpx, 91rpx, 'lottory_nextgo.png');
-							
+							transform: translateX(-50%);
 						}
 					}
 				}
