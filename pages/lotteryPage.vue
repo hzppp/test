@@ -242,6 +242,7 @@
 				shareUrl: '',
 				isIOS: false, 
 				lotteryType: '',
+				activityType:"",
 				shareURL: '',
 				sharePosterPic: '',
 				buttons: [{
@@ -291,6 +292,7 @@
 			// #endif
 			this.shareURL = decodeURIComponent(options.shareURL)
 			this.lotteryType = options.lotteryType
+			this.activityType = options.activityType
 			this.showDialogL = false;
 			this.GirdShowDialogL = false;
 			this.prizes = []
