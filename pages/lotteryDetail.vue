@@ -6,7 +6,9 @@
         <view class="headerInfo">
           <view class="lDetail">
             <view class="prizeName">{{detailInfo.prizeName}}</view>
+            <!--  #ifdef MP-WEIXIN  -->
             <view class="services-btn" @tap="toServices(detailInfo.csUrl)" v-if="detailInfo.csUrl">点击添加客服</view>
+            <!-- #endif -->
             <view class="prizeCode" v-if="detailInfo.source !=3"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
             <!-- 积分商品 -->
             <view class="prizeScore" v-else>
