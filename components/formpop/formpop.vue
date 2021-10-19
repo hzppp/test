@@ -136,7 +136,7 @@
 		</view>
 		<!-- 签到成功 -->
 		<view class="checkin-success-pop" v-if="popName == 'checkin-success-pop'">
-			<view class="success-icon"></view>
+			<view class="checkin-success-icon"></view>
 			<view class="p1">签到成功</view>
 			<text class="p2">可以参与抽奖啦</text>
 			<view class="look-coupon-btn" @tap="toDraw">去抽奖</view>
