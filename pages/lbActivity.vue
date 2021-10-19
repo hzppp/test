@@ -572,7 +572,7 @@
 					url = url.replace('O', 'sourceUserId')
 					url = url.replace('V', 'Vouchers')
 					url = url.replace('C', 'veriCode') //签到码
-					url = url.replace('S', 'checkIn')
+					url = url.replace('=S', '=checkIn')
 					url = url.replace(/@/g, '=')
 					url = url.replace(/_/g, '&')
 				} else { // 旧
