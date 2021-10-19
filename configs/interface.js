@@ -286,7 +286,13 @@ const config = {
 		//根据经销商查询车系
 		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
 		//查询用户基本信息
-		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`
+		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`,
+		//活动扫码签到
+		checkIn:`${DOMAIN.changan}/api/xcx/activity/checkIn`,
+		//查询用户的活动签到状态
+		checkInStatus:`${DOMAIN.changan}/api/xcx/activity/checkIn/status`,
+		// 客服url
+		serversCode: `${DOMAIN.changan}/wap/#/serversCode`,
 		
 		
 		

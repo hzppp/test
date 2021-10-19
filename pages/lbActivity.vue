@@ -9,7 +9,7 @@
 			</page-top>
 			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
 
-			<template v-if="activityType=='wawaji'">
+			<template v-if="activityType=='wawaji' || activityType=='checkIn'">
 				<view class="title">{{content.name}}</view>
 				<view class="date" v-if="content && isActStart && !isActEnded">
 					离活动结束还剩<view class="db">{{artDownDate[0]}}</view>天<view class="db">{{artDownDate[1]}}</view>时<view
@@ -29,7 +29,7 @@
 					<button class="over-btn" hover-class="none">活动已结束</button>
 				</view>
 				<view class="type-a" v-else>
-					<template v-if="activityType && activityType=='wawaji'">
+					<template v-if="activityType && activityType=='wawaji' || activityType=='checkIn'">
 						<template v-if="isApply && actSelect == 2 && isActStart ">
 							<view class="enroll-btn actSelectOneBtn" @click="actSelect1()">
 								<view class="selectTitle1">车展现场活动</view>
@@ -54,14 +54,27 @@
 							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 							<!-- #endif -->
+							
 							<template v-if="!isActStart && isApply">
 								<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
 							</template>
 							<template v-else>
-								<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-									@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
-								<button class="enroll-btn enroll-btn2" @tap="formShow"
-									v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
+									<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+										@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+									<template v-else>
+										<!-- 如果是到店签到活动 -->
+										<template v-if="activityType=='checkIn'">
+											<!-- 如果未留咨，则取留咨 -->
+											<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply">报名活动</button>
+											<!-- 如果已经留咨但未签到 ，则取扫码签到 -->
+											<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
+											<!-- 如果已经留咨且已签到 ，则去抽奖 -->
+											<button class="enroll-btn enroll-btn2" @tap="formShow" v-if="isApply && ischeckIn">去抽奖</button>
+										</template>	
+										<button class="enroll-btn enroll-btn2" @tap="formShow"
+										v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
+									</template>
+											
 							</template>
 						</template>
 					</template>
@@ -89,6 +102,14 @@
 			</view>
 
 		</uni-popup>
+
+		<view class="checkin-popup" v-if="isShowCheckInPop">
+			<!-- 签到报名弹窗 -->
+			<view class="checkin-sign-pop">
+				<view class="p1">您还没有报名活动</br>请先报名后再重新扫码签到</view>
+				<view class="show-form-btn" @tap="formShow">报名活动</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -124,25 +145,30 @@
 				isActStart: false,
 				shareURL: '',
 				isApply: 0, //是否留咨过
+				ischeckIn:0, //是否签到
 				lotteryType: '', //转盘类型
 				actSelect: '' ,// 玩法（0   线下   1 线上抽奖  2 both）
-				formShowTitle:'我要参与抽奖'
+				formShowTitle:'我要参与抽奖',
+				isShowCheckInPop:false  //签到二维码进入报名提示
 				
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
 			if (options.scene) { // 分享海报来的
-				let url = decodeURIComponent(options.scene)
+				let url = options.scene.indexOf('%')>-1 ? decodeURIComponent(options.scene) : options.scene
+				console.log('===============url1==============',url)
 				url = this.changURl(url)
+				console.log('===============url==============',url)
 				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
 				let array = url.split('&')
 				array.forEach((item, index) => {
-					let arr = item.split('=')
+					let arr = item.split('=') 
 					if (arr) {
 						options[arr[0]] = arr[1]
 					}
 				})
+
 
 			}
 			await login.checkLogin(api)
@@ -150,6 +176,7 @@
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType = options.type || ''
+			console.log("activityId",this.activityId,options)
 			this.actSelect = options.actSelect || ''
 			// 分享用
 			let cs = ''
@@ -175,7 +202,7 @@
 			console.log('shareurl', this.shareURL)
 			if (app.Interval) {
 				clearInterval(app.Interval)
-				console.log('----------------', this.Interval)
+				console.log('----------------', app.Interval)
 			}
 			
 			try {
@@ -187,9 +214,39 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.activityId)
+				//从签到二维码进入
+				if(options.scene && options.veriCode && data.miniUrl){
+					let param = data.miniUrl.split('?')[1].split('&')
+					param.forEach((item, index) => {
+						let arr = item.split('=')
+						if (arr) {
+							options[arr[0]] = arr[1]
+						}
+						this.lotteryType = options.lotteryType
+						this.sourceUserId = options.sourceUserId
+						this.activityId = options.id
+						this.activityType = options.type || ''
+						this.actSelect = options.actSelect || ''
+						this.veriCode = options.veriCode || ''
+					})
+				}
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
-				this.getFission()
+				//是否留咨
+				await this.getFission()
+				//如果是到店签到活动，判断是否签到
+				if(this.activityType == "checkIn"){
+					await this.getCheckInStatus()
+					//签到二维码扫码进入
+					if(options.scene && options.veriCode){
+						//已经报名未签到，则直接签到
+						if(!this.ischeckIn && this.isApply){
+							this.checkIn()
+						}else if(!this.isApply){ //未报名
+							this.isShowCheckInPop = true
+						}
+					}
+				}
 				app.Interval = setInterval(() => {
 					this.downDate(data.endTime)
 				}, 1000)
@@ -228,6 +285,7 @@
 			})
 
 		},
+		
 		onHide() {
 			if (app.Interval) {
 				clearInterval(app.Interval)
@@ -254,25 +312,24 @@
 			}
 		},
 		methods: {
+			//到店签到活动，判断是否签到
+			async getCheckInStatus(){
+				let checkInStatus = await api.checkInStatus({activityId: this.activityId})
+				if (checkInStatus && checkInStatus.code==1 && checkInStatus.data) {
+					this.ischeckIn = checkInStatus.data.status==1?true:false
+				}
+			},
 			async getFission() {
-				console.log(1)
-				// let {
-				// 	data,
-				// 	code
-				// } = await api.getFission({
-				// 	activityId: this.activityId
-				// })
-				
 				let clueInfo = await api.getClueInfo({
 					activityId: this.activityId
 				})
 				if (clueInfo && clueInfo.data) {
 					let isApply = clueInfo.data.isApply
+					// for 本地测试
 					this.isApply = isApply;
 					if(isApply && !this.isActStart){
 						this.formShowTitle = "已报名,活动未开始"
 					}
-					
 					
 					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart)
 					//是否提交过
@@ -310,6 +367,33 @@
 				this.soureDone = true
 
 			},
+			//扫码签到
+			async scanCode(){
+				let that=this;
+				uni.scanCode({
+				    success: function (res) {
+						//调用签到接口
+						if(res.result){
+							that.checkIn(res.result)
+						}	
+					},
+					fail:function(err){
+						that.$toast(err)
+					}
+				});
+			},
+			//活动扫码签到
+			async checkIn(){
+				let {activityId , veriCode} = this
+				let res = await api.checkIn({activityId,veriCode})
+				if(res.code==1){
+					//弹出签到成功弹窗
+					this.getCheckInStatus();
+					this.$refs.formpop.formShow('checkin-success-pop') 
+				}else{
+					this.$toast(res.msg)
+				}
+			},
 			actSelect1() {
 				uni.navigateTo({
 					url: `/pages/wawaji?activityId=${this.content.id}`
@@ -323,6 +407,7 @@
 			},
 
 			formShow() {
+				this.isShowCheckInPop = false;
 				if(!this.isActStart && this.isApply){
 					return
 				}
@@ -330,7 +415,7 @@
 				wx.aldstat.sendEvent('报名活动')
 				// #endif
 				console.log("this.isApply", this.isApply)
-				if (this.activityType == 'wawaji') {
+				if (this.activityType == 'wawaji' || this.activityType == 'checkIn') {
 					if (!this.isApply) {
 						// #ifdef MP-WEIXIN
 						this.$refs.formpop.formShow('form', 'activity', this.content, '报名活动')
@@ -343,12 +428,12 @@
 						if (this.actSelect == 1) {
 							uni.reLaunch({
 								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL) + "&activityType="+this.activityType
 							})
 						} else if (this.actSelect == 2) {
 							uni.navigateTo({
 								url: '/pages/ActivitySelect?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL) + "&activityType="+this.activityType
 							})
 						} else {
 							uni.navigateTo({
@@ -428,8 +513,12 @@
 				return number > 9 ? number : '0' + number
 			},
 			
-			subSuccess(){
-				this.getFission()
+			async subSuccess(type){
+				if(type=='draw'){
+					this.formShow()
+				}else{
+					this.getFission()
+				}
 			},
 			getData() {
 				// 访问活动 记录活动访问次数
@@ -482,6 +571,9 @@
 					url = url.replace('A', 'actSelect')
 					url = url.replace('O', 'sourceUserId')
 					url = url.replace('V', 'Vouchers')
+					url = url.replace('C', 'veriCode') //签到码
+					url = url.replace(/@/g, '=')
+					url = url.replace(/_/g, '&')
 				} else { // 旧
 					//dd=69&ll=gg&tt=ww&aa=1&ss=66
 					url = url.replace('tt', 'type')
@@ -650,10 +742,11 @@
 				border-radius: 44rpx;
 				
 				&.enroll-btn2 {
-					width: 420rpx;
-						
+					width: 420rpx;	
 				}
-				
+				&.enroll-btn-gray{
+					background: #9e9e9e;
+				}
 				
 			}
 			.enroll-btn3 {
@@ -814,5 +907,42 @@
 			margin-top: 10rpx;
 		}
 
+	}
+
+	// 签到报名弹窗
+	.checkin-popup{
+		.mask;
+    	z-index: 11;
+		.checkin-sign-pop{
+			width:560rpx;
+			height: 313rpx;
+			border-radius: 16rpx;
+			background: #ffffff;
+			position: fixed;
+			left: 50%;
+			top: 52%;
+			transform: translate(-50%, -49%);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+		.p1{
+			font-size: 32rpx;
+			color: #333333;
+			line-height: 50rpx;
+		}
+		.show-form-btn{
+			width: 400rpx;
+			height: 88rpx;
+			text-align: center;
+			line-height: 88rpx;
+			border-radius: 44rpx;
+			background: #fb2b51;
+			margin-top: 30rpx;
+			font-size: 32rpx;
+			color: #ffffff;
+		}
 	}
 </style>
