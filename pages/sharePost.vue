@@ -170,6 +170,7 @@
 				this.scene1 =this.scene1.replace('actSelect','A')
 				this.scene1 =this.scene1.replace('sourceUserId','O')	
 				this.scene1 =this.scene1.replace('Vouchers','V')
+				this.scene1 =this.scene1.replace('checkIn','S')
 				// this.scene1 = 'dd=169&ll=gg&型=ww&aa=1&ss=72160'
 				//pages/CqMarathon 分享测试用
 				// if(page == 'pages/CqMarathon' && domain.getCurrentEnv() == 1){
