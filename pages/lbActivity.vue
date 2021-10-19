@@ -178,28 +178,7 @@
 			this.activityType = options.type || ''
 			console.log("activityId",this.activityId,options)
 			this.actSelect = options.actSelect || ''
-			// 分享用
-			let cs = ''
-			for (let i in options) {
-				if (i != 'scene' && i != 'sourceUserId') {
-					cs += `${i}=${options[i]}&`
-				}
-
-			}
-			this.cs = cs.substr(0, cs.length - 1)
-			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			if(wxUserInfo){
-				if(this.lotteryType == 'Vouchers'){
-					this.formShowTitle = '领取代金券'
-					this.shareURL = `/pages/lbActivity?${this.cs}`
-				}else{
-					this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
-				}
-			}
 			
-			
-
-			console.log('shareurl', this.shareURL)
 			if (app.Interval) {
 				clearInterval(app.Interval)
 				console.log('----------------', app.Interval)
@@ -230,6 +209,27 @@
 						this.veriCode = options.veriCode || ''
 					})
 				}
+
+				// 分享用
+				let cs = ''
+				for (let i in options) {
+					if (i != 'scene' && i != 'sourceUserId' && i!='veriCode') {
+						cs += `${i}=${options[i]}&`
+					}
+
+				}
+				this.cs = cs.substr(0, cs.length - 1)
+				let wxUserInfo = uni.getStorageSync('wxUserInfo')
+				if(wxUserInfo){
+					if(this.lotteryType == 'Vouchers'){
+						this.formShowTitle = '领取代金券'
+						this.shareURL = `/pages/lbActivity?${this.cs}`
+					}else{
+						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+					}
+				}
+				console.log('shareurl', this.shareURL)
+
 				this.downDate(data.endTime)
 				this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
 				//是否留咨
@@ -572,6 +572,7 @@
 					url = url.replace('O', 'sourceUserId')
 					url = url.replace('V', 'Vouchers')
 					url = url.replace('C', 'veriCode') //签到码
+					url = url.replace('S', 'checkIn')
 					url = url.replace(/@/g, '=')
 					url = url.replace(/_/g, '&')
 				} else { // 旧
