@@ -318,6 +318,7 @@
 									})
 								},
 								fail: function(res) {
+									that.$toast('您当前未授权相册权限，请到设置中开启')
 									console.log('保存到相册授权失败', res);
 
 								}
