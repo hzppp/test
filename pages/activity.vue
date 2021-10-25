@@ -26,7 +26,7 @@
 				</view>
 			</view>
 			<!-- customAdList -->
-			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
+			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)" :key="index">
 				<image style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;"
 					:src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
@@ -42,14 +42,16 @@
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
 						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>		
 					
-					<template v-if="!isActStart && isApply">
-						<button :class="'enroll-btn enroll-btn3'" :style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
+					<template v-if="!isActStart ">
+						<button v-if="isApply" :class="'enroll-btn enroll-btn3'" :style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
+						<!-- 下订活动活动未开始不允许点击 -->
+						<button v-if="buyOrder" :class="'enroll-btn enroll-btn3'" :style="{width:canShare?'420rpx':'686rpx'}">活动未开始</button>
 					</template>
 					
 					<template v-else>
 						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
-							v-if="!phone" :style="{width:canShare?'420rpx':'686rpx'}">报名活动</button>
-						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" :style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow" v-else>{{fromShowBtnTitle}}</button>
+							v-if="!phone" :style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
+						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" :style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow" v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
 					</template>
 					
 				</view>
@@ -126,7 +128,9 @@
 				fromShowBtnTitle:'报名活动',
 				voucherShow:false,
 				activitySceneId:'',
-				canShare:true
+				canShare:true,
+				buyOrder:false   ,//是否下订活动
+				haveBuy:false  //已经购买过且有有效订单
 
 			}
 		},
@@ -205,7 +209,20 @@
 					// 针对有抽奖凭证的 不能点击
 					return
 				}
-				
+				if(this.buyOrder){
+					// 下订活动单独处理
+					if(this.haveBuy){
+						//已经购买且有有有效订单
+					}else{
+						// 未购买
+						uni.navigateTo({
+							url: `/pages/buyOrder?activityId=${this.content.id}`
+						})
+					}
+					
+					return	
+				}
+
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				console.log("已经报名，且为抓娃娃机活动", this.isApply, this.activityType)
@@ -415,6 +432,10 @@
 							uni.reLaunch({
 								url: '/pages/lbActivity?id=' + this.activityId 
 							})
+						}
+						// 下订活动专用
+						if(data.miniUrl && data.miniUrl.indexOf('type=buyorder') != -1){
+						   this.buyOrder = true
 						}
 						// 访问活动 记录活动访问次数
 						api.fetchActivityVisit({
