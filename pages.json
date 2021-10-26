@@ -389,7 +389,10 @@
 			"path": "pages/orderDetail",
 			"style": {
 				"navigationBarTitleText": "订单详情",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#3C4851",
+				"backgroundColor":"#3C4851"
+				
 				
 			}
 		}
