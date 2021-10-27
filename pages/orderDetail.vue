@@ -11,11 +11,11 @@
 					<view class="prizeName">{{detailInfo.prizeName}}</view>
 					<view class="services-btn">{{detailInfo.prizeName}}</view>
 					<view class="prizeCode">
-						<view v-if="detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7">核销码：
+						<view v-if="detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7 && state !=1 && state !=3">核销码：
 						</view>
 						<view
-							:class="(detailInfo.verificationCode && detailInfo.verificationCode.length&& state !=7)?'code':'nocode' ">
-							{{ (detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7)? detailInfo.verificationCode:(state==2? "核销码完成支付后生成":(state==7?"核销码已失效":"核销码生成中"))}}
+							:class="(detailInfo.verificationCode && detailInfo.verificationCode.length&& state !=7 && state !=1 && state !=3)?'code':'nocode' ">
+							{{ (detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7 && state !=1 && state !=3)? detailInfo.verificationCode:(state==2? "核销码完成支付后生成":(state==7?"核销码已失效":(state==1?"订单已失效":"核销码生成中")))}}
 						</view>
 					</view>
 				</view>
@@ -57,13 +57,10 @@
 								style="color: #FA8845;">{{detailInfo.distance | formatThousand}}</view>
 						</view>
 					</view>
-
 					<view class="info" style="margin-top: 40rpx;">
 						<view class="title titleK">使用说明:</view>
 						<view class="contentTips">
-
 							<text>
-
 								1、兑奖期限：2021年6月30日24时前，过期作废。
 								2、本券仅用于活动期间购买长安汽车旗下乘用车品
 								牌经销商（不含新能源）线下使用，每辆车限使用1
@@ -107,11 +104,11 @@
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='disBackPay()'>取消退款</view>
 			</view>
-			<view class="boomV" v-if="state==4 || state==3">
-				<button class="share-btn" hover-class="none" open-type="share" @click="shareBtnClick">分享活动</button>
+			<view class="boomV" v-if="state==4">
+				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='backPay()'>退款</view>
 			</view>
-			<view class="boomV" v-if="state==1 || state==7 || state==6" @tap='goActivity()'>
+			<view class="boomV" v-if="state==1 || state==7 || state==6 || state==3" @tap='goActivity()'>
 				<view class="activityDeatil">活动详情</view>
 			</view>
 		</view>
@@ -157,7 +154,7 @@
 			return {
 				detailInfo: {},
 				id: '',
-				state: 4, // 订单状态有7种  1 已失效  2 待支付  3  已支付  4 待使用  5 退款审核种 6 已核销  7已退款 
+				state: 3, // 订单状态有7种  1 已失效  2 待支付  3  已支付  4 待使用  5 退款审核种 6 已核销  7已退款 
 				orderState: '1635236704000', // 支付订单倒计时
 				orderText: '',
 				timer: '',
