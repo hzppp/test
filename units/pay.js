@@ -23,9 +23,7 @@ export default {
 		// api.preOrderBack({"op":3,"id":clueInfo.data.orderDetail.orderId})
 
 		//0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
-		if (clueInfo.code == 1 && clueInfo.orderDetail && clueInfo.orderDetail.orderId && (clueInfo.orderDetail
-				.orderStatus != 0 || clueInfo.orderDetail.orderStatus != 6 || clueInfo.orderDetail.orderStatus != 5
-			)) {
+		if (clueInfo.code == 1 && clueInfo.data.orderDetail && clueInfo.data.orderDetail.orderId && clueInfo.data.orderDetail.orderStatus != 0 ) {
 			// 说明有在进行中的到查看订单
 			uni.showToast({
 				title: "已有支付订单,请勿重复操作",
@@ -34,7 +32,7 @@ export default {
 			if (callback) {
 				callback(0)
 			} else {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `/pages/orderDetail?id=${this.content.id}`
 				})
 			}
@@ -76,7 +74,7 @@ export default {
 					if (callback) {
 						callback(1)
 					} else {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: `/pages/orderDetail?id=${order.orderId}&pay=1`
 						})
 					}
@@ -97,7 +95,7 @@ export default {
 					if (callback) {
 						callback(0)
 					} else {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: `/pages/orderDetail?id=${order.orderId}&pay=0`
 						})
 					}

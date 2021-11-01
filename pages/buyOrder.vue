@@ -222,6 +222,9 @@
 			this.sourceUserId = options.sourceUserId
 			await distance.getLocation()
 			await login.checkLogin(api)
+			
+		},
+		onShow() {
 			this.getData()
 		},
 

@@ -67,7 +67,7 @@ name: "lotteryRecord",
   		}
   
   		case 3: {
-  			return '退款审核中'
+  			return '退款中'
   			break;
   		}
   

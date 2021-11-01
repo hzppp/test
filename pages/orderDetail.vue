@@ -73,19 +73,19 @@
 					</view>
 				</view>
 			</view>
-			<view class="boomV" v-if="state==0">
+			<view class="boomV" v-if="state===0">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='pay()'>去支付</view>
 			</view>
-			<view class="boomV" v-if="state==3">
+			<!-- <view class="boomV" v-if="state==3">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='disBackPay()'>取消退款</view>
-			</view>
+			</view> -->
 			<view class="boomV" v-if="state==2">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='backPay()'>退款</view>
 			</view>
-			<view class="boomV" v-if="state==6 || state==5 || state==4 || state==1" @tap='goActivity()'>
+			<view class="boomV" v-if="state==6 || state==5 || state==4 || state==1 || state==3" @tap='goActivity()'>
 				<view class="activityDeatil">活动详情</view>
 			</view>
 		</view>
@@ -100,7 +100,7 @@
 				<view class="soure" @tap='backSoure()'>确定退款</view>
 			</view>
 
-			<view class="popV" v-if="showType=='success'" style="width: 560rpx;height: 546rpx;">
+			<view class="popV" v-if="showType=='success'" style="width: 560rpx;height: 556rpx;">
 				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderSuccess.png"></image>
 				<view class="title1">提交成功</view>
 				<view class="title2">提交成功支付费用将会在3个工作日原路退回，请注意查收</view>
@@ -142,7 +142,7 @@
 			return {
 				detailInfo: {},
 				id: '', // 订单id
-				state: 0, // 订单状态有7种   //0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
+				state: '', // 订单状态有7种   //0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
 				orderTime: '600', // 支付订单倒计时
 				orderText: '',
 				timer: '',
@@ -188,7 +188,7 @@
 					}
 
 					case 3: {
-						return '退款审核中'
+						return '退款中'
 						break;
 					}
 
@@ -272,59 +272,53 @@
 		},
 		methods: {
 			async getDeatil() {
-
+                await this.getOrderDetail()
 				uni.showLoading({
 					title: '正在加载...'
 				})
-				this.detailInfo = await api.orderDetail({
-					"id": this.id
-				}).then(res => {
-					console.log('rrrres', res)
-					setTimeout(() => {
-						uni.hideLoading()
-					}, 300)
-					if (res.code == 1) {
-						return res.data || {}
-					} else {
-						uni.showToast({
-							title: res.msg,
-							icon: "none"
-						})
-					}
-				})
-				if (this.detailInfo.picUrl && this.detailInfo.picUrl.indexOf("http") != -1) {
-					this.picShow = true
-				}
-				this.orderTime = this.detailInfo.ttl
-				let crtPosition = app.globalData.currentLocation.wxPosition
-				let longitude = crtPosition.longitude
-				let latitude = crtPosition.latitude
-				if (longitude && latitude) {
-					this.detailInfo.distance = distance.countLatLng(parseFloat(latitude), parseFloat(longitude),
-						parseFloat(this.detailInfo.latitude), parseFloat(this.detailInfo.longitude))
-				}
 
 				this.refStatus()
 				if (this.payState == 1 && (this.state == 0 || this.state == 1)) {
 					// 刚刚支持成功   要及时获取核销码生成状态
 					this.timer1 && clearInterval(this.timer1)
 					this.timer1 = setInterval(() => {
-						this.detailInfo = api.orderDetail({
-							"id": this.id
-						}).then(res => {
-							if (res.code == 1 && res.data) {
-								this.refStatus()
-								if (res.data.state != 1 && res.data.state != 0) {
-									this.timer1 && clearInterval(this.timer1)
-								}
-							} else {
-								console.log('接口异常')
-								this.timer1 && clearInterval(this.timer1)
-							}
-						})
+						this.getDeatil()
+						
 					}, 2000)
 				}
 
+			},
+			
+		 async getOrderDetail(){
+			this.detailInfo = await api.orderDetail({
+				"id": this.id
+			}).then(res => {
+				console.log('rrrres', res)
+				setTimeout(() => {
+					uni.hideLoading()
+				}, 300)
+				if (res.code == 1) {
+					return res.data || {}
+				} else {
+					uni.showToast({
+						title: res.msg,
+						icon: "none"
+					})
+				}
+			})	
+			if (this.detailInfo.picUrl && this.detailInfo.picUrl.indexOf("http") != -1) {
+				this.picShow = true
+			}
+			this.orderTime = this.detailInfo.ttl
+			let crtPosition = app.globalData.currentLocation.wxPosition
+			let longitude = crtPosition.longitude
+			let latitude = crtPosition.latitude
+			if (longitude && latitude) {
+				this.detailInfo.distance = distance.countLatLng(parseFloat(latitude), parseFloat(longitude),
+					parseFloat(this.detailInfo.latitude), parseFloat(this.detailInfo.longitude))
+			}
+			
+			console.log('请求完了哈',this.detailInfo)
 			},
 
 			refStatus() {
@@ -349,8 +343,8 @@
 			pay() {
 				let that = this
 				pay.pay(this.detailInfo.activityId, function(n) {
-					that.payState = 1
-					that.getDeatil()
+					that.payState = n
+					that.getDeatil(that.id)
 					console.log('支付完了')
 				})
 				console.log('去支付')
@@ -366,9 +360,9 @@
 			backPay() {
 				console.log('发起退款')
 				let time = new Date().getTime()
-				let endtime = this.detailInfo.endTime
+				let endtime = this.detailInfo.couponEndTime   //卡券结束时间
 				let j = endtime - time
-				if (j <= 0) {
+				if (j <= 0 && this.detailInfo.couponStatus != 2) {
 					// 到了有效期
 					this.$nextTick(function() {
 						//success showtexteare
@@ -436,6 +430,13 @@
 
 			popCancle() {
 				this.$refs.popup.close()
+				
+				setTimeout(() => {
+					this.getOrderDetail()
+				}, 2000)
+				
+				
+				
 
 			},
 			async backSoure() {
@@ -474,9 +475,13 @@
 
 				console.log('时间', j / 1000, minutes, ss)
 				this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
-				if (orderState <= 0) {
+				if (orderState <= 0 ) {
 					this.timer && clearInterval(this.timer)
 					this.orderText = '订单已失效'
+					this.state = 6 
+					// setTimeout(() => {
+					//   this.getOrderDetail()
+					// }, 1000)
 				}
 			},
 		}
