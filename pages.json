@@ -372,9 +372,7 @@
 		{
 			"path": "pages/buyOrder",
 			"style": {
-				"navigationBarTitleText": "报名购买",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "报名购买"
 			}
 		},
 		{

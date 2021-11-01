@@ -213,6 +213,9 @@
 					// 下订活动单独处理
 					if(this.haveBuy){
 						//已经购买且有有有效订单
+						uni.navigateTo({
+						  url: `/pages/orderDetail?id=${this.content.id}`
+						})
 					}else{
 						// 未购买
 						uni.navigateTo({
@@ -400,6 +403,11 @@
 						})
 						if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
 						
+						//0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
+						if(clueInfo.code == 1 && clueInfo.orderDetail && clueInfo.orderDetail.orderId && (clueInfo.orderDetail.orderStatus != 0 || clueInfo.orderDetail.orderStatus != 6|| clueInfo.orderDetail.orderStatus != 5)){
+							this.haveBuy = true
+						}
+											
 						if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
 							
 							let str = ''

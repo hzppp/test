@@ -2,26 +2,27 @@
 	<view class="bg">
 		<view class="container">
 			<view class="headerT">
-				<view class="lId">订单ID：{{detailInfo.winningCode}}</view>
-				<view class="lIdorderState" v-if="state==2">{{orderText}}</view>
+				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
+				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
 				<view :class="'lIdcode' + state">{{ state | formatState }}</view>
 			</view>
 			<view class="headerInfo">
 				<view class="lDetail">
-					<view class="prizeName">{{detailInfo.prizeName}}</view>
-					<view class="services-btn">{{detailInfo.prizeName}}</view>
+					<view class="prizeName">{{detailInfo.productName}}</view>
+					<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
 					<view class="prizeCode">
-						<view v-if="detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7 && state !=1 && state !=3">核销码：
+						<view
+							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
+							核销码：
 						</view>
 						<view
-							:class="(detailInfo.verificationCode && detailInfo.verificationCode.length&& state !=7 && state !=1 && state !=3)?'code':'nocode' ">
-							{{ (detailInfo.verificationCode && detailInfo.verificationCode.length && state !=7 && state !=1 && state !=3)? detailInfo.verificationCode:(state==2? "核销码完成支付后生成":(state==7?"核销码已失效":(state==1?"订单已失效":"核销码生成中")))}}
+							:class="(detailInfo.verifyCode && detailInfo.verifyCode.length&& state !=5 && state !=6 && state !=1)?'code':'nocode' ">
+							{{ (detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1)? detailInfo.verifyCode:(state==0? "核销码完成支付后生成":(state==5?"核销码已失效":(state==6?"订单已失效":"核销码生成中")))}}
 						</view>
 					</view>
 				</view>
-				<!-- yuchenceshi -->
-				<image mode="widthFix" style="margin: auto;width: 606rpx;"
-					src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/lottery_detail_bg1.png"></image>
+				<image v-if="picShow" mode="widthFix" style="margin: auto;width: 606rpx;" :src="detailInfo.picUrl">
+				</image>
 
 				<view class="bodyT">
 					<view class="info">
@@ -30,112 +31,96 @@
 						</view>
 						<view class="item">
 							<view class="babelT">姓名：</view>
-							{{ detailInfo.mobile }}
+							{{ detailInfo.userName }}
 						</view>
 						<view class="item">
 							<view class="babelT">电话：</view>
 							{{ detailInfo.mobile }}
 						</view>
 						<view class="item">
-							<view class="babelT">购买时间：</view>{{detailInfo.createTime | formatTimeMins }}
+							<view class="babelT">购买时间：</view>{{detailInfo.createTime }}
 						</view>
 						<view class="item">
-							<view class="babelT">使用期限：</view>{{detailInfo.endDate | formatTimeMins}}
+							<view class="babelT">使用期限：</view>{{detailInfo.endTime | formatTimeMins}}
 						</view>
 						<view class="item">
 							<view class="babelT">经销商：</view>
-							{{ detailInfo.mobile }}
+							{{ detailInfo.dealerName }}
 						</view>
 						<view class="item" @tap='goDealer()'>
-							<view class="babelT">地址：</view>
-							{{ detailInfo.mobile }}
+							<view class="babelT" style="width: 100rpx;">地址：</view>
+							{{ detailInfo.address }}
+						</view>
+						<view class="item" @tap='goDealer()'>
 							<image v-if="detailInfo.distance != undefined && detailInfo.distance != Infinity"
 								class="hotNDelFicon"
-								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealLocation1.png">
+								src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/dealLocation1.png"
+								style="width: 24rpx;height: 24rpx;">
 							</image>
 							<view v-if="detailInfo.distance != undefined && detailInfo.distance != Infinity"
-								style="color: #FA8845;">{{detailInfo.distance | formatThousand}}</view>
+								style="color: #FA8845;white-space:nowrap;">{{detailInfo.distance | formatThousand}}
+							</view>
 						</view>
+
 					</view>
 					<view class="info" style="margin-top: 40rpx;">
 						<view class="title titleK">使用说明:</view>
 						<view class="contentTips">
-							<text>
-								1、兑奖期限：2021年6月30日24时前，过期作废。
-								2、本券仅用于活动期间购买长安汽车旗下乘用车品
-								牌经销商（不含新能源）线下使用，每辆车限使用1
-								张代金券。
-								3、请您在购车时出示本券，经服务中心销售人员验
-								证后核销使用。
-								4、购车客户电话号码和报名活动电话号码需保持一
-								致，否则将导致奖券无法使用。
-								* 本次活动解释权归长安乘用车营销事业部所有
-								1、兑奖期限：2021年6月30日24时前，过期作废。
-								2、本券仅用于活动期间购买长安汽车旗下乘用车品
-								牌经销商（不含新能源）线下使用，每辆车限使用1
-								张代金券。
-								3、请您在购车时出示本券，经服务中心销售人员验
-								证后核销使用。
-								4、购车客户电话号码和报名活动电话号码需保持一
-								致，否则将导致奖券无法使用。
-								* 本次活动解释权归长安乘用车营销事业部所有
-								1、兑奖期限：2021年6月30日24时前，过期作废。
-								2、本券仅用于活动期间购买长安汽车旗下乘用车品
-								牌经销商（不含新能源）线下使用，每辆车限使用1
-								张代金券。
-								3、请您在购车时出示本券，经服务中心销售人员验
-								证后核销使用。
-								4、购车客户电话号码和报名活动电话号码需保持一
-								致，否则将导致奖券无法使用。
-								* 本次活动解释权归长安乘用车营销事业部所有
-							</text>
-							<!-- <text>{{detailInfo.activityMemoArr}}</text> -->
+							<text>{{detailInfo.meme}}</text>
 
 						</view>
 
 					</view>
 				</view>
 			</view>
-			<view class="boomV" v-if="state==2">
+			<view class="boomV" v-if="state==0">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='pay()'>去支付</view>
 			</view>
-			<view class="boomV" v-if="state==5">
+			<view class="boomV" v-if="state==3">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='disBackPay()'>取消退款</view>
 			</view>
-			<view class="boomV" v-if="state==4">
+			<view class="boomV" v-if="state==2">
 				<view class="share-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='backPay()'>退款</view>
 			</view>
-			<view class="boomV" v-if="state==1 || state==7 || state==6 || state==3" @tap='goActivity()'>
+			<view class="boomV" v-if="state==6 || state==5 || state==4 || state==1" @tap='goActivity()'>
 				<view class="activityDeatil">活动详情</view>
 			</view>
 		</view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
 			<view class="popV" v-if="showType=='showtexteare'">
 				<view class="setitle">退款成功后会取消相应的权益，请登记一下您的退款原因</view>
-				<view class="textareaback" >
-					<textarea placeholder="请填写退款原因" maxlength="200" v-model="backReason" placeholder-style="color:#CCCCCC;" />
+				<view class="textareaback">
+					<textarea placeholder="请填写退款原因" maxlength="200" v-model="backReason"
+						placeholder-style="color:#CCCCCC;" />
 				</view>
 				<view class="cancle" @tap='popCancle()'>取消</view>
 				<view class="soure" @tap='backSoure()'>确定退款</view>
 			</view>
-			
+
 			<view class="popV" v-if="showType=='success'" style="width: 560rpx;height: 546rpx;">
 				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderSuccess.png"></image>
 				<view class="title1">提交成功</view>
-				<view class="title2">{{detailInfo.winningCode  + '提交之后将会原路退回支付金额'}}</view>
+				<view class="title2">提交成功支付费用将会在3个工作日原路退回，请注意查收</view>
 				<view class="soure" @tap='popCancle()' style="width: 360rpx;">好的</view>
 			</view>
-			
+
 			<view class="popV" v-if="showType=='error'" style="width: 560rpx;height: 666rpx;">
 				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderFail.png"></image>
 				<view class="title1">对不起,核销码生成失败</view>
-				<view class="title2 error" >
-					<text >您已支付的金额将会在3个工作日内系统将会原路返回，请注意查收 
-					
-					如有其它疑问，可电话咨询 400-2548-265</text>
+				<view class="title2 error">
+					<text>您已支付的金额将会在3个工作日内系统将会原路返回，请注意查收
+
+						如有其它疑问，可电话咨询 400-2548-265</text>
+				</view>
+				<view class="soure" @tap='popCancle1()' style="width: 360rpx;">好的</view>
+			</view>
+			<view class="popV" v-if="showType=='backerror'" style="width: 440rpx;height: 387rpx;padding:23rpx 60rpx;">
+				<view class="title1">由于核销码生成不可作废，因此需商品过期后才可以申请退款</view>
+				<view class="title2 error">
+					<text>{{detailInfo.endTime | formatTime }}~</text>
 				</view>
 				<view class="soure" @tap='popCancle()' style="width: 360rpx;">好的</view>
 			</view>
@@ -148,54 +133,71 @@
 	import api from '@/public/api/index'
 	import login from '@/units/login'
 	import domain from '@/configs/interface';
+	import distance from '@/units/distance'
+	import pay from '@/units/pay'
+	let app = getApp()
 	export default {
 		name: "lotteryDetail",
 		data() {
 			return {
 				detailInfo: {},
-				id: '',
-				state: 3, // 订单状态有7种  1 已失效  2 待支付  3  已支付  4 待使用  5 退款审核种 6 已核销  7已退款 
-				orderState: '1635236704000', // 支付订单倒计时
+				id: '', // 订单id
+				state: 0, // 订单状态有7种   //0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
+				orderTime: '600', // 支付订单倒计时
 				orderText: '',
 				timer: '',
+				timer1: '',
 				backReason: '',
-				showType:''   //showtexteare 输入   success  成功  error  失败
-				
+				showType: '', //showtexteare 输入   success  成功  error  失败
+				payState: '', // 1支付成功（实时刷新结果）   0 支付失败
+				picShow: false
+
 			}
 		},
 		filters: {
+			formatTime(time) {
+				var date = new Date(parseInt(time));;
+				var YY = date.getFullYear() + '-';
+				var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+				var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+				var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+				var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+				// var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+				return YY + MM + DD + " " + hh + mm + '后再来申请退款吧'
+
+			},
 			formatState(state) {
 				// console.log('parseInt(state)', parseInt(state))
 				switch (parseInt(state)) {
-					case 1: {
+					case 6: {
 						return '已失效'
 						break;
 					}
-					case 2: {
+					case 0: {
 						return '待支付'
 						break;
 					}
-					case 3: {
+					case 1: {
 						return '已支付'
 						break;
 					}
 
-					case 4: {
+					case 2: {
 						return '待使用'
 						break;
 					}
 
-					case 5: {
+					case 3: {
 						return '退款审核中'
 						break;
 					}
 
-					case 6: {
+					case 4: {
 						return '已核销'
 						break;
 					}
 
-					case 7: {
+					case 5: {
 						return '已退款'
 						break;
 					}
@@ -209,7 +211,34 @@
 
 			},
 			formatTimeMins(time) {
-				return time ? time.substr(0, time.length - 3) : time;
+
+				let t = new Date(parseInt(time));
+
+				let month = t.getMonth() + 1;
+				let date = t.getDate();
+				let hour = t.getHours();
+				let min = t.getMinutes();
+				let sec = t.getSeconds();
+				console.log('time', t.getFullYear())
+				if (month < 10) {
+					month = '0' + month;
+				}
+				if (date < 10) {
+					date = '0' + date;
+				}
+				if (hour < 10) {
+					hour = '0' + hour;
+				}
+				if (min < 10) {
+					min = '0' + min;
+				}
+				if (sec < 10) {
+					sec = '0' + sec;
+				}
+
+				return t.getFullYear() + '.' + month + '.' + date + ' ' + hour + ':' + min + ':' + sec;
+
+
 			},
 			formatThousand(num) {
 				if (num != undefined && num != Infinity) {
@@ -230,12 +259,25 @@
 			} = options
 			console.log('id', id)
 			this.id = id
+			this.payState = options.pay
 			if (id) {
+				this.getDeatil(id)
+			}
+		},
+
+		onUnload() {
+			console.log('onUnload')
+			this.timer1 && clearInterval(this.timer1)
+			this.timer && clearInterval(this.timer)
+		},
+		methods: {
+			async getDeatil() {
+
 				uni.showLoading({
 					title: '正在加载...'
 				})
-				this.detailInfo = await api.getLotteryDetail({
-					id
+				this.detailInfo = await api.orderDetail({
+					"id": this.id
 				}).then(res => {
 					console.log('rrrres', res)
 					setTimeout(() => {
@@ -250,51 +292,119 @@
 						})
 					}
 				})
-				if (this.state == 2) {
-					this.timer = setInterval(() => {
-						this.getOrderState(this.orderState)
-					}, 1000)
+				if (this.detailInfo.picUrl && this.detailInfo.picUrl.indexOf("http") != -1) {
+					this.picShow = true
+				}
+				this.orderTime = this.detailInfo.ttl
+				let crtPosition = app.globalData.currentLocation.wxPosition
+				let longitude = crtPosition.longitude
+				let latitude = crtPosition.latitude
+				if (longitude && latitude) {
+					this.detailInfo.distance = distance.countLatLng(parseFloat(latitude), parseFloat(longitude),
+						parseFloat(this.detailInfo.latitude), parseFloat(this.detailInfo.longitude))
 				}
 
+				this.refStatus()
+				if (this.payState == 1 && (this.state == 0 || this.state == 1)) {
+					// 刚刚支持成功   要及时获取核销码生成状态
+					this.timer1 && clearInterval(this.timer1)
+					this.timer1 = setInterval(() => {
+						this.detailInfo = api.orderDetail({
+							"id": this.id
+						}).then(res => {
+							if (res.code == 1 && res.data) {
+								this.refStatus()
+								if (res.data.state != 1 && res.data.state != 0) {
+									this.timer1 && clearInterval(this.timer1)
+								}
+							} else {
+								console.log('接口异常')
+								this.timer1 && clearInterval(this.timer1)
+							}
+						})
+					}, 2000)
+				}
 
-				this.$nextTick(function() {
-					//success showtexteare
-					this.showType = 'error'
-				})
-				this.$refs.popup.open('center')
+			},
 
-				// yuchencehshi
-				// this.detailInfo.verificationCode = ''
-			}
-		},
+			refStatus() {
+				this.state = this.detailInfo.status
+				if (this.detailInfo.couponStatus == -1) {
+					this.$nextTick(function() {
+						//success showtexteare
+						this.showType = 'error'
+					})
+					this.$refs.popup.open('center')
 
-		onUnload() {
-			clearInterval(this.timer)
-		},
-		methods: {
+				}
 
+				if (this.state == 0) {
+					this.timer && clearInterval(this.timer)
+					this.timer = setInterval(() => {
+						this.orderTime = this.orderTime - 1
+						this.getOrderState(this.orderTime)
+					}, 1000)
+				}
+			},
 			pay() {
+				let that = this
+				pay.pay(this.detailInfo.activityId, function(n) {
+					that.payState = 1
+					that.getDeatil()
+					console.log('支付完了')
+				})
 				console.log('去支付')
 			},
 			disBackPay() {
 				// 取消退款
+
+
+
+
 			},
 			// 退款
 			backPay() {
 				console.log('发起退款')
-				
-				
-				
-				
+				let time = new Date().getTime()
+				let endtime = this.detailInfo.endTime
+				let j = endtime - time
+				if (j <= 0) {
+					// 到了有效期
+					this.$nextTick(function() {
+						//success showtexteare
+						this.showType = 'showtexteare'
+					})
+					this.$refs.popup.open('center')
+				} else {
+					// 还没有到有效期
+					this.showType = 'backerror'
+					this.$refs.popup.open('center')
+				}
 			},
 
 			goActivity() {
-
 				uni.navigateTo({
-					url: `/pages/activity?id=${this.id}`
+					url: `/pages/activity?id=${this.detailInfo.activityId}`
 				})
 			},
 			goDealer() {
+				if (this.detailInfo.latitude && this.detailInfo.longitude) {
+					// uni.navigateTo({
+					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+					// })
+					uni.openLocation({
+						'latitude': Number(this.detailInfo.latitude),
+						'longitude': Number(this.detailInfo.longitude),
+						'name': this.detailInfo.dealerName,
+						scale: 18,
+						success(sus) {
+							console.log(sus)
+						},
+						fail(res) {
+							console.log(res)
+						}
+					})
+				}
 
 			},
 			toExternalPage(url) {
@@ -316,26 +426,43 @@
 					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
 				})
 			},
-			
-			popCancle(){
+
+			popCancle1() {
 				this.$refs.popup.close()
-				
+				uni.reLaunch({
+					url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
+				})
 			},
-			backSoure(){
+
+			popCancle() {
+				this.$refs.popup.close()
+
+			},
+			async backSoure() {
 				// this.$refs.popup.close()
 				console.log('确定退款')
-				
-				
-				
-				//提交成功
-				this.showType = 'success'
-				this.$refs.popup.open('center')
-				
+				if (this.backReason.length <= 0) {
+					this.$toast('请先输入退款原因')
+					return
+				}
+				if (this.backReason.length > 200) {
+					this.backReason = this.backReason.substr(0, 200)
+				}
+				let data = await api.apply({
+					"orderId": this.detailInfo.id,
+					"refundReason": this.backReason
+				})
+				if (data.code == 1) {
+					//提交成功
+					this.showType = 'success'
+					this.$refs.popup.open('center')
+				} else if (data.code == 2) {
+					this.showType = 'backerror'
+					this.$refs.popup.open('center')
+				}
 			},
 			getOrderState(orderState) {
-				let time = new Date().getTime()
-				let endtime = new Date(parseInt(orderState)).getTime()
-				let j = parseInt((endtime - time) / 1000) // 66 s
+				let j = orderState // 66 s
 				let minutes = parseInt(j / 60)
 				let ss = Math.floor(j % 60)
 				if (minutes < 0) {
@@ -345,10 +472,10 @@
 					ss = 0
 				}
 
-				// console.log('时间',j / 1000,minutes,ss)
+				console.log('时间', j / 1000, minutes, ss)
 				this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
-				if (minutes == 0 && ss == 0) {
-					clearInterval(this.timer)
+				if (orderState <= 0) {
+					this.timer && clearInterval(this.timer)
 					this.orderText = '订单已失效'
 				}
 			},
@@ -365,13 +492,14 @@
 
 	.bg {
 		width: 100%;
-		// height: 1000rpx;
+		min-height: 100vh;
 		background: #f6f7f8;
 
 		// padding-bottom: 100rpx;
 	}
 
 	.container {
+
 		.titleK {
 			font-size: 32rpx;
 			font-weight: 800;
@@ -398,16 +526,16 @@
 
 			.lIdorderState {
 				position: absolute;
-				top: 34rpx;
+				top: 14rpx;
 				right: 162rpx;
 				color: #A5ABAF;
 				font-size: 24rpx;
 			}
 
-			.lIdcode2,
+			.lIdcode0,
 			.lIdcode3,
-			.lIdcode5,
-			.lIdcode4 {
+			.lIdcode1,
+			.lIdcode2 {
 				position: absolute;
 				top: 26rpx;
 				right: 36rpx;
@@ -420,10 +548,10 @@
 				padding: 0 15rpx 0;
 			}
 
-			.lIdcode7,
-			.lIdcode6,
+			.lIdcode5,
+			.lIdcode4,
 
-			.lIdcode1 {
+			.lIdcode6 {
 				position: absolute;
 				top: 26rpx;
 				right: 36rpx;
@@ -550,6 +678,9 @@
 
 					.babelT {
 						color: #999;
+						white-space: nowrap;
+						// background: red;
+
 					}
 				}
 			}
@@ -581,6 +712,8 @@
 
 		.boomV {
 			display: flex;
+			position: absolute;
+			bottom: 0;
 			width: 100%;
 			height: 120rpx;
 			background: #FFFFFF;
@@ -638,18 +771,21 @@
 		background: #FFFFFF;
 		border-radius: 10rpx;
 		text-align: center;
-		image{
+
+		image {
 			padding-top: 60rpx;
 			width: 130rpx;
 			height: 130rpx;
 		}
-		.title1{
+
+		.title1 {
 			color: #333333;
 			font-size: 36rpx;
 			margin-top: 37rpx;
 			font-weight: 800;
 		}
-		.title2{
+
+		.title2 {
 			margin: auto;
 			width: 334rpx;
 			color: #999999;
@@ -657,7 +793,8 @@
 			margin-top: 37rpx;
 			font-weight: 500;
 		}
-		.error{
+
+		.error {
 			margin-top: 20rpx;
 		}
 
@@ -678,6 +815,7 @@
 				border: 1px solid #FFD5BC;
 				border-radius: 8rpx;
 				padding: 20rpx;
+				text-align: left;
 			}
 		}
 

@@ -1243,7 +1243,7 @@ module.exports = {
 		let {
 			data
 		} = await request({
-			url: domain.getAPI('orderDetail'),
+			url: domain.getAPI('orderDetail') +"/" +para.id,
 			method: "GET",
 			data: para
 			
@@ -1267,6 +1267,17 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('preOrderBack'),
 			method: "GET",
+			data: para
+			
+		})
+		return data
+	},
+	preOrder: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('preOrder'),
+			method: "POST",
 			data: para
 			
 		})

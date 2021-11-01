@@ -4,12 +4,12 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
-          <view class="code">订单ID：{{ item.winningCode }}</view>
-		  <view class="playState">{{item.state || "待支付"}}</view>
+          <view class="code">订单ID：{{ item.outTradeNo }}</view>
+		  <view class="playState">{{item.status | formatState}}</view>
           <view class="title">{{ item.prizeName }}</view>
-          <view class="time">购买时间：{{item.endDate | formatTimeMins}}</view>
-		  <view class="time1">使用期限：{{item.endDate | formatTimeMins}}</view>
-          <view class="detail">{{ item.price || '¥0.00' }}</view>
+          <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
+		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
+          <view class="detail">{{"¥" +  item.totalFee  }}</view>
         </view>
       </view>
       <view class="no-more" v-if="noMore">没有更多了</view>
@@ -45,6 +45,49 @@ name: "lotteryRecord",
     formatTimeMins(time) {
       return time ? time.substr(0,time.length-3) : time;
     },
+  formatState(state) {
+  	// console.log('parseInt(state)', parseInt(state))
+  	switch (parseInt(state)) {
+  		case 6: {
+  			return '已失效'
+  			break;
+  		}
+  		case 0: {
+  			return '待支付'
+  			break;
+  		}
+  		case 1: {
+  			return '已支付'
+  			break;
+  		}
+  
+  		case 2: {
+  			return '待使用'
+  			break;
+  		}
+  
+  		case 3: {
+  			return '退款审核中'
+  			break;
+  		}
+  
+  		case 4: {
+  			return '已核销'
+  			break;
+  		}
+  
+  		case 5: {
+  			return '已退款'
+  			break;
+  		}
+  		default: {
+  			return '已失效'
+  			break;
+  		}
+  
+  	}
+  
+   },
   },
   onReachBottom() {
     if(!this.noMore){
@@ -64,7 +107,7 @@ name: "lotteryRecord",
     },
     async getRecordList(){
       let {pageNum,pageSize}=this
-      let {data} = await api.getlotteryRecordList({pageNum,pageSize})
+      let data = await api.orders({pageNum,pageSize})
       if(data.code == 1){
         uni.hideLoading()
         if(data.hasNext){
@@ -139,7 +182,7 @@ name: "lotteryRecord",
 	  }
       .detail{
         position: absolute;
-        right: 30rpx;
+        right: 40rpx;
         bottom: 115rpx;
         color: #FA8845;
         font-size: 32rpx;

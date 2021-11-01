@@ -9,7 +9,7 @@
             <!--  #ifdef MP-WEIXIN  -->
             <view class="services-btn" @tap="toServices(detailInfo.csUrl)" v-if="detailInfo.csUrl">点击添加客服</view>
             <!-- #endif -->
-			<view class="services-btn" @tap="toCollectInfor(detailInfo.csUrl)" v-if="detailInfo.yucenUrl">登记信息</view>
+			<view class="services-btn" @tap="toCollectInfor(detailInfo.externalLink)" v-if="detailInfo.externalLink&&detailInfo.source==4">登记信息</view>
             <view class="prizeCode" v-if="detailInfo.source !=3"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
             <!-- 积分商品 -->
             <view class="prizeScore" v-else>
@@ -79,14 +79,12 @@ export default {
           })
         }
       })
-	  
-	  // yuchenceshi
-	 this.detailInfo.yucenUrl = 'http://dev.pcauto.com.cn:8080/#/collectInfor?id=11&order=22'
-	  
+
     }
   },
   methods: {
       toExternalPage(url){
+		 
         if (url && url.substring(0, 4) == "http") {
           uni.navigateTo({
               url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
@@ -94,8 +92,15 @@ export default {
         }
       },
 	  toCollectInfor(url){
-		 uni.navigateTo({
-		     url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+		   let weburl;
+		  if(url.indexOf('?') == -1){
+		  	  weburl =`${url}?id=${this.detailInfo.activityId}&order=${this.detailInfo.id}`
+		  }else{
+		  	  weburl =`{url}&id=${this.detailInfo.activityId}&order=${this.detailInfo.id}`
+		  }
+		  console.log('url',weburl)
+		 uni.redirectTo ({
+		     url: `/pages/webview?webURL=${encodeURIComponent(weburl)}`,
 		 })
 	  },
       toServices(csUrl){
