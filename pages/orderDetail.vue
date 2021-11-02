@@ -285,6 +285,8 @@
 						this.getDeatil()
 						
 					}, 2000)
+				}else{
+					this.timer1 && clearInterval(this.timer1)
 				}
 
 			},
@@ -377,7 +379,11 @@
 			},
 
 			goActivity() {
-				uni.navigateTo({
+				let pages = getCurrentPages();  //获取所有页面栈实例列表
+				console.log(pages)
+				
+				
+				uni.redirectTo({
 					url: `/pages/activity?id=${this.detailInfo.activityId}`
 				})
 			},
@@ -423,7 +429,7 @@
 
 			popCancle1() {
 				this.$refs.popup.close()
-				uni.reLaunch({
+				uni.redirectTo({
 					url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
 				})
 			},
@@ -499,8 +505,9 @@
 		width: 100%;
 		min-height: 100vh;
 		background: #f6f7f8;
-
-		// padding-bottom: 100rpx;
+	    margin-bottom: constant(safe-area-inset-bottom) ;
+	    margin-bottom: env(safe-area-inset-bottom) ;
+		padding-bottom: 140rpx;
 	}
 
 	.container {
@@ -531,8 +538,8 @@
 
 			.lIdorderState {
 				position: absolute;
-				top: 14rpx;
-				right: 162rpx;
+				top: 77rpx;
+				right: 40rpx;
 				color: #A5ABAF;
 				font-size: 24rpx;
 			}
@@ -580,7 +587,7 @@
 			// height: 186rpx;
 			margin: 0 auto;
 			box-sizing: border-box;
-			margin-top: -210rpx;
+			margin-top: -200rpx;
 
 
 			.lDetail {
@@ -717,7 +724,7 @@
 
 		.boomV {
 			display: flex;
-			position: absolute;
+			position: fixed;
 			bottom: 0;
 			width: 100%;
 			height: 120rpx;
