@@ -101,15 +101,15 @@
 				<view class="soure" @tap='backSoure()'>确定退款</view>
 			</view>
 
-			<view class="popV" v-if="showType=='success'" style="width: 560rpx;height: 556rpx;">
+			<view class="popV" v-if="showType=='success'" style="width: 560rpx;height: 585rpx;">
 				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderSuccess.png"></image>
 				<view class="title1">提交成功</view>
 				<view class="title2">提交成功支付费用将会在3个工作日原路退回，请注意查收</view>
 				<view class="soure" @tap='popCancle()' style="width: 360rpx;">好的</view>
 			</view>
 
-			<view class="popV" v-if="showType=='error'" style="width: 560rpx;height: 666rpx;">
-				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderFail.png"></image>
+			<view class="popV" v-if="showType=='error'" style="width: 560rpx;height: 685rpx;">
+				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderFail.png" ></image>
 				<view class="title1">对不起,核销码生成失败</view>
 				<view class="title2 error">
 					<text>您已支付的金额将会在3个工作日内系统将会原路返回，请注意查收
@@ -118,7 +118,7 @@
 				</view>
 				<view class="soure" @tap='popCancle1()' style="width: 360rpx;">好的</view>
 			</view>
-			<view class="popV" v-if="showType=='backerror'" style="width: 440rpx;height: 387rpx;padding:23rpx 60rpx;">
+			<view class="popV" v-if="showType=='backerror'" style="width: 440rpx;height: 407rpx;padding:23rpx 60rpx;">
 				<view class="title1">由于核销码生成不可作废，因此需商品过期后才可以申请退款</view>
 				<view class="title2 error">
 					<text>{{detailInfo.endTime | formatTime }}~</text>
@@ -784,12 +784,13 @@
 	.popV {
 		width: 600rpx;
 		height: 568rpx;
-		background: #FFFFFF;
+		background: #FFFFFF; 
 		border-radius: 10rpx;
 		text-align: center;
 
 		image {
-			padding-top: 60rpx;
+			// padding-top: 60rpx;
+			margin-top: 60rpx;
 			width: 130rpx;
 			height: 130rpx;
 		}
