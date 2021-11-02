@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
+const CUR_ENV = ENV.TEST; 
 const version = 1044;
 
 
@@ -294,7 +294,19 @@ const config = {
 		// 客服url
 		serversCode: `${DOMAIN.changan}/wap/#/serversCode`,
 		
-		
+		//订单相关
+		// 订单详情
+		orderDetail: `${DOMAIN.changan}/api/xcx/order/order`,
+		// 获取用户订单列表
+		orders: `${DOMAIN.changan}/api/xcx/order/orders`,
+		// 生成订单
+		preOrder: `${DOMAIN.changan}/api/xcx/order/preOrder`,
+		// 微信小程序客户端支付回调
+		preOrderBack: `${DOMAIN.changan}/api/xcx/order/preOrder/callback`,
+		// 用户申请退款
+		apply: `${DOMAIN.changan}/api/xcx/order/refund/apply`,
+		// 取消申请退款
+		cancelApply: `${DOMAIN.changan}/api/xcx/order/refund/cancel`,
 		
 		
 	},

@@ -368,11 +368,33 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/buyOrder",
+			"style": {
+				"navigationBarTitleText": "报名购买"
+			}
+		},
+		{
+			"path": "pages/myOrder",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": false
+				
+			}
+		},
+		{
+			"path": "pages/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#3C4851",
+				"backgroundColor":"#3C4851"
+				
+				
+			}
 		}
-		
-		
-		
-		
+
 	],
 	"tabBar": {
 		"custom": true,

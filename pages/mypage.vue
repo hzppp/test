@@ -56,6 +56,12 @@
 						<view class="right isApprove"></view>
 					</view>
 					<view class="line"></view>
+					
+					<view class="box-list list8" @tap="toMyOrder">
+						<view class="p1">我的订单</view>
+						<view class="right isApprove"></view>
+					</view>
+					<view class="line"></view>
 				<!-- #endif -->
 				<view class="box-list list6" @tap="toactivity">
 					<view class="p1">我的活动</view>
@@ -253,6 +259,12 @@
 				uni.navigateTo({
 					url: '/pages/myCoupon'
 				})
+			},
+			toMyOrder(){
+			 // 我的订单
+			uni.navigateTo({
+				url: '/pages/myOrder'
+			})	
 			},
 			toMyicon(){
 				// #ifdef MP-WEIXIN
