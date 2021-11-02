@@ -232,10 +232,15 @@
 							url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
 						})
 					} else {
+						// #ifdef MP-WEIXIN
 						// 未购买
 						uni.navigateTo({
 							url: `/pages/buyOrder?activityId=${this.content.id}`
 						})
+						// #endif
+					// #ifndef MP-WEIXIN
+					 this.$toast('请在微信搜索本小程序参与')
+					// #endif
 					}
 
 					return
