@@ -20,9 +20,10 @@
 							{{ (detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1)? detailInfo.verifyCode:(state==0? "核销码完成支付后生成":(state==5?"核销码已失效":(state==6?"订单已失效":"核销码生成中")))}}
 						</view>
 					</view>
+					<image v-if="picShow" mode="widthFix" style="margin: auto;width: 606rpx;" :src="detailInfo.picUrl">
+					</image>
 				</view>
-				<image v-if="picShow" mode="widthFix" style="margin: auto;width: 606rpx;" :src="detailInfo.picUrl">
-				</image>
+			
 
 				<view class="bodyT">
 					<view class="info">
@@ -362,15 +363,16 @@
 			backPay() {
 				console.log('发起退款')
 				let time = new Date().getTime()
-				let endtime = this.detailInfo.couponEndTime   //卡券结束时间
+				let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
 				let j = endtime - time
 				if (j <= 0 && this.detailInfo.couponStatus != 2) {
 					// 到了有效期
+						this.$refs.popup.open('center')
 					this.$nextTick(function() {
 						//success showtexteare
 						this.showType = 'showtexteare'
 					})
-					this.$refs.popup.open('center')
+				
 				} else {
 					// 还没有到有效期
 					this.showType = 'backerror'
@@ -463,9 +465,11 @@
 					//提交成功
 					this.showType = 'success'
 					this.$refs.popup.open('center')
+					this.state = 3
 				} else if (data.code == 2) {
 					this.showType = 'backerror'
 					this.$refs.popup.open('center')
+					this.$toast(data.msg)
 				}
 			},
 			getOrderState(orderState) {

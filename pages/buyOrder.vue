@@ -4,12 +4,13 @@
 		<view class="buyOrder">
 			<view class="orderHeader" v-if="products && products.name">
 				<view class="name">{{products.name}}</view>
-				<view class="price">{{products.price}}</view>
+				<view class="price1">¥ </view>
+				<view class="price">{{ products.price}}</view>
 				<view class="stock">{{'剩余库存: ' + products.stock}}</view>
 
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
-			<image mode="widthFix" src="../static/images/yuyue_banner.png" />
+			<image mode="widthFix" :src="products.picUrl" />
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
 			<view class="content">
 				<view class="title">报名信息</view>
@@ -29,8 +30,9 @@
 					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange"
 						mode="multiSelector" :range="[provinceList, cities]" :range-key="'name'" class="select"
 						:value="selectIndex">
-						<view v-if="showProvinceCityText&&showProvinceCityText.length" style="width: 450rpx">{{showProvinceCityText}}</view>
-						<view v-else class="place">请选择城市</view>
+						<view v-if="showProvinceCityText&&showProvinceCityText.length" style="width: 450rpx">
+							{{showProvinceCityText}}</view>
+						<view v-else class="place" style="width: 450rpx">请选择城市</view>
 					</picker>
 					<view class="arrow"></view>
 				</view>
@@ -38,8 +40,9 @@
 					<view class="list-title">地区</view>
 					<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
 						:range="districtList" :range-key="'name'" class="select">
-						<view v-if="showDistrictText&&showDistrictText.length" style="width: 450rpx">{{showDistrictText}}</view>
-						<view v-else class="place">请选择地区</view>
+						<view v-if="showDistrictText&&showDistrictText.length" style="width: 450rpx">
+							{{showDistrictText}}</view>
+						<view v-else class="place" style="width: 450rpx">请选择地区</view>
 					</picker>
 					<i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
 					<view class="arrow"></view>
@@ -54,8 +57,11 @@
 							<view style="width: 450rpx">{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 						</picker>
 						<view v-else class="select">
-							<view class="place">暂无对应经销商</view>
+							<view v-if="showProvinceCityText&&showProvinceCityText.length" class="place"
+								style="width: 450rpx">暂无对应经销商 </view>
+							<view v-else class="place" style="width: 450rpx">请选择经销商</view>
 						</view>
+						<view class="arrow"></view>
 					</block>
 					<view class="arrow" v-show="currentDealer.name"></view>
 				</view>
@@ -136,8 +142,8 @@
 				smsCodeShow: false,
 				canSubmit: false,
 				sourceUserId: '',
-				products: {} ,// 关联商品
-				orderDetail:{} //当前活动订单状态
+				products: {}, // 关联商品
+				orderDetail: {} //当前活动订单状态
 			}
 		},
 		watch: {
@@ -222,7 +228,7 @@
 			this.sourceUserId = options.sourceUserId
 			await distance.getLocation()
 			await login.checkLogin(api)
-			
+
 		},
 		onShow() {
 			this.getData()
@@ -237,15 +243,15 @@
 					let {
 						data = {}
 					} = await api.getActivityContent(this.id)
-					
+
 					let clueInfo = await api.getClueInfo({
 						activityId: this.id
 					})
 					if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-					
+
 					this.currentObj = data
-					if(data.products){
-					  this.products = data.products[0]
+					if (data.products) {
+						this.products = data.products[0]
 					}
 					this.serialList = this.currentObj.serialGroupList
 
@@ -387,12 +393,12 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
-				
-				if(!this.products  || this.products.stock <= 0){
+
+				if (!this.products || this.products.stock <= 0) {
 					//当前没有库存了
 					return false
 				}
-				
+
 				if ((this.phone.length == 11 && this.phone != uni.getStorageSync('userPhone') && this.smsCode) || this
 					.phone == uni.getStorageSync('userPhone')) {
 					return true
@@ -592,11 +598,11 @@
 				}
 			},
 			async buyOrder() {
-				
-			    if(!this.ifcanSubmit()){
+
+				if (!this.ifcanSubmit()) {
 					return
 				}
-				
+
 				if (this.from == 'activity') {
 					// #ifdef MP-WEIXIN
 					wx.aldstat.sendEvent('报名活动留资提交')
@@ -633,7 +639,7 @@
 				}
 				console.log('留资参数', pam)
 				let data = await api.submitClue(pam)
-				
+
 				if (data.code == 1) {
 					// 留资成功 吊起支付
 					this.pay()
@@ -646,82 +652,82 @@
 
 				console.log(data)
 			},
-           // 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
-		 async pay() {
-			 
-			pay.pay(this.id)
-			 
-			 // let {
-			 //  	data = {}
-			 //  } = await api.getActivityContent(id)
-			 //  if(products.stock<=0){
-			 // 	 this.$toast('商品太火爆，被抢完了')
-			 // 	 return
-			 //  }
-			 //    // 留资成功生成订单
-			 //  let clueInfo = await api.getClueInfo({
-			 //  	activityId: id
-			 //  })
-			 //  let clueDetail
-			 //  if (clueInfo.code == 1)  clueDetail = clueInfo.data.clueDetail
-			  
-			 //  // yuchen 测试
-			 //  // api.preOrderBack({"op":3,"id":clueInfo.data.orderDetail.orderId})
-			  
-			 //  //0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
-			 //  if(clueInfo.code == 1 && clueInfo.orderDetail && clueInfo.orderDetail.orderId && (clueInfo.orderDetail.orderStatus != 0 || clueInfo.orderDetail.orderStatus != 6|| clueInfo.orderDetail.orderStatus != 5)){
-			 //  	// 说明有在进行中的到查看订单
-			 // 	this.$toast('已有支付订单,请勿重复操作')
-			 // 	uni.navigateTo({
-			 // 	  url: `/pages/orderDetail?id=${this.content.id}`
-			 // 	})
-			 // 	return
-			 //  }
-			 //  console.log('clueDetail',clueDetail)
-			 //  if(!clueDetail){
-			 // 	 console.log('订单生成失败')
-			 // 	 this.$toast(clueInfo.msg)
-			 //      return	 
-			 //  }
-			 // 	let data1 =  await api.preOrder({"clueId":clueDetail.clueId})
-			 // 	if (data1.code = 1 &&  data1.data){
-			 // 		let order = data1.data
-			 // 		let that = this
-			 // 		uni.requestPayment({
-			 // 			provider: 'wxpay', // 平台
-			 // 			timeStamp: order.timeStamp, // 时间戳
-			 // 			nonceStr: order.nonceStr, // 随机字符串
-			 // 			package: order.package, //  统一下单接口返回的 prepay_id 参数值
-			 // 			signType: order.signType, // 签名算法，暂支持 MD5。
-			 // 			paySign: order.paySign, // 签名
-			 // 			success: function(res) {
-			 // 				console.log('success:' + JSON.stringify(res));
-			 				
-			 // 				api.preOrderBack({"op":1,"id":order.orderId})
-			 // 				uni.navigateTo({
-			 // 				  url: `/pages/orderDetail?id=${order.orderId}&pay=1`
-			 // 				})
-			 // 				that.$toast('支付成功')
-			 // 			},
-			 // 			fail: function(err) {
-			 // 				console.log('fail:' + JSON.stringify(err));
-			 // 				api.preOrderBack({"op":3,"id":order.orderId})
-			 // 				that.$toast('支付失败请稍后重试')
-			 // 				uni.navigateTo({
-			 // 				  url: `/pages/orderDetail?id=${order.orderId}&pay=0`
-			 // 				})
-			 // 			},
-			 // 			complete: () => {
-			 // 				console.log("payment结束")
-			 // 			}
-			 // 		});
-			 		
-			 // 	}else{
-			 // 		this.$toast(data.msg)
-			 // 	}
-			 
-			 	
-			 }
+			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
+			async pay() {
+
+				pay.pay(this.id)
+
+				// let {
+				//  	data = {}
+				//  } = await api.getActivityContent(id)
+				//  if(products.stock<=0){
+				// 	 this.$toast('商品太火爆，被抢完了')
+				// 	 return
+				//  }
+				//    // 留资成功生成订单
+				//  let clueInfo = await api.getClueInfo({
+				//  	activityId: id
+				//  })
+				//  let clueDetail
+				//  if (clueInfo.code == 1)  clueDetail = clueInfo.data.clueDetail
+
+				//  // yuchen 测试
+				//  // api.preOrderBack({"op":3,"id":clueInfo.data.orderDetail.orderId})
+
+				//  //0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
+				//  if(clueInfo.code == 1 && clueInfo.orderDetail && clueInfo.orderDetail.orderId && (clueInfo.orderDetail.orderStatus != 0 || clueInfo.orderDetail.orderStatus != 6|| clueInfo.orderDetail.orderStatus != 5)){
+				//  	// 说明有在进行中的到查看订单
+				// 	this.$toast('已有支付订单,请勿重复操作')
+				// 	uni.navigateTo({
+				// 	  url: `/pages/orderDetail?id=${this.content.id}`
+				// 	})
+				// 	return
+				//  }
+				//  console.log('clueDetail',clueDetail)
+				//  if(!clueDetail){
+				// 	 console.log('订单生成失败')
+				// 	 this.$toast(clueInfo.msg)
+				//      return	 
+				//  }
+				// 	let data1 =  await api.preOrder({"clueId":clueDetail.clueId})
+				// 	if (data1.code = 1 &&  data1.data){
+				// 		let order = data1.data
+				// 		let that = this
+				// 		uni.requestPayment({
+				// 			provider: 'wxpay', // 平台
+				// 			timeStamp: order.timeStamp, // 时间戳
+				// 			nonceStr: order.nonceStr, // 随机字符串
+				// 			package: order.package, //  统一下单接口返回的 prepay_id 参数值
+				// 			signType: order.signType, // 签名算法，暂支持 MD5。
+				// 			paySign: order.paySign, // 签名
+				// 			success: function(res) {
+				// 				console.log('success:' + JSON.stringify(res));
+
+				// 				api.preOrderBack({"op":1,"id":order.orderId})
+				// 				uni.navigateTo({
+				// 				  url: `/pages/orderDetail?id=${order.orderId}&pay=1`
+				// 				})
+				// 				that.$toast('支付成功')
+				// 			},
+				// 			fail: function(err) {
+				// 				console.log('fail:' + JSON.stringify(err));
+				// 				api.preOrderBack({"op":3,"id":order.orderId})
+				// 				that.$toast('支付失败请稍后重试')
+				// 				uni.navigateTo({
+				// 				  url: `/pages/orderDetail?id=${order.orderId}&pay=0`
+				// 				})
+				// 			},
+				// 			complete: () => {
+				// 				console.log("payment结束")
+				// 			}
+				// 		});
+
+				// 	}else{
+				// 		this.$toast(data.msg)
+				// 	}
+
+
+			}
 
 
 		}
@@ -743,6 +749,7 @@
 
 		.orderHeader {
 			margin: 32rpx;
+
 			.name {
 				font-size: 40rpx;
 				font-weight: 800;
@@ -754,6 +761,15 @@
 				margin-top: 30rpx;
 				display: inline;
 				font-size: 48rpx;
+				font-weight: 800;
+				text-align: left;
+				color: #fa8845;
+			}
+
+			.price1 {
+				margin-top: 30rpx;
+				display: inline;
+				font-size: 38rpx;
 				font-weight: 800;
 				text-align: left;
 				color: #fa8845;
