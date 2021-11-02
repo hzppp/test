@@ -10,9 +10,9 @@
             <view class="services-btn" @tap="toServices(detailInfo.csUrl)" v-if="detailInfo.csUrl">点击添加客服</view>
             <!-- #endif -->
 			<view class="services-btn" @tap="toCollectInfor(detailInfo.externalLink)" v-if="detailInfo.externalLink&&detailInfo.source==4">登记信息</view>
-            <view class="prizeCode" v-if="detailInfo.source !=3"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
+            <view class="prizeCode" v-if="detailInfo.source !=3 && detailInfo.source!=4"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
             <!-- 积分商品 -->
-            <view class="prizeScore" v-else>
+            <view class="prizeScore" v-else-if="detailInfo.source!=4">
               <view>
                 <view class="code"><text>{{detailInfo.price}}</text> 积分</view>
                 <view class="description">需自行去长安商城兑换商品，兑换记录在商城查看</view>
