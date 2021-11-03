@@ -23,9 +23,8 @@
 					<image v-if="picShow" mode="widthFix" style="margin: auto;width: 606rpx;" :src="detailInfo.picUrl">
 					</image>
 				</view>
-			
-
-				<view class="bodyT">
+			    <!-- <image mode="widthFix" src="../static/images/orderDetailMiddle.png" style="width: 100%;"></image> -->
+				 <view class="bodyT">
 					<view class="info">
 						<view class="title titleK">
 							报名信息：
@@ -584,9 +583,9 @@
 
 		.headerInfo {
 			position: relative;
-			background: #fff;
-			border-radius: 20rpx;
-			padding: 42rpx;
+			// background: red;
+			// border-radius: 20rpx;
+			// padding: 42rpx;
 			width: 686rpx;
 			// height: 186rpx;
 			margin: 0 auto;
@@ -597,7 +596,10 @@
 			.lDetail {
 				position: relative;
 				height: 100%;
+				border-radius: 30rpx;
 				padding-bottom: 42rpx;
+				background: #FFFFFF;
+				padding: 42rpx;
 				border-bottom: 1px dashed #ebebeb;
 
 				.prizeName {
@@ -673,6 +675,9 @@
 
 		.bodyT {
 			padding-top: 42rpx;
+			background: #FFFFFF;
+			padding: 42rpx;
+			border-radius: 30rpx;
 
 			.info {
 				font-size: 26rpx;
