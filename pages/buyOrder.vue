@@ -599,6 +599,11 @@
 			},
 			async buyOrder() {
 
+
+
+              if (!this.products || this.products.stock <= 0) {
+				 this.$toast('商品太火爆，被抢完了')
+				}
 				if (!this.ifcanSubmit()) {
 					return
 				}
@@ -655,7 +660,13 @@
 			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
 			async pay() {
 
-				pay.pay(this.id)
+			  await	pay.pay(this.id)
+			  setTimeout(()=>{
+				// 延时
+				this.getData()   
+			  },1100)
+			
+			  
 
 				// let {
 				//  	data = {}

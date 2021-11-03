@@ -44,7 +44,7 @@
 						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>
 
 					<template v-if="!isActStart ">
-						<button v-if="isApply" :class="'enroll-btn enroll-btn3'"
+						<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
 							:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
 						<!-- 下订活动活动未开始不允许点击 -->
 						<button v-if="buyOrder" :class="'enroll-btn enroll-btn3'"

@@ -117,7 +117,7 @@ export default {
 
 		} else {
 			uni.showToast({
-				title: data1.msg,
+				title: "商品太火爆，被抢完了",
 				icon: "none"
 			})
 		}
