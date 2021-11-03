@@ -50,7 +50,7 @@
 			</view>
 
 			<view class="box">
-				<!--  #ifndef MP-TOUTIAO  -->
+				<!--  #ifdef MP-WEIXIN  -->
 					<view class="box-list list2" @tap="toMyicon">
 						<view class="p1">积分商城</view>
 						<view class="right isApprove"></view>
@@ -86,7 +86,7 @@
 						<view class="right isApprove"></view>
 					</view> -->
 				<!-- #endif -->
-				<!--  #ifndef MP-TOUTIAO  -->
+				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
 					<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
 					<view class="box-list list7">
@@ -112,7 +112,7 @@
 			<image src=""></image>
 		</view> -->
 		<testDrive aldEventName='我的页面预约试驾'></testDrive>
-<!--  #ifndef MP-TOUTIAO  -->
+<!--  #ifdef MP-WEIXIN  -->
 		<viewTabBar :current="4"></viewTabBar>
 <!-- #endif -->
 	</view>

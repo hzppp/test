@@ -1,6 +1,6 @@
 <template>
 	<view class="bg">
-		<view class="container">
+		<view class="container" v-if="detailInfo">
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
@@ -42,6 +42,9 @@
 						</view>
 						<view class="item">
 							<view class="babelT">使用期限：</view>{{detailInfo.endTime | formatTimeMins}}
+						</view>
+						<view class="item" v-if="detailInfo.transactionId">
+							<view class="babelT">支付单号：</view>{{detailInfo.transactionId}}
 						</view>
 						<view class="item">
 							<view class="babelT">经销商：</view>
