@@ -1,6 +1,6 @@
 <template>
 	<view class="bg">
-		<view class="container" v-if="detailInfo">
+		<view class="container" v-if="detailInfo && detailInfo.id">
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
@@ -280,13 +280,12 @@
 					title: '正在加载...'
 				})
 
-				this.refStatus()
+				// this.refStatus()
 				if (this.payState == 1 && (this.state == 0 || this.state == 1)) {
-					// 刚刚支持成功   要及时获取核销码生成状态
+					// 刚刚支持成功   要及时获取核销码生成状态  不停刷新状态
 					this.timer1 && clearInterval(this.timer1)
 					this.timer1 = setInterval(() => {
 						this.getDeatil()
-						
 					}, 2000)
 				}else{
 					this.timer1 && clearInterval(this.timer1)
@@ -324,34 +323,30 @@
 			}
 			
 			console.log('请求完了哈',this.detailInfo)
+			
+			this.state = this.detailInfo.status
+			if (this.detailInfo.couponStatus == -1) {
+				this.timer1 && clearInterval(this.timer1)
+				this.$nextTick(function() {
+					//success showtexteare
+					this.showType = 'error'
+				})
+				this.$refs.popup.open('center')
+			
+			}
+			
+			if (this.state == 0) {
+				this.timer && clearInterval(this.timer)
+				this.timer = setInterval(() => {
+					this.orderTime = this.orderTime - 1
+					this.getOrderState(this.orderTime)
+				}, 1000)
+			}
 			},
 
-			refStatus() {
-				this.state = this.detailInfo.status
-				if (this.detailInfo.couponStatus == -1) {
-					this.$nextTick(function() {
-						//success showtexteare
-						this.showType = 'error'
-					})
-					this.$refs.popup.open('center')
-
-				}
-
-				if (this.state == 0) {
-					this.timer && clearInterval(this.timer)
-					this.timer = setInterval(() => {
-						this.orderTime = this.orderTime - 1
-						this.getOrderState(this.orderTime)
-					}, 1000)
-				}
-			},
 			pay() {
 				let that = this
-				pay.pay(this.detailInfo.activityId, function(n) {
-					that.payState = n
-					that.getDeatil(that.id)
-					console.log('支付完了')
-				})
+				pay.pay(this.detailInfo.activityId)
 				console.log('去支付')
 			},
 			disBackPay() {
@@ -363,22 +358,29 @@
 			},
 			// 退款
 			backPay() {
-				console.log('发起退款')
-				let time = new Date().getTime()
-				let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
-				let j = endtime - time
-				if (j <= 0 && this.detailInfo.couponStatus != 2) {
-					// 到了有效期
+				// 支付成功 卡券信息可能没那么快生成
+				if(this.detailInfo.couponEndTime){
+					console.log('发起退款')
+					let time = new Date().getTime()
+					let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
+					let j = endtime - time
+					if (j <= 0 && this.detailInfo.couponStatus != 2) {
+						// 到了有效期
+							this.$refs.popup.open('center')
+						this.$nextTick(function() {
+							//success showtexteare
+							this.showType = 'showtexteare'
+						})
+					
+					} else {
+						// 还没有到有效期
+						this.showType = 'backerror'
 						this.$refs.popup.open('center')
-					this.$nextTick(function() {
-						//success showtexteare
-						this.showType = 'showtexteare'
-					})
-				
-				} else {
-					// 还没有到有效期
-					this.showType = 'backerror'
-					this.$refs.popup.open('center')
+					}
+				}else{
+				// 还没有到有效期
+				this.showType = 'backerror'
+				this.$refs.popup.open('center')
 				}
 			},
 
@@ -489,8 +491,12 @@
 				this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
 				if (orderState <= 0 ) {
 					this.timer && clearInterval(this.timer)
+					if(this.state == 0){
+						// 手动改下
 					this.orderText = '订单已失效'
-					this.state = 6 
+					this.state = 6 	
+					}
+					
 					// setTimeout(() => {
 					//   this.getOrderDetail()
 					// }, 1000)

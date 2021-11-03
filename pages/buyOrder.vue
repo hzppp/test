@@ -119,6 +119,7 @@
 				title: '报名活动',
 				currentObj: {},
 				from: "",
+				id:'',
 				serialList: [],
 				provinceList: [],
 				cities: [],
