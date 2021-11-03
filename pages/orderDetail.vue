@@ -96,7 +96,7 @@
 			<view class="popV" v-if="showType=='showtexteare'">
 				<view class="setitle">退款成功后会取消相应的权益，请登记一下您的退款原因</view>
 				<view class="textareaback">
-					<textarea placeholder="请填写退款原因" maxlength="200" v-model="backReason"
+					<textarea placeholder="请填写退款原因" maxlength="80" v-model="backReason"
 						placeholder-style="color:#CCCCCC;" />
 				</view>
 				<view class="cancle" @tap='popCancle()'>取消</view>
@@ -118,7 +118,7 @@
 
 						如有其它疑问，可电话咨询 400-2548-265</text>
 				</view>
-				<view class="soure" @tap='popCancle1()' style="width: 360rpx;">好的</view>
+				<view class="soure" @tap='goActivity()' style="width: 360rpx;">好的</view>
 			</view>
 			<view class="popV backerror" v-if="showType=='backerror'" >
 				<view class="title1">由于核销码生成不可作废，因此需商品过期后才可以申请退款</view>
@@ -385,8 +385,8 @@
 			},
 
 			goActivity() {
-				let pages = getCurrentPages();  //获取所有页面栈实例列表
-				console.log(pages)
+				// let pages = getCurrentPages();  //获取所有页面栈实例列表
+				// console.log(pages)
 				
 				
 				uni.redirectTo({
@@ -470,9 +470,11 @@
 					this.showType = 'success'
 					this.$refs.popup.open('center')
 					this.state = 3
-				} else if (data.code == 2) {
+				} else if (data.code == 2 || data.code == 3) {
 					this.showType = 'backerror'
 					this.$refs.popup.open('center')
+					this.$toast(data.msg)
+				}else{
 					this.$toast(data.msg)
 				}
 			},
