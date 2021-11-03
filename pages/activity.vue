@@ -421,9 +421,10 @@
 					let clueInfo = await api.getClueInfo({
 						activityId: this.activityId
 					})
-					if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
-
-					this.orderDetail = clueInfo.data.orderDetail
+					if (clueInfo.code == 1) {
+						this.isApply = clueInfo.data.isApply
+						this.orderDetail = clueInfo.data.orderDetail
+					}
 					//0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
 					if (clueInfo.code == 1 && clueInfo.data.orderDetail && clueInfo.data.orderDetail.orderId && 
 						(	clueInfo.data.orderDetail.orderStatus != 5 || 	clueInfo.data.orderDetail.orderStatus != 6) ) {
