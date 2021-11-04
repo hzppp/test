@@ -37,14 +37,18 @@
 			<view class="operation-list">
 				<view class="type-c"
 					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
-					<button class="over-btn" hover-class="none">活动已结束</button>
+					<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
+					<button v-else
+						:class="haveBuy?'over-btn1':'over-btn'"
+						style="width::'686rpx;border-radius: 44rpx;" @tap="formShow"
+						v-else>{{haveBuy?'查看订单':'活动已结束'}}</button>
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
 						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>
 
 					<template v-if="!isActStart ">
-						<button v-if="isApply" :class="'enroll-btn enroll-btn3'"
+						<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
 							:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
 						<!-- 下订活动活动未开始不允许点击 -->
 						<button v-if="buyOrder" :class="'enroll-btn enroll-btn3'"
@@ -232,10 +236,19 @@
 							url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
 						})
 					} else {
+						
+						if(this.isActEnded){
+							return
+						}
+						// #ifdef MP-WEIXIN
 						// 未购买
 						uni.navigateTo({
 							url: `/pages/buyOrder?activityId=${this.content.id}`
 						})
+						// #endif
+					// #ifndef MP-WEIXIN
+					 this.$toast('请在微信搜索本小程序参与')
+					// #endif
 					}
 
 					return
@@ -416,12 +429,13 @@
 					let clueInfo = await api.getClueInfo({
 						activityId: this.activityId
 					})
-					if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
-
-					this.orderDetail = clueInfo.data.orderDetail
+					if (clueInfo.code == 1) {
+						this.isApply = clueInfo.data.isApply
+						this.orderDetail = clueInfo.data.orderDetail
+					}
 					//0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
 					if (clueInfo.code == 1 && clueInfo.data.orderDetail && clueInfo.data.orderDetail.orderId && 
-							clueInfo.data.orderDetail.orderStatus != 0 ) {
+						(clueInfo.data.orderDetail.orderStatus != 3 &&	clueInfo.data.orderDetail.orderStatus != 5 && 	clueInfo.data.orderDetail.orderStatus != 6) ) {
 						this.haveBuy = true
 					}
 					if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
@@ -784,6 +798,13 @@
 				height: 88rpx;
 				color: #ffffff;
 				background-color: #cccccc;
+				border-radius: 44rpx;
+			}
+			.over-btn1 {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #FA8845;
 				border-radius: 44rpx;
 			}
 		}

@@ -5,8 +5,8 @@
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
           <view class="code">订单ID：{{ item.outTradeNo }}</view>
-		  <view class="playState">{{item.status | formatState}}</view>
-          <view class="title">{{ item.prizeName }}</view>
+		  <view :class="['playState' ,'state' +  item.status ]">{{item.status | formatState}}</view>
+          <view class="title">{{ item.productName }}</view>
           <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
 		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
           <view class="detail">{{"¥" +  item.totalFee  }}</view>
@@ -18,8 +18,8 @@
       <view style="height:145rpx;"></view>
       <view class="none-icon"></view>
       <view class="none-text">
-        <view class="textK">你现在还没有中奖记录哦~</view>
-        <view class="textK">快去参与抽奖吧~</view>
+        <view class="textK">你现在还没有订单哈~</view>
+        <!-- <view class="textK">快去参与抽奖吧~</view> -->
       </view>
 <!--      <button class="golottery" @tap="golottery">去抽奖</button>-->
     </block>
@@ -223,10 +223,36 @@ name: "lotteryRecord",
 	font-size: 24rpx;
 	font-weight: 500;
 	text-align: left;
-	color: #f04242;
+	color: #FA8845;
 	padding: 0 10rpx 0;
 	line-height:40rpx;
-	border: 1px solid #F04242;
+	border: 1px solid #FA8845;
 	border-radius: 20rpx;
+}
+
+
+.state0{
+	color: #F04242;
+	border: 1px solid #F04242;
+}
+.state2{
+	color: #FA8845;
+	border: 1px solid #FA8845;
+}
+.state4{
+	color: #FFD4B1;
+	border: 1px solid #FFD4B1;
+}
+.state1{
+	color: #333333;
+	border: 1px solid #333333;
+}
+.state3{
+	color: #999999;
+	border: 1px solid #999999;
+}
+.state5{
+	color: #CCCCCC;
+	border: 1px solid #CCCCCC;
 }
 </style>

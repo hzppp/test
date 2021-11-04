@@ -135,7 +135,7 @@ export default {
 		
 		//yuchen 测试 
 		// this.removeSessionKey()
-	   // this.setSessionKey("j8AtsfeLnWnBA1yNIjv5HnQQPvDrE6Rw")
+	   // this.setSessionKey("iICOV95KmScezeQn3P8iFg1euncuqrxX")
 		
 		await this.checkExpireTime(api)
 		// 先判断微信  session 是否有效

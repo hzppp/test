@@ -2,6 +2,15 @@ import api from '@/public/api/index'
 export default {
 
 	async pay(id, callback) {
+		
+		// #ifndef MP-WEIXIN
+		uni.showToast({
+			title: '在微信搜索本小程序参与',
+			icon: "none"
+		})
+		return
+		// #endif
+		 
 		let {
 			data = {}
 		} = await api.getActivityContent(id)

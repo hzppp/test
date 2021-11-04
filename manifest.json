@@ -83,7 +83,8 @@
         "setting" : {
             "minified" : true,
             "postcss" : false,
-            "es6" : false
+            "es6" : false,
+            "urlCheck" : false
         }
     },
     "uniStatistics" : {
