@@ -93,7 +93,7 @@
 				</view> -->
 				<view class="list models" v-if="smsCodeShow">
 				    <view class="list-title">验证码</view>
-				    <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo"/>
+				    <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="smsCode" />
 				    <view class="get-code" v-if="timeDownFalg" @tap="getSmsCodeClick">{{smsCodeText}}</view>
 				    <view class="downcount" v-else>{{smsCodeText}}</view>
 				</view>
