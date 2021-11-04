@@ -134,6 +134,13 @@
 			<view class="look-coupon-btn" @tap="toMyPage">查看优惠券</view>
 			<view class="close-btn-bd2" @tap="formHide"></view>
 		</view>
+		<!-- 签到成功 -->
+		<view class="checkin-success-pop" v-if="popName == 'checkin-success-pop'">
+			<view class="checkin-success-icon"></view>
+			<view class="p1">签到成功</view>
+			<text class="p2">可以参与抽奖啦</text>
+			<view class="look-coupon-btn" @tap="toDraw">去抽奖</view>
+		</view>
 	</view>
 </template>
 
@@ -237,27 +244,35 @@
 		},
 		methods: {
 			  async formShow(name, from = "", obj = {}, title) {
+				  console.log("obj",obj)
 				this.popName = name
-				this.from = from
-				this.currentObj = obj
-				this.title = title
-				this.smsCode = ''
-				// this.provinceList = this.currentObj.regionList
-				// this.cities = this.provinceList[0].cities
-				this.serialList = this.currentObj.serialGroupList
-				if(this.currentObj && this.currentObj.noSer){
-					 // 不自动选车型
+				if(this.popName == 'checkin-success-pop'){
+					this.isShowFormPop = true;
 				}else{
-				  this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+					this.from = from
+					this.currentObj = obj
+					this.title = title
+					this.smsCode = ''
+					// this.provinceList = this.currentObj.regionList
+					// this.cities = this.provinceList[0].cities
+					this.serialList = this.currentObj.serialGroupList
+					if(this.currentObj && this.currentObj.noSer){
+						// 不自动选车型
+					}else{
+					this.crtSerialItem = this.serialList.length ? this.serialList[0] : {}
+					}
+					await this.reqProvincecities()
+					this.getpreClue()
 				}
-				await this.reqProvincecities()
-				this.getpreClue()
-				
 			},
 			doPy() {
 				uni.navigateTo({
 					url: '/pages/changanPy'
 				})
+			},
+			//去抽奖
+			toDraw(){
+				this.$emit('subSuccess','draw')
 			},
 			closeBtnClick() {
 				if (this.from == 'activity') {
@@ -521,7 +536,7 @@
 				let data = await api.submitClue(pam)
 				let popname
 				if (data.code == 1) { //成功留资
-					console.log(ly + data)
+					console.log("成功留资",ly ,lydx.from,lydx.activityType)
 					if ((ly == 'lbactivity' || lydx.from == 'lbactivity') && lydx.isActStart) {
 						if (lydx.activityType == 'wawaji') {
 							if (lydx.actSelect == 0) {
@@ -550,6 +565,8 @@
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 										.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
 								})
+							}else if(lydx.activityType == 'checkIn'){
+								this.popName = 'checkin-success-pop'
 							} else {
 								uni.reLaunch({
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
@@ -560,6 +577,12 @@
 						}
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity' 
+
+						if(lydx.activityType == 'checkIn'){
+							this.$emit('subSuccess')
+							
+						}
+						
 						//跳转抽奖
 						// this.popName = 'lbactivity'
 						// let url = '/pages/lotteryPage?activityId=' + lydx.id

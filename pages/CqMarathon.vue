@@ -4,7 +4,7 @@
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth" style="top: 128rpx"></button>
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
-			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'重庆马拉松门票抽奖活动'" :noShowHouse="!!(isApply == 0)">
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'" :noShowHouse="!!(isApply == 0)">
 			</page-top>
 			<form-pop ref="formpop" @subSuccess="subSuccess()"></form-pop>
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
@@ -76,13 +76,13 @@
 							<view class="invitered_count" v-if="inviteCount > 0" @click="goInviteRecord"
 								>已有{{ inviteCount }}位好友报名 <text class="_sp">»</text></view
 							>
-							<view class="invitered_count" v-else>邀请好友报名可参与门票抽奖哦~</view>
+							<view class="invitered_count" v-else>邀请好友报名可参与抽奖哦~</view>
 						</template>
 					</view>
 					<!--  #ifdef MP-WEIXIN  -->
 					<view>
 						<button
-							:open-type="[content.sharePosterPic ? '' : 'share']"
+							:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 							:class="['btn', isComplete ? '' : 'not_up_to_standard']"
 							@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
 						>
@@ -155,7 +155,7 @@
 					<button
 						v-else
 						class="btn bottom"
-						:open-type="[content.sharePosterPic ? '' : 'share']"
+						:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
 					>
 						{{ isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
@@ -510,6 +510,7 @@ export default {
 			// #ifdef MP-WEIXIN
 			this.content.sharePosterPic && this.$refs.popup.open("bottom")
 			// #endif
+			console.log('shareChoise')
 		},
 
 		// 分享好友关闭

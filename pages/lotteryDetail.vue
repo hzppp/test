@@ -6,9 +6,13 @@
         <view class="headerInfo">
           <view class="lDetail">
             <view class="prizeName">{{detailInfo.prizeName}}</view>
-            <view class="prizeCode" v-if="detailInfo.source !=3"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
+            <!--  #ifdef MP-WEIXIN  -->
+            <view class="services-btn" @tap="toServices(detailInfo.csUrl)" v-if="detailInfo.csUrl">点击添加客服</view>
+            <!-- #endif -->
+			<view class="services-btn1" @tap="toCollectInfor(detailInfo.externalLink)" v-if="detailInfo.externalLink&&detailInfo.source==4">登记信息</view>
+            <view class="prizeCode" v-if="detailInfo.source !=3 && detailInfo.source!=4"><view>核销码：</view> <view class="code">{{ detailInfo.verificationCode }}</view></view>
             <!-- 积分商品 -->
-            <view class="prizeScore" v-else>
+            <view class="prizeScore" v-else-if="detailInfo.source!=4">
               <view>
                 <view class="code"><text>{{detailInfo.price}}</text> 积分</view>
                 <view class="description">需自行去长安商城兑换商品，兑换记录在商城查看</view>
@@ -41,6 +45,7 @@
 <script>
 import api from '@/public/api/index'
 import login from '@/units/login'
+import domain from '@/configs/interface';
 export default {
   name: "lotteryDetail",
   data() {
@@ -65,7 +70,7 @@ export default {
         setTimeout(() => {
           uni.hideLoading()
         },300)
-        if(res.code == 1) {
+        if(res.code == 1) {	
           return res.data || {}
         }else {
           uni.showToast({
@@ -74,16 +79,37 @@ export default {
           })
         }
       })
+
     }
   },
   methods: {
       toExternalPage(url){
+		 
         if (url && url.substring(0, 4) == "http") {
           uni.navigateTo({
               url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
           })
         }
-      }       
+      },
+	  toCollectInfor(url){
+		   let weburl;
+		  if(url.indexOf('?') == -1){
+		  	  weburl =`${url}?id=${this.detailInfo.activityId}&order=${this.detailInfo.id}`
+		  }else{
+		  	  weburl =`{url}&id=${this.detailInfo.activityId}&order=${this.detailInfo.id}`
+		  }
+		  console.log('url',weburl)
+		 uni.redirectTo ({
+		     url: `/pages/webview?webURL=${encodeURIComponent(weburl)}`,
+		 })
+	  },
+      toServices(csUrl){
+        let baseUrl = domain.getAPI('serversCode')
+        let url=`${baseUrl}?csUrl=${csUrl}`
+        uni.navigateTo({
+            url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+        })
+      }         
   }
 }
 </script>
@@ -142,6 +168,32 @@ export default {
             color:#FA8845;
           }
         }
+        .services-btn{
+          width: 216rpx;
+          height: 58rpx;
+          line-height: 58rpx;
+          font-size: 24rpx;
+          text-align: center;
+          border-radius: 29rpx;
+          background: #fa8845;
+          color: #ffffff;
+          float: right;
+          transform: translateY(-50%)
+        }
+		.services-btn1{
+			 position: relative;
+		  width: 216rpx;
+		  height: 58rpx;
+		  line-height: 58rpx;
+		  font-size: 24rpx;
+		  text-align: center;
+		  border-radius: 29rpx;
+		  background: #fa8845;
+		  color: #ffffff;
+		  float: right;
+		  margin-bottom: 20rpx;
+		  transform: translateY(-120%)
+		}
         .prizeScore{
           display: flex;
           justify-content: space-between;

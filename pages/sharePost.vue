@@ -149,7 +149,7 @@
 					let arr = item.split('=')
 					if(arr){
 						console.log('array',arr[0],arr[1])
-						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' || page.indexOf('CqMarathon')){
+						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' || arr[0] == 'nums'){
 						  dic[arr[0]] = arr[1]	
 						}
 					}
@@ -170,6 +170,7 @@
 				this.scene1 =this.scene1.replace('actSelect','A')
 				this.scene1 =this.scene1.replace('sourceUserId','O')	
 				this.scene1 =this.scene1.replace('Vouchers','V')
+				this.scene1 =this.scene1.replace('checkIn','S')
 				// this.scene1 = 'dd=169&ll=gg&型=ww&aa=1&ss=72160'
 				//pages/CqMarathon 分享测试用
 				// if(page == 'pages/CqMarathon' && domain.getCurrentEnv() == 1){
@@ -317,6 +318,7 @@
 									})
 								},
 								fail: function(res) {
+									that.$toast('您当前未授权相册权限，请到设置中开启')
 									console.log('保存到相册授权失败', res);
 
 								}

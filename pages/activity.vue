@@ -26,7 +26,8 @@
 				</view>
 			</view>
 			<!-- customAdList -->
-			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)">
+			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)"
+				:key="index">
 				<image style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;"
 					:src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
@@ -36,22 +37,35 @@
 			<view class="operation-list">
 				<view class="type-c"
 					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
-					<button class="over-btn" hover-class="none">活动已结束</button>
+					<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
+					<button v-else
+						:class="haveBuy?'over-btn1':'over-btn'"
+						style="width::'686rpx;border-radius: 44rpx;" @tap="formShow"
+						v-else>{{haveBuy?'查看订单':'活动已结束'}}</button>
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>		
-					
-					<template v-if="!isActStart && isApply">
-						<button :class="'enroll-btn enroll-btn3'" :style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
+						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>
+
+					<template v-if="!isActStart ">
+						<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
+							:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
+						<!-- 下订活动活动未开始不允许点击 -->
+						<button v-if="buyOrder" :class="'enroll-btn enroll-btn3'"
+							:style="{width:canShare?'420rpx':'686rpx'}">活动未开始</button>
 					</template>
-					
+
 					<template v-else>
-						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"
-							v-if="!phone" :style="{width:canShare?'420rpx':'686rpx'}">报名活动</button>
-						<button :class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'" :style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow" v-else>{{fromShowBtnTitle}}</button>
+						<button
+							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+							open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
+							:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
+						<button
+							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+							:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
+							v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
 					</template>
-					
+
 				</view>
 				<view class="type-b" v-else-if="content.needApply == 0">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
@@ -62,7 +76,7 @@
 
 		<view class="myred" @tap='tapmyred()' v-if="red.redDone"></view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
-			<view v-if="!red.redDone" class="redOpenV" >
+			<view v-if="!red.redDone" class="redOpenV">
 				<view @tap='redOpen()' class="redOpenVBtn"></view>
 				<!-- <image  src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redBack.png" mode="aspectFit"></image> -->
 			</view>
@@ -122,11 +136,14 @@
 					amount: 0,
 					redDone: false
 				},
-				redOpening:false,
-				fromShowBtnTitle:'报名活动',
-				voucherShow:false,
-				activitySceneId:'',
-				canShare:true
+				redOpening: false,
+				fromShowBtnTitle: '报名活动',
+				voucherShow: false,
+				activitySceneId: '',
+				canShare: true,
+				buyOrder: false, //是否下订活动
+				haveBuy: false, //已经购买过且有有效订单
+				orderDetail: '' // 订单详情
 
 			}
 		},
@@ -151,7 +168,7 @@
 
 				console.log('liveurl == ', this.liveUrl)
 			}
-			if(options.canShare && options.canShare == 'no'){
+			if (options.canShare && options.canShare == 'no') {
 				this.canShare = false
 			}
 			if (app.Interval) {
@@ -177,6 +194,12 @@
 			this.shareURL = `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
 		},
+	    onShow() {
+		   if(this.activityId){
+			    this.getData()
+		   }
+	     
+	    },
 		onHide() {
 			if (app.Interval) {
 				clearInterval(app.Interval)
@@ -200,12 +223,37 @@
 		},
 		methods: {
 			formShow() {
-				
-				if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
+
+				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
 					// 针对有抽奖凭证的 不能点击
 					return
 				}
-				
+				if (this.buyOrder) {
+					// 下订活动单独处理
+					if (this.haveBuy) {
+						//已经购买且有有有效订单
+						uni.navigateTo({
+							url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
+						})
+					} else {
+						
+						if(this.isActEnded){
+							return
+						}
+						// #ifdef MP-WEIXIN
+						// 未购买
+						uni.navigateTo({
+							url: `/pages/buyOrder?activityId=${this.content.id}`
+						})
+						// #endif
+					// #ifndef MP-WEIXIN
+					 this.$toast('请在微信搜索本小程序参与')
+					// #endif
+					}
+
+					return
+				}
+
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				console.log("已经报名，且为抓娃娃机活动", this.isApply, this.activityType)
@@ -227,7 +275,7 @@
 						url: `/pages/wawaji?activityId=${this.content.id}`
 					})
 				} else {
-				this.$children[3].formShow('form', 'activity', this.content, '报名活动')
+					this.$children[3].formShow('form', 'activity', this.content, '报名活动')
 				}
 				// #endif
 
@@ -370,63 +418,76 @@
 				return number > 9 ? number : '0' + number
 			},
 
-		 async	getData() {
-					try {
-						uni.showLoading({
-							title: '正在加载...'
-						})
-						let {
-							data = {}
-						} = await api.getActivityContent(this.activityId)
-						let clueInfo = await api.getClueInfo({
-							activityId: this.activityId
-						})
-						if (clueInfo.code == 1) this.isApply = clueInfo.data.isApply
-						
-						if(this.isApply && this.activityType != 'wawaji' && this.voucherShow){
-							
-							let str = ''
-							if(app.globalData.wxUserInfo.openId){
-								str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length-6)
-							}
-							
-							this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId +  str; 
-						}
-						
-						this.downDate(data.endTime)
-						this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) > 0)
-						app.Interval = setInterval(() => {
-							this.downDate(data.endTime)
-						}, 1000)
-						this.phone = uni.getStorageSync('userPhone');
-						this.content = data
-						if (this.liveUrl) {
-							this.content.liveUrl = this.liveUrl
-						}
-						this.content.isActStart = this.isActStart
-						
-						
-						if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
-							uni.reLaunch({
-								url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
-							})
-						}
-						if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
-							uni.reLaunch({
-								url: '/pages/lbActivity?id=' + this.activityId 
-							})
-						}
-						// 访问活动 记录活动访问次数
-						api.fetchActivityVisit({
-							'activityId': this.activityId
-						})
-					} catch (err) {
-						console.error(err)
-					} finally {
-						uni.hideLoading()
+			async getData() {
+				try {
+					uni.showLoading({
+						title: '正在加载...'
+					})
+					let {
+						data = {}
+					} = await api.getActivityContent(this.activityId)
+					let clueInfo = await api.getClueInfo({
+						activityId: this.activityId
+					})
+					if (clueInfo.code == 1) {
+						this.isApply = clueInfo.data.isApply
+						this.orderDetail = clueInfo.data.orderDetail
 					}
-				
-				
+					//0待支付 1已支付 2待使用 3退款审核中 4已核销 5已退款 6已失效
+					if (clueInfo.code == 1 && clueInfo.data.orderDetail && clueInfo.data.orderDetail.orderId && 
+						(clueInfo.data.orderDetail.orderStatus != 3 &&	clueInfo.data.orderDetail.orderStatus != 5 && 	clueInfo.data.orderDetail.orderStatus != 6) ) {
+						this.haveBuy = true
+					}
+					if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
+
+						let str = ''
+						if (app.globalData.wxUserInfo.openId) {
+							str = app.globalData.wxUserInfo.openId.substring(app.globalData.wxUserInfo.openId.length -
+								6)
+						}
+
+						this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId + str;
+					}
+
+					this.downDate(data.endTime)
+					this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) >
+						0)
+					app.Interval = setInterval(() => {
+						this.downDate(data.endTime)
+					}, 1000)
+					this.phone = uni.getStorageSync('userPhone');
+					this.content = data
+					if (this.liveUrl) {
+						this.content.liveUrl = this.liveUrl
+					}
+					this.content.isActStart = this.isActStart
+
+
+					if (data.redirectType == 1 && data.h5Link && data.h5Link.substring(0, 4) == "http") {
+						uni.reLaunch({
+							url: `/pages/webview?webURL=${encodeURIComponent(data.h5Link)}`,
+						})
+					}
+					if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
+						uni.reLaunch({
+							url: '/pages/lbActivity?id=' + this.activityId
+						})
+					}
+					// 下订活动专用
+					if (data.miniUrl && data.miniUrl.indexOf('type=buyorder') != -1) {
+						this.buyOrder = true
+					}
+					// 访问活动 记录活动访问次数
+					api.fetchActivityVisit({
+						'activityId': this.activityId
+					})
+				} catch (err) {
+					console.error(err)
+				} finally {
+					uni.hideLoading()
+				}
+
+
 				// #ifdef MP-WEIXIN
 				// 红包相关
 				this.redStatus(this.activityId)
@@ -457,7 +518,7 @@
 			async redRecord() {
 				let data = await api.redRecord({
 					'activityId': this.activityId,
-					'activitySceneId':this.activitySceneId
+					'activitySceneId': this.activitySceneId
 				})
 				console.log('中奖记录', data)
 				let rows = data.rows
@@ -479,46 +540,47 @@
 				if (app.globalData.wxUserInfo && app.globalData.wxUserInfo.openId) {
 					openId = app.globalData.wxUserInfo.openId
 				}
-				
-				if(this.redOpening){
+
+				if (this.redOpening) {
 					return
 				}
-				
+
 				this.redOpening = true
 				uni.showLoading({})
 				try {
-				 let {
-				 	data,code
-				 } = await api.openRed({
-				 	'activityId': this.activityId,
-				 	'openId': openId,
-				 	'scene': '0',
-					'activitySceneId':this.activitySceneId
-				 })
-				 uni.hideLoading()
-				 if(code==-1){
-					this.$toast('活动太火爆啦，请稍后再来') 
-				 }else{
-				  this.red.redDone = true
-				  this.red.amount = data.amount
-				  console.log(data, data.amount)	 
-				 }
-				} catch(err) {
+					let {
+						data,
+						code
+					} = await api.openRed({
+						'activityId': this.activityId,
+						'openId': openId,
+						'scene': '0',
+						'activitySceneId': this.activitySceneId
+					})
 					uni.hideLoading()
-				 	this.$toast('活动太火爆啦，请稍后再来')
+					if (code == -1) {
+						this.$toast('活动太火爆啦，请稍后再来')
+					} else {
+						this.red.redDone = true
+						this.red.amount = data.amount
+						console.log(data, data.amount)
+					}
+				} catch (err) {
+					uni.hideLoading()
+					this.$toast('活动太火爆啦，请稍后再来')
 				}
-				
-				 this.redOpening = false
-		
-				
+
+				this.redOpening = false
+
+
 				// #endif
-				
+
 				// #ifdef MP-TOUTIAO
 				this.$toast('请在微信搜索本小程序参与活动')
-	
+
 				// #endif
-				
-				
+
+
 			},
 
 
@@ -528,7 +590,7 @@
 			tapmyred() {
 				this.$refs.popup.open('center')
 			},
-			subSuccess(){
+			subSuccess() {
 				// 留资成功
 				this.isApply = true
 			}
@@ -688,6 +750,7 @@
 				box-sizing: border-box;
 				background-color: #FFFFFF;
 			}
+
 			.enroll-btn4 {
 				width: 420rpx;
 				height: 88rpx;
@@ -699,6 +762,7 @@
 				font-size: 27rpx;
 				line-height: 88rpx;
 			}
+
 			.enroll-btn {
 				width: 420rpx;
 				height: 88rpx;
@@ -706,8 +770,9 @@
 				background-color: #fa8845;
 				border-radius: 44rpx;
 			}
+
 			.enroll-btn3 {
-				background-color: #DEDEDE;	
+				background-color: #DEDEDE;
 			}
 		}
 
@@ -735,6 +800,13 @@
 				background-color: #cccccc;
 				border-radius: 44rpx;
 			}
+			.over-btn1 {
+				width: 686rpx;
+				height: 88rpx;
+				color: #ffffff;
+				background-color: #FA8845;
+				border-radius: 44rpx;
+			}
 		}
 	}
 
@@ -743,7 +815,8 @@
 		width: 560rpx;
 		height: 760rpx;
 		.setbg(560rpx, 760rpx, 'redBack.png');
-		.redOpenVBtn{
+
+		.redOpenVBtn {
 			// background: #0062CC;
 			position: absolute;
 			top: 146rpx;
@@ -751,7 +824,7 @@
 			width: 249rpx;
 			height: 250rpx;
 			.setbg(249rpx, 250rpx, 'redBackOpen.png');
-			
+
 		}
 	}
 

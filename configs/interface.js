@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST;
-const version = 1033;
+const CUR_ENV = ENV.RELEASE; 
+const version = 1045;
 
 
 
@@ -286,9 +286,27 @@ const config = {
 		//根据经销商查询车系
 		listByDealer:`${DOMAIN.changan}/api/xcx/serialGroup/listByDealer`,
 		//查询用户基本信息
-		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`
+		queryingUserInfor:`${DOMAIN.changan}/api/xcx/user/base/info`,
+		//活动扫码签到
+		checkIn:`${DOMAIN.changan}/api/xcx/activity/checkIn`,
+		//查询用户的活动签到状态
+		checkInStatus:`${DOMAIN.changan}/api/xcx/activity/checkIn/status`,
+		// 客服url
+		serversCode: `${DOMAIN.changan}/wap/#/serversCode`,
 		
-		
+		//订单相关
+		// 订单详情
+		orderDetail: `${DOMAIN.changan}/api/xcx/order/order`,
+		// 获取用户订单列表
+		orders: `${DOMAIN.changan}/api/xcx/order/orders`,
+		// 生成订单
+		preOrder: `${DOMAIN.changan}/api/xcx/order/preOrder`,
+		// 微信小程序客户端支付回调
+		preOrderBack: `${DOMAIN.changan}/api/xcx/order/preOrder/callback`,
+		// 用户申请退款
+		apply: `${DOMAIN.changan}/api/xcx/order/refund/apply`,
+		// 取消申请退款
+		cancelApply: `${DOMAIN.changan}/api/xcx/order/refund/cancel`,
 		
 		
 	},
