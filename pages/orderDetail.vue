@@ -96,8 +96,8 @@
 			<view class="popV" v-if="showType=='showtexteare'">
 				<view class="setitle">退款成功后会取消相应的权益，请登记一下您的退款原因</view>
 				<view class="textareaback">
-					<textarea placeholder="请填写退款原因" maxlength="80" v-model="backReason"
-						placeholder-style="color:#CCCCCC;" />
+					<textarea placeholder="请填写退款原因" maxlength="80" v-model="backReason" confirm-type='done'
+						 />
 				</view>
 				<view class="cancle" @tap='popCancle()'>取消</view>
 				<view class="soure" @tap='backSoure()'>确定退款</view>
@@ -373,7 +373,7 @@
 						})
 					
 					} else {
-						// 还没有到有效期
+						// // 还没有到有效期
 						this.showType = 'backerror'
 						this.$refs.popup.open('center')
 					}
