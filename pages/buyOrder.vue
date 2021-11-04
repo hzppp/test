@@ -10,15 +10,15 @@
 
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
-			<image v-if="products.picUrl&&products.picUrl.indexOf('http')!=-1" mode="widthFix" :src="products.picUrl" />
-			<view  v-if="products.picUrl&&products.picUrl.indexOf('http')!=-1" style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
+			<image v-if="products&&products.picUrl.length>4" mode="widthFix" :src="products.picUrl" />
+			<view  v-if="products&&products.picUrl.length>4" style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
 			<view class="content">
 				<view class="title">报名信息</view>
 				<view class="list models">
 					<view class="list-title">车型</view>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'" class="select">
-						<view style="width: 450rpx">{{showSerialText}}</view>
+						<view style="width: 470rpx">{{showSerialText}}</view>
 					</picker>
 					<view v-else class="select place" @tap="showToast('暂无车型')">
 						<view>暂无车型</view>
@@ -30,9 +30,9 @@
 					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange"
 						mode="multiSelector" :range="[provinceList, cities]" :range-key="'name'" class="select"
 						:value="selectIndex">
-						<view v-if="showProvinceCityText&&showProvinceCityText.length" style="width: 450rpx">
+						<view v-if="showProvinceCityText&&showProvinceCityText.length" style="width: 470rpx">
 							{{showProvinceCityText}}</view>
-						<view v-else class="place" style="width: 450rpx">请选择城市</view>
+						<view v-else class="place" style="width: 470rpx">请选择城市</view>
 					</picker>
 					<view class="arrow"></view>
 				</view>
@@ -40,9 +40,9 @@
 					<view class="list-title">地区</view>
 					<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
 						:range="districtList" :range-key="'name'" class="select">
-						<view v-if="showDistrictText&&showDistrictText.length" style="width: 450rpx">
+						<view v-if="showDistrictText&&showDistrictText.length" style="width: 470rpx">
 							{{showDistrictText}}</view>
-						<view v-else class="place" style="width: 450rpx">请选择地区</view>
+						<view v-else class="place" style="width: 470rpx">请选择地区</view>
 					</picker>
 					<i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
 					<view class="arrow"></view>
@@ -54,12 +54,12 @@
 					<block>
 						<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex"
 							:range="dealerList" :range-key="'name'" class="select" :value="selectDealerIndex">
-							<view style="width: 450rpx">{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
+							<view style="width: 470rpx">{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 						</picker>
 						<view v-else class="select">
 							<view v-if="showProvinceCityText&&showProvinceCityText.length" class="place"
-								style="width: 450rpx">暂无对应经销商 </view>
-							<view v-else class="place" style="width: 450rpx">请选择经销商</view>
+								style="width: 470rpx">暂无对应经销商 </view>
+							<view v-else class="place" style="width: 470rpx">请选择经销商</view>
 						</view>
 						<view class="arrow"></view>
 					</block>
@@ -81,7 +81,7 @@
 					<!-- #endif -->
 				</view>
 
-				<view class="list models" v-if="smsCodeShow">
+				<!-- <view class="list models" v-if="smsCodeShow">
 					<view class="list-title">验证码</view>
 					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码"
 						placeholder-style="color: #CCCCCC;" placeholder-class="placeholder" class="select"></input>
@@ -90,6 +90,12 @@
 						{{smsCodeText}}
 					</view>
 
+				</view> -->
+				<view class="list models" v-if="smsCodeShow">
+				    <view class="list-title">验证码</view>
+				    <input class="select" :always-embed="true" placeholder="请输入验证码" v-model="codeNum" @input="checkInfo"/>
+				    <view class="get-code" v-if="timeDownFalg" @tap="getSmsCodeClick">{{smsCodeText}}</view>
+				    <view class="downcount" v-else>{{smsCodeText}}</view>
 				</view>
 
 
@@ -123,6 +129,7 @@
 				serialList: [],
 				provinceList: [],
 				cities: [],
+			    timeDownFalg: true, //验证码倒计时标识
 				districtList: [],
 				dealerList: [],
 				crtSerialItem: {}, // 当前选择的车型
@@ -230,10 +237,28 @@
 			this.sourceUserId = options.sourceUserId
 			await distance.getLocation()
 			await login.checkLogin(api)
+			this.getData()
 
 		},
-		onShow() {
-			this.getData()
+		async onShow() {
+			if(this.id){
+				let {
+					data = {}
+				} = await api.getActivityContent(this.id)
+							
+				let clueInfo = await api.getClueInfo({
+					activityId: this.id
+				})
+				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
+							
+				this.currentObj = data
+				if (data.products) {
+					this.products = data.products[0]
+				}
+			}	
+			
+			
+			// console.log('asdhiashih', this.products,this.products.picUrl.length>0,this.products.picUrl.indexOf('http')!=-1)
 		},
 
 		methods: {
@@ -279,9 +304,6 @@
 				} finally {
 					uni.hideLoading()
 				}
-
-
-
 			},
 			// 获取验证码被点击
 			getSmsCodeClick() {
@@ -297,6 +319,7 @@
 					return
 				}
 
+                this.timeDownFalg = false
 				this.smsCodeTime = 60
 				this.smsCodeText = this.smsCodeTime + 's'
 				this.reqCode()
@@ -307,6 +330,7 @@
 					this.smsCodeTime--
 					this.smsCodeText = this.smsCodeTime + 's'
 					if (this.smsCodeTime <= 0) {
+						this.timeDownFalg = true
 						this.smsCodeText = '重新发送'
 						clearTimeout(this.smsCodeTimer)
 					} else {

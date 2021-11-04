@@ -236,6 +236,10 @@
 							url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
 						})
 					} else {
+						
+						if(this.isActEnded){
+							return
+						}
 						// #ifdef MP-WEIXIN
 						// 未购买
 						uni.navigateTo({

@@ -93,15 +93,14 @@
 			</view>
 		</view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
-			<view class="popV" v-if="showType=='showtexteare'">
+		<!-- 	<view class="popV" v-if="showType=='showtexteare'">
 				<view class="setitle">退款成功后会取消相应的权益，请登记一下您的退款原因</view>
 				<view class="textareaback">
-					<textarea placeholder="请填写退款原因" maxlength="80" v-model="backReason" confirm-type='done'
-						 />
+					<textarea placeholder="请填写退款原因" maxlength="80"  v-model="backReason" confirm-type='done'/>
 				</view>
 				<view class="cancle" @tap='popCancle()'>取消</view>
 				<view class="soure" @tap='backSoure()'>确定退款</view>
-			</view>
+			</view> -->
 
 			<view class="popV success" v-if="showType=='success'">
 				<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/backOrderSuccess.png"></image>
@@ -129,6 +128,19 @@
 			</view>
 
 		</uni-popup>
+	
+	<view v-if="showType=='showtexteare'" style="width:750rpx;height: 100vh;position: fixed;top: 0rpx;left: 0rpx;">
+		<view style="width:100%;height: 100%;background: #000000;opacity: 0.5;"></view>
+		<view class="popV"  style="position: fixed;top: 351rpx;left: 75rpx;">
+		<view class="setitle">退款成功后会取消相应的权益，请登记一下您的退款原因</view>
+		<view class="textareaback">
+			<textarea placeholder="请填写退款原因" maxlength="80"  v-model="backReason" confirm-type='done'/>
+		</view>
+		<view class="cancle" @tap='popCancle()'>取消</view>
+		<view class="soure" @tap='backSoure()'>确定退款</view>
+		</view>
+	</view>
+	
 	</view>
 </template>
 
@@ -266,8 +278,8 @@
 			if (id) {
 				this.getDeatil(id)
 			}
+			
 		},
-
 		onUnload() {
 			console.log('onUnload')
 			this.timer1 && clearInterval(this.timer1)
@@ -366,11 +378,8 @@
 					let j = endtime - time
 					if (j <= 0 && this.detailInfo.couponStatus != 2) {
 						// 到了有效期
-							this.$refs.popup.open('center')
-						this.$nextTick(function() {
-							//success showtexteare
-							this.showType = 'showtexteare'
-						})
+							// this.$refs.popup.open('center')
+						this.showType = 'showtexteare'
 					
 					} else {
 						// // 还没有到有效期
@@ -435,6 +444,7 @@
 
 			popCancle1() {
 				this.$refs.popup.close()
+				this.showType = ''
 				uni.redirectTo({
 					url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
 				})
@@ -442,7 +452,7 @@
 
 			popCancle() {
 				this.$refs.popup.close()
-				
+				this.showType = ''
 				setTimeout(() => {
 					this.getOrderDetail()
 				}, 2000)
@@ -803,6 +813,7 @@
 		background: #FFFFFF; 
 		border-radius: 10rpx;
 		text-align: center;
+		z-index: 999;
 
 		image {
 			// padding-top: 60rpx;
@@ -849,6 +860,7 @@
 				border-radius: 8rpx;
 				padding: 20rpx;
 				text-align: left;
+			
 			}
 		}
 
@@ -863,7 +875,7 @@
 			color: #333333;
 			line-height: 88rpx;
 			text-align: center;
-			margin: 40rpx 0rpx 40rpx 40rpx;
+			// margin: 40rpx 0rpx 40rpx 10rpx;
 		}
 
 		.soure {
