@@ -223,10 +223,10 @@ name: "lotteryRecord",
 	font-size: 24rpx;
 	font-weight: 500;
 	text-align: left;
-	color: #f04242;
+	color: #FA8845;
 	padding: 0 10rpx 0;
 	line-height:40rpx;
-	border: 1px solid #F04242;
+	border: 1px solid #FA8845;
 	border-radius: 20rpx;
 }
 
@@ -234,8 +234,8 @@ name: "lotteryRecord",
 .state0,
 .state2,
 .state4{
-	color: #f04242;
-	border: 1px solid #F04242;
+	color: #FA8845;
+	border: 1px solid #FA8845;
 }
 .state1{
 	color: #333333;

@@ -10,8 +10,8 @@
 
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
-			<image mode="widthFix" :src="products.picUrl" />
-			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
+			<image v-if="products.picUrl&&products.picUrl.indexOf('http')!=-1" mode="widthFix" :src="products.picUrl" />
+			<view  v-if="products.picUrl&&products.picUrl.indexOf('http')!=-1" style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
 			<view class="content">
 				<view class="title">报名信息</view>
 				<view class="list models">
@@ -165,6 +165,7 @@
 			},
 			smsCode(code) {
 				this.canSubmit = this.ifcanSubmit()
+				
 			}
 		},
 

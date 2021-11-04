@@ -40,7 +40,7 @@
 						<view class="item">
 							<view class="babelT">购买时间：</view>{{detailInfo.createTime }}
 						</view>
-						<view class="item">
+						<view class="item" v-if="detailInfo.endTime&&detailInfo.endTime!=0">
 							<view class="babelT">使用期限：</view>{{detailInfo.endTime | formatTimeMins}}
 						</view>
 						<view class="item" v-if="detailInfo.transactionId">
