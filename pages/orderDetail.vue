@@ -276,9 +276,9 @@
 		methods: {
 			async getDeatil() {
                 await this.getOrderDetail()
-				uni.showLoading({
-					title: '正在加载...'
-				})
+				// uni.showLoading({
+				// 	title: '正在加载...'
+				// })
 
 				// this.refStatus()
 				if (this.payState == 1 && (this.state == 0 || this.state == 1)) {
