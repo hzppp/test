@@ -231,11 +231,17 @@ name: "lotteryRecord",
 }
 
 
-.state0,
-.state2,
-.state4{
+.state0{
+	color: #F04242;
+	border: 1px solid #F04242;
+}
+.state2{
 	color: #FA8845;
 	border: 1px solid #FA8845;
+}
+.state4{
+	color: #FFD4B1;
+	border: 1px solid #FFD4B1;
 }
 .state1{
 	color: #333333;
