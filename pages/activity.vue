@@ -15,7 +15,11 @@
 			<view class="date" v-if="isActEnded">活动已结束</view>
 
 			<view class="content">
-				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
+				<image class="content-image"
+				:src="content.detailPic"
+				mode="widthFix"
+				lazy-load="false"
+				@click="imgClick"></image>
 			</view>
 			<view class="serial-list" v-if="content.showCustomAds == 0">
 				<view class="serial-item" v-for="(serialGroupItem, index) in content.serialGroupList" :key="index"
@@ -40,8 +44,8 @@
 					<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
 					<button v-else
 						:class="haveBuy?'over-btn1':'over-btn'"
-						style="width::'686rpx;border-radius: 44rpx;" @tap="formShow"
-						v-else>{{haveBuy?'查看订单':'活动已结束'}}</button>
+						style="width::'686rpx;border-radius: 44rpx;"
+						@tap="formShow">{{haveBuy?'查看订单':'活动已结束'}}</button>
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
 					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
@@ -98,6 +102,27 @@
 
 			<view class="closeBtn" @tap='closePop()'></view>
 		</uni-popup>
+		
+		<uni-popup v-if="activityId == 138" ref="roleImgPopup" :mask-click="false">
+			<view class="rolePopup">
+				<swiper class="s-container"
+						:current="rolesPopupSwiperCurrent"
+						:duration="500"
+						@change="e => this.rolesPopupSwiperCurrent = e.detail.current">
+					<swiper-item class="swiper-item" v-for="(item, index) in 26" :key="index">
+						<image class="item-img" :src="'https://www1.pcauto.com.cn/images/roleImages/' + Math.floor(index / 9) + '-' + (index % 9) + '.jpg'"></image>
+					</swiper-item>
+				</swiper>
+				<view class="number">{{rolesPopupSwiperCurrent + 1}}/26</view>
+				<view class="swiper-control-btn">
+					<view :class="['left', rolesPopupSwiperCurrent != 0 ? 'show' : '']"
+						@click="rolesPopupSwiperCurrent--"></view>
+					<view :class="['right', rolesPopupSwiperCurrent != 25 ? 'show' : '']"
+						@click="rolesPopupSwiperCurrent++"></view>
+				</view>
+				<view class="role-Popup-closeBtn" @click="closeRolesSwiperPopup"></view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -143,12 +168,35 @@
 				canShare: true,
 				buyOrder: false, //是否下订活动
 				haveBuy: false, //已经购买过且有有效订单
-				orderDetail: '' // 订单详情
+				orderDetail: '', // 订单详情
 
+				pxAndRpxRatio: 0.5,
+				rolesPopupSwiperCurrent: 0,
+				roleListInfo: {
+					offsetTop: 1197,
+					offsetLeft: 59,
+					imgWidth: 58,
+					imgHeight: 114,
+					imgPathBaseUrl: '',
+					defaultAboutInterval: 14,
+					roleList: [{
+							y: 0
+						},
+						{
+							y: 121
+						},
+						{
+							y: 242,
+							aboutInterval: 24
+						}
+					]
+				}
 			}
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			this.getPxAndRpxRatio()
+
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
@@ -593,9 +641,64 @@
 			subSuccess() {
 				// 留资成功
 				this.isApply = true
-			}
+			},
 
 
+			imgClick(e) {
+				if ( this.activityId ==  138)
+					this.roleActivityClickFunc(e)
+			},
+			
+			roleActivityClickFunc(e) {
+				const roleListInfo = this.roleListInfo,
+						roleList = roleListInfo.roleList;
+					
+				const left = (e.detail.x - e.currentTarget.offsetLeft) / this.pxAndRpxRatio,
+					top = (e.detail.y - e.currentTarget.offsetTop) / this.pxAndRpxRatio
+				
+				// 判断点击处是否在范围内
+				// if (top < roleListInfo.offsetTop || left < roleListInfo.offsetLeft) return
+				
+				// 相对于图片列表区域左上角的坐标
+				const _left = left - roleListInfo.offsetLeft,
+					_top = top - roleListInfo.offsetTop
+				
+				const rowIndex = roleList.findIndex(item => (item.y <= _top) && (item.y + roleListInfo.imgHeight >= _top))
+				
+				if (rowIndex == -1) return
+				
+				const colIndex = (function() {
+					const aboutInterval = roleList[rowIndex].aboutInterval || roleListInfo.defaultAboutInterval
+					return Math.floor((left + aboutInterval) / (aboutInterval + roleListInfo.imgWidth) - 1)
+				})()
+				console.log(rowIndex + '-' + colIndex)
+				
+				this.openRolesSwiperPopup(rowIndex * 9 + colIndex)
+			},
+
+			// 获取当前屏幕，px和rpx的比例
+			getPxAndRpxRatio() {
+				wx.getSystemInfo({
+					success: (res) => {
+						console.log(res)
+						this.pxAndRpxRatio = (res.windowWidth / 750).toFixed(2);
+						console.log(this.pxAndRpxRatio)
+					}
+				})
+			},
+			
+			rolesSwiperChange(e) {
+				this.rolesPopupSwiperCurrent = e.detail.current
+			},
+			
+			openRolesSwiperPopup(current = 0) {
+				this.rolesPopupSwiperCurrent = current
+				this.$refs['roleImgPopup'].open()
+			},
+			
+			closeRolesSwiperPopup() {
+				this.$refs['roleImgPopup'].close()
+			},
 		}
 	}
 </script>
@@ -911,5 +1014,71 @@
 		width: 64rpx;
 		height: 64rpx;
 		.setbg(64rpx, 64rpx, 'redClose.png');
+	}
+	
+	.rolePopup{
+		width: 500rpx;
+		.s-container{
+			height: 1000rpx;
+			width: 100%;
+			.swiper-item {
+				height: 100%;
+				box-sizing: border-box;
+				position: relative;
+			}
+			.item-img {
+				width: 100%;
+				height: 100%;
+				z-index: 5;
+			}
+		}
+		.number {
+			width: 108rpx;
+			height: 40rpx;
+			position: absolute;
+			left: 50%;
+			bottom: 0;
+			transform: translate(-50%, 0);
+			background-image: url('https://www1.pcauto.com.cn/images/role-swiper-num-bg.png');
+			background-size: 100% 100%;
+			text-align: center;
+			line-height: 40rpx;
+			font-size: 24rpx;
+			color: #fff;
+		}
+		.swiper-control-btn {
+			width: 100%;
+			position: absolute;
+			top: 50%;
+			transform: translate(0, -50%);
+			.left,.right {
+				display: none;
+				width: 48rpx;
+				height: 48rpx;
+				position: absolute;
+				background-image: url('https://www1.pcauto.com.cn/images/role-swiper-control-btn.png');
+				background-size: 100% 100%;
+				&.show {
+					display: inline-block;
+				}
+			}
+			.left {
+				left: -97rpx;
+			}
+			.right {
+				right: -97rpx;
+				transform: rotate(180deg);
+			}
+		}
+		.role-Popup-closeBtn {
+			height: 48rpx;
+			width: 48rpx;
+			position: absolute;
+			bottom: -96rpx;
+			left: 50%;
+			transform: translate(-50%, 0);
+			background-image: url('https://www1.pcauto.com.cn/images/role-swiper-close-btn.png');
+			background-size: 100% 100%;
+		}
 	}
 </style>
