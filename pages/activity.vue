@@ -56,14 +56,20 @@
 					</template>
 
 					<template v-else>
-						<button
-							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-							open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
-							:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
-						<button
-							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-							:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
-							v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+						<button v-if="buyOrder && !haveBuy && (!content.products[0] || content.products[0].stock == 0)" 
+						:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn enroll-btn3'">
+							已被抢完啦
+						</button>
+						<template v-else>
+							<button
+								:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+								open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
+								:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
+							<button
+								:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+								:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
+								v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+						</template>
 					</template>
 
 				</view>
