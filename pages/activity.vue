@@ -115,15 +115,15 @@
 						:current="rolesPopupSwiperCurrent"
 						:duration="500"
 						@change="e => this.rolesPopupSwiperCurrent = e.detail.current">
-					<swiper-item class="swiper-item" v-for="(item, index) in 26" :key="index">
-						<image class="item-img" :src="'https://www1.pcauto.com.cn/images/roleImages/' + Math.floor(index / 9) + '-' + (index % 9) + '.jpg'"></image>
+					<swiper-item class="swiper-item" v-for="item in rolePopupSwiperList" :key="item">
+						<image class="item-img" :src="'https://www1.pcauto.com.cn/images/roleImages/' + item + '.jpg'"></image>
 					</swiper-item>
 				</swiper>
-				<view class="number">{{rolesPopupSwiperCurrent + 1}}/26</view>
+				<view class="number">{{rolesPopupSwiperCurrent + 1}} / {{rolePopupSwiperList.length}}</view>
 				<view class="swiper-control-btn">
 					<view :class="['left', rolesPopupSwiperCurrent != 0 ? 'show' : '']"
 						@click="rolesPopupSwiperCurrent--"></view>
-					<view :class="['right', rolesPopupSwiperCurrent != 25 ? 'show' : '']"
+					<view :class="['right', rolesPopupSwiperCurrent != (rolePopupSwiperList.length - 1) ? 'show' : '']"
 						@click="rolesPopupSwiperCurrent++"></view>
 				</view>
 				<view class="role-Popup-closeBtn" @click="closeRolesSwiperPopup"></view>
@@ -176,27 +176,34 @@
 				haveBuy: false, //已经购买过且有有效订单
 				orderDetail: '', // 订单详情
 
-				pxAndRpxRatio: 0.5,
+				pxAndRpxRatio: 0.5, // 当前屏幕尺寸 px和rpx的比例
 				rolesPopupSwiperCurrent: 0,
-				roleListInfo: {
-					offsetTop: 1197,
+				rolePopupSwiperList: [], // 弹窗swiper imgList
+				roleImgInfo: { // 小图的宽高
+					width: 58,
+					height: 114,
+					verticalInterval: 7
+				},
+				activityStageInfoList: [{
+					offsetTop: 1097,
 					offsetLeft: 59,
-					imgWidth: 58,
-					imgHeight: 114,
-					imgPathBaseUrl: '',
-					defaultAboutInterval: 14,
-					roleList: [{
-							y: 0
-						},
-						{
-							y: 121
-						},
-						{
-							y: 242,
-							aboutInterval: 24
-						}
-					]
-				}
+					width: 634,
+					height: 235,
+					roleList: [
+						['0-0', '0-1', '0-3', '0-2', '0-4', '0-6', '0-8', '1-2', '1-3'],
+						['1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-7']
+					],
+				}, {
+					offsetTop: 1511,
+					offsetLeft: 59,
+					width: 634,
+					height: 356,
+					roleList: [
+						['0-0', '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8'],
+						['1-0', '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8'],
+						['2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7']
+					],
+				}]
 			}
 		},
 		mixins: [shouquan],
@@ -652,32 +659,38 @@
 
 			imgClick(e) {
 				if ( this.activityId ==  138)
-					this.roleActivityClickFunc(e)
+					this.roleActivityClickFunc({
+						touchX: (e.detail.x - e.currentTarget.offsetLeft) / this.pxAndRpxRatio,
+						touchY: (e.detail.y - e.currentTarget.offsetTop) / this.pxAndRpxRatio
+					})
 			},
 			
-			roleActivityClickFunc(e) {
-				const roleListInfo = this.roleListInfo,
-						roleList = roleListInfo.roleList;
-					
-				const left = (e.detail.x - e.currentTarget.offsetLeft) / this.pxAndRpxRatio,
-					top = (e.detail.y - e.currentTarget.offsetTop) / this.pxAndRpxRatio
+			roleActivityClickFunc({ touchX, touchY }) {
+				const roleImgInfo = this.roleImgInfo,
+					activityStageInfoList = this.activityStageInfoList
+
+				const activityStageInfo = activityStageInfoList.find(item => (item.offsetTop <= touchY) && (item.offsetTop + item.height >= touchY))
 				
+				if (!activityStageInfo) return
+
+				const roleList = activityStageInfo.roleList,
+					// 相对于图片列表区域左上角的坐标
+					_left = touchX - activityStageInfo.offsetLeft,
+					_top = touchY - activityStageInfo.offsetTop
+
 				// 判断点击处是否在范围内
-				// if (top < roleListInfo.offsetTop || left < roleListInfo.offsetLeft) return
-				
-				// 相对于图片列表区域左上角的坐标
-				const _left = left - roleListInfo.offsetLeft,
-					_top = top - roleListInfo.offsetTop
-				
-				const rowIndex = roleList.findIndex(item => (item.y <= _top) && (item.y + roleListInfo.imgHeight >= _top))
-				
-				if (rowIndex == -1) return
-				
+				if (_top > activityStageInfo.height || _left < 0 || _left > activityStageInfo.width) return
+
+				const rowIndex = Math.floor((_top + roleImgInfo.verticalInterval) / (roleImgInfo.height + roleImgInfo.verticalInterval))	
 				const colIndex = (function() {
-					const aboutInterval = roleList[rowIndex].aboutInterval || roleListInfo.defaultAboutInterval
-					return Math.floor((left + aboutInterval) / (aboutInterval + roleListInfo.imgWidth) - 1)
+					const aboutInterval = (activityStageInfo.width - roleList[rowIndex].length * roleImgInfo.width) / (roleList[rowIndex].length - 1)
+					console.log(aboutInterval)
+					return Math.floor((_left + aboutInterval) / (aboutInterval + roleImgInfo.width))
 				})()
-				console.log(rowIndex + '-' + colIndex)
+
+				this.rolePopupSwiperList = roleList.reduce((prev, item) => {
+					return [...prev, ...item]
+				})
 				
 				this.openRolesSwiperPopup(rowIndex * 9 + colIndex)
 			},
@@ -686,9 +699,7 @@
 			getPxAndRpxRatio() {
 				wx.getSystemInfo({
 					success: (res) => {
-						console.log(res)
 						this.pxAndRpxRatio = (res.windowWidth / 750).toFixed(2);
-						console.log(this.pxAndRpxRatio)
 					}
 				})
 			},
