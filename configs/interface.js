@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE; 
-const version = 1045;
+const version = 1046;
 
 
 

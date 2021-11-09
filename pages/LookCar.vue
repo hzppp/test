@@ -117,7 +117,7 @@ export default {
                 let ids = []
                 if(code === 1 ) {
                     data.map((v,i) => {
-                        if( i < 2) {
+                        if( i < 3 && v.pcModelId) {
                             ids.push(v.pcModelId)
                         }
                     })
