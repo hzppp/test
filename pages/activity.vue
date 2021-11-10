@@ -113,10 +113,10 @@
 			<view class="rolePopup">
 				<swiper class="s-container"
 						:current="rolesPopupSwiperCurrent"
-						:duration="500"
+						:duration="rolesSwiperDuration"
 						@change="e => this.rolesPopupSwiperCurrent = e.detail.current">
-					<swiper-item class="swiper-item" v-for="item in rolePopupSwiperList" :key="item">
-						<image class="item-img" :src="'https://www1.pcauto.com.cn/images/roleImages/' + item + '.jpg'"></image>
+					<swiper-item class="swiper-item" v-for="(item, index) in rolePopupSwiperList" :key="item">
+						<image class="item-img" :src="(rolesPopupSwiperCurrent <= index + 1 && rolesPopupSwiperCurrent >= index - 1) ? ('https://www1.pcauto.com.cn/images/roleImages/' + item + '.jpg') : ''"></image>
 					</swiper-item>
 				</swiper>
 				<view class="number">{{rolesPopupSwiperCurrent + 1}} / {{rolePopupSwiperList.length}}</view>
@@ -175,7 +175,8 @@
 				buyOrder: false, //是否下订活动
 				haveBuy: false, //已经购买过且有有效订单
 				orderDetail: '', // 订单详情
-
+				
+				rolesSwiperDuration: 500,
 				pxAndRpxRatio: 0.5, // 当前屏幕尺寸 px和rpx的比例
 				rolesPopupSwiperCurrent: 0,
 				rolePopupSwiperList: [], // 弹窗swiper imgList
@@ -684,7 +685,6 @@
 				const rowIndex = Math.floor((_top + roleImgInfo.verticalInterval) / (roleImgInfo.height + roleImgInfo.verticalInterval))	
 				const colIndex = (function() {
 					const aboutInterval = (activityStageInfo.width - roleList[rowIndex].length * roleImgInfo.width) / (roleList[rowIndex].length - 1)
-					console.log(aboutInterval)
 					return Math.floor((_left + aboutInterval) / (aboutInterval + roleImgInfo.width))
 				})()
 
@@ -704,17 +704,15 @@
 				})
 			},
 			
-			rolesSwiperChange(e) {
-				this.rolesPopupSwiperCurrent = e.detail.current
-			},
-			
 			openRolesSwiperPopup(current = 0) {
 				this.rolesPopupSwiperCurrent = current
 				this.$refs['roleImgPopup'].open()
+				this.rolesSwiperDuration = 500
 			},
 			
 			closeRolesSwiperPopup() {
 				this.$refs['roleImgPopup'].close()
+				this.rolesSwiperDuration = 0
 			},
 		}
 	}
