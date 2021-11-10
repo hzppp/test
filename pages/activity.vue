@@ -119,7 +119,7 @@
 						<image class="item-img" :src="(rolesPopupSwiperCurrent <= index + 1 && rolesPopupSwiperCurrent >= index - 1) ? ('https://www1.pcauto.com.cn/images/roleImages/' + item + '.jpg') : ''"></image>
 					</swiper-item>
 				</swiper>
-				<view class="number">{{rolesPopupSwiperCurrent + 1}} / {{rolePopupSwiperList.length}}</view>
+				<view class="number">{{rolesPopupSwiperCurrent + 1}}/{{rolePopupSwiperList.length}}</view>
 				<view class="swiper-control-btn">
 					<view :class="['left', rolesPopupSwiperCurrent != 0 ? 'show' : '']"
 						@click="rolesPopupSwiperCurrent--"></view>
