@@ -115,7 +115,7 @@
 				<view class="title2 error">
 					<text>您已支付的金额将会在3个工作日内系统将会原路返回，请注意查收
 
-						如有其它疑问，可电话咨询 400-2548-265</text>
+						如有其它疑问，可电话咨询 400-0114-638</text>
 				</view>
 				<view class="soure" @tap='goActivity()' style="width: 360rpx;">好的</view>
 			</view>
