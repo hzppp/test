@@ -134,10 +134,10 @@ const COUNTDOWN = 60
         },
         onShow() {
 			if(this.show && this.serialId){
-				 this.reqSerialDetail(this.serialId)
+				 this.reqSerialDetail(this.serialId,2)
 				 this.show = false
 			}
-			 // console.log('22222options :>> ', this.serialId);
+			//  console.log('22222options :>> ', this.serialId);
             this.checkInfo()
         },
         async onLoad(options) {
@@ -183,7 +183,6 @@ const COUNTDOWN = 60
 			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
 			        if(code === 1) {
 			          this.serialId = data[0].pcSerialGroupId
-					  console.log(this.serialId,data[0])
 					  this.reqSerialDetail(this.serialId )
 			        }
 			    } catch (error) {
@@ -246,7 +245,7 @@ const COUNTDOWN = 60
             },
 
             //获取车系详情
-            async reqSerialDetail(sgId) {
+            async reqSerialDetail(sgId,type=1) {
 				if(!sgId){
 				  return
 				}
@@ -258,7 +257,9 @@ const COUNTDOWN = 60
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1) {
                         this.serialData = data
-                        this.currentCaraSerial = data.name
+                        if(type==2){
+                            this.currentCaraSerial = data.name
+                        }
                     }
                 } catch (error) {
                     console.error(error)
