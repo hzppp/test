@@ -134,7 +134,7 @@ const COUNTDOWN = 60
         },
         onShow() {
 			if(this.show && this.serialId){
-				 this.reqSerialDetail(this.serialId,2)
+				 this.reqSerialDetail(this.serialId)
 				 this.show = false
 			}
 			//  console.log('22222options :>> ', this.serialId);
@@ -183,7 +183,7 @@ const COUNTDOWN = 60
 			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
 			        if(code === 1) {
 			          this.serialId = data[0].pcSerialGroupId
-					  this.reqSerialDetail(this.serialId )
+					  this.reqSerialDetail(this.serialId,0)
 			        }
 			    } catch (error) {
 			        console.error(error)
@@ -245,6 +245,8 @@ const COUNTDOWN = 60
             },
 
             //获取车系详情
+            //type=0，从首页预约试驾进入，没有选择车型，默认不显示车型名称
+            //type=1,其他情况则显示车型名称
             async reqSerialDetail(sgId,type=1) {
 				if(!sgId){
 				  return
@@ -257,7 +259,7 @@ const COUNTDOWN = 60
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1) {
                         this.serialData = data
-                        if(type==2){
+                        if(type!=0){
                             this.currentCaraSerial = data.name
                         }
                     }
