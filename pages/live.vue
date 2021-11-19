@@ -2,20 +2,20 @@
 	<view>
 		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title"
 			:isShowBackBtn="'false'"></pageTopCity>
-		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;"> 点击跳转太平洋汽车网+小程序观看直播</view>
+		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;"> 点击跳转长安汽车小程序观看直播 </view>
 		<block v-if="liveList.length">
 			<scroll-view scroll-y lower-threshold="200"  class="live-list">
 				<view class="live-item" v-for="(item,index) in liveList" :key="index" @tap="toLiveDet(item)">
 					<view class="banner">
 						<image class="bg" :src="item.pic" mode="aspectFill"></image>
-						<view v-if="item.state == '直播'" class="icon1 iconB">
+						<view v-if="item.state == 'live'" class="icon1 iconB">
 							<image :src="liveIcon[0]" class="iconK"></image>直播中
 						</view>
-						<view v-else-if="item.state == '回放'" class="icon1">
+						<view v-else-if="item.state == 'playback'" class="icon1">
 							<image :src="liveIcon[2]" class="iconK"></image>回放
 						</view>
 						<view v-else class="icon1">
-							<image :src="liveIcon[1]" class="iconK"></image>{{item.begin_time}}开播
+							<image :src="liveIcon[1]" class="iconK"></image>{{item.begin_time| timeFim}}开播
 						</view>
 					</view>
 					<view class="title">
@@ -51,13 +51,34 @@
 				liveList: [],
 				hasNext: true,
 				pageNum: 1,
-				pageSize: 30,
+				pageSize: 10,
+				total:0,
 				dealerGroupId: '',
 				liveIcon: [
 					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png',
 					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png',
 					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'
 				],
+			}
+		},
+		filters:{
+			timeFim(time){
+				var json_date = new Date(time);
+				
+				//最准确的方式：
+				var year=json_date.getFullYear();//年
+				if (year< 1900) year = year + 1900;
+				var month = json_date.getMonth() + 1;//月
+				if (month < 10) month = '0' + month;
+				var day = json_date.getDate();//日
+				if (day < 10) day = '0' + day;
+				var hour = json_date.getHours();//小时
+				if (hour < 10) hour = '0' + hour;
+				var minute = json_date.getMinutes();//分钟
+				if (minute < 10) minute = '0' + minute;
+				var second = json_date.getSeconds();//秒
+				if (second < 10) second = '0' + second;
+				return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 			}
 		},
 		onLoad() {
@@ -89,14 +110,16 @@
 				if (!this.hasNext) {
 					return false;
 				}
-				let {
-					data
-				} = await api.getLiveList({
+				let  data = await api.getLiveList({
 					page: this.pageNum,
 					num: this.pageSize,
-					'where[0][k]': 'types',
-					'where[0][v]': 'live',
-					'where[1][k]': 'state'
+					'where[0][k]':'types',
+					'where[0][v]':'live',
+					'where[1][k]':'state',
+					'where[1][v]':'end',
+					'desc[0]':'begin_time',
+					'where[1][op]':'!=',
+					
 				})
 				
 				if (!data) {
@@ -105,22 +128,33 @@
 				}
 				
 				const {total, num, page} = data.ext;
-				this.hasNext = total - (num * page) > 0;
+				if(this.pageNum == 1){
+				   this.total = total;	
+				   this.liveList = []
+				}
+				this.hasNext = this.total - (num * page) > 0;
 				
-				data.datas.forEach(function(item) {
-					item.begin_time = item.begin_time.substring(0, 16);
-				})
+				// data.datas.forEach(function(item) {
+				// 	// item.begin_time = item.begin_time.substring(0, 16);
+				// 	// item.begin_time = this.rTime(item.begin_time)
+					
+					
+				// 	// item.begin_time =  new Date(new Date(json_date) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '') 
+				//    item.begin_time = this.timeFor(item.begin_time)
+					
+				// })
 				this.liveList = [...this.liveList, ...data.datas];
 
 				if (this.hasNext) {
 					this.pageNum++;
 				}
 			},
-
+	
 			toLiveDet(item) {
 				wx.aldstat.sendEvent('直播点击')
 
-				if (item.state == '直播' || item.state == '回放') {
+				if (item) {
+					console.log('直播路径','/pages/loading/loading?sharePage=/pages/index/live/liveDetail/liveDetail&index=2&channel=2111171&id=' + item.id)
 					// #ifndef MP-WEIXIN
 					this.$toast('请在微信搜索本小程序参与')
 					// #endif
