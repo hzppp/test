@@ -1306,6 +1306,29 @@ module.exports = {
 		return data
 	},
 
+	packetRecords: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('fetchPacketRecords'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
+
+	openRedPacket: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('openRedPacket'),
+			method: "POST",
+			data: para
+			
+		})
+		return data
+	},
 	
 
 	

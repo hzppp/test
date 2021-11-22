@@ -250,7 +250,7 @@
 			if (!currentLocation) {
 				return
 			}
-			console.log('index_app.globalData.currentLocation', app.globalData.currentLocation)
+			console.log('index_app.globalData.currentLocation',  this.provinceList,app.globalData.currentLocation)
 			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市',
 				'') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 			if (crtLocationProvinceItem) {
@@ -260,7 +260,7 @@
 				this.cityList = this.crtProvinceItem.cities
 				this.crtCityItem = crtLocationCityItem
 
-				console.log('tstst', this.crtProvinceItem, this.crtCityItem)
+				console.log('===================tstst===================', this.crtProvinceItem, this.crtCityItem)
 				// const resData = (await this.getCityId()) || [1000000022,1000000022]
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()

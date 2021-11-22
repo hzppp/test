@@ -5,7 +5,7 @@
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
 				style="top: 128rpx;"></button>
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
-			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse="sourceUserId">
+			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse="sourceUserId" @getTopNavHeigth="getTopNavHeigth">
 			</page-top>
 			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
 
@@ -22,65 +22,96 @@
 			<view class="content">
 				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
 			</view>
-
-			<view class="zw"></view>
-			<view class="operation-list">
-				<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
-					<button class="over-btn" hover-class="none">活动已结束</button>
-				</view>
-				<view class="type-a" v-else>
-					<template v-if="activityType && activityType=='wawaji' || activityType=='checkIn'">
-						<template v-if="isApply && actSelect == 2 && isActStart ">
-							<view class="enroll-btn actSelectOneBtn" @click="actSelect1()">
-								<view class="selectTitle1">车展现场活动</view>
-								<view class="selectTitle2">线下活动</view>
-							</view>
-							<view class="enroll-btn actSelectTwoBtn" @click="actSelect2()">
-								<view class="selectTitle1">奇趣拆盲盒</view>
-								<view class="selectTitle2">线上抽豪礼</view>
-							</view>
-						</template>
+			
+			<!-- 拆红包活动 -->
+			<open-red-packets-activity :navHeight="navHeight" :activityId="activityId" v-if="activityType && activityType=='packets'" ref="redPackets">
+				<view class="package-detail-btn" slot="operateBtn" slot-scope="msg">
+					<template v-if="!isActStart && isApply">
+						<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
+					</template>
+					<template v-else>
+						<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+							@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
 						<template v-else>
+							<button v-if="isApply" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
+							<button v-else class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
+						</template>
+						<view class="chance-count">还有{{msg.data}}次机会</view>
+					</template>
+					<!--  #ifdef MP-WEIXIN  -->
+					<button v-if="content.sharePosterPic"
+						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						@tap='shareChoise()'>分享好友</button>
 
-							<!--  #ifdef MP-WEIXIN  -->
-							<button v-if="content.sharePosterPic"
-								:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-								@tap='shareChoise()'>分享好友</button>
-
-							<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-							<!-- #endif -->
-							<!--  #ifndef MP-WEIXIN  -->
-							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-							<!-- #endif -->
-							
-							<template v-if="!isActStart && isApply">
-								<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
+					<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+					<!-- #endif -->
+					<!--  #ifndef MP-WEIXIN  -->
+					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+					<!-- #endif -->
+					<view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view>
+				</view>
+			</open-red-packets-activity>
+			<template  v-else>
+				<view class="zw"></view>
+				<view class="operation-list">
+					<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
+						<button class="over-btn" hover-class="none">活动已结束</button>
+					</view>
+					<view class="type-a" v-else>
+						<template v-if="activityType && activityType=='wawaji' || activityType=='checkIn'">
+							<template v-if="isApply && actSelect == 2 && isActStart ">
+								<view class="enroll-btn actSelectOneBtn" @click="actSelect1()">
+									<view class="selectTitle1">车展现场活动</view>
+									<view class="selectTitle2">线下活动</view>
+								</view>
+								<view class="enroll-btn actSelectTwoBtn" @click="actSelect2()">
+									<view class="selectTitle1">奇趣拆盲盒</view>
+									<view class="selectTitle2">线上抽豪礼</view>
+								</view>
 							</template>
 							<template v-else>
-									<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-										@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
-									<template v-else>
-										<!-- 如果是到店签到活动 -->
-										<template v-if="activityType=='checkIn'">
-											<!-- 如果未留咨，则取留咨 -->
-											<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply">报名活动</button>
-											<!-- 如果已经留咨但未签到 ，则取扫码签到 -->
-											<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
-											<!-- 如果已经留咨且已签到 ，则去抽奖 -->
-											<button class="enroll-btn enroll-btn2" @tap="formShow" v-if="isApply && ischeckIn">去抽奖</button>
-										</template>	
-										<button class="enroll-btn enroll-btn2" @tap="formShow"
-										v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
-									</template>
-											
+								<!--  #ifdef MP-WEIXIN  -->
+								<button v-if="content.sharePosterPic"
+									:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+									@tap='shareChoise()'>分享好友</button>
+
+								<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+									hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+								<!-- #endif -->
+								<!--  #ifndef MP-WEIXIN  -->
+								<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+									hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+								<!-- #endif -->
+								
+								<template v-if="!isActStart && isApply">
+									<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
+								</template>
+								<template v-else>
+										<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+											@getphonenumber="getPhoneNumber" v-if="!phone">报名活动</button>
+										<template v-else>
+											<!-- 如果是到店签到活动 -->
+											<template v-if="activityType=='checkIn'">
+												<!-- 如果未留咨，则取留咨 -->
+												<button class="enroll-btn enroll-btn2"  @tap="formShow" v-if="!isApply">报名活动</button>
+												<!-- 如果已经留咨但未签到 ，则取扫码签到 -->
+												<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="isApply && !ischeckIn">到店扫码签到后方可抽奖</button>
+												<!-- 如果已经留咨且已签到 ，则去抽奖 -->
+												<button class="enroll-btn enroll-btn2" @tap="formShow" v-if="isApply && ischeckIn">去抽奖</button>
+											</template>	
+											<button class="enroll-btn enroll-btn2" @tap="formShow"
+											v-else>{{(actSelect == 1 && isApply)?"奇趣拆盲盒":"报名活动"}}</button>
+										</template>
+												
+								</template>
 							</template>
 						</template>
-					</template>
-					<button :class="(!isActStart && isApply)?'enroll-btn enroll-btn3': 'enroll-btn'" @tap="formShow" v-else>{{formShowTitle}}</button>
+						<button :class="(!isActStart && isApply)?'enroll-btn enroll-btn3': 'enroll-btn'" @tap="formShow" v-else>{{formShowTitle}}</button>
+					</view>
 				</view>
-			</view>
+			</template>
 		</view>
 
 		<uni-popup ref="popup" type="bottom">
@@ -122,13 +153,15 @@
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import userBand from '@/components/userBand/userBand'
+	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
 	let app = getApp()
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
 			'form-pop': formpop,
 			'page-top': pageTop,
-			'userBand': userBand
+			'userBand': userBand,
+			'open-red-packets-activity':openRedPacketsActivity
 			// 'share-pop': shareSuccess
 		},
 		data() {
@@ -149,8 +182,8 @@
 				lotteryType: '', //转盘类型
 				actSelect: '' ,// 玩法（0   线下   1 线上抽奖  2 both）
 				formShowTitle:'我要参与抽奖',
-				isShowCheckInPop:false  //签到二维码进入报名提示
-				
+				isShowCheckInPop:false,  //签到二维码进入报名提示
+				navHeight:0,
 			}
 		},
 		mixins: [shouquan],
@@ -312,6 +345,10 @@
 			}
 		},
 		methods: {
+			//获取顶部导航栏高度
+			getTopNavHeigth(h){
+				this.navHeight = h
+			},
 			//到店签到活动，判断是否签到
 			async getCheckInStatus(){
 				let checkInStatus = await api.checkInStatus({activityId: this.activityId})
@@ -331,24 +368,24 @@
 						this.formShowTitle = "已报名,活动未开始"
 					}
 					
-					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart)
+					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart) 
 					//是否提交过
-					if (isApply == 1 && this.activityType == "" && this.isActStart) {
-						if(this.lotteryType == 'Vouchers'){
-							uni.redirectTo({
-							 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+					// if (isApply == 1 && this.activityType == "" && this.isActStart) {
+					// 	if(this.lotteryType == 'Vouchers'){
+					// 		uni.redirectTo({
+					// 		 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
+					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							
-							})
-						}else{
-							uni.reLaunch({
-								url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-									.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
+					// 		})
+					// 	}else{
+					// 		uni.reLaunch({
+					// 			url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
+					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
 							
-							})	
-						}
+					// 		})	
+					// 	}
 						
-					}
+					// }
 				}
 				// if(code == 10){
 				// 	// 活动以下架
@@ -456,6 +493,11 @@
 					this.$children[3].formShow('form', formpopName, this.content, '报名活动')
 					// #endif
 				}
+			},
+
+			//开启红包
+			openPackets(){
+				this.$refs.redPackets.openPacket()
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -909,7 +951,23 @@
 		}
 
 	}
-
+	.share-txt{
+		font-size: 24rpx;
+		color: #999999;
+		text-align: center;
+		margin-top: 19rpx;
+		line-height: 1;
+	}
+	.chance-count{
+		position: absolute;
+		.setbg(132rpx,32rpx,'redpackage/chance-bg.png');
+		font-size: 20rpx;
+		text-align: center;
+		line-height: 32rpx;
+		color: #ffffff;
+		top:-15rpx;
+		right:-22rpx;
+	}
 	// 签到报名弹窗
 	.checkin-popup{
 		.mask;
@@ -947,3 +1005,73 @@
 		}
 	}
 </style>
+<style scoped>
+	/deep/.red-package-page .inviteRecord{
+		width:686rpx;
+		margin:0 auto 40rpx;
+		box-sizing: border-box;
+	}
+	/deep/.red-package-page .inviteRecord .title,/deep/.red-package-page .tips .title{
+       color: #ff5b02;
+	   padding: 0;
+    }
+	/deep/.red-package-page .inviteRecord .title:before,
+	/deep/.red-package-page .inviteRecord .title:after,
+	/deep/.red-package-page .tips .title:before,
+	/deep/.red-package-page .tips .title:after{
+		content:"";
+		width:185rpx;
+		height:13rpx;
+		display:inline-block;
+		vertical-align:middle;
+		margin:0 20rpx;
+	}
+	/deep/.red-package-page .inviteRecord .title:before,
+	/deep/.red-package-page .tips .title:before{
+		background: url(https://www1.pcauto.com.cn/changan/xcx/img/redpackage/title-line1.png) no-repeat center/100%;
+	}
+	/deep/.red-package-page .inviteRecord .title:after,
+	/deep/.red-package-page .tips .title:after{
+		background: url(https://www1.pcauto.com.cn/changan/xcx/img/redpackage/title-line2.png) no-repeat center/100%;
+	}
+	/deep/.red-package-page .inviteRecord .item{
+       background: #fff3e3;
+    }
+	/deep/.red-package-page .tips .contentBody .contentTips-outer{
+		background: #fff3e3;
+		color: #333333;
+		font-size: 28rpx;
+		line-height: 54rpx;
+	}
+	/deep/.red-package-page .package-detail-btn{
+		position: absolute;
+		left:50%;
+		bottom:100rpx;
+		transform: translate(-50%,0);
+	}
+	/deep/.red-package-page .enroll-btn{
+		font-size: 36rpx;
+		font-weight: bold;
+		text-align: center;
+		line-height: 100rpx;
+		color: #ffffff;
+		width:560rpx;
+		height:100rpx;
+		background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redpackage/open-btn-bg.png) no-repeat center/100%;
+	}
+	/deep/.red-package-page .share-btn{
+		width: 560rpx;
+		height: 94rpx;
+		border: 3rpx solid #ff5c02;
+		border-radius: 50rpx;
+		font-size: 36rpx;
+		font-weight: 700;
+		text-align: center;
+		color: #ff5c02;
+		margin-top: 24rpx;
+		line-height: 94rpx;
+		background: none;
+	}
+	
+</style>
+

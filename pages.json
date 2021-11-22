@@ -394,6 +394,14 @@
 				
 				
 			}
+		},
+		{
+			"path": "pages/myPackets",
+			"style": {
+				"navigationBarTitleText": "我的红包",
+				"enablePullDownRefresh": false
+				
+			}
 		}
 
 	],
