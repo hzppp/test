@@ -186,7 +186,15 @@
 					verticalInterval: 7
 				},
 				activityStageInfoList: [{
-					offsetTop: 1097,
+					offsetTop: 986,
+					offsetLeft: 59,
+					width: 634,
+					height: 58,
+					roleList: [
+						['0-0', '0-3', '0-4', '0-6', '1-2', '1-3', '1-7', '2-0', '2-1']
+					],
+				}, {
+					offsetTop: 1281,
 					offsetLeft: 59,
 					width: 634,
 					height: 235,
@@ -195,7 +203,7 @@
 						['1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-7']
 					],
 				}, {
-					offsetTop: 1511,
+					offsetTop: 1695,
 					offsetLeft: 59,
 					width: 634,
 					height: 356,
