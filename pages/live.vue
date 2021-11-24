@@ -134,15 +134,29 @@
 				}
 				this.hasNext = this.total - (num * page) > 0;
 				
-				// data.datas.forEach(function(item) {
-				// 	// item.begin_time = item.begin_time.substring(0, 16);
-				// 	// item.begin_time = this.rTime(item.begin_time)
-					
-					
-				// 	// item.begin_time =  new Date(new Date(json_date) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '') 
-				//    item.begin_time = this.timeFor(item.begin_time)
-					
-				// })
+				data.datas.forEach(function(item) {
+				// 直播预告”状态判定方式:
+				// types字段值为:live
+				// state字段值为:live
+				// begin_time字段值：大于当前系统时间
+				
+				// “正在直播”状态判定方式:
+				// types字段值为:live
+				// state字段值为:live
+				// begin_time字段值：小于当前系统时间
+				
+				// “回放”状态判定方式:
+				// types字段值为:live
+				// state字段值为:playback
+				// begin_time字段值：小于当前系统时间  new Date(endtime.replace(/-/g, '/')).getTime()
+				let time = new Date().getTime() 
+				let begin_time = new Date(item.begin_time).getTime()
+				let j = begin_time - time
+				if (item.state == "live" && j > 0) {
+					// console.log('begin_time22',item.state ,begin_time,time,j)
+					item.state = 'willLive'
+				}										
+				})
 				this.liveList = [...this.liveList, ...data.datas];
 
 				if (this.hasNext) {
