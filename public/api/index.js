@@ -1312,7 +1312,10 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('fetchPacketRecords'),
 			method: "POST",
-			data: para
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
 			
 		})
 		return data

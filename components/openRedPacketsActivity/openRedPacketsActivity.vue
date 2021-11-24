@@ -2,7 +2,7 @@
     <view class="red-package-page">
        <view class="package-top" :style="'top:' + navHeight + 'px'">
             <!-- 中奖纪录 -->
-			<win-records :winnerRecords="winnerRecords" :autoplay="autoplay"/>
+			<win-records :winnerRecords="winnerRecords" :autoplay="autoplay" v-if="winnerRecords && winnerRecords.length>=3"/>
             <!-- 我的红包 -->
             <view class="mypackage-btn" @tap="goMyPackage">中奖纪录</view>
         </view>
@@ -69,13 +69,11 @@ export default {
         goMyPackage(){
             if(this.isOpening) return;
             uni.navigateTo({
-                url:'/pages/myPackets'
+                url:`/pages/myPackets?activityId=${this.activityId}`
             })
         },
         async getActivityInfo(){
-            
-            let {activityId} = this;
-            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId})
+            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
                 this.winnerRecords = data.winnerRecords
@@ -118,9 +116,6 @@ export default {
             position: absolute;
             width: 100%;
             left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 20rpx;
             box-sizing: border-box;
         }
@@ -130,6 +125,7 @@ export default {
             text-align: center;
             line-height: 56rpx;
             color: #ffffff;
+            float: right;
         }
         
        

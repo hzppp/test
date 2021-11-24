@@ -26,18 +26,13 @@
 			<!-- 拆红包活动 -->
 			<open-red-packets-activity :navHeight="navHeight" :activityId="activityId" v-if="activityType && activityType=='packets'" ref="redPackets">
 				<view class="package-detail-btn" slot="operateBtn" slot-scope="msg">
-					<template v-if="!isActStart && isApply">
-						<button class="enroll-btn enroll-btn2 enroll-btn3" >已报名，活动未开始</button>
-					</template>
+					<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+						@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
 					<template v-else>
-						<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-							@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
-						<template v-else>
-							<button v-if="isApply" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
-							<button v-else class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
-						</template>
-						<view class="chance-count">还有{{msg.data}}次机会</view>
+						<button v-if="isApply" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
+						<button v-else class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
 					</template>
+					<view class="chance-count">还有{{msg.data}}次机会</view>
 					<!--  #ifdef MP-WEIXIN  -->
 					<button v-if="content.sharePosterPic"
 						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
@@ -497,6 +492,10 @@
 
 			//开启红包
 			openPackets(){
+				//活动未开始或者已结束
+				if((!this.isActStart && this.isApply) || !this.isApply || this.isActEnded){
+					return;
+				}
 				this.$refs.redPackets.openPacket()
 			},
 			// 分享按钮被点击

@@ -46,7 +46,7 @@ export default {
             return time ? time.substr(0,time.length-3) : time;
         },
      },
-    async onLoad(options) {
+    onLoad(options) {
         this.activityId = options.activityId
         uni.showLoading({
             title: '正在加载...'
