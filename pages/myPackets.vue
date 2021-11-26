@@ -1,7 +1,7 @@
 <template>
     <view class="my-packages">
         <userBand></userBand>
-        <block v-if="!(recordsList&&recordsList.length)">
+        <block v-if="recordsList&&recordsList.length">
             <view class="package-top">
                 <view class="package-total">
                     <text class="money">{{amountSum}}</text>元
@@ -12,7 +12,7 @@
                 <view class="title">红包记录</view>
                 <view class="records-list" v-for="(item,index) in recordsList" :key="index">
                     <view class="records-item">
-                        <view class="t1">{{item.winningTime}}</view>
+                        <view class="t1">{{item.winningTime | formatTimeMins}}</view>
                         <view class="t2">成功抽中红包</view>
                         <view class="t3">{{item.amount}}元</view>
                     </view>
@@ -56,7 +56,6 @@ export default {
     methods:{
         async getRecordList(){
             let {activityId}=this
-            uni.hideLoading()
             let {code,data,msg} = await api.packetRecords({activityId})
             if(code == 1){
                 uni.hideLoading()

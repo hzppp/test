@@ -1,47 +1,25 @@
 <template>
-
 	<view>
-
 		<pageTopCity ref="pagetop" :background="'#fff'" :titleys="'#000'" :btnys="''" :title.sync="title"
 			:isShowBackBtn="'false'"></pageTopCity>
-		<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
-		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;"> 点击跳转太平洋汽车网+小程序观看直播
-		</view>
-		<block v-if="nothing">
+		<view style="font-size: 26rpx;margin-bottom: 20rpx;margin-left: 20rpx; color: #AFB3B6;"> 点击跳转长安汽车小程序观看直播 </view>
+		<block v-if="liveList.length">
 			<scroll-view scroll-y lower-threshold="200"  class="live-list">
-				<view class="live-item" v-for="(item,index) in liveList" :key="item.id" @tap="toLiveDet(item)">
-					<!-- <view class="top">
-						<image class="avator" :src="item.headPic"></image>
-						<view class="name">
-							{{item.nickName}}
-						</view>
-					</view> -->
+				<view class="live-item" v-for="(item,index) in liveList" :key="index" @tap="toLiveDet(item)">
 					<view class="banner">
-						<image class="bg" :src="item.cover" mode="aspectFill"></image>
-						<!-- <view class="play"></view>
- -->
-						<view class="icon1 iconB" v-if="item.status == 1">
-							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}
+						<image class="bg" :src="item.pic" mode="aspectFill"></image>
+						<view v-if="item.state == 'live'" class="icon1 iconB">
+							<image :src="liveIcon[0]" class="iconK"></image>直播中
 						</view>
-						<view class="icon1" v-if="item.status == 2 && item.startTime">
-							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.startTime}}开播
+						<view v-else-if="item.state == 'playback'" class="icon1">
+							<image :src="liveIcon[2]" class="iconK"></image>回放
 						</view>
-						<view class="icon1" v-if="item.status == 3">
-							<image :src="liveIcon[item.status-1]" class="iconK"></image>{{item.status | formatStatus}}
+						<view v-else class="icon1">
+							<image :src="liveIcon[1]" class="iconK"></image>{{item.begin_time| timeFim}}开播
 						</view>
-						<!-- <view class="status blue" v-if="item.status==0 || item.status==2">
-						<view class="icon1"></view> {{item.startTime}}开始播放
-					</view>
-					
-					<view class="icon1 status yellow" v-if="item.status==1"> 
-		
-					</view>
-					<view class="icon1  status green" v-if="item.status==3">
-		
-					</view> -->
 					</view>
 					<view class="title">
-						{{item.title}}
+						{{item.name}}
 					</view>
 				</view>
 			</scroll-view>
@@ -59,7 +37,6 @@
 
 <script>
 	import tabBar from '@/components/tabBar/tabBar'
-	// import shouquan from '@/units/shouquan'
 	import api from '@/public/api/index'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	let app = getApp()
@@ -74,16 +51,36 @@
 				liveList: [],
 				hasNext: true,
 				pageNum: 1,
-				pageSize: 30,
+				pageSize: 10,
+				total:0,
 				dealerGroupId: '',
-				nothing: 1,
-				liveIcon: ['https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png',
+				liveIcon: [
+					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/play_icon_3x.png',
 					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/willplay_icon_3x.png',
 					'https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/replay_icon_3x.png'
 				],
 			}
 		},
-		// mixins: [],
+		filters:{
+			timeFim(time){
+				var json_date = new Date(time);
+				
+				//最准确的方式：
+				var year=json_date.getFullYear();//年
+				if (year< 1900) year = year + 1900;
+				var month = json_date.getMonth() + 1;//月
+				if (month < 10) month = '0' + month;
+				var day = json_date.getDate();//日
+				if (day < 10) day = '0' + day;
+				var hour = json_date.getHours();//小时
+				if (hour < 10) hour = '0' + hour;
+				var minute = json_date.getMinutes();//分钟
+				if (minute < 10) minute = '0' + minute;
+				var second = json_date.getSeconds();//秒
+				if (second < 10) second = '0' + second;
+				return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+			}
+		},
 		onLoad() {
 			this.getList()
 		},
@@ -94,11 +91,10 @@
 			})
 			this.pageNum = 1
 			this.hasNext = true
-			// this.liveList = []
 			this.getList()
 			setTimeout(() => {
-					  uni.hideLoading()
-					  uni.stopPullDownRefresh()
+				uni.hideLoading()
+				uni.stopPullDownRefresh()
 			}, 300)
 			
 		},
@@ -108,75 +104,65 @@
 		onShow() {
 
 		},
-		filters: {
-			formatStatus(status) {
-				// <!--contentType 1文章资讯，2活动，3直播-->
-				// <!--status 当为直播类型时 1直播中  2预告  3回放-->
-				switch (status) {
-					case 1: {
-						return '直播中'
-						break;
-					}
-					case 3: {
-						return '回放'
-						break;
-					}
-				}
-			},
-		},
 		methods: {
 			/* 获取列表 */
 			async getList() {
-				// console.log(this.hasNext)
 				if (!this.hasNext) {
 					return false;
 				}
-				let {
-					data
-				} = await api.getLiveList({
-					pageNum: this.pageNum,
-					pageSize: this.pageSize
+				let  data = await api.getLiveList({
+					page: this.pageNum,
+					num: this.pageSize,
+					'where[0][k]':'types',
+					'where[0][v]':'live',
+					'where[1][k]':'state',
+					'where[1][v]':'end',
+					'desc[0]':'begin_time',
+					'where[1][op]':'!=',
+					
 				})
+				
+				if (!data) {
+					this.hasNext = false;
+					return;
+				}
+				
+				const {total, num, page} = data.ext;
+				if(this.pageNum == 1){
+				   this.total = total;	
+				   this.liveList = []
+				}
+				this.hasNext = this.total - (num * page) > 0;
+				
+				// data.datas.forEach(function(item) {
+				// 	// item.begin_time = item.begin_time.substring(0, 16);
+				// 	// item.begin_time = this.rTime(item.begin_time)
+					
+					
+				// 	// item.begin_time =  new Date(new Date(json_date) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '') 
+				//    item.begin_time = this.timeFor(item.begin_time)
+					
+				// })
+				this.liveList = [...this.liveList, ...data.datas];
 
-				data.rows.forEach((item, index) => {
-					item.startTime = item.startTime.substring(0, 16)
-				})
-				if (this.pageNum == 1) {
-					this.liveList = data.rows
-				} else {
-					this.liveList = [...this.liveList, ...data.rows]
-				}
-				if (data.hasNext) {
-					this.pageNum++
-					this.hasNext = true
-				} else {
-					this.hasNext = false
-				}
-				console.log(this.liveList.length, data.rows.length);
-				if (data.rows.length == 0) {
-					this.nothing = 0
-				} else {
-					this.nothing = 1
+				if (this.hasNext) {
+					this.pageNum++;
 				}
 			},
-
+	
 			toLiveDet(item) {
 				wx.aldstat.sendEvent('直播点击')
-				if (item.status == 2 || item.status == 0) {
-					/* 直播预告 */
-					uni.navigateTo({
-						url: '/pages/liveDetail?liveId=' + item.id
-					})
-				} else if (item.status == 1) {
-					/* 直播中 */
+
+				if (item) {
+					console.log('直播路径','/pages/loading/loading?sharePage=/pages/index/live/liveDetail/liveDetail&index=2&channel=2111171&id=' + item.id)
 					// #ifndef MP-WEIXIN
 					this.$toast('请在微信搜索本小程序参与')
 					// #endif
+
 					 // #ifdef MP-WEIXIN
 					uni.navigateToMiniProgram({
-						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalLive&id=' +
-							item.roomId + '&sourceId=' + item.id,
+						appId: 'wx0cd552d51ce3cfc0',
+						path: '/pages/loading/loading?sharePage=/pages/index/live/liveDetail/liveDetail&index=2&channel=2111171&id=' + item.id,
 						extraData: {},
 						// envVersion: 'trial',
 						success(res) {
@@ -184,21 +170,6 @@
 						}
 					})
 				    // #endif
-				} else if (item.status == 3) {
-					//回放
-					// #ifndef MP-WEIXIN
-					this.$toast('请在微信搜索本小程序参与')
-					// #endif
-					uni.navigateToMiniProgram({
-						appId: 'wxa860d5a996074dbb',
-						path: '/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?type=verticalPlayback&id=' +
-							item.playId + '&sourceId=' + item.id,
-						extraData: {},
-						// envVersion: 'trial',
-						success(res) {
-							// 打开成功
-						}
-					})
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 <template>
-    <view class="inviteRecord">
+    <view class="inviteRecord" v-if="isRecordsShow || (!isRecordsShow&&inviteRecordList&&inviteRecordList.length)">
         <view class="title titleK">邀请记录</view>
         <block v-if="inviteRecordList&&inviteRecordList.length">
             <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
@@ -28,7 +28,11 @@ export default {
         activityId:{
             type: String,
             default: ""
-        }
+        },
+		isRecordsShow:{
+			type: Boolean,
+            default: true
+		}
     },
     data() {
         return {
@@ -50,7 +54,7 @@ export default {
 				this.inviteRecordCount = res.total || 0
 				return res.code == 1 ? res.rows : []
 			})
-            console.log(this.inviteRecordList)
+            console.log("isPacket",this.isRecordsShow,this.isRecordsShow&&this.inviteRecordList&&this.inviteRecordList.length)
         },
         goInviteRecord() {
             if(app.globalData.isRotating){

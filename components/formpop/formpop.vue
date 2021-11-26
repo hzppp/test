@@ -567,7 +567,7 @@
 								})
 							}else if(lydx.activityType == 'checkIn'){
 								this.popName = 'checkin-success-pop'
-							} else {
+							} else if(lydx.activityType != 'packets'){
 								uni.reLaunch({
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 										.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
@@ -578,7 +578,7 @@
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity' 
 
-						if(lydx.activityType == 'checkIn'){
+						if(lydx.activityType == 'checkIn' || lydx.activityType == 'packets'){
 							this.$emit('subSuccess')
 							
 						}

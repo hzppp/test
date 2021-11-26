@@ -1327,8 +1327,10 @@ module.exports = {
 		} = await request({
 			url: domain.getAPI('openRedPacket'),
 			method: "POST",
-			data: para
-			
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
 		})
 		return data
 	},

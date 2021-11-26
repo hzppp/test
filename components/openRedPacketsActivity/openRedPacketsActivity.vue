@@ -8,15 +8,18 @@
         </view>
         <slot name="operateBtn" :data="chanceCount"></slot>
        <!-- 邀请记录 -->
-	    <invite-records :activityId="activityId"/>
+	    <invite-records :activityId="activityId" :isRecordsShow="false"/>
        <!-- 抽奖说明 -->
 	   <draw-tips :activityMemoArr="activityMemoArr"/>
        <!-- 中奖弹窗 -->
-       <packet-popup :isOpen.sync="isOpen">
-            <view class="win-inner-con">
+       <packet-popup 
+       :isOpen.sync="isOpen" 
+       :isSharePosterPic="isSharePosterPic"
+       :shareStatus="shareStatus">
+            <view class="win-inner-con" >
                 <block v-if="amount>0">
                     <view class="win-txt1">恭喜获得</view>
-                    <view class="win-money"><text>3.88</text>元</view>
+                    <view class="win-money"><text>{{amount}}</text>元</view>
                     <view class="win-txt2">30分钟内到账微信钱包，请注意查收</view>
                 </block>
                 <block v-else>
@@ -43,6 +46,14 @@ export default {
         activityId:{
             type: String,
             default: ""
+        },
+        shareStatus: {
+			type: Number,
+			default: 0
+		},
+        isSharePosterPic:{
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -59,7 +70,7 @@ export default {
             isOpen:false,
             isOpening:false,//是否正在打开红包
             chanceCount:"",
-
+            autoplay:true
         }
     },
     mounted() {
@@ -86,20 +97,23 @@ export default {
             }
         },
         async openPacket(){
-            this.isOpen = true;
-            this.isOpening =true;
+            if(this.chanceCount<=0) return;
             let {code,data,msg} = await api.openRedPacket({activityId: this.activityId})
-            setTimeout(()=>{
-                this.isOpening=false;
-            },2500)
             if(code==1){
+                this.isOpen = true;
+                this.isOpening =true;
+                setTimeout(()=>{
+                    this.isOpening=false;
+                },2500)
                 this.amount=data.amount
+                this.getActivityInfo();
             }else{
                 uni.showToast({
                     title: msg,
                     icon: "none"
                 })
             }
+            
         }
     },
 }

@@ -12,9 +12,9 @@
             <view class="process process-open-front hide"></view>
             <view class="share-btn-group hide">
                 <!--  #ifdef MP-WEIXIN  -->
-                <button v-if="sharePosterPic"
+                <button v-if="isSharePosterPic"
                     :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-                    @tap='shareChoise()'>分享好友</button>
+                    @tap='sharePosterClick()'>分享好友</button>
 
                 <button v-else :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')"
                     hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
@@ -24,7 +24,7 @@
                     hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
                 <!-- #endif -->
             </view>
-             <view class="close" @click="close"></view>
+             <view class="close hide" @click="close"></view>
         </view>
        
     </view>
@@ -35,14 +35,19 @@ export default {
         isOpen: {
             type: Boolean,
             default: false
-        }
+        },
+        shareStatus: {
+			type: Number,
+			default: 0
+		},
+        isSharePosterPic:{
+            type: Boolean,
+            default: false
+        },
     },
     data() {
       return {
         isMoveStart:false,
-        isWin:true,
-        sharePosterPic:false,
-        shareStatus:false
       }
     },
     created() {
@@ -53,9 +58,13 @@ export default {
        close(){
            this.$emit('update:isOpen',false)
        },
-       openPacket(){
-
-       }
+       sharePosterClick(){
+           this.$EventBus.$emit('shareChoiseFun')
+       },
+       // 分享按钮被点击
+        shareBtnClick() {
+            wx.aldstat.sendEvent('活动分享点击')
+        },
     },
 }
 </script>
@@ -68,7 +77,7 @@ export default {
         left:0;
         top: 0;
         background: rgba(0,0,0,0.5);
-        z-index: 999;
+        z-index: 99;
         .process-cover{
             position: absolute;
             width:560rpx;
@@ -153,6 +162,9 @@ export default {
             }
             .share-btn-group{
                 animation: show 0.6s ease-out 1.8s forwards;
+            }
+            .hide{
+                animation: show 0.6s ease-out 2s forwards;
             }
         }
     }

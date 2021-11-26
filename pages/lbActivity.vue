@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="page-container">
 		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
@@ -24,15 +24,27 @@
 			</view>
 			
 			<!-- 拆红包活动 -->
-			<open-red-packets-activity :navHeight="navHeight" :activityId="activityId" v-if="activityType && activityType=='packets'" ref="redPackets">
+			<open-red-packets-activity 
+				ref="redPackets"
+				:navHeight="navHeight" 
+				:activityId="activityId" 
+				:shareStatus="content.shareStatus"
+				:isSharePosterPic="content.sharePosterPic ? true : false"
+				v-if="activityType && activityType=='packets'" >
 				<view class="package-detail-btn" slot="operateBtn" slot-scope="msg">
-					<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-						@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
+
+					<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="!isActStart">活动未开始</button>
+					<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-else-if="isActEnded">活动已结束</button>
 					<template v-else>
-						<button v-if="isApply" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
-						<button v-else class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
+						<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+							@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
+						<template v-else>
+							<button v-if="!isApply" class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
+							<button v-else-if="isApply && msg.data>0" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
+							<button v-else class="enroll-btn enroll-btn2 enroll-btn-gray">拆红包</button>
+						</template>
+						<view class="chance-count">还有{{msg.data||0}}次机会</view>
 					</template>
-					<view class="chance-count">还有{{msg.data}}次机会</view>
 					<!--  #ifdef MP-WEIXIN  -->
 					<button v-if="content.sharePosterPic"
 						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
@@ -46,6 +58,7 @@
 						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 					<!-- #endif -->
 					<view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view>
+		
 				</view>
 			</open-red-packets-activity>
 			<template  v-else>
@@ -183,6 +196,7 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
+			this.$EventBus.$on('shareChoiseFun',this.shareChoise)
 			if (options.scene) { // 分享海报来的
 				let url = options.scene.indexOf('%')>-1 ? decodeURIComponent(options.scene) : options.scene
 				console.log('===============url1==============',url)
@@ -315,6 +329,7 @@
 		},
 		
 		onHide() {
+			this.$EventBus.$off('shareChoiseFun')
 			if (app.Interval) {
 				clearInterval(app.Interval)
 			}
@@ -496,7 +511,12 @@
 				if((!this.isActStart && this.isApply) || !this.isApply || this.isActEnded){
 					return;
 				}
-				this.$refs.redPackets.openPacket()
+				if(this.$refs.redPackets.chanceCount>0){
+					this.$refs.redPackets.openPacket()
+				}else{
+					this.$toast('手机号码授权失败', 'none', 1500);
+				}
+				
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -559,6 +579,9 @@
 					this.formShow()
 				}else{
 					this.getFission()
+					if(this.activityType="packets"){
+						this.$refs.redPackets.getActivityInfo();
+					}
 				}
 			},
 			getData() {
@@ -581,6 +604,7 @@
 				
 			},
 			shareChoise() {
+				console.log("shareChoise",this)
 				this.$refs.popup.open('bottom')
 			},
 
@@ -639,7 +663,9 @@
 
 <style lang="less">
 	@import '@/static/less/public.less';
-
+	// .page-container{
+	// 	position: relative;
+	// }
 	.title {
 		line-height: 65rpx;
 		padding: 30rpx 32rpx;
@@ -1045,8 +1071,7 @@
 	/deep/.red-package-page .package-detail-btn{
 		position: absolute;
 		left:50%;
-		bottom:100rpx;
-		transform: translate(-50%,0);
+		transform: translate(-50%,-145%);
 	}
 	/deep/.red-package-page .enroll-btn{
 		font-size: 36rpx;
@@ -1057,6 +1082,9 @@
 		width:560rpx;
 		height:100rpx;
 		background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redpackage/open-btn-bg.png) no-repeat center/100%;
+	}
+	/deep/.red-package-page .enroll-btn.enroll-btn-gray{
+		background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redpackage/open-btn-bg-gray.png) no-repeat center/100%;
 	}
 	/deep/.red-package-page .share-btn{
 		width: 560rpx;
