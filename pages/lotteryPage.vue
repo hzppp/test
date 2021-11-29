@@ -36,15 +36,8 @@
 				<view :class="lotteryType != 'grid'?'luckyWheel':'LuckyGrid'"
 					:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
 					<image :src="lotteryActInfo.activityPic" @load="e => imgBindload()"  class="lottery-bg"></image>
-					<view class="lotteryList">
-						<swiper style="width: 500rpx;height: 56rpx;" :disable-touch="true" :vertical="true"
-							:circular="true" :duration="500" :interval="2000" :autoplay="autoplay">
-							<swiper-item @touchmove.stop='stopTouchMove' @touchstart.stop='stopTouchMove' v-for="(item,index) in lotteryActInfo.winnerRecords"
-								:key="index">
-								<view class="item">{{item}}</view>
-							</swiper-item>
-						</swiper>
-					</view>
+					<!-- 中奖纪录 -->
+					<win-records :winnerRecords="lotteryActInfo.winnerRecords" :autoplay="autoplay"/>
 					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
 
 					<!-- 转盘抽奖 -->
@@ -74,36 +67,11 @@
 				</view>
 				<view :class="lotteryType != 'grid'?'list':'list girdList'">
 					<button v-if="lotteryType != 'grid'" open-type="share" class="invite"></button>
-					<view class="inviteRecord">
-						<view class="title titleK">邀请记录</view>
-						<block v-if="inviteRecordList&&inviteRecordList.length">
-							<view class="item" v-for="(item,index) in inviteRecordList" :key="index">
-								<view class="imgView">
-									<image class="img" :src="item.wxHead"></image>
-								</view>
-								<view class="name">{{item.wxName}}</view>
-								<view class="time">{{item.joinTime}} 加入</view>
-							</view>
-						</block>
-						<view class="nodata" v-else>
-							您还没有邀请记录哦！快去邀请好友参与吧~
-						</view>
-						<view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
-							查看更多 >
-						</view>
-					</view>
+					<!-- 邀请记录 -->
+					<invite-records :activityId="activityId"/>
 				</view>
-				<view class="tips">
-					<view class="contentBody">
-						<view class="title titleK">抽奖说明</view>
-						<view class="contentTips-outer">
-							<scroll-view scroll-y="true" class="contentTips">
-								<text>{{activityMemoArr}}</text>
-							</scroll-view>
-						</view>
-					</view>
-				</view>
-
+				<!-- 抽奖说明 -->
+				<draw-tips :activityMemoArr="activityMemoArr"/>
 			</template>
 		</view>
 		<view class="lotteryDialog" v-if="showDialogL && lotteryType != 'grid'" @touchmove.stop.prevent>
@@ -204,6 +172,9 @@
 	import login from '@/units/login'
 	import userBand from '@/components/userBand/userBand'
 	import pageTop from '@/components/pageTop/pageTop'
+	import winRecords from '@/components/winRecords/winRecords'
+	import inviteRecords from '@/components/inviteRecords/inviteRecords'
+	import drawTips from '@/components/drawTips/drawTips'
 	import {
 		changeUnits,
 		resolveImage
@@ -217,7 +188,10 @@
 			// LuckyGrid,
 			MysteryPrize,
 			pageTop,
-			lottery
+			lottery,
+			winRecords,
+			inviteRecords,
+			drawTips
 		},
 		data() {
 			return {
@@ -313,15 +287,6 @@
 			} = options
 			this.activityId = activityId
 			// await login.checkLogin(api)
-			//邀请记录list
-			this.inviteRecordList = await api.getInviteRecordList({
-				pageNo: 1,
-				pageSize: 3,
-				activityId
-			}).then(res => {
-				this.inviteRecordCount = res.total || 0
-				return res.code == 1 ? res.rows : []
-			})
 			this.lotteryActInfo = await api.getLotteryActInfo({
 				activityId
 			}).then(res => {
@@ -430,10 +395,7 @@
 			imgBindload () {
 				this.bgImgLoaded = true;
             },
-			//禁止用户手动滑动
-			stopTouchMove(){
-				return true;
-			},
+			
 			// 点击抽奖按钮触发回调
 			async startCallBack() {
 				if (!this.lotteryActInfo.chanceCount) {
@@ -1116,78 +1078,7 @@
 					margin-bottom: 60rpx;
 				}
 
-				.inviteRecord {
-					color: #333333;
-					padding: 40rpx 20rpx 30rpx;
-					background: #ffffff;
-					border-radius: 10rpx;
-
-					.title {
-						text-align: center;
-						font-size: 32rpx;
-						line-height: 32rpx;
-						margin-bottom: 20rpx;
-						color: #ed2c2c;
-					}
-
-					.item {
-						height: 112rpx;
-						line-height: 112rpx;
-						background: #eef1f5;
-						margin-bottom: 20rpx;
-						box-sizing: border-box;
-						padding: 20rpx;
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-						border-radius: 10rpx;
-
-						&>view {
-							display: inline-block;
-						}
-
-						.imgView {
-							width: 72rpx;
-							height: 72rpx;
-
-							.img {
-								width: 100%;
-								height: 100%;
-								border-radius: 50%;
-							}
-						}
-
-						.name {
-							font-size: 30rpx;
-							width: 232rpx;
-							overflow: hidden;
-							text-overflow: ellipsis;
-							white-space: nowrap;
-						}
-
-						.time {
-							color: #999999;
-							font-size: 24rpx;
-						}
-					}
-
-					.nodata {
-						border-radius: 10rpx;
-						margin-bottom: 20rpx;
-						background: #eef1f5;
-						height: 212rpx;
-						line-height: 212rpx;
-						font-size: 28rpx;
-						color: #999999;
-						text-align: center;
-					}
-
-					.more {
-						color: #999999;
-						text-align: center;
-						font-size: 24rpx;
-					}
-				}
+				
 			}
 
 			.gridlist {
@@ -1279,66 +1170,7 @@
 
 
 
-			.tips {
-				padding: 0 32rpx 20rpx;
-				box-sizing: border-box;
-				.title {
-					color: #ed2c2c;
-					text-align: center;
-					font-size: 32rpx;
-					line-height: 32rpx;
-					margin-bottom: 20rpx;
-				}
-
-				.contentBody {
-					color: #333333;
-					padding: 40rpx 20rpx 30rpx;
-					background: #ffffff;
-					border-radius: 10rpx;
-					.contentTips-outer{
-						max-height: 406rpx;
-						padding: 30rpx 10rpx 30rpx 20rpx;
-						box-sizing: border-box;
-						width: 646rpx;
-						background: #eef1f5;
-						border-radius: 10rpx;
-					}
-					.contentTips {
-						width: 100%;
-						height: 346rpx;
-						overflow: scroll;
-						font-size: 28rpx;
-						line-height: 54rpx;
-						
-						text{
-							padding-right:15rpx;
-							display: block;
-						}
-						/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-						::-webkit-scrollbar {
-							width: 10rpx !important;
-							height: 51rpx !important;
-							color:  #dee0e2;
-
-						}
-
-						// /*定义滚动条轨道 内阴影+圆角*/
-						// ::-webkit-scrollbar-track {
-						// 	-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-						// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-						// 	border-radius: 5rpx;
-						// 	background-color:#FFFFFF;
-						// }
-
-						/*定义滑块 内阴影+圆角*/
-						::-webkit-scrollbar-thumb {
-							border-radius: 5rpx;
-							background-color:#dee0e2; /*滚动条的颜色*/
-						}
-					}
-				}
-			}
-
+			
 			.mbt14 {
 				// margin-bottom: 14rpx;
 			}
@@ -1783,3 +1615,5 @@
 		height: 100%;
 	}
 </style>
+
+

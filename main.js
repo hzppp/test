@@ -10,6 +10,7 @@ Vue.component("loading", loading)
 Vue.prototype.$store = store
 Vue.prototype.$toast = toast
 Vue.prototype.$request = request
+Vue.prototype.$EventBus = new Vue()
 Vue.config.productionTip = false
 
 App.mpType = 'app'

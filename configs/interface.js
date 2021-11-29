@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE; 
+const CUR_ENV = ENV.TEST; 
 const version = 1052;
 
 
@@ -308,7 +308,10 @@ const config = {
 		// 取消申请退款
 		cancelApply: `${DOMAIN.changan}/api/xcx/order/refund/cancel`,
 		
-		
+		//查询用户红包记录
+		fetchPacketRecords: `${DOMAIN.changan}/api/xcx/redPacket/user/record`,
+		//开启红包
+		openRedPacket: `${DOMAIN.changan}/api/xcx/redPacket/redPacketOpen`,
 	},
 	getAPI(key) {
 		let url;

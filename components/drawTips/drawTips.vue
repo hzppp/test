@@ -1,0 +1,86 @@
+<template>
+    <view class="tips">
+        <view class="contentBody">
+            <view class="title titleK">抽奖说明</view>
+            <view class="contentTips-outer">
+                <scroll-view scroll-y="true" class="contentTips">
+                    <text>{{activityMemoArr}}</text>
+                </scroll-view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+export default {
+    props:{
+        activityMemoArr: {
+            type: String,
+            default:""
+        }
+    }
+}
+</script>
+<style lang="less" scoped>
+    .tips {
+		padding: 0 32rpx 20rpx;
+		box-sizing: border-box;
+		.title {
+			color: #ed2c2c;
+			text-align: center;
+			font-size: 32rpx;
+			line-height: 32rpx;
+			margin-bottom: 20rpx;
+		}
+
+		.contentBody {
+			color: #333333;
+			padding: 40rpx 20rpx 30rpx;
+			background: #ffffff;
+			border-radius: 10rpx;
+			.contentTips-outer{
+				max-height: 406rpx;
+				padding: 30rpx 10rpx 30rpx 20rpx;
+				box-sizing: border-box;
+				width: 646rpx;
+				background: #eef1f5;
+				border-radius: 10rpx;
+			}
+			.contentTips {
+				width: 100%;
+				height: 346rpx;
+				overflow: scroll;
+				font-size: 28rpx;
+				line-height: 54rpx;
+				
+				text{
+					padding-right:15rpx;
+					display: block;
+				}
+				/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+				::-webkit-scrollbar {
+					width: 10rpx !important;
+					height: 51rpx !important;
+					color:  #dee0e2;
+
+				}
+
+				// /*定义滚动条轨道 内阴影+圆角*/
+				// ::-webkit-scrollbar-track {
+				// 	-webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+				// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+				// 	border-radius: 5rpx;
+				// 	background-color:#FFFFFF;
+				// }
+
+				/*定义滑块 内阴影+圆角*/
+				::-webkit-scrollbar-thumb {
+					border-radius: 5rpx;
+					background-color:#dee0e2; /*滚动条的颜色*/
+				}
+			}
+		}
+	}
+</style>
+
+
