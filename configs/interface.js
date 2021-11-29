@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE; 
-const version = 1051;
+const version = 1052;
 
 
 
@@ -18,7 +18,7 @@ var DOMAIN_R = {
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	webUrl:'https://ccar.pcauto.com.cn/h5/' ,//云展厅
 	UPC:'https://upc2.pc.com.cn',
-	mystore:'https://cloud.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
+	mystore:'https://cloud.mall.changan.com.cn/reactcaecapp/member/home?biz=69&mine=1'
 }
 
 //测试环境域名
