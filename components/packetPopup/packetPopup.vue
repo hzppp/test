@@ -163,7 +163,7 @@ export default {
             .share-btn-group{
                 animation: show 0.6s ease-out 1.8s forwards;
             }
-            .hide{
+            .close{
                 animation: show 0.6s ease-out 2s forwards;
             }
         }

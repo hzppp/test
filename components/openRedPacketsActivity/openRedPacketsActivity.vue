@@ -10,7 +10,7 @@
        <!-- 邀请记录 -->
 	    <invite-records :activityId="activityId" :isRecordsShow="false"/>
        <!-- 抽奖说明 -->
-	   <draw-tips :activityMemoArr="activityMemoArr"/>
+	   <draw-tips :activityMemoArr="activityMemoArr" v-if="activityMemoArr"/>
        <!-- 中奖弹窗 -->
        <packet-popup 
        :isOpen.sync="isOpen" 
@@ -126,6 +126,7 @@ export default {
     @import '@/static/less/public.less';
     .red-package-page{
         background: #fef7ea;
+        padding-bottom: 44rpx;
         .package-top{
             position: absolute;
             width: 100%;

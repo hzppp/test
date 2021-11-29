@@ -20,7 +20,7 @@
 			</template>
 
 			<view class="content">
-				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false"></image>
+				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" ></image>
 			</view>
 			
 			<!-- 拆红包活动 -->
@@ -30,7 +30,7 @@
 				:activityId="activityId" 
 				:shareStatus="content.shareStatus"
 				:isSharePosterPic="content.sharePosterPic ? true : false"
-				v-if="activityType && activityType=='packets'" >
+				v-if="activityType && activityType=='packets' && bgImgLoaded" >
 				<view class="package-detail-btn" slot="operateBtn" slot-scope="msg">
 
 					<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="!isActStart">活动未开始</button>
@@ -61,7 +61,7 @@
 		
 				</view>
 			</open-red-packets-activity>
-			<template  v-else>
+			<template  v-if="activityType && activityType!='packets'">
 				<view class="zw"></view>
 				<view class="operation-list">
 					<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
@@ -192,6 +192,7 @@
 				formShowTitle:'我要参与抽奖',
 				isShowCheckInPop:false,  //签到二维码进入报名提示
 				navHeight:0,
+				bgImgLoaded:false,
 			}
 		},
 		mixins: [shouquan],
@@ -355,6 +356,9 @@
 			}
 		},
 		methods: {
+			imgBindload () {
+				this.bgImgLoaded = true;
+            },
 			//获取顶部导航栏高度
 			getTopNavHeigth(h){
 				this.navHeight = h
