@@ -19,6 +19,7 @@
 				:src="content.detailPic"
 				mode="widthFix"
 				lazy-load="false"
+				style="height:auto"
 				@click="imgClick"></image>
 			</view>
 			<view class="serial-list" v-if="content.showCustomAds == 0">
