@@ -59,11 +59,13 @@ export default {
            this.$emit('update:isOpen',false)
        },
        sharePosterClick(){
-           this.$EventBus.$emit('shareChoiseFun')
+            this.$parent.$parent.shareChoise()
+            // this.close()
        },
        // 分享按钮被点击
         shareBtnClick() {
             wx.aldstat.sendEvent('活动分享点击')
+            // this.close()
         },
     },
 }

@@ -197,7 +197,7 @@
 		},
 		mixins: [shouquan],
 		async onLoad(options) {
-			this.$EventBus.$on('shareChoiseFun',this.shareChoise)
+			// this.$EventBus.$on('shareChoiseFun',this.shareChoise)
 			if (options.scene) { // 分享海报来的
 				let url = options.scene.indexOf('%')>-1 ? decodeURIComponent(options.scene) : options.scene
 				console.log('===============url1==============',url)
@@ -328,12 +328,21 @@
 			})
 
 		},
-		
+		onShow() {
+			if(this.activityType=="packets"){
+				this.$refs.redPackets.autoplay=true
+			}
+		},
 		onHide() {
-			this.$EventBus.$off('shareChoiseFun')
+			// this.$EventBus.$off('shareChoiseFun')
 			if (app.Interval) {
 				clearInterval(app.Interval)
 			}
+			if(this.activityType=="packets"){
+				this.$refs.redPackets.autoplay=false;
+				this.$refs.redPackets.isOpen=false;
+			}
+			
 		},
 		onShareAppMessage() {
 			let title = this.content.name
@@ -586,17 +595,20 @@
 					this.formShow()
 				}else{
 					this.getFission()
-					if(this.activityType="packets"){
+					if(this.activityType=="packets"){
 						this.$refs.redPackets.getActivityInfo();
 					}
 				}
 			},
-			getData() {
+			async getData() {
 				// 访问活动 记录活动访问次数
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
-				
+				if(this.activityType=="packets"){
+					await this.getFission()
+					this.$refs.redPackets.getActivityInfo()
+				}
 				let wxUserInfo = uni.getStorageSync('wxUserInfo')
 				console.log("getData wxUserInfo",wxUserInfo)
 				this.phone = wxUserInfo.mobile
@@ -611,7 +623,6 @@
 				
 			},
 			shareChoise() {
-				console.log("shareChoise",this)
 				this.$refs.popup.open('bottom')
 			},
 
