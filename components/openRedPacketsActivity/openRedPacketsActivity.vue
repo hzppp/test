@@ -4,9 +4,9 @@
             <!-- 中奖纪录 -->
 			<win-records :winnerRecords="winnerRecords" :autoplay="autoplay" v-if="winnerRecords && winnerRecords.length>=3"/>
             <!-- 我的红包 -->
-            <view class="mypackage-btn" @tap="goMyPackage">中奖纪录</view>
+            <view class="mypackage-btn" @tap="goMyPackage">我的红包</view>
         </view>
-        <slot name="operateBtn" :data="chanceCount"></slot>
+        <slot :chanceCount="chanceCount"></slot>
        <!-- 邀请记录 -->
 	    <invite-records :activityId="activityId" :isRecordsShow="false"/>
        <!-- 抽奖说明 -->
@@ -87,6 +87,7 @@ export default {
             let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
+                console.log("获取当前抽奖机会",this.chanceCount)
                 this.winnerRecords = data.winnerRecords
                 this.activityMemoArr = data.activityMemo.replace('/n', '/r/s')
             }else{

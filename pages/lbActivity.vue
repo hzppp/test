@@ -31,35 +31,35 @@
 				:shareStatus="content.shareStatus"
 				:isSharePosterPic="content.sharePosterPic ? true : false"
 				v-if="activityType && activityType=='packets' && bgImgLoaded" >
-				<view class="package-detail-btn" slot="operateBtn" slot-scope="msg">
-
-					<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="!isActStart">活动未开始</button>
-					<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-else-if="isActEnded">活动已结束</button>
-					<template v-else>
-						<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
-							@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
+				<template slot-scope="scope">
+					<view class="package-detail-btn">
+						<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-if="!isActStart">活动未开始</button>
+						<button class="enroll-btn enroll-btn2 enroll-btn-gray" v-else-if="isActEnded">活动已结束</button>
 						<template v-else>
-							<button v-if="!isApply" class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
-							<button v-else-if="isApply && msg.data>0" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
-							<button v-else class="enroll-btn enroll-btn2 enroll-btn-gray">拆红包</button>
+							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+								@getphonenumber="getPhoneNumber" v-if="!phone">报名拆红包</button>
+							<template v-else>
+								<button v-if="!isApply" class="enroll-btn enroll-btn2" @tap="formShow">报名拆红包</button>
+								<button v-else-if="isApply && scope.chanceCount>0" class="enroll-btn enroll-btn2" @tap="openPackets">拆红包</button>
+								<button v-else class="enroll-btn enroll-btn2 enroll-btn-gray">拆红包</button>
+							</template>
+							<view class="chance-count" v-if="isApply">还有{{scope.chanceCount||0}}次机会</view>
 						</template>
-						<view class="chance-count">还有{{msg.data||0}}次机会</view>
-					</template>
-					<!--  #ifdef MP-WEIXIN  -->
-					<button v-if="content.sharePosterPic"
-						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						@tap='shareChoise()'>分享好友</button>
+						<!--  #ifdef MP-WEIXIN  -->
+						<button v-if="content.sharePosterPic"
+							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+							@tap='shareChoise()'>分享好友</button>
 
-					<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-					<!-- #endif -->
-					<!--  #ifndef MP-WEIXIN  -->
-					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-					<!-- #endif -->
-					<view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view>
-		
-				</view>
+						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- #endif -->
+						<!-- <view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view> -->
+					</view>
+				</template>
 			</open-red-packets-activity>
 			<template  v-if="activityType && activityType!='packets'">
 				<view class="zw"></view>
@@ -515,12 +515,15 @@
 				if((!this.isActStart && this.isApply) || !this.isApply || this.isActEnded){
 					return;
 				}
+				// #ifndef MP-WEIXIN
+				this.$toast('请在微信搜索本小程序参与')
+				// #endif
+				
+				// #ifdef MP-WEIXIN
 				if(this.$refs.redPackets.chanceCount>0){
 					this.$refs.redPackets.openPacket()
-				}else{
-					this.$toast('手机号码授权失败', 'none', 1500);
 				}
-				
+				// #endif
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -644,6 +647,7 @@
 					url = url.replace('=S', '=checkIn')
 					url = url.replace(/@/g, '=')
 					url = url.replace(/_/g, '&')
+					url = url.replace('K', 'packets')
 				} else { // 旧
 					//dd=69&ll=gg&tt=ww&aa=1&ss=66
 					url = url.replace('tt', 'type')
