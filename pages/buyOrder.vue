@@ -151,7 +151,8 @@
 				canSubmit: false,
 				sourceUserId: '',
 				products: {}, // 关联商品
-				orderDetail: {} //当前活动订单状态
+				orderDetail: {} ,//当前活动订单状态
+				buyOrderIng:false
 			}
 		},
 		watch: {
@@ -625,7 +626,10 @@
 			},
 			async buyOrder() {
 
-
+               if(this.buyOrderIng){
+				   // 防止重复点击
+				   return
+			   }
 
               if (!this.products || this.products.stock <= 0) {
 				 this.$toast('商品太火爆，被抢完了')
@@ -669,18 +673,22 @@
 					pam.sourceUserId = this.sourceUserId
 				}
 				console.log('留资参数', pam)
+				this.buyOrderIng = true
 				let data = await api.submitClue(pam)
 
 				if (data.code == 1) {
 					// 留资成功 吊起支付
-					this.pay()
+				 await this.pay()
+				 this.buyOrderIng = false
 				} else if (data.code == 2) {
 					// 重复留资了
-					this.pay()
+					await this.pay()
+					this.buyOrderIng = false
 				} else {
 					this.showToast(data.msg)
+					this.buyOrderIng = false
 				}
-
+				
 				console.log(data)
 			},
 			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
