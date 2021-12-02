@@ -20,7 +20,7 @@
 			</template>
 
 			<view class="content">
-				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" ></image>
+				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 			</view>
 			
 			<!-- 拆红包活动 -->
@@ -474,7 +474,6 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				// #endif
-				console.log("this.isApply", this.isApply)
 				if (this.activityType == 'wawaji' || this.activityType == 'checkIn') {
 					if (!this.isApply) {
 						// #ifdef MP-WEIXIN

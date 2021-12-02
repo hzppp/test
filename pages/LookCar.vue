@@ -19,7 +19,7 @@
    
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
-            <image mode='widthFix' lazy-load :src='item' />
+            <image mode='widthFix' lazy-load :src='item' style="height:auto" />
 
         </view>
 

@@ -617,7 +617,7 @@
 					// 	})
 					// 	return
 					// }
-
+					
 					if (ly == 'coupon') {
 						popname = 'coupon-warning-pop'
 					} else {
@@ -627,7 +627,10 @@
 						popname = 'form-livewarning-pop'
 					}
 					this.popName = popname
-
+					
+					if(lydx.activityType == 'packets'){
+						this.$emit('subSuccess')
+					}
 
 				} else {
 					if (ly == 'coupon') {
