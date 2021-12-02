@@ -24,7 +24,9 @@ export default {
         },
         getWxUserInfoAuth(callback) {
             // console.log('getWxUserInfoAuth', e)
-         // #ifdef MP-TOUTIAO
+            if(app.globalData.hasAuthorized) return;
+            app.globalData.hasAuthorized = true;
+            // #ifdef MP-TOUTIAO
             console.log('#ifdef TOUTIAO')
             uni.getUserInfo({
                 desc: '完善信息',
@@ -83,7 +85,7 @@ export default {
                                 }
                             })
                         }
-						
+						app.globalData.hasAuthorized = false;
                     })
 					
                 },
@@ -100,6 +102,7 @@ export default {
                     this.haveUserInfoAuth = false
                     uni.setStorageSync('wxUserInfo',null)
                     app.globalData.wxUserInfo = null
+                    app.globalData.hasAuthorized = false;
                 }
             })
             // #endif
@@ -146,6 +149,7 @@ export default {
                                 }
                             })
                         }
+                        app.globalData.hasAuthorized = false;
                     })
                 },
                 fail: (res) => {
@@ -156,6 +160,7 @@ export default {
                     this.haveUserInfoAuth = false
                     uni.setStorageSync('wxUserInfo',null)
                     app.globalData.wxUserInfo = null
+                    app.globalData.hasAuthorized = false;
                 }
             })
             // #endif

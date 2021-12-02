@@ -39,6 +39,7 @@
 			wxUserInfo: null,
 			phone: '', //  授权的手机号码
 			provinceList: [], // 省市列表
+			hasAuthorized:false
 		},
 		onLaunch: function() {
 			// #ifndef MP-TOUTIAO

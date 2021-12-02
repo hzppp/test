@@ -474,7 +474,6 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('报名活动')
 				// #endif
-				console.log("this.isApply", this.isApply)
 				if (this.activityType == 'wawaji' || this.activityType == 'checkIn') {
 					if (!this.isApply) {
 						// #ifdef MP-WEIXIN
