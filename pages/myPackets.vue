@@ -18,7 +18,7 @@
                     </view>
                 </view>
             </view>
-            <view class="package-reminder">红包抽中后30分钟内会自动转入微信钱包，请仔细查看账单</br>如发现没有收到，可电话400-888-6677</view>
+            <view class="package-reminder">红包抽中后6小时内会自动转入微信钱包，请仔细查看账单</br>如发现没有收到，可电话400-888-6677</view>
         </block>
         <view class="no-data" v-else>
             <view class="no-data-txt1">红包空空如也</view>
