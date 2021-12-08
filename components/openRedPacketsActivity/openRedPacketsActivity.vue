@@ -20,7 +20,7 @@
                 <block v-if="amount>0">
                     <view class="win-txt1">恭喜获得</view>
                     <view class="win-money"><text>{{amount}}</text>元</view>
-                    <view class="win-txt2">30分钟内到账微信钱包，请注意查收</view>
+                    <view class="win-txt2">6小时内到账微信钱包，请注意查收</view>
                 </block>
                 <block v-else>
                     <view class="win-txt1">很遗憾，没有拆到红包</view>

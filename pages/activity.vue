@@ -102,7 +102,7 @@
 					<view class="middelTitle1" v-else>
 						<view class="amount">祝好运常伴</view>
 					</view>
-					<view class="miaos">{{red.amount>0?'红包约30分钟后到账':''}}</view>
+					<view class="miaos">{{red.amount>0?'红包约6小时后到账':''}}</view>
 					<button class="shareV" hover-class="none" open-type="share" @click="shareBtnClick"></button>
 				</view>
 			</view>
