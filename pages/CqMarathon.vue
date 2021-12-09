@@ -267,6 +267,7 @@ export default {
 			})
 		}
 		await login.checkLogin(api)
+		await login.checkOauthMobile(api)
 		this.sourceUserId = options.sourceUserId || ""
 		this.activityId = options.id || ""
 		this.nums = options.nums || 0

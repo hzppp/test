@@ -149,7 +149,7 @@ export default {
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
                 uni.setStorageSync('wxUserInfo', data)
-                uni.setStorageSync('userPhone', data.mobile)
+                uni.setStorageSync('userPhone', data.oauthMobile)
             } else if (code == -4) {
 			  this.removeSessionKey()
 			  let d  = await this.login()
@@ -163,7 +163,7 @@ export default {
                     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                     app.globalData.wxUserInfo = data
                     uni.setStorageSync('wxUserInfo', data)
-				    uni.setStorageSync('userPhone', data.mobile)
+				    uni.setStorageSync('userPhone', data.oauthMobile)
                 }
             }
             console.log('用户信息1',app.globalData.haveUserInfoAuth)
@@ -179,10 +179,36 @@ export default {
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
                 uni.setStorageSync('wxUserInfo', data)
-                uni.setStorageSync('userPhone', data.mobile)
+                uni.setStorageSync('userPhone', data.oauthMobile)
             }
         }
     },
+	
+	async checkOauthMobile(api){
+		let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			console.log('用户取消授权了，要重新登录',wxUserInfo)
+		if(wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile){
+			console.log('用户取消授权了，要重新登录')
+			let d = await this.login()
+			if (d ==1 ){
+				return 1;
+			}
+			 let {code, data} = await api.getUser()
+			   console.log('用户信息2',data)
+			 if (code == 1 && data) {
+			     app.globalData.haveUserInfoAuth = !!data.wxName
+			     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+			     app.globalData.wxUserInfo = data
+			     uni.setStorageSync('wxUserInfo', data)
+			     uni.setStorageSync('userPhone', data.oauthMobile)
+			 }
+		}
+	
+	
+		
+	},
+	
+
 	async userBind(api,phone,iv) {
 		if(phone && iv){
 			// 有注册需要的参数，直接注册
@@ -211,7 +237,7 @@ export default {
 			    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
 			    app.globalData.wxUserInfo = data
 			    uni.setStorageSync('wxUserInfo', data)
-			    uni.setStorageSync('userPhone', data.mobile)
+			    uni.setStorageSync('userPhone', data.oauthMobile)
 			    console.log('用户信息2',app.globalData.haveUserInfoAuth)
 			}
 			return data

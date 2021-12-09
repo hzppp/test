@@ -215,6 +215,7 @@
 
 			}
 			await login.checkLogin(api)
+			await login.checkOauthMobile(api)
 			this.lotteryType = options.lotteryType
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id

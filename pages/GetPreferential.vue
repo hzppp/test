@@ -161,7 +161,8 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 		   // #endif
 		    this.zijie = options.zijie;
             console.log('options :>> ', options);
-            // await login.checkLogin(api)
+            await login.checkLogin(api)
+            await login.checkOauthMobile(api)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
             if(options.cityId) {

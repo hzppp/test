@@ -142,7 +142,8 @@ const COUNTDOWN = 60
         },
         async onLoad(options) {
             // console.log('111111options :>> ', options);
-            // await login.checkLogin(api)
+            await login.checkLogin(api)
+			await login.checkOauthMobile(api)
 			
 			// #ifdef MP-TOUTIAO
 			 this.TOUTIAO = 'TOUTIAO'

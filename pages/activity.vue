@@ -260,6 +260,7 @@
 			}
 			this.voucherShow = options.voucherShow
 			await login.checkLogin(api)
+			await login.checkOauthMobile(api)
 			// await login.login()
 			this.activityId = options.id
 			// 数据相关
