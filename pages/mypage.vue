@@ -208,6 +208,8 @@
 			// this.signInList
 
 			// console.log('getsignIn', data)
+			await login.checkLogin(api)
+			await login.checkOauthMobile(api)
 
 		},
 		methods: {
