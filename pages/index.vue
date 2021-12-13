@@ -158,6 +158,9 @@
 				}
 			}
 		},
+		// mounted() {
+		// 	gdp('track', 'YCZ_homeShow', { YCZ_area_var: '' ,YCZ_position_var: '',YCZ_flowName_var: '',YCZ_sourcePage_var: ''});
+		// },
 		computed: {
 			selectCity() {
 				let text = ''

@@ -20,10 +20,10 @@
 								<!-- #endif -->
 								
 							</view>
-							<view  class="phoneV">
+							<view v-if="photo" class="phoneV">
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
-								<view class="phonetitle">{{photo?photo:'-'}}</view>
+								<view class="phonetitle">{{photo}}</view>
 							</view>
 							<view v-if="score" class="phoneV">
 								<image class="scoreVicon"
@@ -206,8 +206,6 @@
 			// this.qdIndex = index
 			// this.signInList = data.data
 			// this.signInList
-			await login.checkLogin(api)
-			await login.checkOauthMobile(api)
 
 			// console.log('getsignIn', data)
 

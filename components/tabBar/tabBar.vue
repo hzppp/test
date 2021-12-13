@@ -16,6 +16,7 @@
 		name: "tabBar",
 		props: ['current'],
 		data() {
+
 			return {
 				paddingBottomHeight: 0, //苹果X以上手机底部适配高度
 				num:2,
@@ -40,7 +41,9 @@
 					icon: '/static/images/tab5_icon.png',
 					icon_a: '/static/images/tab5_icon_c.png',
 					path: "mypage",
-				}]
+				}],
+				//当前所在页面
+				currentPage:''
 			};
 		},
 		created() {
@@ -66,6 +69,7 @@
 			tabbarChange(path) {
 				// this.$pageTo.toTab(path);
 				//  云展厅先加上导航可以返回
+
 				if (path == 'exhibition') {
 					uni.navigateTo({
 						url: '/pages/exhibition'
@@ -82,10 +86,23 @@
 					// 	})	
 				    // }
 				} else {
+					
+					if(path=='welfareActivity'){
+						//活动页面打开埋点
+						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": this.currentPage})
+					}else if(path=='live'){
+						//直播页面打开埋点
+						gioGlobal.gdp('track', 'YCZ_livePageView')
+					}
+			
+					if(path)
 					uni.switchTab({
 						url: path
 					})
 				}
+				//埋点触发后再更新当前页面
+				console.log('this.currentPage',this.currentPage,path)
+				this.currentPage=path
 
 			},
 			async getLivePage() {
