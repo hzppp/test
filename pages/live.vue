@@ -105,6 +105,7 @@
 
 		},
 		methods: {
+			
 			/* 获取列表 */
 			async getList() {
 				if (!this.hasNext) {
@@ -166,7 +167,10 @@
 	
 			toLiveDet(item) {
 				wx.aldstat.sendEvent('直播点击')
-
+				
+				// 点击某个直播间时触发埋点
+				gioGlobal.gdp('track', 'YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+				
 				if (item) {
 					console.log('直播路径','/pages/loading/loading?sharePage=/pages/index/live/liveDetail/liveDetail&index=2&channel=2111171&id=' + item.id)
 					// #ifndef MP-WEIXIN
@@ -181,6 +185,11 @@
 						// envVersion: 'trial',
 						success(res) {
 							// 打开成功 
+							gioGlobal.gdp('track', 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							
+						},
+						fail(res){
+							gioGlobal.gdp('track', 'YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 						}
 					})
 				    // #endif

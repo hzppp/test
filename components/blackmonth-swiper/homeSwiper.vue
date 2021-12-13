@@ -54,7 +54,7 @@
 					if(item.opacity==null){
 						// console.log("变化了",this.swiperList2)
 
-						gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":'',"YCZ_sourcePage_var":''})
+						gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":'',"YCZ_sourcePage_var":gioGlobal.lastUrl})
 						
 					}
 				})

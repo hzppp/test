@@ -296,6 +296,8 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
+				//数据足够了调用埋点
+				this.setGdp()
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
 					console.log('sourceUserId' + this.sourceUserId)
@@ -366,6 +368,11 @@
 			}
 		},
 		methods: {
+			//设置进入页面的埋点
+			setGdp() {
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				//还没有更新全局lastUrl
+			},
 			imgBindload () {
 				this.bgImgLoaded = true;
             },

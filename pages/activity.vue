@@ -273,6 +273,7 @@
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
+			
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -301,7 +302,12 @@
 				imageUrl: imageUrl
 			}
 		},
+
 		methods: {
+			setGdp() {
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				//还没有更新全局lastUrl
+			},
 			formShow() {
 
 				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
@@ -537,6 +543,8 @@
 					}, 1000)
 					this.phone = uni.getStorageSync('userPhone');
 					this.content = data
+					//设置进入页面的埋点
+					this.setGdp()
 					if (this.liveUrl) {
 						this.content.liveUrl = this.liveUrl
 					}

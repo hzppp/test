@@ -43,7 +43,7 @@
 					path: "mypage",
 				}],
 				//当前所在页面
-				currentPage:''
+				// currentPage:''
 			};
 		},
 		created() {
@@ -89,7 +89,7 @@
 					
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
-						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": this.currentPage})
+						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": gioGlobal.lastUrl})
 					}else if(path=='live'){
 						//直播页面打开埋点
 						gioGlobal.gdp('track', 'YCZ_livePageView')
@@ -101,8 +101,8 @@
 					})
 				}
 				//埋点触发后再更新当前页面
-				console.log('this.currentPage',this.currentPage,path)
-				this.currentPage=path
+				console.log('this.currentPage',gioGlobal.lastUrl,path)
+				gioGlobal.lastUrl=path
 
 			},
 			async getLivePage() {

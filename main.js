@@ -23,7 +23,10 @@ gdp('init', 'ac8e9fff9218d0b4', 'a8baef5711ad838e', 'wxb36fb5205e5afb36', {
 });
 //gdp('track', eventId, properties);
 gdp('track', 'YCZ_openApplet');
+//上一个url
+var lastUrl='index'
 gioGlobal.gdp=gdp
+gioGlobal.lastUrl=lastUrl
 const app = new Vue({
 	store,
     ...App

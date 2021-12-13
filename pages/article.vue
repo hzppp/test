@@ -137,6 +137,8 @@
 				this.content = content
 			}
 			// this.$refs.loading.changeLoading(false)
+			//触发埋点
+			this.setGdp()
 		},
     mounted() {
       uni.hideLoading()
@@ -152,7 +154,10 @@
 			}
 		},
 		methods: {
-
+			setGdp() {
+				gioGlobal.gdp('track', 'YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
+				//还没有更新全局lastUrl
+			},
 		}
 	}
 </script>
