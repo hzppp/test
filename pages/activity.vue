@@ -141,7 +141,7 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-
+	const gdp = gioGlobal.gio;
 	let app = getApp()
 	const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -449,6 +449,9 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
+					// #ifdef MP-WEIXIN
+					gdp('track', 'YCZ_phoneGrantPermissions')
+					// #endif
 					try {
 						let {
 							data

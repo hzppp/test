@@ -65,7 +65,7 @@ import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
-
+const gdp = gioGlobal.gio;
 
 /* *
 * 倒计时默认时间
@@ -201,6 +201,9 @@ const COUNTDOWN = 60
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
+                    // #ifdef MP-WEIXIN
+                    gdp('track', 'YCZ_phoneGrantPermissions')
+                    // #endif
                     try {
                     	uni.showLoading({
                             title: '正在加载...'

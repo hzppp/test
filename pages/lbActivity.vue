@@ -163,6 +163,7 @@
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
 	let app = getApp()
+	const gdp = gioGlobal.gio;
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
@@ -543,6 +544,9 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
+					// #ifdef MP-WEIXIN
+					gdp('track', 'YCZ_phoneGrantPermissions')
+					// #endif
 					try {
 						let {
 							data

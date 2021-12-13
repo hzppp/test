@@ -22,6 +22,7 @@ gdp('init', 'ac8e9fff9218d0b4', 'a8baef5711ad838e', 'wxb36fb5205e5afb36', {
     debug: true
 });
 gdp('track', 'YCZ_openApplet');
+
 const app = new Vue({
 	store,
     ...App

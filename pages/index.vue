@@ -27,7 +27,8 @@
 					</view>
 				</scroll-view>
 			</view>
-			<view class="hotAct">
+			<view class="hotAct" 
+				>
 				<view class="hotTab">
 					云展厅
 				</view>
@@ -36,7 +37,9 @@
 				</view>
 			</view>
 			
-			<view class="hotAct">
+			<view class="hotAct"
+				data-gio-imp-track="YCZ_homeShow"
+  				:data-gio-imp-attrs="hotNDelF">
 				<view class="hotTabMore" >
 					最近门店
 				</view>
@@ -120,6 +123,7 @@
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
 	let app = getApp()
+	const gdp = gioGlobal.gio;
 	export default {
 		components: {
 			viewTabBar: tabBar,
@@ -155,7 +159,8 @@
 					cityId:'',
 					proId:'',
 					name:''
-				}
+				},
+				hotNDelF: JSON.stringify({ YCZ_area_var: '最近门店', YCZ_position_var: '1', YCZ_flowName_var: '北京燕长风商贸有限公司北辰亚运村分公司', YCZ_sourcePage_var: '' }),
 			}
 		},
 		computed: {
@@ -244,13 +249,14 @@
 			clearTimeout(this.timeOutEvent); 
 		},
 		async onShow(options) {
+			gdp('collectImp', this);
 			await distance.getLocation()
 			await this.reqProvinceCityList()
 			let currentLocation = app.globalData.currentLocation
 			if (!currentLocation) {
 				return
 			}
-			console.log('index_app.globalData.currentLocation',  this.provinceList,app.globalData.currentLocation)
+			// console.log('index_app.globalData.currentLocation',  this.provinceList,app.globalData.currentLocation)
 			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市',
 				'') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 			if (crtLocationProvinceItem) {
@@ -260,7 +266,7 @@
 				this.cityList = this.crtProvinceItem.cities
 				this.crtCityItem = crtLocationCityItem
 
-				console.log('===================tstst===================', this.crtProvinceItem, this.crtCityItem)
+				// console.log('===================tstst===================', this.crtProvinceItem, this.crtCityItem)
 				// const resData = (await this.getCityId()) || [1000000022,1000000022]
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
@@ -268,7 +274,7 @@
 			}
 			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
-				console.log('开始及时')
+				// console.log('开始及时')
 			  	// #ifdef MP-WEIXIN
 				if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
 				// console.log(this.$refs.cmSwiper)
@@ -288,7 +294,7 @@
 		},
 		watch: {
 			indexCity: function(newVal) {
-				console.log('indexCity===========', newVal)
+				// console.log('indexCity===========', newVal)
 			}
 		},
 		async onLoad(options) {
@@ -328,7 +334,7 @@
 
 				//抖音小程序隐藏特定活动
 				// #ifndef MP-WEIXIN
-					console.log("pageData",this.pageData)
+					// console.log("pageData",this.pageData)
 					let array = this.pageData.banners.length>0 ? this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.redirectUrl.indexOf('banH=true') == -1):[]
 					this.pageData.banners = array
 					//精选活动
@@ -336,7 +342,7 @@
 					this.pageData.list = list
 				// #endif
 				this.sgList = this.pageData.heatSgList
-				console.log("过滤后的pageData",this.pageData)
+				// console.log("过滤后的pageData",this.pageData)
 			},
 			async getNearDealer(){
 			        let  cityId;
@@ -355,7 +361,7 @@
 					   city = currentLocation.cityData.city;     
 					   pro  =  currentLocation.cityData.pro
 					}
-					console.log('provinceList',city,pro)
+					// console.log('provinceList',city,pro)
 				    if (city&&pro) {
 				    	const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
 				    		'市', '') == pro.replace('省', '').replace('市', ''))
@@ -379,7 +385,7 @@
 				    	}
 				    }
 				   
-				   console.log('provinceList',this.nearDealer)
+				//    console.log('provinceList',this.nearDealer)
 			
 			
 					
@@ -434,7 +440,7 @@
 					let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
 
 					const provinceList = await this.reqProvinceList()
-					console.log('sdsdsd', provinceList)
+					// console.log('sdsdsd', provinceList)
 					const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市',
 						'') == pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
@@ -444,7 +450,7 @@
 						if (crtLocationCityItem) {
 							this.crtProvinceItem = crtLocationProvinceItem
 							this.crtCityItem = crtLocationCityItem
-							console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
+							// console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
 							return [crtLocationProvinceItem.id, crtLocationCityItem.id]
 						}
 					}
@@ -457,7 +463,7 @@
 					res = await api.fetchProvinceList().then(res => {
 						return res.code == 1 ? res.data : []
 					})
-					console.log('rrr', res)
+					// console.log('rrr', res)
 					return res
 				} catch (err) {
 					this.showToast('获取省份信息失败')
@@ -474,7 +480,7 @@
 					}).then(res => {
 						return res.code == 1 ? res.data : []
 					})
-					console.log('ccc', res)
+					// console.log('ccc', res)
 					return res
 				} catch (err) {
 					this.showToast('获取城市信息失败')
@@ -486,7 +492,7 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击查看更多')
 				// #endif
-				console.log('去更多经销商	',this.currentCity)
+				// console.log('去更多经销商	',this.currentCity)
 				// var nearDealer = JSON.stringify(this.currentCity);
 				uni.navigateTo({
 					url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
@@ -496,7 +502,7 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击导航')
 				// #endif
-				console.log('去经销商',this.nearDealer)
+				// console.log('去经销商',this.nearDealer)
 				if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
 					// uni.navigateTo({
 					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
@@ -538,7 +544,7 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击预约试驾')
 				// #endif
-				console.log('预约试驾',this.nearDealer)
+				// console.log('预约试驾',this.nearDealer)
 				 var nearDealer = JSON.stringify(this.nearDealer);
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
@@ -568,7 +574,7 @@
 				// status = 1
 				//type:1资讯，2活动，3直播
 				//status:1直播中，2预告，3回放
-				console.log('type,id,status', type, id, status, typeof(type))
+				// console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
 						// #ifdef MP-WEIXIN
@@ -717,7 +723,7 @@
 			goMP(id, type, sourceId) { //跳转pcauto+
 				const oUrl =
 					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
-				console.log('oUrl', oUrl)
+				// console.log('oUrl', oUrl)
 				// #ifndef MP-WEIXIN
 				this.$toast('请在微信搜索本小程序参与')
 				// #endif
