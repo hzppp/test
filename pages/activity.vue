@@ -305,8 +305,11 @@
 
 		methods: {
 			setGdp() {
+				// #ifdef MP-WEIXIN
 				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				// #endif
 				//还没有更新全局lastUrl
+				
 			},
 			formShow() {
 
@@ -370,8 +373,20 @@
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
+				gioGlobal.gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
 				// #endif			
+				
 			},
+			//分享给好友成功时触发
+			onShareAppMessage() {
+				// #ifdef MP-WEIXIN
+	
+				gioGlobal.gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+															,'YCZ_activityName_var':this.content.name
+															,'YCZ_infoId_var':''
+															,'YCZ_infoName_var':''})
+				// #endif	
+			  },
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
 				// #ifdef MP-WEIXIN

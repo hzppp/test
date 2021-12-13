@@ -30,7 +30,7 @@
 		</getFormidbox>
     <testDrive></testDrive>
 		<view :class="!isIpx ? 'share-btn' : 'share-btn ipx'">
-			<button open-type="share" plain="true" hover-class="none">分享给好友</button>
+			<button open-type="share" plain="true" hover-class="none" @click="shareBtnClick">分享给好友</button>
 		</view>
 	</view>
 </template>
@@ -154,8 +154,29 @@
 			}
 		},
 		methods: {
+			onShareAppMessage() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':''
+																	,'YCZ_activityName_var':''
+																	,'YCZ_infoId_var':this.articleId
+																	,'YCZ_infoName_var':this.title})
+				// #endif	
+			  },
+			shareBtnClick() {
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('活动分享点击')
+				
+				gioGlobal.gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':''
+																	,'YCZ_activityName_var':''
+																	,'YCZ_infoId_var':this.articleId
+																	,'YCZ_infoName_var':this.title})
+				// #endif			
+				
+			},
 			setGdp() {
+				// #ifdef MP-WEIXIN
 				gioGlobal.gdp('track', 'YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
+				// #endif
 				//还没有更新全局lastUrl
 			},
 		}

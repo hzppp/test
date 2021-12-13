@@ -87,14 +87,17 @@
 				    // }
 				} else {
 					
+					// #ifdef MP-WEIXIN
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
+						
 						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": gioGlobal.lastUrl})
 					}else if(path=='live'){
 						//直播页面打开埋点
 						gioGlobal.gdp('track', 'YCZ_livePageView')
 					}
-			
+					// #endif
+					
 					if(path)
 					uni.switchTab({
 						url: path

@@ -53,9 +53,9 @@
 				array.forEach((item,index)=>{
 					if(item.opacity==null){
 						// console.log("变化了",this.swiperList2)
-
+						// #ifdef MP-WEIXIN
 						gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":'',"YCZ_sourcePage_var":gioGlobal.lastUrl})
-						
+						// #endif
 					}
 				})
 				
@@ -284,7 +284,9 @@
 				// console.log('type,id,status', type, id, status, typeof(type))
 				// console.log('item1.index',index)
 				//主页轮播点击埋点
+				// #ifdef MP-WEIXIN
 				gioGlobal.gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index ,"YCZ_flowName_var":''})
+				// #endif
 				switch (type) {
 					case 1: {
 						// #ifdef MP-WEIXIN

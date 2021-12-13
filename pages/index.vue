@@ -69,7 +69,7 @@
 				</view>
 			
 			</view>
-			<view class="hotAct" v-if="pageData.list.length">
+			<view class="hotAct" v-if="pageData.list.length" >
 				<view class="hotTab">
 					精选
 				</view>
@@ -119,6 +119,8 @@
 	import distance from '@/units/distance'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
+	import IntersectionObserver from '@/main.js';
+	
 	let app = getApp()
 	export default {
 		components: {
@@ -247,6 +249,7 @@
 			clearTimeout(this.timeOutEvent); 
 		},
 		async onShow(options) {
+			
 			await distance.getLocation()
 			await this.reqProvinceCityList()
 			let currentLocation = app.globalData.currentLocation
@@ -287,7 +290,9 @@
 				this.$children[2].moveRight()
 			}
 			// #endif
-			  
+			
+			//注册半自动曝光
+			// gioGlobal.gdp('collectImp', this)
 		},
 		watch: {
 			indexCity: function(newVal) {
@@ -299,7 +304,9 @@
 			// 	console.log('sssssssss', res)
 			// 	return res.code == 1 && res.data ? res.data : []
 			// })
-			// this.sgList = [...sgList]	
+			// this.sgList = [...sgList]
+				
+
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -316,6 +323,8 @@
 			}
 		},
 		methods: {
+			
+			
 			async getPageData() {
 				const cityId = this.crtCityItem.id
 				const cityCode = this.crtCityItem.code
