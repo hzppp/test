@@ -386,6 +386,7 @@
 															,'YCZ_infoId_var':''
 															,'YCZ_infoName_var':''})
 				// #endif	
+				
 			  },
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {

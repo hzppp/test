@@ -83,7 +83,9 @@
     },
   },
 		async onShow() {
-
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_myActivityPageView')
+			// #endif
 		},
 		async onLoad() {
 			this.getList()

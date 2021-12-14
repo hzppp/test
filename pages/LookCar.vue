@@ -1,7 +1,7 @@
 <template>
 	<view class="cars-page">
         <view class="image-wrap" v-if="serialData.videoUrl">
-            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;"></video>
+            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;" @play="playVideo()"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
@@ -12,7 +12,7 @@
 			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
 		    <!-- 按钮 -->
-		     <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
+		     <btnWrap :ids="ids" :serialId="serialId" :serialData="serialData"></btnWrap>
         </view>
 
       
@@ -65,6 +65,7 @@ export default {
                 if(code ===1 ) {
                     this.serialData = data
                     this.serialId = data.pcSerialGroupId
+
                     this.reqModelsList(data.pcSerialGroupId)
                     uni.setNavigationBarTitle({
                         title:data.name
@@ -73,7 +74,23 @@ export default {
             } catch (error) {
                 console.error(error)
             }
+			
+			// 进入车辆详情页面时触发埋点
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
+														'YCZ_carSeries_var':this.serialData.pcSerialGroupName,
+														'YCZ_sourcePage_var':gioGlobal.lastUrl})
+			// #endif
         },
+		//开始播放视频 触发埋点
+		playVideo(){
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_videoClick',{'YCZ_videoID_var':'',
+														'YCZ_videoName_var':'',
+														'YCZ_carModel_var':this.serialData.name,
+														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+			// #endif
+		},
         //预约试驾
         goYuyue(){
 			// #ifdef MP-WEIXIN

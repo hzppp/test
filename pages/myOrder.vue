@@ -95,6 +95,11 @@ name: "lotteryRecord",
     }
 			
 	},
+	onShow(){
+		// #ifdef MP-WEIXIN
+		gioGlobal.gdp('track', 'YCZ_myOrderPageView')
+		// #endif
+	},
   methods:{
     goDetail(id) {
       //

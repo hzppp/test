@@ -74,6 +74,7 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(item) {
+
                 if(this.type === "calc") {
                     return  uni.navigateTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${item.pcSerialGroupId}`

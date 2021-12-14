@@ -122,7 +122,7 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
-				console.log(n)
+				
 				if(this.gochoiseCity){
 				   this.reqDealersList(n.id)  	
 				}
@@ -136,6 +136,7 @@ const COUNTDOWN = 60
             },
 			
 			phoneNum(n){
+			console.log("phoneNum",n)
 			if(n.length > 11){
 				 this.phoneNum = n.substring(0,11)
 			}
@@ -156,6 +157,7 @@ const COUNTDOWN = 60
 			}
 		},
         onShow() {
+			console.log("into nearDeal")
             this.checkInfo()
         },
         async onLoad(options) {
