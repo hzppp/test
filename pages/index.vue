@@ -128,7 +128,8 @@
 	import distance from '@/units/distance'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
-	import IntersectionObserver from '@/main.js';
+	import {isWeChat} from '@/units/platform.js'
+	// import IntersectionObserver from '@/main.js';
 	
 	let app = getApp()
 	const gdp = gioGlobal.gio;
@@ -367,7 +368,107 @@
 					}
 				}
 			},
-			
+			MonitorSlide(){
+				
+				// #ifdef MP-WEIXIN
+				
+				this.$nextTick(()=>{
+					
+					class BadIntersectionObserver {
+					  constructor(options) {
+					    this.$options = {
+					      context: null,
+					      selector: null,
+					      onEach: res => res.dataset,
+					      onFinal: () => null,
+					      relativeTo: null,
+					      threshold: 0.5,
+					      delay: 200,
+					      observeAll: false,
+					      initialRatio: 0,
+					      ...options,
+					    }
+					    this.$observer = null
+					  }
+					
+					  connect() {
+					    if (this.$observer) return this
+					    this.$observer = this._createObserver()
+					    return this
+					  }
+					
+					  reconnect() {
+					    this.disconnect()
+					    this.connect()
+					  }
+					
+					  disconnect() {
+					    if (!this.$observer) return
+					    const ob = this.$observer
+					    if (ob.$timer) clearTimeout(ob.$timer)
+					    ob.disconnect()
+					    this.$observer = null
+					  }
+					
+					  _createObserver() {
+					    const opt = this.$options
+					    const observerOptions = {
+					      thresholds: [0.5],
+					      observeAll: opt.observeAll,
+					      initialRatio: opt.initialRatio,
+					    }
+					
+					    // 创建监听器
+					    const ob = opt.context
+					      ? opt.context.createIntersectionObserver(observerOptions)
+					      : wx.createIntersectionObserver(null, observerOptions)
+					
+					    // 相交区域设置
+					    if (opt.relativeTo) ob.relativeTo(opt.relativeTo)
+					    else ob.relativeToViewport()
+					
+					    // 开始监听
+					    let finalData = []
+					    let isCollecting = false
+					    ob.observe(opt.selector, res => {
+					      const { intersectionRatio } = res
+					      const visible = intersectionRatio >= opt.threshold
+					      if (!visible) return
+					
+					      const data = opt.onEach(res)
+					      finalData.push(data)
+					
+					      if (isCollecting) return
+					      isCollecting = true
+					
+					      setTimeout(() => {
+					        opt.onFinal.call(null, finalData)
+					        finalData = []
+					        isCollecting = false
+					      }, opt.delay)
+					    })
+					    return ob
+					  }
+					}
+					
+					let that = this
+					this.ob = new BadIntersectionObserver({
+					  selector: '.block',
+					  observeAll: true,
+					  context: this,
+					  onEach: ({ dataset }) => {
+						const { key } = dataset || {}
+						return key
+					  },
+					  onFinal: args => {
+						  if(!args) return
+						that.exposure(args)
+					  },
+					})
+					this.ob.connect()
+				})
+				// #endif
+			},
 			async getPageData() {
 				const cityId = this.crtCityItem.id
 				const cityCode = this.crtCityItem.code
@@ -394,25 +495,8 @@
 				console.log("过滤后的pageData",this.pageData)
 				
 				//监听滑动时候 模块曝光
-				// #ifdef MP-WEIXIN
-				this.$nextTick(()=>{
-					let that = this
-					this.ob = new IntersectionObserver({
-					  selector: '.block',
-					  observeAll: true,
-					  context: this,
-					  onEach: ({ dataset }) => {
-						const { key } = dataset || {}
-						return key
-					  },
-					  onFinal: args => {
-						  if(!args) return
-						that.exposure(args)
-					  },
-					})
-					this.ob.connect()
-				})
-				// #endif
+				this.MonitorSlide()
+
 			},
 			async getNearDealer(){
 			        let  cityId;
@@ -622,6 +706,7 @@
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
 				
+				console.log("isWeChat",isWeChat())
 				// #ifdef MP-WEIXIN
 				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
 				// #endif
