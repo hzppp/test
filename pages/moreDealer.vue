@@ -280,6 +280,10 @@
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}`
 				})
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '最近门店页', "YCZ_sourceButtonName_var": '最近门店列表预约试驾' })
+				// #endif
 			},
 		},
 

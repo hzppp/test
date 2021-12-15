@@ -160,6 +160,7 @@ const COUNTDOWN = 60
 			if(this.show && this.serialId){
 				 this.reqSerialDetail(this.serialId)
 				 this.show = false
+				 
 			}
 			//  console.log('22222options :>> ', this.serialId);
             this.checkInfo()

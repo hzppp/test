@@ -69,6 +69,18 @@ name: "testDrive",
       uni.navigateTo({
          url: `/pages/YuyuePage`
       })
+	  
+	  let sourcePage=''
+	  if(gioGlobal.lastUrl=='index'){
+		  sourcePage='首页'
+	  }else if(gioGlobal.lastUrl=='mypage'){
+		  sourcePage='我的页面'
+	  }else if(gioGlobal.lastUrl=='welfareActivity'){
+		  sourcePage='活动页面'
+	  }
+	  // #ifdef MP-WEIXIN
+	  gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": sourcePage, "YCZ_sourceButtonName_var": '悬浮按钮预约试驾' })
+	  // #endif
     },
     onChange(e) {
       if (e.detail.source === "touch") {

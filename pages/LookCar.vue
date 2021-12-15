@@ -101,6 +101,10 @@ export default {
             uni.navigateTo({
                 url:"/pages/YuyuePage?serialId=" + this.serialId
             })
+			
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '预约试驾' })
+			// #endif
         },
 		// vr 图库
 		toVR(){
@@ -121,6 +125,10 @@ export default {
 			uni.navigateTo({
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
 			})
+			
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			// #endif
 		},
         //跳转VR
         goVr(){

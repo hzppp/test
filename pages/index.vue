@@ -633,6 +633,10 @@
 				// #ifdef MP-WEIXIN
 				gioGlobal.gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
 				// #endif
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '首页', "YCZ_sourceButtonName_var": '最近门店预约试驾' })
+				// #endif
 			},
 			goVr() {
 				// #ifdef MP-WEIXIN

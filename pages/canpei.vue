@@ -465,6 +465,10 @@
                 uni.navigateTo({
                     url:"/pages/YuyuePage?serialId=" + idx
                 })
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型参配-参数配置页', "YCZ_sourceButtonName_var": '预约试驾' })
+				// #endif
             },
 			getCarData(ids) {
 				return new Promise((relove, resject) => {
