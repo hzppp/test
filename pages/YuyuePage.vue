@@ -203,6 +203,7 @@ const trackAttribute={
 			if(this.show && this.serialId){
 				 this.reqSerialDetail(this.serialId)
 				 this.show = false
+				 
 			}
 			//  console.log('22222options :>> ', this.serialId);
             this.checkInfo()
@@ -240,7 +241,7 @@ const trackAttribute={
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
             this.reqSerialDetail(options.serialId)
-           
+            // #ifdef MP-WEIXIN
             if(options.from){
                 gdp('track', 'YCZ_leaveAssetsPageView',{
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
@@ -249,6 +250,7 @@ const trackAttribute={
                     YCZ_sourceCarSeries_var:this.currentCaraSerial
                 })
             }
+            // #endif
         },
         methods: {
 			// 获取车型信息

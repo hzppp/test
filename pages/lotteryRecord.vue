@@ -56,6 +56,7 @@ name: "lotteryRecord",
 		gdp('track', 'YCZ_myWinningRecordPageView')
 		// #endif
 	},
+	
   methods:{
     goDetail(id) {
       //

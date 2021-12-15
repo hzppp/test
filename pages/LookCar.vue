@@ -65,6 +65,7 @@ export default {
                 console.log('data :>> ', data);
                 if(code ===1 ) {
                     this.serialData = data
+					console.log("datadata",data)
                     this.serialId = data.pcSerialGroupId
 
                     this.reqModelsList(data.pcSerialGroupId)
@@ -102,6 +103,10 @@ export default {
             uni.navigateTo({
                 url:"/pages/YuyuePage?serialId=" + this.serialId +"&from=carDetDrive"
             })
+			
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '预约试驾' })
+			// #endif
         },
 		// vr 图库
 		toVR(){
@@ -122,6 +127,10 @@ export default {
 			uni.navigateTo({
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
 			})
+			
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			// #endif
 		},
         //跳转VR
         goVr(){

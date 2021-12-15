@@ -289,10 +289,12 @@
 				let  id = item.id
 				// console.log('type,id,status', type, id, status, typeof(type))
 				// console.log('item1.index',index)
+				
 				//主页轮播点击埋点
 				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index ,"YCZ_flowName_var":''})
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":''})
 				// #endif
+				
 				switch (type) {
 					case 1: {
 						// #ifdef MP-WEIXIN

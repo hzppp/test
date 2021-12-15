@@ -23,6 +23,7 @@
 
 <script>
 const app = getApp()
+const gdp = gioGlobal.gio;
 export default {
 name: "testDrive",
   props: {
@@ -73,6 +74,14 @@ name: "testDrive",
       uni.navigateTo({
          url: `/pages/YuyuePage?from=${this.from}`
       })
+      let sourcePage={
+        "index":"首页",
+        "myPage":"我的页面",
+        "activity":"活动页面"
+      }
+      // #ifdef MP-WEIXIN
+      gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": sourcePage[this.from], "YCZ_sourceButtonName_var": '悬浮按钮预约试驾' })
+      // #endif
     },
     onChange(e) {
       if (e.detail.source === "touch") {

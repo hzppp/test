@@ -252,14 +252,15 @@
 								'YCZ_carModel6_var':'','YCZ_carSeries6_var':'','YCZ_configure6_var':''}
 
 				for(let i=0;i<val.length;i++){
-
+					let modelNameArray = val[i].modelName.toString().split(' ')
 					ArrayName['YCZ_carModel'+(i+1).toString()+'_var']=val[i].modelName
 					ArrayName['YCZ_carSeries'+(i+1).toString()+'_var']=val[i].serialGorup
+					ArrayName['YCZ_configure'+(i+1).toString()+'_var']=modelNameArray[modelNameArray.length-1]
 				}
 				
 
 				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',ArrayName)
+				gdp('track', 'YCZ_modelParameterConfigureConfigurePageView',ArrayName)
 				// #endif
 			},
 			// dataList(val){
@@ -466,6 +467,10 @@
                 uni.navigateTo({
                     url:"/pages/YuyuePage?serialId=" + idx +'&from=canpei'
                 })
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型参配-参数配置页', "YCZ_sourceButtonName_var": '预约试驾' })
+				// #endif
             },
 			getCarData(ids) {
 				return new Promise((relove, resject) => {

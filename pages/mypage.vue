@@ -130,7 +130,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
-	const gdp = gio;
+	const gdp = gioGlobal.gio;
 	let app = getApp()
 	export default {
 		components: {

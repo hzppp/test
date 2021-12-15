@@ -13,23 +13,28 @@
 			<viewTabBar :current="0"></viewTabBar>
 		<!-- #endif -->
 		<testDrive aldEventName="首页预约试驾点击" from="index"></testDrive>
-		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
-		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
+		
+		<view class="block" :data-key=0 >
+			<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+			<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
+		</view>
+		
 		<view class="content">
+			
 			<view class="hotAct">
 				<view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
 					热销车型
 				</view>
 				<scroll-view scroll-x="true" show-scrollbar class="hotCar">
-					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
+					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item,index)">
 						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
 					</view>
 				</scroll-view>
 			</view>
-			<view class="hotAct" 
-				>
-				<view class="hotTab">
+			
+			<view class="hotAct">
+				<view class="hotTab block" :data-key=1>
 					云展厅
 				</view>
 				<view class="actItem vrCar" @tap="goVr">
@@ -37,10 +42,8 @@
 				</view>
 			</view>
 			
-			<view class="hotAct"
-				data-gio-imp-track="YCZ_homeShow"
-  				:data-gio-imp-attrs="hotNDelF">
-				<view class="hotTabMore" >
+			<view class="hotAct">
+				<view class="hotTabMore block" :data-key=2>
 					最近门店
 				</view>
 				<view class="hotmore" @tap="goMoreDel()">查看更多
@@ -72,13 +75,15 @@
 				</view>
 			
 			</view>
-			<view class="hotAct" v-if="pageData.list.length" >
+			<view class="hotAct" v-if="pageData.list.length">
 				<view class="hotTab">
 					精选
 				</view>
-				<view v-for="(item,index) in pageData.list" :key="index" class="actItem"
-					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id)">
+				<view v-for="(item,index) in pageData.list" :key="index" class="actItem block" :data-key="index+3"
+					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id,index,item.title)">
+
 					<view :class="item.contentType == 3 ? 'playType':''">
+						
 						<!--contentType 1文章资讯，2活动，3直播-->
 						<!--status 当为直播类型时 1直播中  2预告  3回放-->
 						<!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
@@ -107,6 +112,7 @@
 							<view class="title ovh">{{item.title}}</view>
 						</view>
 					</view>
+
 				</view>
 			</view>
 		</view>
@@ -308,7 +314,20 @@
 			// })
 			// this.sgList = [...sgList]
 				
+			// this.ob = new IntersectionObserver({
+			//   selector: '.block',
+			//   observeAll: true,
+			//   context: this,
+			//   onEach: ({ dataset }) => {
+			// 	const { key } = dataset || {}
+			// 	return key
+			//   },
+			//   onFinal: args => {
 
+			// 	console.log('module view',args)
+			//   },
+			// })
+			// this.ob.connect()
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -324,8 +343,30 @@
 				imageUrl: imageUrl
 			}
 		},
+		
+		
 		methods: {
-			
+			//曝光埋点
+			exposure(args){
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				for(let i=0 ;i<args.length;i++){
+	
+					if(args[i]==0){ //轮播模块曝光
+
+					}else if(args[i]==1){ //热销车型曝光
+
+						for(let i=0;i<this.sgList.length;i++){
+							gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '热销车型', "YCZ_position_var": i+1 ,"YCZ_flowName_var":this.sgList[i].name,'YCZ_sourcePage_var':sourcePage})
+						}
+					}else if(args[i]==2){ //云展厅曝光
+						gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '云展厅', "YCZ_position_var": 1 ,"YCZ_flowName_var":'云展厅','YCZ_sourcePage_var':sourcePage})
+					}else if(args[i]==3){ //最近门店曝光
+						gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name,'YCZ_sourcePage_var':sourcePage})
+					}else{ //精选曝光
+						gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '精选', "YCZ_position_var": args[i]-3 ,"YCZ_flowName_var":this.pageData.list[args[i]-4].title,'YCZ_sourcePage_var':sourcePage})
+					}
+				}
+			},
 			
 			async getPageData() {
 				const cityId = this.crtCityItem.id
@@ -350,7 +391,28 @@
 					this.pageData.list = list
 				// #endif
 				this.sgList = this.pageData.heatSgList
-				// console.log("过滤后的pageData",this.pageData)
+				console.log("过滤后的pageData",this.pageData)
+				
+				//监听滑动时候 模块曝光
+				// #ifdef MP-WEIXIN
+				this.$nextTick(()=>{
+					let that = this
+					this.ob = new IntersectionObserver({
+					  selector: '.block',
+					  observeAll: true,
+					  context: this,
+					  onEach: ({ dataset }) => {
+						const { key } = dataset || {}
+						return key
+					  },
+					  onFinal: args => {
+						  if(!args) return
+						that.exposure(args)
+					  },
+					})
+					this.ob.connect()
+				})
+				// #endif
 			},
 			async getNearDealer(){
 			        let  cityId;
@@ -505,6 +567,8 @@
 				uni.navigateTo({
 					url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
 				})
+				
+				
 			},
 			goDealer(){
 				// #ifdef MP-WEIXIN
@@ -557,6 +621,14 @@
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
+				
+				// #ifdef MP-WEIXIN
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
+				// #endif
+				
+				// #ifdef MP-WEIXIN
+				gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '首页', "YCZ_sourceButtonName_var": '最近门店预约试驾' })
+				// #endif
 			},
 			goVr() {
 				// #ifdef MP-WEIXIN
@@ -572,10 +644,15 @@
 				})
 				// #endif
 				
-				
+				// #ifdef MP-WEIXIN
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '云展厅', "YCZ_position_var": 1 ,"YCZ_flowName_var":'云展厅'})
+				// #endif
 				
 			},
-			handleLinkHot(type, id, status, sourceId,liveSoureId) {
+			handleLinkHot(type, id, status, sourceId,liveSoureId,index,title) {
+				// #ifdef MP-WEIXIN
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '精选', "YCZ_position_var": index+1 ,"YCZ_flowName_var":title})
+				// #endif
 				// type = 3
 				// id = 48965835
 				// status = 'verticalLive'
@@ -770,13 +847,17 @@
 					url: '/pages/activity?id=50'
 				})
 			},
-			goLookCar(item) {
+			goLookCar(item,index) {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('热销车型点击')
 				// #endif
 				uni.navigateTo({
 					url: `/pages/LookCar?id=${item.pcSerialGroupId}`
 				})
+				
+				// #ifdef MP-WEIXIN
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": '热销车型', "YCZ_position_var": index+1 ,"YCZ_flowName_var":item.name})
+				// #endif
 			},
 			goArticlePage() {
 				uni.navigateTo({
