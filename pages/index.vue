@@ -355,9 +355,12 @@
 					if(args[i]==0){ //轮播模块曝光
 
 					}else if(args[i]==1){ //热销车型曝光
-						// #ifdef MP-WEIXIN
-						gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '热销车型', "YCZ_position_var": 1 ,"YCZ_flowName_var":'','YCZ_sourcePage_var':gioGlobal.lastUrl})
-						// #endif
+
+						for(let i=0;i<this.sgList.length;i++){
+							// #ifdef MP-WEIXIN
+							gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '热销车型', "YCZ_position_var": i+1 ,"YCZ_flowName_var":this.sgList[i].name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+							// #endif
+						}
 					}else if(args[i]==2){ //云展厅曝光
 						// #ifdef MP-WEIXIN
 						gioGlobal.gdp('track', 'YCZ_homeShow', { "YCZ_area_var": '云展厅', "YCZ_position_var": 1 ,"YCZ_flowName_var":'云展厅','YCZ_sourcePage_var':gioGlobal.lastUrl})
