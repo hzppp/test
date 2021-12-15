@@ -73,6 +73,9 @@ export default {
 	    _data['type'] = '2'
 	    // #endif	
 
+		// #ifdef MP-WEIXIN
+	    _data['type'] = '1'
+	    // #endif
         if (app.globalData.salesId) {
             _data.salesId = app.globalData.salesId
         }

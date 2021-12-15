@@ -41,6 +41,10 @@ name: "testDrive",
     position: {
       type: Number,
       default: 4
+    },
+    from:{
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -67,7 +71,7 @@ name: "testDrive",
         
       }
       uni.navigateTo({
-         url: `/pages/YuyuePage`
+         url: `/pages/YuyuePage?from=${this.from}`
       })
     },
     onChange(e) {

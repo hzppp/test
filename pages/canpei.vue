@@ -463,7 +463,7 @@
             //go预约试驾
             toYuYue(idx) {
                 uni.navigateTo({
-                    url:"/pages/YuyuePage?serialId=" + idx
+                    url:"/pages/YuyuePage?serialId=" + idx +'&from=canpei'
                 })
             },
 			getCarData(ids) {

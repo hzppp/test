@@ -74,12 +74,13 @@ export default {
             } catch (error) {
                 console.error(error)
             }
+            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
 			
 			// 进入车辆详情页面时触发埋点
 			// #ifdef MP-WEIXIN
 			gioGlobal.gdp('track', 'YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName,
-														'YCZ_sourcePage_var':gioGlobal.lastUrl})
+														'YCZ_sourcePage_var':sourcePage})
 			// #endif
         },
 		//开始播放视频 触发埋点
@@ -98,7 +99,7 @@ export default {
 			// #endif
           
             uni.navigateTo({
-                url:"/pages/YuyuePage?serialId=" + this.serialId
+                url:"/pages/YuyuePage?serialId=" + this.serialId +"&from=carDetDrive"
             })
         },
 		// vr 图库
@@ -118,7 +119,7 @@ export default {
 			 wx.aldstat.sendEvent('车系页获取实时底价点击')
 			// #endif
 			uni.navigateTo({
-				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
+				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
 			})
 		},
         //跳转VR

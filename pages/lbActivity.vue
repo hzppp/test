@@ -372,8 +372,12 @@
 			//设置进入页面的埋点
 			setGdp() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
-				//还没有更新全局lastUrl
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{
+					'YCZ_activityId_var':this.activityId,
+					'YCZ_activityName_var':this.content.name,
+					'YCZ_sourcePage_var':sourcePage
+				})
 				// #endif
 			},
 			onShareAppMessage() {

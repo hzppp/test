@@ -72,6 +72,49 @@ const gdp = gioGlobal.gio;
 */
 const COUNTDOWN = 60
 
+//埋点标识字段
+const trackAttribute={
+    index:{
+        btnFrom:"悬浮按钮预约试驾",
+        pageFrom:"首页"
+    },
+    activity:{
+        btnFrom:"悬浮按钮预约试驾",
+        pageFrom:"活动页面"
+    },
+    myPage:{
+        btnFrom:"悬浮按钮预约试驾",
+        pageFrom:"我的页面"
+    },
+    carDetDrive:{
+        btnFrom:"预约试驾",
+        pageFrom:"车辆详情页"
+    },
+    calc:{
+        btnFrom:"预约试驾",
+        pageFrom:"购车计算器页"
+    },
+    carVs:{
+        btnFrom:"预约试驾",
+        pageFrom:"车型对比页"
+    },
+    canpei:{
+        btnFrom:"预约试驾",
+        pageFrom:"车型参配-参数配置页"
+    },
+    exhibitionTotal:{
+        btnFrom:"询低价",
+        pageFrom:"云展厅车辆总页"
+    },
+    exhibitionInner:{
+        btnFrom:"云展厅内饰页预约试驾",
+        pageFrom:"云展厅内饰页"
+    },
+    exhibitionCar:{
+        btnFrom:"询低价",
+        pageFrom:"云展厅车辆页"
+    },
+}
     export default {
         components:{pop,pyBoomV,userBand},
         data() {
@@ -172,7 +215,7 @@ const COUNTDOWN = 60
 			// #ifdef MP-TOUTIAO
 			 this.TOUTIAO = 'TOUTIAO'
 			// #endif
-			
+			 console.log("options.from=======",options)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
 			if(this.serialId == ""){
@@ -182,9 +225,6 @@ const COUNTDOWN = 60
 				this.currentDealer = JSON.parse(options.nearDealer)
 				console.log('currentDealer',this.currentDealer)
 			}
-			
-			
-			
 			
 			if(options.cityId) {
                 await distance.getLocation()
@@ -200,6 +240,15 @@ const COUNTDOWN = 60
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
             this.reqSerialDetail(options.serialId)
+           
+            if(options.from){
+                gdp('track', 'YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
+                    YCZ_sourceCarModel_var:"",
+                    YCZ_sourceCarSeries_var:this.currentCaraSerial
+                })
+            }
         },
         methods: {
 			// 获取车型信息
@@ -364,9 +413,9 @@ const COUNTDOWN = 60
                         sourceId:this.serialId
                     })
                     if(res.code === 1) {
-						
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
 						// #ifdef MP-WEIXIN
-						gioGlobal.gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':gioGlobal.lastUrl
+						gioGlobal.gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
 																	,'YCZ_carModel_var':this.currentCaraSerial
 																	,'YCZ_mobile_var':this.phoneNum
 																	,'YCZ_province_var':''

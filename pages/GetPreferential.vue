@@ -86,13 +86,25 @@ import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
-
+const gdp = gioGlobal.gio;
 /* *
 * 倒计时默认时间
 */
 const COUNTDOWN = 60
 let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
 
+//埋点标识字段
+const trackAttribute={
+    carDetPrice:{
+        btnFrom:"获取实时底价",
+        pageFrom:"车辆详情页"
+    },
+    
+    myPage:{
+        btnFrom:"悬浮按钮预约试驾",
+        pageFrom:"我的页面"
+    }
+}
     export default {
         components: {pop,pyBoomV,userBand},
         data() {
@@ -179,6 +191,14 @@ let reg = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
             this.reqSerialDetail(options.serialId)
+            if(options.from){
+                gdp('track', 'YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
+                    YCZ_sourceCarModel_var:"",
+                    YCZ_sourceCarSeries_var:this.currentCaraSerial
+                })
+            }
         },
         methods: {
             getStoragePhone() {

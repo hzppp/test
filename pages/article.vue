@@ -177,7 +177,6 @@
 				// #ifdef MP-WEIXIN
 				gioGlobal.gdp('track', 'YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
 				// #endif
-				//还没有更新全局lastUrl
 			},
 		}
 	}

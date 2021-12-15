@@ -107,7 +107,7 @@
 </template>
 <script>
 	export default {
-		props:["types",'leftSerial','rightSerial'],
+		props:["types",'leftSerial','rightSerial','from'],
 		methods:{
 			// 前往车系详情页
 			tofirmIndex(serialId){
@@ -130,7 +130,7 @@
 			// 预约试驾
 			yuYue(id){
 				uni.navigateTo({
-					url:"/pages/YuyuePage?serialId="+id
+					url:"/pages/YuyuePage?serialId="+id+"&from="+this.from
 				})
 			}
 		}

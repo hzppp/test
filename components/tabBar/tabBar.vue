@@ -90,8 +90,8 @@
 					// #ifdef MP-WEIXIN
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
-						
-						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": gioGlobal.lastUrl})
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
 					}else if(path=='live'){
 						//直播页面打开埋点
 						gioGlobal.gdp('track', 'YCZ_livePageView')
@@ -103,10 +103,6 @@
 						url: path
 					})
 				}
-				//埋点触发后再更新当前页面
-				console.log('this.currentPage',gioGlobal.lastUrl,path)
-				gioGlobal.lastUrl=path
-
 			},
 			async getLivePage() {
 				let {

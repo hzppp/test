@@ -1138,7 +1138,7 @@
 			goDrive(){
 				if(this.drive == true){
 					uni.navigateTo({
-						url: "/pages/YuyuePage?serialId="+this.serialId
+						url: "/pages/YuyuePage?serialId="+this.serialId+"&from=calc"
 					})
 					
 				}

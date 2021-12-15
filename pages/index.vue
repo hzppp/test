@@ -12,7 +12,7 @@
 		<!--  #ifndef MP-TOUTIAO  -->
 			<viewTabBar :current="0"></viewTabBar>
 		<!-- #endif -->
-		<testDrive aldEventName="首页预约试驾点击"></testDrive>
+		<testDrive aldEventName="首页预约试驾点击" from="index"></testDrive>
 		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
 		<view class="content">
@@ -558,7 +558,7 @@
 				// console.log('预约试驾',this.nearDealer)
 				 var nearDealer = JSON.stringify(this.nearDealer);
 				uni.navigateTo({
-					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
+					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
 			},
 			goVr() {

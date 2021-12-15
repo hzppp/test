@@ -4,7 +4,7 @@
 		<!-- <load-fail v-if="loadFail" @init="init"></load-fail> -->
 		<!-- 车系信息s -->
 		<block v-if="leftSerial!=''&& rightSerial!=''">
-			<car-info @changeCarSearial="changeCarSearial" :leftSerial="leftSerial" :rightSerial="rightSerial" :types="types"></car-info>
+			<car-info @changeCarSearial="changeCarSearial" :leftSerial="leftSerial" :rightSerial="rightSerial" :types="types" from="carVs"></car-info>
 		</block>
 		<!-- 车系信息e -->
 		<view class="page" v-if="leftSerial!=''&&rightSerial!=''">

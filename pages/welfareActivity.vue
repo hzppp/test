@@ -1,6 +1,6 @@
 <template>
 	<view class="welfareActivity">
-		<testDrive :aldEventName="'活动列表预约试驾'"></testDrive>
+		<testDrive :aldEventName="'活动列表预约试驾'" from="activity"></testDrive>
 		<!--  #ifndef MP-TOUTIAO  -->
 		<viewTabBar :current="3"></viewTabBar>
 		<!--  #endif  -->

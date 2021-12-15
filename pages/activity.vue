@@ -306,9 +306,12 @@
 		methods: {
 			setGdp() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{
+					'YCZ_activityId_var':this.activityId,
+					'YCZ_activityName_var':this.content.name,
+					'YCZ_sourcePage_var':sourcePage})
 				// #endif
-				//还没有更新全局lastUrl
 				
 			},
 			formShow() {

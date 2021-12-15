@@ -111,7 +111,7 @@
 		<!-- <view class="banner_bot">
 			<image src=""></image>
 		</view> -->
-		<testDrive aldEventName='我的页面预约试驾'></testDrive>
+		<testDrive aldEventName='我的页面预约试驾' from="myPage"></testDrive>
 <!--  #ifdef MP-WEIXIN  -->
 		<viewTabBar :current="4"></viewTabBar>
 <!-- #endif -->

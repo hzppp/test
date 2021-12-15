@@ -71,7 +71,17 @@ import pyBoomV from '@/components/pyBoomV/pyBoomV'
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
 const gdp = gioGlobal.gio;
-
+//埋点标识字段
+const trackAttribute={
+    nearStore:{
+        btnFrom:"最近门店预约试驾",
+        pageFrom:"首页"
+    },
+    moreDealer:{
+        btnFrom:"最近门店列表预约试驾",
+        pageFrom:"最近门店页"
+    }
+}
 /* *
 * 倒计时默认时间
 */
@@ -176,7 +186,14 @@ const COUNTDOWN = 60
 				this.reqSerialScreenList()
 				console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
-
+            if(options.from){
+                gdp('track', 'YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
+                    YCZ_sourceCarModel_var:"",
+                    YCZ_sourceCarSeries_var:this.serialData.name
+                })
+            }
         },
         methods: {
 			async reqSerialScreenList() {
