@@ -64,6 +64,7 @@ export default {
                 console.log('data :>> ', data);
                 if(code ===1 ) {
                     this.serialData = data
+					console.log("datadata",data)
                     this.serialId = data.pcSerialGroupId
 
                     this.reqModelsList(data.pcSerialGroupId)

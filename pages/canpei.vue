@@ -258,7 +258,7 @@
 				
 
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',ArrayName)
+				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureConfigurePageView',ArrayName)
 				// #endif
 			},
 			// dataList(val){

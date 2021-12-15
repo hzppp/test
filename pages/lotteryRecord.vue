@@ -55,6 +55,7 @@ name: "lotteryRecord",
 		gioGlobal.gdp('track', 'YCZ_myWinningRecordPageView')
 		// #endif
 	},
+	
   methods:{
     goDetail(id) {
       //
