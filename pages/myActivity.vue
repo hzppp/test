@@ -48,6 +48,7 @@
 <script>
 	import api from '@/public/api/index'
 	let app = getApp()
+	const gdp = gioGlobal.gio;
 	export default {
 		components: {
 
@@ -84,7 +85,7 @@
   },
 		async onShow() {
 			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_myActivityPageView')
+			gdp('track', 'YCZ_myActivityPageView')
 			// #endif
 		},
 		async onLoad() {

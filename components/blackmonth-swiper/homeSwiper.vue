@@ -15,6 +15,7 @@
 
 <script>
 	import api from '@/public/api/index'
+	const gdp = gioGlobal.gio;
 	export default {
 		props: {
 			swiperList: {
@@ -54,7 +55,7 @@
 					if(item.opacity==null){
 						// console.log("变化了",this.swiperList2)
 						// #ifdef MP-WEIXIN
-						gioGlobal.gdp('track', 'YCZ_homeShow', 
+						gdp('track', 'YCZ_homeShow', 
 							{ "YCZ_area_var": 'banner', 
 							"YCZ_position_var": index+1 ,
 							"YCZ_flowName_var":'',
@@ -290,7 +291,7 @@
 				// console.log('item1.index',index)
 				//主页轮播点击埋点
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index ,"YCZ_flowName_var":''})
+				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index ,"YCZ_flowName_var":''})
 				// #endif
 				switch (type) {
 					case 1: {

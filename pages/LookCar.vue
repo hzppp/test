@@ -41,6 +41,7 @@ import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
 let app = getApp()
+const gdp = gioGlobal.gio;
 export default {
     components: {btnWrap},
     data() {
@@ -78,7 +79,7 @@ export default {
 			
 			// 进入车辆详情页面时触发埋点
 			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
+			gdp('track', 'YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName,
 														'YCZ_sourcePage_var':sourcePage})
 			// #endif
@@ -86,7 +87,7 @@ export default {
 		//开始播放视频 触发埋点
 		playVideo(){
 			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_videoClick',{'YCZ_videoID_var':'',
+			gdp('track', 'YCZ_videoClick',{'YCZ_videoID_var':'',
 														'YCZ_videoName_var':'',
 														'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})

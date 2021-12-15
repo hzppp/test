@@ -373,7 +373,7 @@
 			setGdp() {
 				// #ifdef MP-WEIXIN
 				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{
+				gdp('track', 'YCZ_activiDetailPageView',{
 					'YCZ_activityId_var':this.activityId,
 					'YCZ_activityName_var':this.content.name,
 					'YCZ_sourcePage_var':sourcePage
@@ -382,7 +382,7 @@
 			},
 			onShareAppMessage() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+				gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
 															,'YCZ_activityName_var':this.content.name
 															,'YCZ_infoId_var':''
 															,'YCZ_infoName_var':''})
@@ -560,7 +560,7 @@
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
-				gioGlobal.gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+				gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
 				// #endif	
 			},
 			async getPhoneNumber(e) {

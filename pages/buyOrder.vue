@@ -116,6 +116,7 @@
 	import pyBoomV from '@/components/pyBoomV/pyBoomV'
 	import pay from '@/units/pay'
 	let app = getApp()
+	const gdp = gioGlobal.gio;
 	export default {
 		comments: {
 			pyBoomV
@@ -680,7 +681,7 @@
 					// 留资成功 吊起支付
 					
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
+					gdp('track', 'YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
 																'YCZ_activityName_var':this.currentObj.name,
 																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
 																'YCZ_gender_var':app.globalData.wxUserInfo.gender,

@@ -31,6 +31,7 @@
 </template>
 
 <script>
+const gdp = gioGlobal.gio;
 export default {
 	props: {
 		PropsSmartData: {
@@ -60,7 +61,7 @@ export default {
 				
 				var names = model.name.toString().split(' ')
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
+				gdp('track', 'YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
 																		'YCZ_price_var':model.price+'万',
 																		'YCZ_carModel_var':model.name,
 																		'YCZ_carSeries_var':''})

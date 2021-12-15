@@ -130,6 +130,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
+	const gdp = gio;
 	let app = getApp()
 	export default {
 		components: {
@@ -164,7 +165,7 @@
 
 		async onShow() {
 			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_myPageView')
+			gdp('track', 'YCZ_myPageView')
 			// #endif	
 			
              this.getData()
@@ -217,7 +218,7 @@
 			
 			contactKefu(){
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_contactCustomerServiceClick')
+				gdp('track', 'YCZ_contactCustomerServiceClick')
 				// #endif
 			},
 			
@@ -225,7 +226,7 @@
 			        console.log(e.detail.path)
 			        console.log(e.detail.query)
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_contactCustomerServicePageView')
+					gdp('track', 'YCZ_contactCustomerServicePageView')
 					// #endif
 					
 			    },
@@ -274,7 +275,7 @@
 			},
 			toMyOrder(){
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_MyOrderClick')
+				gdp('track', 'YCZ_MyOrderClick')
 				// #endif
 				
 			 // 我的订单
@@ -284,7 +285,7 @@
 			},
 			toMyicon(){
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_integralShopClick')
+				gdp('track', 'YCZ_integralShopClick')
 				// #endif
 				
 				// #ifdef MP-WEIXIN
@@ -306,7 +307,7 @@
 			},
 			toactivity() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_myActivityClick')
+				gdp('track', 'YCZ_myActivityClick')
 				// #endif
 				
 				
@@ -319,7 +320,7 @@
 			},
 			toMylotteryRecord() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_myWinningRecordClick')
+				gdp('track', 'YCZ_myWinningRecordClick')
 				// #endif
 				
 				uni.navigateTo({
@@ -328,7 +329,7 @@
 			},
 			tomyvideo() {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_newMediaMarketingQueryClick')
+				gdp('track', 'YCZ_newMediaMarketingQueryClick')
 				// #endif
 				
 				// #ifdef MP-WEIXIN

@@ -53,12 +53,12 @@
 				})
 				
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
+				gdp('track', 'YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 				// #endif
 				
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
+				gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
 																		'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 				// #endif
@@ -74,7 +74,7 @@
 				
 				//进入车型参配-参数概述页面时触发
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
+				gdp('track', 'YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 				// #endif
             },
@@ -88,12 +88,12 @@
 				
 
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
+				gdp('track', 'YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 				// #endif
 				
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
+				gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
 																		'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 				// #endif

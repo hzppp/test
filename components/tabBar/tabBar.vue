@@ -12,6 +12,7 @@
 
 <script>
 	import api from '@/public/api/index'
+	const gdp = gioGlobal.gio;
 	export default {
 		name: "tabBar",
 		props: ['current'],
@@ -91,10 +92,10 @@
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
 						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-						gioGlobal.gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
+						gdp('track', 'YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
 					}else if(path=='live'){
 						//直播页面打开埋点
-						gioGlobal.gdp('track', 'YCZ_livePageView')
+						gdp('track', 'YCZ_livePageView')
 					}
 					// #endif
 					

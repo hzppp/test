@@ -23,6 +23,7 @@
 
 <script>
 	import api from '@/public/api/index'
+    const gdp = gioGlobal.gio;
 	export default {
 		data() {
 			return {
@@ -117,7 +118,7 @@
                 }
 
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_addCarModelClick',{'YCZ_carModel_var':this.modelName})
+				gdp('track', 'YCZ_addCarModelClick',{'YCZ_carModel_var':this.modelName})
 				// #endif
             },
             //goSingle 单选跳转
@@ -125,7 +126,7 @@
                 if(this.type === "calc") {
 					
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
+					gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
 																			'YCZ_carModel_var':item.name,
 																			'YCZ_carSeries_var':item.serialGroupName})
 					// #endif

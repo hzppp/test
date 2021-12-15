@@ -288,6 +288,7 @@
 	// import backHome from '@/components/backHome/backHome.vue'
 	// import activityADView from '@/components/activityADView/activityADView.vue'
 	// import countPage from '@/configs/countPage';
+	const gdp = gioGlobal.gio;
 	export default {
 		data() {
 			return {
@@ -954,11 +955,11 @@
 
 				if(confirm){
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_windowOkButtonClick')
+					gdp('track', 'YCZ_windowOkButtonClick')
 					// #endif
 				}else{
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_windowCancelButtonClick')
+					gdp('track', 'YCZ_windowCancelButtonClick')
 					// #endif
 				}
 			},

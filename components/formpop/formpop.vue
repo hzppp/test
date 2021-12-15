@@ -147,6 +147,7 @@
 <script>
 	import api from '@/public/api/index'
 	import distance from '@/units/distance'
+	const gdp = gioGlobal.gio;
 	let app = getApp()
 	export default {
 		data() {
@@ -540,7 +541,7 @@
 					
 					//成功报名埋点
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
+					gdp('track', 'YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
 																'YCZ_activityName_var':this.currentObj.name,
 																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
 																'YCZ_gender_var':app.globalData.wxUserInfo.gender,

@@ -193,6 +193,7 @@
     import external from '@/components/review/external.vue'
     import internal from '@/components/review/internal.vue'
 	import domain from '@/configs/interface';
+	const gdp = gioGlobal.gio;
 	export default {
         components:{ main, base, smart, power, external, internal },
 		data() {
@@ -258,7 +259,7 @@
 				
 
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',ArrayName)
+				gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',ArrayName)
 				// #endif
 			},
 			// dataList(val){
@@ -278,7 +279,7 @@
 				this.tabWhich = val
 				if(this.tabWhich==2){
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_modelParameterConfigurePageTabClick',{'YCZ_parameterConfigurationSummary_var':'参配概述',
+					gdp('track', 'YCZ_modelParameterConfigurePageTabClick',{'YCZ_parameterConfigurationSummary_var':'参配概述',
 																			'YCZ_parameterConfiguration_var':'参数配置'})
 					// #endif
 				}

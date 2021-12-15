@@ -295,9 +295,6 @@
 				this.$children[2].moveRight()
 			}
 			// #endif
-			
-			//注册半自动曝光
-			// gioGlobal.gdp('collectImp', this)
 		},
 		watch: {
 			indexCity: function(newVal) {

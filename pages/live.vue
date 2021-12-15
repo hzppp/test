@@ -40,6 +40,7 @@
 	import api from '@/public/api/index'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	let app = getApp()
+	const gdp = gioGlobal.gio;
 	export default {
 		components: {
 			viewTabBar: tabBar,
@@ -170,7 +171,7 @@
 				
 				// 点击某个直播间时触发埋点
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+				gdp('track', 'YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 				// #endif
 				
 				if (item) {
@@ -188,12 +189,12 @@
 						success(res) {
 							// 打开成功 
 							// #ifdef MP-WEIXIN
-							gioGlobal.gdp('track', 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							gdp('track', 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 							// #endif
 						},
 						fail(res){
 							// #ifdef MP-WEIXIN
-							gioGlobal.gdp('track', 'YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							gdp('track', 'YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 							// #endif
 						}
 					})

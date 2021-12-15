@@ -160,13 +160,13 @@ const trackAttribute={
         watch: {
             currentCity(n) {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_chooseCity',{'YCZ_city_var':n.name})
+				gdp('track', 'YCZ_chooseCity',{'YCZ_city_var':n.name})
 				// #endif
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
+				gdp('track', 'YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
 				// #endif
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
@@ -177,7 +177,7 @@ const trackAttribute={
 			currentCaraSerial(n){
 
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
+				gdp('track', 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
 															'YCZ_carSeries_var':n})
 				// #endif
 				
@@ -188,14 +188,14 @@ const trackAttribute={
 					 
 				}else if(n.length==11){
 					// #ifdef MP-WEIXIN
-					gioGlobal.gdp('track', 'YCZ_iphoneInput')
+					gdp('track', 'YCZ_iphoneInput')
 					// #endif
 				}
 				this.checkInfo()
 			},
 			currentDealer(n){
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				gdp('track', 'YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
 				// #endif
 			}
         },
@@ -374,7 +374,7 @@ const trackAttribute={
             async yuYue() {
 				
 				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
+				gdp('track', 'YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
 															,'YCZ_mobile_var':this.phoneNum
 															,'YCZ_province_var':''
 															,'YCZ_city_var':this.currentCity.name
@@ -415,7 +415,7 @@ const trackAttribute={
                     if(res.code === 1) {
 						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
 						// #ifdef MP-WEIXIN
-						gioGlobal.gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
+						gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
 																	,'YCZ_carModel_var':this.currentCaraSerial
 																	,'YCZ_mobile_var':this.phoneNum
 																	,'YCZ_province_var':''
