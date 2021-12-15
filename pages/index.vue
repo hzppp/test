@@ -72,7 +72,7 @@
 				</view>
 			
 			</view>
-			<view class="hotAct" v-if="pageData.list.length">
+			<view class="hotAct" v-if="pageData.list.length" >
 				<view class="hotTab">
 					精选
 				</view>
@@ -122,6 +122,8 @@
 	import distance from '@/units/distance'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
+	import IntersectionObserver from '@/main.js';
+	
 	let app = getApp()
 	const gdp = gioGlobal.gio;
 	export default {
@@ -163,6 +165,9 @@
 				hotNDelF: JSON.stringify({ YCZ_area_var: '最近门店', YCZ_position_var: '1', YCZ_flowName_var: '北京燕长风商贸有限公司北辰亚运村分公司', YCZ_sourcePage_var: '' }),
 			}
 		},
+		// mounted() {
+		// 	gdp('track', 'YCZ_homeShow', { YCZ_area_var: '' ,YCZ_position_var: '',YCZ_flowName_var: '',YCZ_sourcePage_var: ''});
+		// },
 		computed: {
 			selectCity() {
 				let text = ''
@@ -249,7 +254,7 @@
 			clearTimeout(this.timeOutEvent); 
 		},
 		async onShow(options) {
-			gdp('collectImp', this);
+			
 			await distance.getLocation()
 			await this.reqProvinceCityList()
 			let currentLocation = app.globalData.currentLocation
@@ -290,7 +295,9 @@
 				this.$children[2].moveRight()
 			}
 			// #endif
-			  
+			
+			//注册半自动曝光
+			// gioGlobal.gdp('collectImp', this)
 		},
 		watch: {
 			indexCity: function(newVal) {
@@ -302,7 +309,9 @@
 			// 	console.log('sssssssss', res)
 			// 	return res.code == 1 && res.data ? res.data : []
 			// })
-			// this.sgList = [...sgList]	
+			// this.sgList = [...sgList]
+				
+
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -319,6 +328,8 @@
 			}
 		},
 		methods: {
+			
+			
 			async getPageData() {
 				const cityId = this.crtCityItem.id
 				const cityCode = this.crtCityItem.code

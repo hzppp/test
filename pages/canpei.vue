@@ -242,11 +242,29 @@
 			"Data.detailArray"(val) {
 				this.max = val.length;
 				this.width = 280 + val.length * 250;
+
+				let ArrayName ={'YCZ_carModel1_var':'','YCZ_carSeries1_var':'','YCZ_configure1_var':'',
+								'YCZ_carModel2_var':'','YCZ_carSeries2_var':'','YCZ_configure2_var':'',
+								'YCZ_carModel3_var':'','YCZ_carSeries3_var':'','YCZ_configure3_var':'',
+								'YCZ_carModel4_var':'','YCZ_carSeries4_var':'','YCZ_configure4_var':'',
+								'YCZ_carModel5_var':'','YCZ_carSeries5_var':'','YCZ_configure5_var':'',
+								'YCZ_carModel6_var':'','YCZ_carSeries6_var':'','YCZ_configure6_var':''}
+
+				for(let i=0;i<val.length;i++){
+
+					ArrayName['YCZ_carModel'+(i+1).toString()+'_var']=val[i].modelName
+					ArrayName['YCZ_carSeries'+(i+1).toString()+'_var']=val[i].serialGorup
+				}
+				
+
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',ArrayName)
+				// #endif
 			},
+			// dataList(val){
+			// 	console.log(this.Data,"???????",val)
+			// },
 			
-			watSerialId(val){
-				this.serialId = val
-			},
 			
 			watMides(val){
 				let mids = val || "";
@@ -256,8 +274,15 @@
 				this.mids = mids
 			},
 			tabWhich(val){
-				console.log('1ref')
+				// console.log('1ref',val)
 				this.tabWhich = val
+				if(this.tabWhich==2){
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_modelParameterConfigurePageTabClick',{'YCZ_parameterConfigurationSummary_var':'参配概述',
+																			'YCZ_parameterConfiguration_var':'参数配置'})
+					// #endif
+				}
+				
 			},
 			// ref(val){
 			// 	if(val=="ref"){
@@ -412,6 +437,8 @@
 			},
 			// 添加车型
 			addCar() {
+				
+				
                 uni.navigateTo({
 					url:`/pages/AddYuYue?serialId=${this.serialId}&mids=${this.mids.join(',')}&pages=canpei`
                 })

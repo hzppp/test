@@ -116,21 +116,45 @@ const COUNTDOWN = 60
         },
         watch: {
             currentCity(n) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_chooseCity',{'YCZ_city_var':n.name})
+				// #endif
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
+				// #endif
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
 			serialId(n){
+				
 				 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
 			},
+			currentCaraSerial(n){
+
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
+															'YCZ_carSeries_var':n})
+				// #endif
+				
+			},
 			phoneNum(n){
-			if(n.length > 11){
-				 this.phoneNum = n.substring(0,11)
+				if(n.length > 11){
+					 this.phoneNum = n.substring(0,11)
+					 
+				}else if(n.length==11){
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_iphoneInput')
+					// #endif
+				}
+				this.checkInfo()
+			},
+			currentDealer(n){
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				// #endif
 			}
-			  this.checkInfo()
-			}
-		   
         },
         onShow() {
 			if(this.show && this.serialId){
@@ -299,6 +323,15 @@ const COUNTDOWN = 60
 
             //立即预约
             async yuYue() {
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
+															,'YCZ_mobile_var':this.phoneNum
+															,'YCZ_province_var':''
+															,'YCZ_city_var':this.currentCity.name
+															,'YCZ_distributorName_var':this.currentDealer.name})
+				// #endif
+				
                 if(!this.currentDealer.id) return uni.showToast({
                     title:"请先选择经销商",
                     icon:"none"
@@ -331,6 +364,16 @@ const COUNTDOWN = 60
                         sourceId:this.serialId
                     })
                     if(res.code === 1) {
+						
+						// #ifdef MP-WEIXIN
+						gioGlobal.gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':gioGlobal.lastUrl
+																	,'YCZ_carModel_var':this.currentCaraSerial
+																	,'YCZ_mobile_var':this.phoneNum
+																	,'YCZ_province_var':''
+																	,'YCZ_city_var':this.currentCity.name
+																	,'YCZ_distributorName_var':this.currentDealer.name})
+						// #endif
+						
 						// #ifdef MP-WEIXIN
 						 this.$refs.pop.isShow = true
 						// #endif

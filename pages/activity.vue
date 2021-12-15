@@ -273,6 +273,7 @@
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
+			
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -301,7 +302,15 @@
 				imageUrl: imageUrl
 			}
 		},
+
 		methods: {
+			setGdp() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				// #endif
+				//还没有更新全局lastUrl
+				
+			},
 			formShow() {
 
 				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
@@ -364,8 +373,21 @@
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
+				gioGlobal.gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
 				// #endif			
+				
 			},
+			//分享给好友成功时触发
+			onShareAppMessage() {
+				// #ifdef MP-WEIXIN
+	
+				gioGlobal.gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+															,'YCZ_activityName_var':this.content.name
+															,'YCZ_infoId_var':''
+															,'YCZ_infoName_var':''})
+				// #endif	
+				
+			  },
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
 				// #ifdef MP-WEIXIN
@@ -540,6 +562,8 @@
 					}, 1000)
 					this.phone = uni.getStorageSync('userPhone');
 					this.content = data
+					//设置进入页面的埋点
+					this.setGdp()
 					if (this.liveUrl) {
 						this.content.liveUrl = this.liveUrl
 					}

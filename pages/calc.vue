@@ -950,6 +950,19 @@
 				return Math.round(price);
 			},
 			
+			setOnclickGdp(confirm){
+
+				if(confirm){
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_windowOkButtonClick')
+					// #endif
+				}else{
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_windowCancelButtonClick')
+					// #endif
+				}
+			},
+			
 			async reqModelsList(sgId) {
 				const that = this
 			    try {
@@ -966,7 +979,10 @@
 			       	title: '没有找到你查询的车系',
 			       	confirmColor: '#007adf',
 			       	success: function(res) {
+						
+						that.setOnclickGdp(res.confirm)
 			       		if (res.confirm) {
+							
 			       			uni.navigateBack({
 			       				delta: 1
 			       			});
@@ -977,6 +993,7 @@
 			},
 			//获取车系数据
 			async getSerial(modelId, serialId, cityId, callback) {
+
 				// var modelId = modelId;
 				// var serialId = serialId;
 				// var cityId = cityId || this.cityId;
@@ -1035,7 +1052,9 @@
 							content: '请返回重新选择试试',
 							confirmColor: '#007adf',
 							success: function(res) {
+								that.setOnclickGdp(res.confirm)
 								if (res.confirm) {
+									
 									uni.navigateBack({
 										delta: 1
 									});
@@ -1050,7 +1069,9 @@
 						title: '没有找到你查询的车系',
 						confirmColor: '#007adf',
 						success: function(res) {
+							that.setOnclickGdp(res.confirm)
 							if (res.confirm) {
+								
 								uni.navigateBack({
 									delta: 1
 								});

@@ -526,7 +526,7 @@
 					smsCode: this.smsCode,
 
 				}
-				console.log(this.currentObj.sourceUserId)
+				console.log(app.globalData.wxUserInfo.gender,"??????????????")
 
 				if (this.currentObj.sourceUserId && this.currentObj.sourceUserId != 'undefined' && this.currentObj
 					.sourceUserId != 0) {
@@ -535,7 +535,19 @@
 				console.log('留资参数', pam)
 				let data = await api.submitClue(pam)
 				let popname
+
 				if (data.code == 1) { //成功留资
+					
+					//成功报名埋点
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
+																'YCZ_activityName_var':this.currentObj.name,
+																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
+																'YCZ_gender_var':app.globalData.wxUserInfo.gender,
+																'YCZ_mobile_var':this.phone,
+																'YCZ_likes_var':''})
+					// #endif	
+					
 					console.log("成功留资",ly ,lydx.from,lydx.activityType)
 					if ((ly == 'lbactivity' || lydx.from == 'lbactivity') && lydx.isActStart) {
 						if (lydx.activityType == 'wawaji') {
@@ -644,6 +656,7 @@
 
 				console.log(data)
 			},
+			
 			ifcanSubmit() {
 				let isphone = this.isPoneAvailable(this.phone)
 				if (!this.crtSerialItem.id) {

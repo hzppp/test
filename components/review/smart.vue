@@ -11,7 +11,7 @@
 						<view class="item__name">{{ item.title }}</view>
 						<uni-collapse-item class="diy_uni-collapse-item" :title="item.value" showAnimation="true" :count="item.amount">
 							<view class="item__model_wrap">
-								<view class="item__model" v-for="(model, mIndex) in item.models" :key="mIndex" @tap="goCanpei(model.id, 1)">
+								<view class="item__model" v-for="(model, mIndex) in item.models" :key="mIndex" @tap="goCanpei(model.id, 1,model)">
 									<view class="item__model__left">
 										<view class="item__model__left_title">{{ model.name }}</view>
 										<view class="item__model__left_price">{{ model.price }}万</view>
@@ -55,7 +55,17 @@ export default {
 		},
 	},
 	methods: {
-		goCanpei(id, type) {
+		goCanpei(id, type,model) {
+			if(model){
+				
+				var names = model.name.toString().split(' ')
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
+																		'YCZ_price_var':model.price+'万',
+																		'YCZ_carModel_var':model.name,
+																		'YCZ_carSeries_var':''})
+				// #endif
+			}
 			if (type == 1) {
 				this.$emit("addHighlightedModelId", [id]);
 			} else {

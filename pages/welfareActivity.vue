@@ -144,6 +144,7 @@
 				console.log('indexCity===========', newVal)
 			}
 		},
+
 		async onShow() {
 			await distance.getLocation()
 			let currentLocation = app.globalData.currentLocation

@@ -18,6 +18,11 @@
 
     export default {
         props:{
+			serialData:{
+				type: Object ,
+				default: null
+			},
+			
             serialId: { //车系id
                 type: String,
                 default: ""
@@ -46,6 +51,17 @@
 				uni.navigateTo({
 					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				// #endif
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
+																		'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				// #endif
 			},
             goSerialList() {
 				// #ifdef MP-WEIXIN
@@ -55,6 +71,12 @@
                 uni.navigateTo({
 					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
 				})
+				
+				//进入车型参配-参数概述页面时触发
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				// #endif
             },
             goCalc() {
 				// #ifdef MP-WEIXIN
@@ -63,6 +85,18 @@
                 uni.navigateTo({
                     url:`/pages/calc?serialId=${this.serialId}`
                 })
+				
+
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				// #endif
+				
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
+																		'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				// #endif
             },
 		}
     }

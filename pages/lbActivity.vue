@@ -297,6 +297,8 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
+				//数据足够了调用埋点
+				this.setGdp()
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
 					console.log('sourceUserId' + this.sourceUserId)
@@ -367,6 +369,21 @@
 			}
 		},
 		methods: {
+			//设置进入页面的埋点
+			setGdp() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_activiDetailPageView',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_sourcePage_var':gioGlobal.lastUrl})
+				//还没有更新全局lastUrl
+				// #endif
+			},
+			onShareAppMessage() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+															,'YCZ_activityName_var':this.content.name
+															,'YCZ_infoId_var':''
+															,'YCZ_infoName_var':''})
+				// #endif	
+			  },
 			imgBindload () {
 				this.bgImgLoaded = true;
             },
@@ -537,7 +554,10 @@
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
+				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
+				gioGlobal.gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+				// #endif	
 			},
 			async getPhoneNumber(e) {
 				let {

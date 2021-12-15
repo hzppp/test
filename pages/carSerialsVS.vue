@@ -170,9 +170,12 @@
 			// },
             //查看完整参数对比
             goCanpei() {
+				
 				uni.navigateTo({
 					url: `/pages/canpei?mids=${this.mid1},${this.mid2}`
 				})
+				
+
             },
             //获取车系下的车型
             async reqModelsBySerialId(noun,sgId) {

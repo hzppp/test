@@ -88,7 +88,7 @@
 				<!-- #endif -->
 				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
-					<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
+					<button class="list7Btn"  open-type="contact" bindcontact="handleContact" @click="contactKefu"></button>
 					<view class="box-list list7">
 						<view class="p1">联系客服</view>
 						<view class="right isApprove"></view>
@@ -163,6 +163,9 @@
 		},
 
 		async onShow() {
+			// #ifdef MP-WEIXIN
+			gioGlobal.gdp('track', 'YCZ_myPageView')
+			// #endif	
 			
              this.getData()
 			// this.qiandao()
@@ -208,16 +211,23 @@
 			// this.signInList
 
 			// console.log('getsignIn', data)
-			await login.checkLogin(api)
-			await login.checkOauthMobile(api)
 
 		},
 		methods: {
 			
+			contactKefu(){
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_contactCustomerServiceClick')
+				// #endif
+			},
 			
 			 handleContact (e) {
 			        console.log(e.detail.path)
 			        console.log(e.detail.query)
+					// #ifdef MP-WEIXIN
+					gioGlobal.gdp('track', 'YCZ_contactCustomerServicePageView')
+					// #endif
+					
 			    },
 			
 
@@ -263,12 +273,20 @@
 				})
 			},
 			toMyOrder(){
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_MyOrderClick')
+				// #endif
+				
 			 // 我的订单
 			uni.navigateTo({
 				url: '/pages/myOrder'
 			})	
 			},
 			toMyicon(){
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_integralShopClick')
+				// #endif
+				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的金币点击')
 				// #endif
@@ -288,6 +306,11 @@
 			},
 			toactivity() {
 				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_myActivityClick')
+				// #endif
+				
+				
+				// #ifdef MP-WEIXIN
 			    wx.aldstat.sendEvent('我的活动点击')
 				// #endif
 		    	uni.navigateTo({
@@ -295,11 +318,19 @@
 				})
 			},
 			toMylotteryRecord() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_myWinningRecordClick')
+				// #endif
+				
 				uni.navigateTo({
 					url: '/pages/lotteryRecord'
 				})
 			},
 			tomyvideo() {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gdp('track', 'YCZ_newMediaMarketingQueryClick')
+				// #endif
+				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('新媒体运营查询点击')
 				// #endif
