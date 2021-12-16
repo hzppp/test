@@ -99,11 +99,18 @@ const trackAttribute={
         btnFrom:"获取实时底价",
         pageFrom:"车辆详情页"
     },
-    
     myPage:{
         btnFrom:"悬浮按钮预约试驾",
         pageFrom:"我的页面"
-    }
+    },
+    exhibitionTotal:{
+        btnFrom:"询低价",
+        pageFrom:"云展厅车辆总页"
+    },
+    exhibitionCar:{
+        btnFrom:"询低价",
+        pageFrom:"云展厅车辆页"
+    },
 }
     export default {
         components: {pop,pyBoomV,userBand},

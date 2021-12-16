@@ -30,6 +30,10 @@
 	  // #ifdef MP-TOUTIAO
 	   this.src = this.src + '&app=toutiao'
 	  // #endif
+	 	this.$gdp( 'YCZ_interiorPageView',{
+			YCZ_carModel_var:curParam.carModel,
+			YCZ_carSeries_var:""
+		})
 	}
 	}
 </script>
