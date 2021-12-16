@@ -400,6 +400,14 @@ const trackAttribute={
             },
             //立即预约
             async yuYue() {
+				
+				
+				this.$gdp('YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.serialData.name
+															,'YCZ_mobile_var':this.phoneNum
+															,'YCZ_province_var':''
+															,'YCZ_city_var':this.currentCity.name
+															,'YCZ_distributorName_var':this.currentDealer.name})
+				
 				console.log(this.phoneNum,reg.test(this.phoneNum))
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
