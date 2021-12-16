@@ -142,11 +142,23 @@ const trackAttribute={
         },
         watch: {
             currentCity(n) {
+				this.$gdp('YCZ_chooseCity',{'YCZ_city_var':n.name})
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
+				this.$gdp('YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
+			serialData(n){
+			
+				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':this.serialData.name,
+															'YCZ_carSeries_var':''})
+			},
+			currentDealer(n){
+				
+				this.$gdp('YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				
+			},
 			serialId(n){
 			 // if(this.zijie == 'zijie'){
 				//   this.reqSerialDetail(this.serialId)
@@ -158,7 +170,11 @@ const trackAttribute={
 			phoneNum(n){
 			  if(n.length > 11){
 				  this.phoneNum = n.substring(0,11)
-			  }
+			  }else if(n.length==11){
+					
+					this.$gdp('YCZ_iphoneInput')
+					
+				}
 			  this.checkInfo()
 			}
 			
