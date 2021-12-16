@@ -104,11 +104,11 @@ const trackAttribute={
         pageFrom:"我的页面"
     },
     exhibitionTotal:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆总页"
     },
     exhibitionCar:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆页"
     },
 }

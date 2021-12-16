@@ -181,7 +181,7 @@ export default {
             if (code == 1 && data) {
 				// #ifdef MP-WEIXIN
 				gioGlobal.gio('setUserId', data.cacOpenId);
-				//endif
+				// #endif
                 app.globalData.haveUserInfoAuth = !!data.wxName
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
@@ -203,14 +203,14 @@ export default {
 			 let {code, data} = await api.getUser()
 			   console.log('用户信息2',data)
 			 if (code == 1 && data) {
-				 // #ifdef MP-WEIXIN
+				// #ifdef MP-WEIXIN
 				 gioGlobal.gio('setUserId', data.cacOpenId);
-				 //endif
-			     app.globalData.haveUserInfoAuth = !!data.wxName
-			     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-			     app.globalData.wxUserInfo = data
-			     uni.setStorageSync('wxUserInfo', data)
-			     uni.setStorageSync('userPhone', data.oauthMobile)
+				// #endif
+				app.globalData.haveUserInfoAuth = !!data.wxName
+				uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+				app.globalData.wxUserInfo = data
+				uni.setStorageSync('wxUserInfo', data)
+				uni.setStorageSync('userPhone', data.oauthMobile)
 			 }
 		}
 	
@@ -245,7 +245,7 @@ export default {
 			if (code == 1 && data) {
 				// #ifdef MP-WEIXIN
 				gioGlobal.gio('setUserId', data.cacOpenId);
-				//endif
+				// #endif
 			    app.globalData.haveUserInfoAuth = !!data.wxName
 			    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
 			    app.globalData.wxUserInfo = data

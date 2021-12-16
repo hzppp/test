@@ -103,7 +103,7 @@ const trackAttribute={
         pageFrom:"车型参配-参数配置页"
     },
     exhibitionTotal:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆总页"
     },
     exhibitionInner:{
@@ -111,7 +111,7 @@ const trackAttribute={
         pageFrom:"云展厅内饰页"
     },
     exhibitionCar:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆页"
     },
 }
