@@ -414,6 +414,17 @@ const trackAttribute={
 						 this.$children[2].isShow = true
 						// #endif
                         console.log('res :>> ', res);
+						
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
+																	,'YCZ_carModel_var':this.currentCaraSerial
+																	,'YCZ_mobile_var':this.phoneNum
+																	,'YCZ_province_var':''
+																	,'YCZ_city_var':this.currentCity.name
+																	,'YCZ_distributorName_var':this.currentDealer.name})
+						
+						
+						//这里
                     }else {
                         return uni.showToast({
                             title:res.msg,
