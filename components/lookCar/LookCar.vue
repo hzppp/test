@@ -59,8 +59,8 @@
 				
 				
 				this.$gdp('YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
-																		'YCZ_carModel_var':this.serialData.name,
-																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+																		'YCZ_sourceCarModel_var':this.serialData.name,
+																		'YCZ_sourceCarSeries_var':this.serialData.pcSerialGroupName})
 			},
             goSerialList() {
 				// #ifdef MP-WEIXIN
