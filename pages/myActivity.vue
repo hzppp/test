@@ -48,6 +48,7 @@
 <script>
 	import api from '@/public/api/index'
 	let app = getApp()
+
 	export default {
 		components: {
 
@@ -83,7 +84,9 @@
     },
   },
 		async onShow() {
-
+			
+			this.$gdp('YCZ_myActivityPageView')
+			
 		},
 		async onLoad() {
 			this.getList()

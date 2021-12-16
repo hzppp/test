@@ -47,6 +47,7 @@
 <script>
 	import api from '@/public/api/index'
 	let app = getApp()
+
 	export default {
 		props: ["from"],
 		data() {
@@ -91,6 +92,10 @@
 				} = e
 				console.log('getPhoneNumber===============',e)
 				if (detail.iv) {
+					//申请试用手机号点击允许时触发
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data

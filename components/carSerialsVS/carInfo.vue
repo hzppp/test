@@ -107,7 +107,7 @@
 </template>
 <script>
 	export default {
-		props:["types",'leftSerial','rightSerial'],
+		props:["types",'leftSerial','rightSerial','from'],
 		methods:{
 			// 前往车系详情页
 			tofirmIndex(serialId){
@@ -119,19 +119,23 @@
 			changeCarSearial(index){
 				if(index === 0) {
 					uni.navigateTo({
-						url:`/pages/ChooseSerial?vs=true&noun=left&serialId=${this.rightSerial.serialId}`
+						url:`/pages/ChooseSerial?vs=true&noun=left&serialId=${this.rightSerial.serialId}&serialName=${this.rightSerial.name}`
 					})
 				}else {
 					uni.navigateTo({
-						url:`/pages/ChooseSerial?&vs=true&noun=right&serialId=${this.leftSerial.serialId}`
+						url:`/pages/ChooseSerial?&vs=true&noun=right&serialId=${this.leftSerial.serialId}&serialName=${this.leftSerial.name}`
 					})
 				}
 			},
 			// 预约试驾
 			yuYue(id){
 				uni.navigateTo({
-					url:"/pages/YuyuePage?serialId="+id
+					url:"/pages/YuyuePage?serialId="+id+"&from="+this.from+"&serialName="+this.leftSerial.name
 				})
+				
+				
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型对比页', "YCZ_sourceButtonName_var": '预约试驾' })
+				
 			}
 		}
 	}

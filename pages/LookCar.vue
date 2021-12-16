@@ -1,7 +1,7 @@
 <template>
 	<view class="cars-page">
         <view class="image-wrap" v-if="serialData.videoUrl">
-            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;"></video>
+            <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;" @play="playVideo()"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
         <!-- 按钮 -->
@@ -12,7 +12,7 @@
 			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
 		    <!-- 按钮 -->
-		     <btnWrap :ids="ids" :serialId="serialId"></btnWrap>
+		     <btnWrap :ids="ids" :serialId="serialId" :serialData="serialData"></btnWrap>
         </view>
 
       
@@ -41,6 +41,7 @@ import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
 let app = getApp()
+
 export default {
     components: {btnWrap},
     data() {
@@ -64,7 +65,9 @@ export default {
                 console.log('data :>> ', data);
                 if(code ===1 ) {
                     this.serialData = data
+					console.log("datadata",data)
                     this.serialId = data.pcSerialGroupId
+
                     this.reqModelsList(data.pcSerialGroupId)
                     uni.setNavigationBarTitle({
                         title:data.name
@@ -73,7 +76,24 @@ export default {
             } catch (error) {
                 console.error(error)
             }
+            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+			
+			// 进入车辆详情页面时触发埋点
+			console.log("this.serialData",this.serialData)
+			this.$gdp('YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
+														'YCZ_carSeries_var':'',
+														'YCZ_sourcePage_var':sourcePage})
+			
         },
+		//开始播放视频 触发埋点
+		playVideo(){
+			
+			this.$gdp('YCZ_videoClick',{'YCZ_videoID_var':'',
+														'YCZ_videoName_var':'',
+														'YCZ_carModel_var':this.serialData.name,
+														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+			
+		},
         //预约试驾
         goYuyue(){
 			// #ifdef MP-WEIXIN
@@ -81,8 +101,12 @@ export default {
 			// #endif
           
             uni.navigateTo({
-                url:"/pages/YuyuePage?serialId=" + this.serialId
+                url:"/pages/YuyuePage?serialId=" + this.serialId +"&from=carDetDrive"
             })
+			
+			
+			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '预约试驾' })
+			
         },
 		// vr 图库
 		toVR(){
@@ -101,8 +125,12 @@ export default {
 			 wx.aldstat.sendEvent('车系页获取实时底价点击')
 			// #endif
 			uni.navigateTo({
-				url:'/pages/GetPreferential?' + 'serialId='+this.serialId 
+				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
 			})
+			
+			
+			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			
 		},
         //跳转VR
         goVr(){

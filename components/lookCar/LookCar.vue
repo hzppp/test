@@ -18,6 +18,11 @@
 
     export default {
         props:{
+			serialData:{
+				type: Object ,
+				default: null
+			},
+			
             serialId: { //车系id
                 type: String,
                 default: ""
@@ -46,6 +51,16 @@
 				uni.navigateTo({
 					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
+				
+				
+				this.$gdp('YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				
+				
+				
+				this.$gdp('YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
+																		'YCZ_sourceCarModel_var':this.serialData.name,
+																		'YCZ_sourceCarSeries_var':this.serialData.pcSerialGroupName})
 			},
             goSerialList() {
 				// #ifdef MP-WEIXIN
@@ -55,6 +70,11 @@
                 uni.navigateTo({
 					url:`/pages/ChooseSerial?&vs=true&serialId=${this.serialId}`
 				})
+				
+				//进入车型参配-参数概述页面时触发
+				
+				this.$gdp('YCZ_modelComparisonButtonClick',{'YCZ_sourceCarModel_var':this.serialData.name,
+															'YCZ_sourceCarSeries_var':this.serialData.pcSerialGroupName})
             },
             goCalc() {
 				// #ifdef MP-WEIXIN
@@ -63,6 +83,18 @@
                 uni.navigateTo({
                     url:`/pages/calc?serialId=${this.serialId}`
                 })
+				
+
+				
+				this.$gdp('YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				
+				
+				
+				this.$gdp('YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
+																		'YCZ_sourceCarModel_var':this.serialData.name,
+																		'YCZ_sourceCarSeries_var':this.serialData.pcSerialGroupName})
+				
             },
 		}
     }

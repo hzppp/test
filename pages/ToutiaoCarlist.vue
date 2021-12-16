@@ -56,6 +56,7 @@ let app = getApp()
                 }
 				},
 				goSerialDetail(pcSerialGroupId){
+					
 					uni.navigateTo({
 						url:'/pages/GetPreferential?' + 'serialId='+ pcSerialGroupId + '&zijie=zijie'
 					})

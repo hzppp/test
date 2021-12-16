@@ -4,7 +4,7 @@
 		<view class="swiperPanel" @touchstart="startMove" @touchend="endMove">
 			<view class="swiperItem" v-for="(item, index) in swiperList2" :key="index"
 				:style="{transform: itemStyle[index].transform, zIndex: itemStyle[index].zIndex, opacity: itemStyle[index].opacity}"
-				@tap="touch(item)">
+				@tap="touch(item,index)">
 				<view class="children">
 					<image class="pic" :src="item.picUrl" lazy-load="true" mode="aspectFill"></image>
 				</view>
@@ -45,6 +45,21 @@
 				this.itemStyle = []
 				this.swiperList2.forEach((item, index) => {
 					this.itemStyle.push(this.getStyle(index))
+				})
+				
+			},
+			itemStyle(array){
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				array.forEach((item,index)=>{
+					if(item.opacity==null){
+						// console.log("变化了",this.swiperList2)
+						this.$gdp('YCZ_homeShow', 
+							{ "YCZ_area_var": 'banner', 
+							"YCZ_position_var": index+1 ,
+							"YCZ_flowName_var":'',
+							"YCZ_sourcePage_var":sourcePage
+						})
+					}
 				})
 				
 			}
@@ -237,7 +252,9 @@
 				var newList = JSON.parse(JSON.stringify(this.itemStyle))
 				var last = [newList.pop()]
 				newList = last.concat(newList)
+				// console.log("埋点测试",this.itemStyle,newList)
 				this.itemStyle = newList	
+
 				}
 				
 			},
@@ -257,17 +274,24 @@
 				
 			},
 
-			touch(item) {
+			touch(item,index) { 
 				// #ifdef MP-WEIXIN
 				  wx.aldstat.sendEvent('首页Banner')
 				// #endif	
 				
-				console.log(JSON.stringify(item))
+				console.log('JSON.stringify(item)',JSON.stringify(item))
 				let type = item.contentType;
 				let  contentId = item.contentId
 				let  status = item.status
 				let  id = item.id
-				console.log('type,id,status', type, id, status, typeof(type))
+				// console.log('type,id,status', type, id, status, typeof(type))
+				// console.log('item1.index',index)
+				
+				//主页轮播点击埋点
+				// #ifdef MP-WEIXIN
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":''})
+				// #endif
+				
 				switch (type) {
 					case 1: {
 						// #ifdef MP-WEIXIN
@@ -313,6 +337,7 @@
 						break;
 					}
 				}
+				
 			},
 			goMP(id, type, sourceId) { //跳转pcauto+
 				const oUrl =

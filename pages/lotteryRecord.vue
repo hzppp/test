@@ -28,6 +28,7 @@
 import api from '@/public/api/index'
 import login from '@/units/login'
 import userBand from '@/components/userBand/userBand'
+
 export default {
 name: "lotteryRecord",
  components:{userBand},
@@ -50,6 +51,12 @@ name: "lotteryRecord",
     }
 			
 	},
+	onShow() {
+		
+		this.$gdp('YCZ_myWinningRecordPageView')
+		
+	},
+	
   methods:{
     goDetail(id) {
       //

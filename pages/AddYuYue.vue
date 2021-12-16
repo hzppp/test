@@ -44,9 +44,10 @@ export default {
             }
         },
         goChooseModels(item) {
+
             if(this.pages == 'canpei') {
                 uni.redirectTo({
-                    url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}&originSerialId=${this.serialId}`
+                    url:`/pages/ChooseModels?serialId=${item.pcSerialGroupId}&mids=${this.mids}&pages=${this.pages}&originSerialId=${this.serialId}&modelName=${item.name}`
                 })
             }else {
                 uni.redirectTo({

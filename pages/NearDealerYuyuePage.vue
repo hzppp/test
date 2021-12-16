@@ -71,7 +71,17 @@ import pyBoomV from '@/components/pyBoomV/pyBoomV'
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
 
-
+//埋点标识字段
+const trackAttribute={
+    nearStore:{
+        btnFrom:"最近门店预约试驾",
+        pageFrom:"首页"
+    },
+    moreDealer:{
+        btnFrom:"最近门店列表预约试驾",
+        pageFrom:"最近门店页"
+    }
+}
 /* *
 * 倒计时默认时间
 */
@@ -117,12 +127,13 @@ const COUNTDOWN = 60
                 isFocus:false,
                 isNoData:false,
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
             currentCity(n) {
-				console.log(n)
+				
 				if(this.gochoiseCity){
 				   this.reqDealersList(n.id)  	
 				}
@@ -136,6 +147,7 @@ const COUNTDOWN = 60
             },
 			
 			phoneNum(n){
+			console.log("phoneNum",n)
 			if(n.length > 11){
 				 this.phoneNum = n.substring(0,11)
 			}
@@ -156,6 +168,7 @@ const COUNTDOWN = 60
 			}
 		},
         onShow() {
+			console.log("into nearDeal")
             this.checkInfo()
         },
         async onLoad(options) {
@@ -168,13 +181,22 @@ const COUNTDOWN = 60
 			// #endif
 			
             this.getStoragePhone()
-
+            this.from = options.from
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
-				this.reqSerialScreenList()
-				console.log('currentDealer',this.currentDealer,this.currentCity)
+				await this.reqSerialScreenList()
+                if(this.from){
+                    this.$gdp('YCZ_leaveAssetsPageView',{
+                        YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                        YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                        YCZ_sourceCarModel_var:this.serialData.name,
+                        YCZ_sourceCarSeries_var:""
+                    })
+                }
+				// console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
-
+            
+            
         },
         methods: {
 			async reqSerialScreenList() {
@@ -194,7 +216,6 @@ const COUNTDOWN = 60
 						this.currentRegion.id = dealer.countryId
 			    		
 						this.serialData = res.data.serialGroups[0]?res.data.serialGroups[0]:{}
-						
 						console.log('经销商id', this.serialData)
 			    	} else {
 			    		this.currentCity.proId = '1000000022'
@@ -222,6 +243,9 @@ const COUNTDOWN = 60
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
+                    
+                    this.$gdp('YCZ_phoneGrantPermissions')
+                    
                     try {
                     	uni.showLoading({
                             title: '正在加载...'
