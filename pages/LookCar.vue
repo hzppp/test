@@ -41,7 +41,7 @@ import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
 let app = getApp()
-const gdp = gioGlobal.gio;
+
 export default {
     components: {btnWrap},
     data() {
@@ -79,20 +79,20 @@ export default {
             let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
 			
 			// 进入车辆详情页面时触发埋点
-			// #ifdef MP-WEIXIN
-			gdp('track', 'YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
+			
+			this.$gdp('YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName,
 														'YCZ_sourcePage_var':sourcePage})
-			// #endif
+			
         },
 		//开始播放视频 触发埋点
 		playVideo(){
-			// #ifdef MP-WEIXIN
-			gdp('track', 'YCZ_videoClick',{'YCZ_videoID_var':'',
+			
+			this.$gdp('YCZ_videoClick',{'YCZ_videoID_var':'',
 														'YCZ_videoName_var':'',
 														'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-			// #endif
+			
 		},
         //预约试驾
         goYuyue(){
@@ -104,9 +104,9 @@ export default {
                 url:"/pages/YuyuePage?serialId=" + this.serialId +"&from=carDetDrive"
             })
 			
-			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '预约试驾' })
-			// #endif
+			
+			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '预约试驾' })
+			
         },
 		// vr 图库
 		toVR(){
@@ -128,9 +128,9 @@ export default {
 				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
 			})
 			
-			// #ifdef MP-WEIXIN
-			gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
-			// #endif
+			
+			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			
 		},
         //跳转VR
         goVr(){

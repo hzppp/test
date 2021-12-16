@@ -163,7 +163,7 @@
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
 	let app = getApp()
-	const gdp = gioGlobal.gio;
+
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
@@ -301,7 +301,7 @@
 				this.setGdp()
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
-					console.log('sourceUserId' + this.sourceUserId)
+					
 					// this.$toast('sourceUserId' + this.sourceUserId  )
 				}
 				if (this.shareURL) {
@@ -371,22 +371,22 @@
 		methods: {
 			//设置进入页面的埋点
 			setGdp() {
-				// #ifdef MP-WEIXIN
+				
 				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-				gdp('track', 'YCZ_activiDetailPageView',{
+				this.$gdp('YCZ_activiDetailPageView',{
 					'YCZ_activityId_var':this.activityId,
 					'YCZ_activityName_var':this.content.name,
 					'YCZ_sourcePage_var':sourcePage
 				})
-				// #endif
+				
 			},
 			onShareAppMessage() {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+				
+				this.$gdp('YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
 															,'YCZ_activityName_var':this.content.name
 															,'YCZ_infoId_var':''
 															,'YCZ_infoName_var':''})
-				// #endif	
+					
 			  },
 			imgBindload () {
 				this.bgImgLoaded = true;
@@ -558,19 +558,19 @@
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
-				// #ifdef MP-WEIXIN
+				
 				wx.aldstat.sendEvent('活动分享点击')
-				gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
-				// #endif	
+				this.$gdp( 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+					
 			},
 			async getPhoneNumber(e) {
 				let {
 					detail = {}
 				} = e
 				if (detail.iv) {
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_phoneGrantPermissions')
-					// #endif
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data

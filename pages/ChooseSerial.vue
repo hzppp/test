@@ -74,7 +74,11 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(item) {
-
+				
+				
+				this.$gdp('YCZ_clickModel', { "YCZ_choseCarModel_var": item.name, "YCZ_choseCarSeries_var": item.pcSerialGroupName })
+				
+				
                 if(this.type === "calc") {
                     return  uni.navigateTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${item.pcSerialGroupId}`

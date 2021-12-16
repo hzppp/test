@@ -52,16 +52,15 @@
 					url:`/pages/canpei?navigateBack=1&compare=true&mids=${this.ids}&serialId=${this.serialId}`
 				})
 				
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
-																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-				// #endif
 				
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
+				this.$gdp('YCZ_viewParameterConfigureButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				
+				
+				
+				this.$gdp('YCZ_modelParameterConfigureSummaryPageView',{'YCZ_sourcePage_var':'LookCar',
 																		'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-				// #endif
 			},
             goSerialList() {
 				// #ifdef MP-WEIXIN
@@ -73,10 +72,9 @@
 				})
 				
 				//进入车型参配-参数概述页面时触发
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
-																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-				// #endif
+				
+				this.$gdp('YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
+															'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
             },
             goCalc() {
 				// #ifdef MP-WEIXIN
@@ -87,16 +85,16 @@
                 })
 				
 
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
-																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-				// #endif
 				
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
+				this.$gdp('YCZ_purchaseVehicleButtonClick',{'YCZ_carModel_var':this.serialData.name,
+																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				
+				
+				
+				this.$gdp('YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'LookCar',
 																		'YCZ_carModel_var':this.serialData.name,
 																		'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
-				// #endif
+				
             },
 		}
     }

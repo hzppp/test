@@ -86,7 +86,7 @@ import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
-const gdp = gioGlobal.gio;
+
 /* *
 * 倒计时默认时间
 */
@@ -192,7 +192,7 @@ const trackAttribute={
             }
             this.reqSerialDetail(options.serialId)
             if(options.from){
-                gdp('track', 'YCZ_leaveAssetsPageView',{
+                this.$gdp('YCZ_leaveAssetsPageView',{
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
                     YCZ_sourceCarModel_var:"",

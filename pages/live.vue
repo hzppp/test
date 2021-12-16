@@ -40,7 +40,7 @@
 	import api from '@/public/api/index'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	let app = getApp()
-	const gdp = gioGlobal.gio;
+
 	export default {
 		components: {
 			viewTabBar: tabBar,
@@ -170,9 +170,9 @@
 				wx.aldstat.sendEvent('直播点击')
 				
 				// 点击某个直播间时触发埋点
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
-				// #endif
+				
+				this.$gdp('YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+				
 				
 				if (item) {
 					console.log('直播路径','/pages/loading/loading?sharePage=/pages/index/live/liveDetail/liveDetail&index=2&channel=2111171&id=' + item.id)
@@ -188,14 +188,14 @@
 						// envVersion: 'trial',
 						success(res) {
 							// 打开成功 
-							// #ifdef MP-WEIXIN
-							gdp('track', 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
-							// #endif
+							
+							this.$gdp( 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							
 						},
 						fail(res){
-							// #ifdef MP-WEIXIN
-							gdp('track', 'YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
-							// #endif
+							
+							this.$gdp('YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							
 						}
 					})
 				    // #endif

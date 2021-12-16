@@ -208,7 +208,7 @@ import formpop from "@/components/formpop/formpop"
 import pageTop from "@/components/pageTop/pageTop"
 // import shareSuccess from '@/components/shareSuccess/shareSuccess'
 import userBand from "@/components/userBand/userBand"
-const gdp = gioGlobal.gio;
+
 let app = getApp()
 // const ctx = uni.createCanvasContext('myCanvas')
 export default {
@@ -398,9 +398,9 @@ export default {
 		async getPhoneNumber(e) {
 			let { detail = {} } = e
 			if (detail.iv) {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_phoneGrantPermissions')
-				// #endif
+				
+				this.$gdp( 'YCZ_phoneGrantPermissions')
+				
 				try {
 					let { data } = await api.decryptPhone(detail.encryptedData, detail.iv)
 					if (data && data.phoneNumber) {

@@ -65,7 +65,7 @@ import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
-const gdp = gioGlobal.gio;
+
 
 /* *
 * 倒计时默认时间
@@ -159,15 +159,15 @@ const trackAttribute={
         },
         watch: {
             currentCity(n) {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_chooseCity',{'YCZ_city_var':n.name})
-				// #endif
+				
+				this.$gdp('YCZ_chooseCity',{'YCZ_city_var':n.name})
+				
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
-				// #endif
+				
+				this.$gdp('YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
+				
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
 			serialId(n){
@@ -176,10 +176,10 @@ const trackAttribute={
 			},
 			currentCaraSerial(n){
 
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
+				
+				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
 															'YCZ_carSeries_var':n})
-				// #endif
+				
 				
 			},
 			phoneNum(n){
@@ -187,16 +187,16 @@ const trackAttribute={
 					 this.phoneNum = n.substring(0,11)
 					 
 				}else if(n.length==11){
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_iphoneInput')
-					// #endif
+					
+					this.$gdp('YCZ_iphoneInput')
+					
 				}
 				this.checkInfo()
 			},
 			currentDealer(n){
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
-				// #endif
+				
+				this.$gdp('YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				
 			}
         },
         onShow() {
@@ -241,16 +241,16 @@ const trackAttribute={
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
             this.reqSerialDetail(options.serialId)
-            // #ifdef MP-WEIXIN
+            
             if(options.from){
-                gdp('track', 'YCZ_leaveAssetsPageView',{
+                this.$gdp('YCZ_leaveAssetsPageView',{
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
                     YCZ_sourceCarModel_var:"",
                     YCZ_sourceCarSeries_var:this.currentCaraSerial
                 })
             }
-            // #endif
+            
         },
         methods: {
 			// 获取车型信息
@@ -276,9 +276,9 @@ const trackAttribute={
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
-                    // #ifdef MP-WEIXIN
-                    gdp('track', 'YCZ_phoneGrantPermissions')
-                    // #endif
+                    
+                    this.$gdp( 'YCZ_phoneGrantPermissions')
+                    
                     try {
                     	uni.showLoading({
                             title: '正在加载...'
@@ -375,13 +375,13 @@ const trackAttribute={
             //立即预约
             async yuYue() {
 				
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
+				
+				this.$gdp('YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
 															,'YCZ_mobile_var':this.phoneNum
 															,'YCZ_province_var':''
 															,'YCZ_city_var':this.currentCity.name
 															,'YCZ_distributorName_var':this.currentDealer.name})
-				// #endif
+				
 				
                 if(!this.currentDealer.id) return uni.showToast({
                     title:"请先选择经销商",
@@ -416,14 +416,14 @@ const trackAttribute={
                     })
                     if(res.code === 1) {
 						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-						// #ifdef MP-WEIXIN
-						gdp('track', 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
+						
+						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
 																	,'YCZ_carModel_var':this.currentCaraSerial
 																	,'YCZ_mobile_var':this.phoneNum
 																	,'YCZ_province_var':''
 																	,'YCZ_city_var':this.currentCity.name
 																	,'YCZ_distributorName_var':this.currentDealer.name})
-						// #endif
+						
 						
 						// #ifdef MP-WEIXIN
 						 this.$refs.pop.isShow = true

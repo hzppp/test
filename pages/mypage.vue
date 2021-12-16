@@ -130,7 +130,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
-	const gdp = gioGlobal.gio;
+	
 	let app = getApp()
 	export default {
 		components: {
@@ -164,9 +164,9 @@
 		},
 
 		async onShow() {
-			// #ifdef MP-WEIXIN
-			gdp('track', 'YCZ_myPageView')
-			// #endif	
+			
+			this.$gdp('YCZ_myPageView')
+			
 			
              this.getData()
 			// this.qiandao()
@@ -217,17 +217,17 @@
 		methods: {
 			
 			contactKefu(){
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_contactCustomerServiceClick')
-				// #endif
+				
+				this.$gdp( 'YCZ_contactCustomerServiceClick')
+				
 			},
 			
 			 handleContact (e) {
 			        console.log(e.detail.path)
 			        console.log(e.detail.query)
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_contactCustomerServicePageView')
-					// #endif
+					
+					this.$gdp( 'YCZ_contactCustomerServicePageView')
+					
 					
 			    },
 			
@@ -274,9 +274,9 @@
 				})
 			},
 			toMyOrder(){
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_MyOrderClick')
-				// #endif
+				
+				this.$gdp('YCZ_MyOrderClick')
+				
 				
 			 // 我的订单
 			uni.navigateTo({
@@ -284,9 +284,9 @@
 			})	
 			},
 			toMyicon(){
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_integralShopClick')
-				// #endif
+				
+				this.$gdp('YCZ_integralShopClick')
+				
 				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的金币点击')
@@ -306,9 +306,9 @@
 				}
 			},
 			toactivity() {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_myActivityClick')
-				// #endif
+				
+				this.$gdp( 'YCZ_myActivityClick')
+				
 				
 				
 				// #ifdef MP-WEIXIN
@@ -319,18 +319,18 @@
 				})
 			},
 			toMylotteryRecord() {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_myWinningRecordClick')
-				// #endif
+				
+				this.$gdp('track', 'YCZ_myWinningRecordClick')
+				
 				
 				uni.navigateTo({
 					url: '/pages/lotteryRecord'
 				})
 			},
 			tomyvideo() {
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_newMediaMarketingQueryClick')
-				// #endif
+				
+				this.$gdp('YCZ_newMediaMarketingQueryClick')
+				
 				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('新媒体运营查询点击')

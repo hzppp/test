@@ -28,7 +28,7 @@
 import api from '@/public/api/index'
 import login from '@/units/login'
 import userBand from '@/components/userBand/userBand'
-const gdp = gioGlobal.gio;
+
 export default {
 name: "lotteryRecord",
  components:{userBand},
@@ -52,9 +52,9 @@ name: "lotteryRecord",
 			
 	},
 	onShow() {
-		// #ifdef MP-WEIXIN
-		gdp('track', 'YCZ_myWinningRecordPageView')
-		// #endif
+		
+		this.$gdp('YCZ_myWinningRecordPageView')
+		
 	},
 	
   methods:{

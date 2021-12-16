@@ -133,9 +133,9 @@
 					url:"/pages/YuyuePage?serialId="+id+"&from="+this.from
 				})
 				
-				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型对比页', "YCZ_sourceButtonName_var": '预约试驾' })
-				// #endif
+				
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型对比页', "YCZ_sourceButtonName_var": '预约试驾' })
+				
 			}
 		}
 	}

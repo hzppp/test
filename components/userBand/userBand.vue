@@ -14,7 +14,7 @@
 <script>
 import login from '@/units/login.js'
 import api from '@/public/api/index.js'
-const gdp = gioGlobal.gio;
+
     export default {
 		props: {
 			cancleShow: {
@@ -82,9 +82,9 @@ const gdp = gioGlobal.gio;
 			  },
 			async getPhoneNumber(e) {
 				//点击立即注册发生跳转时触发
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_registerNowClick')
-				// #endif
+				
+				this.$gdp('YCZ_registerNowClick')
+				
 				let {
 					detail
 				} = e
@@ -95,9 +95,9 @@ const gdp = gioGlobal.gio;
 			  
 			  if(detail.encryptedData &&  detail.iv){
 				//申请试用手机号点击允许时触发
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_phoneGrantPermissions')
-				// #endif
+				
+				this.$gdp('YCZ_phoneGrantPermissions')
+				
 				let data =   await	login.userBind(api,detail.encryptedData,detail.iv)
 				let token  =  uni.getStorageSync('session-3rd')
 				console.log('userBand token'+token)
@@ -107,9 +107,9 @@ const gdp = gioGlobal.gio;
 				}else{
 					this.isShow = false
 					//注册成功时触发
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_registerSuccess')
-					// #endif
+					
+					this.$gdp('YCZ_registerSuccess')
+					
 				}
 				uni.hideLoading()
 				this.$emit('loginSuccess')
