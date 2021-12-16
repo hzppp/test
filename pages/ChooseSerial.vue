@@ -48,6 +48,13 @@ import api from '@/public/api/index'
 			}else{
 			    this.reqSerialScreenList()	
 			}
+            //YCZ_云展厅选择车型页面曝光
+            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+            this.$gdp('YCZ_choiceModel',{
+                'YCZ_sourcePage_var':sourcePage,
+                'YCZ_sourceCarModel_var':"",
+                'YCZ_sourceCarSeries_var':"",
+            })
            
         },
         methods: {

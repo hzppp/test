@@ -149,6 +149,7 @@
             this.mid2 = options.mid2 || ''
             this.leftSerialId = options.leftSerialId || ''
             this.rightSerialId = options.rightSerialId || ''
+			
 		},
 		methods: {
 			// async init() {
@@ -223,6 +224,13 @@
                             this.rightSerial = data.rightSerial
                             // reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                             uni.hideLoading()
+							//YCZ_车型对比页曝光
+							this.$gdp( 'YCZ_modelContrastPageView',{
+								'YCZ_carModel1_var':this.leftSerial.name,
+								'YCZ_carSeries1_var':"",
+								'YCZ_carModel2_var':this.rightSerial.name,
+								'YCZ_carSeries2_var':""
+							})
                         },
                         fail:err=>{
                             resject(err)
