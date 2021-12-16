@@ -127,8 +127,8 @@
 					
 					
 					this.$gdp('YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
-																			'YCZ_carModel_var':item.name,
-																			'YCZ_carSeries_var':item.serialGroupName})
+																			'YCZ_sourceCarModel_var':item.name,
+																			'YCZ_sourceCarSeries_var':item.serialGroupName})
 					
 					
                     uni.redirectTo({
