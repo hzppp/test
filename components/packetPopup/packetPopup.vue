@@ -11,19 +11,22 @@
             </view>
             <view class="process process-open-front hide"></view>
             <view class="share-btn-group hide">
+                <view class="ca-logo"></view>
+            </view>
+            <!-- <view class="share-btn-group hide"> -->
                 <!--  #ifdef MP-WEIXIN  -->
-                <button v-if="isSharePosterPic"
+                <!-- <button v-if="isSharePosterPic"
                     :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')" hover-class="none"
                     @tap='sharePosterClick()'>分享好友</button>
 
                 <button v-else :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')"
-                    hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+                    hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
                 <!-- #endif -->
                 <!--  #ifndef MP-WEIXIN  -->
-                <button :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')"
-                    hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+                <!-- <button :class="'share-btn ' + (shareStatus == 0 ? 'share-tip':'')"
+                    hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
                 <!-- #endif -->
-            </view>
+            <!-- </view> -->
              <view class="close hide" @click="close"></view>
         </view>
        
@@ -125,6 +128,13 @@ export default {
             margin-left:-268rpx;
             bottom: 180rpx;
            
+        }
+        .ca-logo{
+            position: absolute;
+            .setbg(214rpx,56rpx,'redpackage/ca-logo.png');
+            left: 50%;
+            margin-left:-107rpx;
+            bottom:75rpx;
         }
         .share-btn{
             width: 420rpx;
