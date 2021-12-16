@@ -199,9 +199,17 @@ const trackAttribute={
 				
 			}
         },
-        onShow() {
+        async onShow() {
 			if(this.show && this.serialId){
-				 this.reqSerialDetail(this.serialId)
+				 await this.reqSerialDetail(this.serialId)
+                 if(this.from){
+                    this.$gdp('YCZ_leaveAssetsPageView',{
+                        YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                        YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                        YCZ_sourceCarModel_var:this.currentCaraSerial,
+                        YCZ_sourceCarSeries_var:""
+                    })
+                }
 				 this.show = false
 				 
 			}
@@ -241,8 +249,15 @@ const trackAttribute={
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
-            
+            await this.reqSerialDetail(options.serialId)
+            if(this.from){
+                this.$gdp('YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                    YCZ_sourceCarModel_var:this.currentCaraSerial,
+                    YCZ_sourceCarSeries_var:""
+                })
+            }
             
             
         },
@@ -341,14 +356,7 @@ const trackAttribute={
                     console.error(error)
                 } finally {
                     uni.hideLoading()
-                    if(this.from){
-                        this.$gdp('YCZ_leaveAssetsPageView',{
-                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
-                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
-                            YCZ_sourceCarModel_var:this.currentCaraSerial,
-                            YCZ_sourceCarSeries_var:""
-                        })
-                    }
+                    
                 }
             },
             //获取验证码

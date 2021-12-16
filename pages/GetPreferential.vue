@@ -214,8 +214,16 @@ const trackAttribute={
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
-            this.from =options.from || ""
+            await this.reqSerialDetail(options.serialId)
+            this.from =options.from || "exhibitionTotal"
+            if(this.from){
+                this.$gdp('YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                    YCZ_sourceCarModel_var:this.serialData.name,
+                    YCZ_sourceCarSeries_var:""
+                })
+            }
             
         },
         methods: {
@@ -271,15 +279,7 @@ const trackAttribute={
                 } catch (error) {
                     console.error(error)
                 } finally {
-                    uni.hideLoading()
-                    if(this.from){
-                        this.$gdp('YCZ_leaveAssetsPageView',{
-                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
-                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
-                            YCZ_sourceCarModel_var:this.serialData.name,
-                            YCZ_sourceCarSeries_var:""
-                        })
-                    }
+                    uni.hideLoading()                   
                 }
             },
             //经销商点击，判断提示

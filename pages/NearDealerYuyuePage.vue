@@ -181,13 +181,21 @@ const COUNTDOWN = 60
 			// #endif
 			
             this.getStoragePhone()
-
+            this.from = options.from
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
-				this.reqSerialScreenList()
-				console.log('currentDealer',this.currentDealer,this.currentCity)
+				await this.reqSerialScreenList()
+                if(this.from){
+                    this.$gdp('YCZ_leaveAssetsPageView',{
+                        YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                        YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                        YCZ_sourceCarModel_var:this.serialData.name,
+                        YCZ_sourceCarSeries_var:""
+                    })
+                }
+				// console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
-            this.from = options.from
+            
             
         },
         methods: {
@@ -216,14 +224,6 @@ const COUNTDOWN = 60
 			    		this.currentCity.countryId = '1000002813'
 			    	}
 					this.checkInfo()
-                    if(this.from){
-                        this.$gdp('YCZ_leaveAssetsPageView',{
-                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
-                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
-                            YCZ_sourceCarModel_var:this.serialData.name,
-                            YCZ_sourceCarSeries_var:""
-                        })
-                    }
 			    }catch(e){
 			    	this.currentCity.proId = '1000000022'
 			    	this.currentCity.name = '重庆市'
