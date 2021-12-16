@@ -137,7 +137,8 @@ const trackAttribute={
                 isNoData:false,
 				zijie:'',
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
@@ -191,14 +192,8 @@ const trackAttribute={
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
             this.reqSerialDetail(options.serialId)
-            if(options.from){
-                this.$gdp('YCZ_leaveAssetsPageView',{
-                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
-                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
-                    YCZ_sourceCarModel_var:"",
-                    YCZ_sourceCarSeries_var:this.currentCaraSerial
-                })
-            }
+            this.from =options.from || ""
+            
         },
         methods: {
             getStoragePhone() {
@@ -246,6 +241,7 @@ const trackAttribute={
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1 ) {
                         this.serialData = data
+                        
                     }else {
                         this.isNoData = true
                     }
@@ -253,6 +249,14 @@ const trackAttribute={
                     console.error(error)
                 } finally {
                     uni.hideLoading()
+                    if(this.from){
+                        this.$gdp('YCZ_leaveAssetsPageView',{
+                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                            YCZ_sourceCarModel_var:this.serialData.name,
+                            YCZ_sourceCarSeries_var:""
+                        })
+                    }
                 }
             },
             //经销商点击，判断提示

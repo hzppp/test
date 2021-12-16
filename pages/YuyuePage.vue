@@ -154,7 +154,8 @@ const trackAttribute={
                 isFocus:false,
                 isNoData:false,
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
@@ -219,6 +220,7 @@ const trackAttribute={
 			 console.log("options.from=======",options)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
+            this.from =options.from || ""
 			if(this.serialId == ""){
 				this.reqSerialScreenList();
 			}
@@ -242,14 +244,7 @@ const trackAttribute={
             }
             this.reqSerialDetail(options.serialId)
             
-            if(options.from){
-                this.$gdp('YCZ_leaveAssetsPageView',{
-                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
-                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
-                    YCZ_sourceCarModel_var:"",
-                    YCZ_sourceCarSeries_var:this.currentCaraSerial
-                })
-            }
+            
             
         },
         methods: {
@@ -340,12 +335,21 @@ const trackAttribute={
                         this.serialData = data
                         if(type!=0){
                             this.currentCaraSerial = data.name
+                             
                         }
                     }
                 } catch (error) {
                     console.error(error)
                 } finally {
                     uni.hideLoading()
+                    if(this.from){
+                        this.$gdp('YCZ_leaveAssetsPageView',{
+                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                            YCZ_sourceCarModel_var:this.currentCaraSerial,
+                            YCZ_sourceCarSeries_var:""
+                        })
+                    }
                 }
             },
             //获取验证码

@@ -128,8 +128,6 @@
 	import distance from '@/units/distance'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
-
-	// import IntersectionObserver from '@/main.js';
 	
 	let app = getApp()
 
@@ -309,27 +307,6 @@
 			}
 		},
 		async onLoad(options) {
-
-			// let sgList = await api.getSgList().then(res => {
-			// 	console.log('sssssssss', res)
-			// 	return res.code == 1 && res.data ? res.data : []
-			// })
-			// this.sgList = [...sgList]
-				
-			// this.ob = new IntersectionObserver({
-			//   selector: '.block',
-			//   observeAll: true,
-			//   context: this,
-			//   onEach: ({ dataset }) => {
-			// 	const { key } = dataset || {}
-			// 	return key
-			//   },
-			//   onFinal: args => {
-
-			// 	console.log('module view',args)
-			//   },
-			// })
-			// this.ob.connect()
 		},
 		onUnload() {},
 		onShareAppMessage() {
@@ -706,13 +683,7 @@
 				uni.navigateTo({
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
-				
-				console.log("isWeChat",isWeChat())
-				
 				this.$gdp('YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
-				
-				
-				
 				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '首页', "YCZ_sourceButtonName_var": '最近门店预约试驾' })
 				
 			},

@@ -7,15 +7,15 @@ gdp('init', domain.CONFIG.accountID, domain.CONFIG.datasourceID, domain.CONFIG.a
     vue: Vue,
     debug: true
 });
-//#ifdef MP-WEIXIN
+// #ifdef MP-WEIXIN
 gdp('track', 'YCZ_openApplet');
-//#endif
+// #endif
 
 //检测平台是否为微信并埋点
 export const gio = function(eventId,properties) {
-	//#ifdef MP-WEIXIN
+	// #ifdef MP-WEIXIN
 	if(properties){
 		gioGlobal.gio('track', eventId ,properties)
 	}else gioGlobal.gio('track', eventId)
-	//#endif
+	// #endif
 };

@@ -132,7 +132,7 @@ export default {
                         if(code == 1) {
                             console.log("登陆成功时触发")
                             //登陆成功时触发
-			                this.$gdp('YCZ_loginClick')
+			                this.$gdp('YCZ_loginSuccess')
                             uni.setStorageSync('haveUserInfoAuth',true)
                             app.globalData.haveUserInfoAuth = true
                             this.haveUserInfoAuth = true

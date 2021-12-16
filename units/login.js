@@ -61,17 +61,17 @@ export default {
 		// 微信登录
         let _data = {}
         let data1 = {}
-		 try{
+		try{
 		 	data1 = await this.uniLogin()//获取jscode
-		 }catch(e){
+		}catch(e){
 		 	console.log('登录获取code失败')
-		 }
+		}
         console.log('uni.login()==================', data1)
         _data['code'] = data1.code
 		
 	    // #ifdef MP-TOUTIAO
 	    _data['type'] = '2'
-	    // #endif	
+	    // #endif
 
 		// #ifdef MP-WEIXIN
 	    _data['type'] = '1'

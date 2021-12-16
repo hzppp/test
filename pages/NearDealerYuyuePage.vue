@@ -127,7 +127,8 @@ const COUNTDOWN = 60
                 isFocus:false,
                 isNoData:false,
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
@@ -186,14 +187,8 @@ const COUNTDOWN = 60
 				this.reqSerialScreenList()
 				console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
-            if(options.from){
-                this.$gdp('YCZ_leaveAssetsPageView',{
-                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
-                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
-                    YCZ_sourceCarModel_var:"",
-                    YCZ_sourceCarSeries_var:this.serialData.name
-                })
-            }
+            this.from = options.from
+            
         },
         methods: {
 			async reqSerialScreenList() {
@@ -213,7 +208,6 @@ const COUNTDOWN = 60
 						this.currentRegion.id = dealer.countryId
 			    		
 						this.serialData = res.data.serialGroups[0]?res.data.serialGroups[0]:{}
-						
 						console.log('经销商id', this.serialData)
 			    	} else {
 			    		this.currentCity.proId = '1000000022'
@@ -222,6 +216,14 @@ const COUNTDOWN = 60
 			    		this.currentCity.countryId = '1000002813'
 			    	}
 					this.checkInfo()
+                    if(this.from){
+                        this.$gdp('YCZ_leaveAssetsPageView',{
+                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                            YCZ_sourceCarModel_var:this.serialData.name,
+                            YCZ_sourceCarSeries_var:""
+                        })
+                    }
 			    }catch(e){
 			    	this.currentCity.proId = '1000000022'
 			    	this.currentCity.name = '重庆市'
