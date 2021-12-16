@@ -73,8 +73,8 @@
 				
 				//进入车型参配-参数概述页面时触发
 				
-				this.$gdp('YCZ_modelComparisonButtonClick',{'YCZ_carModel_var':this.serialData.name,
-															'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+				this.$gdp('YCZ_modelComparisonButtonClick',{'YCZ_sourceCarModel_var':this.serialData.name,
+															'YCZ_sourceCarSeries_var':this.serialData.pcSerialGroupName})
             },
             goCalc() {
 				// #ifdef MP-WEIXIN
