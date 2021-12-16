@@ -15,7 +15,6 @@
 
 <script>
 	import api from '@/public/api/index'
-	const gdp = gioGlobal.gio;
 	export default {
 		props: {
 			swiperList: {
@@ -54,14 +53,12 @@
 				array.forEach((item,index)=>{
 					if(item.opacity==null){
 						// console.log("变化了",this.swiperList2)
-						// #ifdef MP-WEIXIN
-						gdp('track', 'YCZ_homeShow', 
+						this.$gdp('YCZ_homeShow', 
 							{ "YCZ_area_var": 'banner', 
 							"YCZ_position_var": index+1 ,
 							"YCZ_flowName_var":'',
 							"YCZ_sourcePage_var":sourcePage
 						})
-						// #endif
 					}
 				})
 				
@@ -277,7 +274,7 @@
 				
 			},
 
-			touch(item,index) {
+			touch(item,index) { 
 				// #ifdef MP-WEIXIN
 				  wx.aldstat.sendEvent('首页Banner')
 				// #endif	
@@ -292,7 +289,7 @@
 				
 				//主页轮播点击埋点
 				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":''})
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":''})
 				// #endif
 				
 				switch (type) {

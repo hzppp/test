@@ -141,7 +141,7 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	const gdp = gioGlobal.gio;
+
 	let app = getApp()
 	const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -305,13 +305,13 @@
 
 		methods: {
 			setGdp() {
-				// #ifdef MP-WEIXIN
+				
 				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-				gdp('track', 'YCZ_activiDetailPageView',{
+				this.$gdp('YCZ_activiDetailPageView',{
 					'YCZ_activityId_var':this.activityId,
 					'YCZ_activityName_var':this.content.name,
 					'YCZ_sourcePage_var':sourcePage})
-				// #endif
+				
 				
 			},
 			formShow() {
@@ -376,19 +376,19 @@
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
-				gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+				this.$gdp('YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
 				// #endif			
 				
 			},
 			//分享给好友成功时触发
 			onShareAppMessage() {
-				// #ifdef MP-WEIXIN
+				
 	
-				gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+				this.$gdp( 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
 															,'YCZ_activityName_var':this.content.name
 															,'YCZ_infoId_var':''
 															,'YCZ_infoName_var':''})
-				// #endif	
+					
 				
 			  },
 			// 看车按钮被点击
@@ -474,9 +474,9 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_phoneGrantPermissions')
-					// #endif
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data

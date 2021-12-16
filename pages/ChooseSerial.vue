@@ -16,7 +16,7 @@
 
 <script>
 import api from '@/public/api/index'
-const gdp = gioGlobal.gio;
+
     export default {
         data() {
             return {
@@ -75,9 +75,9 @@ const gdp = gioGlobal.gio;
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(item) {
 				
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_clickModel', { "YCZ_choseCarModel_var": item.name, "YCZ_choseCarSeries_var": item.pcSerialGroupName })
-				// #endif
+				
+				this.$gdp('YCZ_clickModel', { "YCZ_choseCarModel_var": item.name, "YCZ_choseCarSeries_var": item.pcSerialGroupName })
+				
 				
                 if(this.type === "calc") {
                     return  uni.navigateTo({

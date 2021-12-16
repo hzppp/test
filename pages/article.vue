@@ -44,7 +44,7 @@
 
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-	const gdp = gioGlobal.gio;
+
 	let app = getApp()
 	export default {
 		components: {
@@ -156,20 +156,20 @@
 		},
 		methods: {
 			onShareAppMessage() {
-				// #ifdef MP-WEIXIN
 				
-				gdp('track', 'YCZ_shareFriend',{'YCZ_activityId_var':''
+				
+				this.$gdp( 'YCZ_shareFriend',{'YCZ_activityId_var':''
 																	,'YCZ_activityName_var':''
 																	,'YCZ_infoId_var':this.articleId
 																	,'YCZ_infoName_var':this.title})
-				// #endif	
+					
 			  },
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
 				
 				
-				gdp('track', 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':''
+				this.$gdp('YCZ_shareFriendButtonClick',{'YCZ_activityId_var':''
 																	,'YCZ_activityName_var':''
 																	,'YCZ_infoId_var':this.articleId
 																	,'YCZ_infoName_var':this.title})
@@ -177,10 +177,10 @@
 				
 			},
 			setGdp() {
-				// #ifdef MP-WEIXIN
 				
-				gdp('track', 'YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
-				// #endif
+				
+				this.$gdp('YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
+				
 			},
 		}
 	}

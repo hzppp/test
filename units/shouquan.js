@@ -114,9 +114,9 @@ export default {
                 success: async (res) => {
 					console.log('res',res)
                     // 申请使用微信昵称、头像，点击允许触发
-                    // #ifdef MP-WEIXIN
-                    gdp('track', 'YCZ_nicknameHeadPortraitGrantPermissions')
-                    // #endif
+                    
+                    this.$gdp( 'YCZ_nicknameHeadPortraitGrantPermissions')
+                    
                     
                     let info = res
                     await api.saveWXuserInfo({

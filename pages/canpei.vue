@@ -193,7 +193,7 @@
     import external from '@/components/review/external.vue'
     import internal from '@/components/review/internal.vue'
 	import domain from '@/configs/interface';
-	const gdp = gioGlobal.gio;
+
 	export default {
         components:{ main, base, smart, power, external, internal },
 		data() {
@@ -259,9 +259,9 @@
 				}
 				
 
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_modelParameterConfigureConfigurePageView',ArrayName)
-				// #endif
+				
+				this.$gdp('YCZ_modelParameterConfigureConfigurePageView',ArrayName)
+				
 			},
 			// dataList(val){
 			// 	console.log(this.Data,"???????",val)
@@ -279,10 +279,10 @@
 				// console.log('1ref',val)
 				this.tabWhich = val
 				if(this.tabWhich==2){
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_modelParameterConfigurePageTabClick',{'YCZ_parameterConfigurationSummary_var':'参配概述',
+					
+					this.$gdp( 'YCZ_modelParameterConfigurePageTabClick',{'YCZ_parameterConfigurationSummary_var':'参配概述',
 																			'YCZ_parameterConfiguration_var':'参数配置'})
-					// #endif
+					
 				}
 				
 			},
@@ -468,9 +468,9 @@
                     url:"/pages/YuyuePage?serialId=" + idx +'&from=canpei'
                 })
 				
-				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型参配-参数配置页', "YCZ_sourceButtonName_var": '预约试驾' })
-				// #endif
+				
+				this.$gdp( 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车型参配-参数配置页', "YCZ_sourceButtonName_var": '预约试驾' })
+				
             },
 			getCarData(ids) {
 				return new Promise((relove, resject) => {

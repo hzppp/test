@@ -288,7 +288,7 @@
 	// import backHome from '@/components/backHome/backHome.vue'
 	// import activityADView from '@/components/activityADView/activityADView.vue'
 	// import countPage from '@/configs/countPage';
-	const gdp = gioGlobal.gio;
+	
 	export default {
 		data() {
 			return {
@@ -954,13 +954,13 @@
 			setOnclickGdp(confirm){
 
 				if(confirm){
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_windowOkButtonClick')
-					// #endif
+					
+					this.$gdp('YCZ_windowOkButtonClick')
+					
 				}else{
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_windowCancelButtonClick')
-					// #endif
+					
+					this.$gdp( 'YCZ_windowCancelButtonClick')
+					
 				}
 			},
 			
@@ -1144,9 +1144,9 @@
 					
 				}
 				
-				// #ifdef MP-WEIXIN
-				gioGlobal.gdp('track', 'YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '购车计算器页', "YCZ_sourceButtonName_var": '预约试驾' })
-				// #endif
+				
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '购车计算器页', "YCZ_sourceButtonName_var": '预约试驾' })
+				
 			},
             //控制必要花费和商业保险的展开 1:必要花费 2:商业保险
             closeprice(sort) {

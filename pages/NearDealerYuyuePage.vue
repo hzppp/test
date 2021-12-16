@@ -70,7 +70,7 @@ import login from '@/units/login'
 import pyBoomV from '@/components/pyBoomV/pyBoomV' 
 import userBand from '@/components/userBand/userBand'
 let app = getApp()
-const gdp = gioGlobal.gio;
+
 //埋点标识字段
 const trackAttribute={
     nearStore:{
@@ -187,7 +187,7 @@ const COUNTDOWN = 60
 				console.log('currentDealer',this.currentDealer,this.currentCity)
 			}
             if(options.from){
-                gdp('track', 'YCZ_leaveAssetsPageView',{
+                this.$gdp('YCZ_leaveAssetsPageView',{
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
                     YCZ_sourceCarModel_var:"",
@@ -241,9 +241,9 @@ const COUNTDOWN = 60
             async getPhoneNumber(e) {
 				let {detail} = e
 				if (detail.iv) {
-                    // #ifdef MP-WEIXIN
-                    gdp('track', 'YCZ_phoneGrantPermissions')
-                    // #endif
+                    
+                    this.$gdp('YCZ_phoneGrantPermissions')
+                    
                     try {
                     	uni.showLoading({
                             title: '正在加载...'

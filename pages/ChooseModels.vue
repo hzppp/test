@@ -23,7 +23,7 @@
 
 <script>
 	import api from '@/public/api/index'
-    const gdp = gioGlobal.gio;
+
 	export default {
 		data() {
 			return {
@@ -117,19 +117,19 @@
                     // })
                 }
 
-				// #ifdef MP-WEIXIN
-				gdp('track', 'YCZ_addCarModelClick',{'YCZ_carModel_var':this.modelName})
-				// #endif
+				
+				this.$gdp( 'YCZ_addCarModelClick',{'YCZ_carModel_var':this.modelName})
+				
             },
             //goSingle 单选跳转
             goSingle(item) {
                 if(this.type === "calc") {
 					
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
+					
+					this.$gdp('YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
 																			'YCZ_carModel_var':item.name,
 																			'YCZ_carSeries_var':item.serialGroupName})
-					// #endif
+					
 					
                     uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`

@@ -47,7 +47,7 @@
 <script>
 	import api from '@/public/api/index'
 	let app = getApp()
-	const gdp = gioGlobal.gio;
+
 	export default {
 		props: ["from"],
 		data() {
@@ -93,9 +93,9 @@
 				console.log('getPhoneNumber===============',e)
 				if (detail.iv) {
 					//申请试用手机号点击允许时触发
-					// #ifdef MP-WEIXIN
-					gdp('track', 'YCZ_phoneGrantPermissions')
-					// #endif
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data
