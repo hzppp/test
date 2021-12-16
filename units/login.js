@@ -112,10 +112,7 @@ export default {
 		console.log('自己系统登录login-data' , data)	
 		uni.setStorageSync('bindToken', data.bindToken)
 		if (data.code == 1) {
-			//登陆成功时触发
-			// #ifdef MP-WEIXIN
-			gioGlobal.gio('track', 'YCZ_loginSuccess')
-			// #endif
+			
 		    if (data.token) {//保存sessionKey
 		        this.setSessionKey(data.token)
 				data['time'] =  new Date().getTime()

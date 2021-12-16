@@ -41,14 +41,16 @@ var CONFIG_T = {
 	accountID:'ac8e9fff9218d0b4',
 	datasourceID:'a8baef5711ad838e',
 	appId:'wxb36fb5205e5afb36',
-	host:'https://cbd-api.changan.com.cn:9090'
+	host:'//cbd-api.changan.com.cn:9090',
+	version:version
 }
 //正式环境
 var CONFIG_R = {
 	accountID:'b17c69986984a3be',
 	datasourceID:'8c8866d4dd9f349c',
 	appId:'wxe6ffa5dceb3b003b',
-	host:'https://cbd-api.changan.com.cn:9092'
+	host:'//cbd-api.changan.com.cn:9092',
+	version:version
 }
 
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
