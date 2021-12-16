@@ -177,9 +177,8 @@ const trackAttribute={
 			},
 			currentCaraSerial(n){
 
-				
 				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
-															'YCZ_carSeries_var':n})
+															'YCZ_carSeries_var':''})
 				
 				
 			},

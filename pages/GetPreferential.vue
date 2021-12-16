@@ -143,11 +143,23 @@ const trackAttribute={
         },
         watch: {
             currentCity(n) {
+				this.$gdp('YCZ_chooseCity',{'YCZ_city_var':n.name})
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
+				this.$gdp('YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
+			serialData(n){
+			
+				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':this.serialData.name,
+															'YCZ_carSeries_var':''})
+			},
+			currentDealer(n){
+				
+				this.$gdp('YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				
+			},
 			serialId(n){
 			 // if(this.zijie == 'zijie'){
 				//   this.reqSerialDetail(this.serialId)
@@ -159,7 +171,11 @@ const trackAttribute={
 			phoneNum(n){
 			  if(n.length > 11){
 				  this.phoneNum = n.substring(0,11)
-			  }
+			  }else if(n.length==11){
+					
+					this.$gdp('YCZ_iphoneInput')
+					
+				}
 			  this.checkInfo()
 			}
 			
@@ -418,6 +434,17 @@ const trackAttribute={
 						 this.$children[2].isShow = true
 						// #endif
                         console.log('res :>> ', res);
+						
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
+																	,'YCZ_carModel_var':this.currentCaraSerial
+																	,'YCZ_mobile_var':this.phoneNum
+																	,'YCZ_province_var':''
+																	,'YCZ_city_var':this.currentCity.name
+																	,'YCZ_distributorName_var':this.currentDealer.name})
+						
+						
+						//这里
                     }else {
                         return uni.showToast({
                             title:res.msg,
