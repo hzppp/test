@@ -46,16 +46,16 @@
 							<view class="chance-count" v-if="isApply">还有{{scope.chanceCount||0}}次机会</view>
 						</template>
 						<!--  #ifdef MP-WEIXIN  -->
-						<button v-if="content.sharePosterPic"
+						<!-- <button v-if="content.sharePosterPic"
 							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-							@tap='shareChoise()'>分享好友</button>
+							@tap='shareChoise()'>分享好友</button> -->
 
-						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- <button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
 						<!-- #endif -->
 						<!--  #ifndef MP-WEIXIN  -->
-						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
 						<!-- #endif -->
 						<!-- <view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view> -->
 					</view>
@@ -1091,6 +1091,7 @@
 		position: absolute;
 		left:50%;
 		transform: translate(-50%,-145%);
+		height:180rpx;
 	}
 	/deep/.red-package-page .enroll-btn{
 		font-size: 36rpx;
