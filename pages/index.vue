@@ -257,6 +257,9 @@
 		},
 		onHide() {
 			clearTimeout(this.timeOutEvent); 
+			if(this.$cmSwiper){
+				this.$cmSwiper.timeOutEvent=null
+			}
 		},
 		async onShow(options) {
 			
@@ -308,7 +311,8 @@
 		},
 		async onLoad(options) {
 		},
-		onUnload() {},
+		onUnload() {
+		},
 		onShareAppMessage() {
 			let title = '长安云车展'
 			let path = `pages/authorization?to=index`
