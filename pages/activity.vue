@@ -61,19 +61,30 @@
 					</template>
 
 					<template v-else>
-						<button v-if="buyOrder && !haveBuy && (!content.products[0] || content.products[0].stock == 0)" 
-						:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn enroll-btn3'">
-							已被抢完啦
-						</button>
+						<!-- 拼团活动  20211227 -->
+						<template v-if="isPinTuan">
+							<view class="enroll-btn purchase-btn"  @tap="purchase">
+								拼团购买
+								<view class="remain">剩余<text class="nums">5648</text>个名额</view>
+							</view>
+						</template>
+
+						<!-- 其他活动 -->
 						<template v-else>
-							<button
-								:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-								open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
-								:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
-							<button
-								:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-								:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
-								v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+							<button v-if="buyOrder && !haveBuy && (!content.products[0] || content.products[0].stock == 0)" 
+							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn enroll-btn3'">
+								已被抢完啦
+							</button>
+							<template v-else>
+								<button
+									:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+									open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
+									:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
+								<button
+									:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+									:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
+									v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+							</template>
 						</template>
 					</template>
 
@@ -221,7 +232,10 @@
 						['1-0', '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8'],
 						['2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7']
 					],
-				}]
+				}],
+				isPinTuan:true,
+				pinTuanSuccess:true,
+				
 			}
 		},
 		mixins: [shouquan],
@@ -303,7 +317,6 @@
 		},
 		methods: {
 			formShow() {
-
 				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
 					// 针对有抽奖凭证的 不能点击
 					return
@@ -359,6 +372,33 @@
 				}
 				// #endif
 
+			},
+			//拼团购买
+			purchase(){
+				// 下订活动单独处理
+				if (this.haveBuy) {
+
+					//已经购买且有有有效订单
+					uni.navigateTo({
+						url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
+					})
+				} else {
+					if(this.isActEnded){
+						return
+					}
+
+					// #ifdef MP-WEIXIN
+					// 未购买
+					uni.navigateTo({
+						url: `/pages/buyOrder?activityId=${this.content.id}`
+					})
+					// #endif
+
+					// #ifndef MP-WEIXIN
+						this.$toast('请在微信搜索本小程序参与')
+					// #endif
+				}
+				return
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
@@ -1114,4 +1154,23 @@
 			background-size: 100% 100%;
 		}
 	}
+
+	// 拼团活动
+	.operation-list{
+		.type-a {
+			.purchase-btn{
+				flex-direction: column;
+				font-size: 32rpx;
+				.remain{
+					font-size: 20rpx;
+					color: #ffd6be;
+					margin-top: 5rpx;
+					.nums{
+						color: #FFFFFF;
+					}
+				}
+			}
+		}
+	}
+	
 </style>

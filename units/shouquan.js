@@ -8,7 +8,6 @@ export default {
         }
     },
     onLoad() {
-        console.log('mixins shouquan')
         this.getStorageUserInfo()
     },
     onShow() {

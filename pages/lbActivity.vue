@@ -61,7 +61,7 @@
 					</view>
 				</template>
 			</open-red-packets-activity>
-			<template  v-if="activityType && activityType!='packets'">
+			<template  v-else>
 				<view class="zw"></view>
 				<view class="operation-list">
 					<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
