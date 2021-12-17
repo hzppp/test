@@ -31,6 +31,7 @@ var DOMAIN_T = {
 	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/',
 	UPC:'https://qa-upc2.pc.com.cn',
 	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
