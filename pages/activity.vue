@@ -31,8 +31,7 @@
 				</view>
 			</view>
 			<!-- customAdList -->
-			<view v-if="content.showCustomAds == 1" v-for="(item) in content.customAdList" @tap="tapAcivity(item)"
-				:key="index">
+			<view v-if="content.showCustomAds == 1" v-for="(item,index) in content.customAdList" @tap="tapAcivity(item)" :key="index">
 				<image style="width: 686rpx;height:270rpx ;margin-left: 32rpx;border-radius: 14rpx;margin-top: 10rpx;"
 					:src="item.picUrl" mode="aspectFill" lazy-load="true"></image>
 			</view>
@@ -61,8 +60,8 @@
 					</template>
 
 					<template v-else>
-						<!-- 拼团活动  20211227 -->
-						<template v-if="isPinTuan">
+						<!-- 拼团活动  20211227 未参加拼团和拼团成功-->
+						<template v-if="isGroupPurchase">
 							<view class="enroll-btn purchase-btn"  @tap="purchase">
 								拼团购买
 								<view class="remain">剩余<text class="nums">5648</text>个名额</view>
@@ -233,9 +232,9 @@
 						['2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7']
 					],
 				}],
-				isPinTuan:true,
-				pinTuanSuccess:true,
-				
+				isGroupPurchase:true,
+				grouppinTuanSuccess:true,
+				groupPurchasing:false
 			}
 		},
 		mixins: [shouquan],
