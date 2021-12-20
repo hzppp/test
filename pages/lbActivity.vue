@@ -163,6 +163,7 @@
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
 	let app = getApp()
+
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
@@ -296,9 +297,11 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
+				//数据足够了调用埋点
+				this.setGdp()
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
-					console.log('sourceUserId' + this.sourceUserId)
+					
 					// this.$toast('sourceUserId' + this.sourceUserId  )
 				}
 				if (this.shareURL) {
@@ -366,6 +369,25 @@
 			}
 		},
 		methods: {
+			//设置进入页面的埋点
+			setGdp() {
+				
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				this.$gdp('YCZ_activiDetailPageView',{
+					'YCZ_activityId_var':this.activityId,
+					'YCZ_activityName_var':this.content.name,
+					'YCZ_sourcePage_var':sourcePage
+				})
+				
+			},
+			onShareAppMessage() {
+				
+				this.$gdp('YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
+															,'YCZ_activityName_var':this.content.name
+															,'YCZ_infoId_var':''
+															,'YCZ_infoName_var':''})
+					
+			  },
 			imgBindload () {
 				this.bgImgLoaded = true;
             },
@@ -536,13 +558,19 @@
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
+				
 				wx.aldstat.sendEvent('活动分享点击')
+				this.$gdp( 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+					
 			},
 			async getPhoneNumber(e) {
 				let {
 					detail = {}
 				} = e
 				if (detail.iv) {
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data

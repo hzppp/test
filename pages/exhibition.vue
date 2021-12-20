@@ -36,11 +36,13 @@
 			}, 5000)
 
 			this.getcity()
+			let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+			this.$gdp( 'YCZ_cloudExhibitionHall',{'YCZ_sourcePage_var':sourcePage})
 		},
 		onShow() {
-		uni.setNavigationBarTitle({
-		  title: '云展厅'
-		})	
+			uni.setNavigationBarTitle({
+				title: '云展厅'
+			})	
 		},		
 		onShareAppMessage() {
 			 let title = '长安云展厅'

@@ -288,6 +288,7 @@
 	// import backHome from '@/components/backHome/backHome.vue'
 	// import activityADView from '@/components/activityADView/activityADView.vue'
 	// import countPage from '@/configs/countPage';
+	
 	export default {
 		data() {
 			return {
@@ -950,6 +951,19 @@
 				return Math.round(price);
 			},
 			
+			setOnclickGdp(confirm){
+
+				if(confirm){
+					
+					this.$gdp('YCZ_windowOkButtonClick')
+					
+				}else{
+					
+					this.$gdp( 'YCZ_windowCancelButtonClick')
+					
+				}
+			},
+			
 			async reqModelsList(sgId) {
 				const that = this
 			    try {
@@ -966,7 +980,10 @@
 			       	title: '没有找到你查询的车系',
 			       	confirmColor: '#007adf',
 			       	success: function(res) {
+						
+						that.setOnclickGdp(res.confirm)
 			       		if (res.confirm) {
+							
 			       			uni.navigateBack({
 			       				delta: 1
 			       			});
@@ -977,6 +994,7 @@
 			},
 			//获取车系数据
 			async getSerial(modelId, serialId, cityId, callback) {
+
 				// var modelId = modelId;
 				// var serialId = serialId;
 				// var cityId = cityId || this.cityId;
@@ -1035,7 +1053,9 @@
 							content: '请返回重新选择试试',
 							confirmColor: '#007adf',
 							success: function(res) {
+								that.setOnclickGdp(res.confirm)
 								if (res.confirm) {
+									
 									uni.navigateBack({
 										delta: 1
 									});
@@ -1050,7 +1070,9 @@
 						title: '没有找到你查询的车系',
 						confirmColor: '#007adf',
 						success: function(res) {
+							that.setOnclickGdp(res.confirm)
 							if (res.confirm) {
+								
 								uni.navigateBack({
 									delta: 1
 								});
@@ -1117,10 +1139,13 @@
 			goDrive(){
 				if(this.drive == true){
 					uni.navigateTo({
-						url: "/pages/YuyuePage?serialId="+this.serialId
+						url: "/pages/YuyuePage?serialId="+this.serialId+"&from=calc"
 					})
 					
 				}
+				
+				
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '购车计算器页', "YCZ_sourceButtonName_var": '预约试驾' })
 				
 			},
             //控制必要花费和商业保险的展开 1:必要花费 2:商业保险

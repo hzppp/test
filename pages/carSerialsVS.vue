@@ -4,7 +4,7 @@
 		<!-- <load-fail v-if="loadFail" @init="init"></load-fail> -->
 		<!-- 车系信息s -->
 		<block v-if="leftSerial!=''&& rightSerial!=''">
-			<car-info @changeCarSearial="changeCarSearial" :leftSerial="leftSerial" :rightSerial="rightSerial" :types="types"></car-info>
+			<car-info @changeCarSearial="changeCarSearial" :leftSerial="leftSerial" :rightSerial="rightSerial" :types="types" from="carVs"></car-info>
 		</block>
 		<!-- 车系信息e -->
 		<view class="page" v-if="leftSerial!=''&&rightSerial!=''">
@@ -149,6 +149,7 @@
             this.mid2 = options.mid2 || ''
             this.leftSerialId = options.leftSerialId || ''
             this.rightSerialId = options.rightSerialId || ''
+			
 		},
 		methods: {
 			// async init() {
@@ -170,9 +171,12 @@
 			// },
             //查看完整参数对比
             goCanpei() {
+				
 				uni.navigateTo({
 					url: `/pages/canpei?mids=${this.mid1},${this.mid2}`
 				})
+				
+
             },
             //获取车系下的车型
             async reqModelsBySerialId(noun,sgId) {
@@ -220,6 +224,13 @@
                             this.rightSerial = data.rightSerial
                             // reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                             uni.hideLoading()
+							//YCZ_车型对比页曝光
+							this.$gdp( 'YCZ_modelContrastPageView',{
+								'YCZ_carModel1_var':this.leftSerial.name,
+								'YCZ_carSeries1_var':"",
+								'YCZ_carModel2_var':this.rightSerial.name,
+								'YCZ_carSeries2_var':""
+							})
                         },
                         fail:err=>{
                             resject(err)

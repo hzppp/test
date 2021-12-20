@@ -30,6 +30,7 @@
 import api from '@/public/api/index'
 import login from '@/units/login'
 import userBand from '@/components/userBand/userBand'
+
 export default {
 name: "lotteryRecord",
  components:{userBand},
@@ -94,6 +95,11 @@ name: "lotteryRecord",
       this.getRecordList()
     }
 			
+	},
+	onShow(){
+		
+		this.$gdp('YCZ_myOrderPageView')
+		
 	},
   methods:{
     goDetail(id) {

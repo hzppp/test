@@ -4,7 +4,7 @@
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
-			@tap="getWxUserInfoAuth(callback)"></button>
+			@tap="getWxUserInfoAuth(callback,'myPage')"></button>
 		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
@@ -20,10 +20,10 @@
 								<!-- #endif -->
 								
 							</view>
-							<view  class="phoneV">
+							<view v-if="photo" class="phoneV">
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
-								<view class="phonetitle">{{photo?photo:'-'}}</view>
+								<view class="phonetitle">{{photo}}</view>
 							</view>
 							<view v-if="score" class="phoneV">
 								<image class="scoreVicon"
@@ -88,7 +88,7 @@
 				<!-- #endif -->
 				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
-					<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
+					<button class="list7Btn"  open-type="contact" bindcontact="handleContact" @click="contactKefu"></button>
 					<view class="box-list list7">
 						<view class="p1">联系客服</view>
 						<view class="right isApprove"></view>
@@ -111,7 +111,7 @@
 		<!-- <view class="banner_bot">
 			<image src=""></image>
 		</view> -->
-		<testDrive aldEventName='我的页面预约试驾'></testDrive>
+		<testDrive aldEventName='我的页面预约试驾' from="myPage"></testDrive>
 <!--  #ifdef MP-WEIXIN  -->
 		<viewTabBar :current="4"></viewTabBar>
 <!-- #endif -->
@@ -130,6 +130,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
+	
 	let app = getApp()
 	export default {
 		components: {
@@ -163,6 +164,9 @@
 		},
 
 		async onShow() {
+			
+			this.$gdp('YCZ_myPageView')
+			
 			
              this.getData()
 			// this.qiandao()
@@ -206,18 +210,25 @@
 			// this.qdIndex = index
 			// this.signInList = data.data
 			// this.signInList
-			await login.checkLogin(api)
-			await login.checkOauthMobile(api)
 
 			// console.log('getsignIn', data)
 
 		},
 		methods: {
 			
+			contactKefu(){
+				
+				this.$gdp( 'YCZ_contactCustomerServiceClick')
+				
+			},
 			
 			 handleContact (e) {
 			        console.log(e.detail.path)
 			        console.log(e.detail.query)
+					
+					this.$gdp( 'YCZ_contactCustomerServicePageView')
+					
+					
 			    },
 			
 
@@ -263,12 +274,20 @@
 				})
 			},
 			toMyOrder(){
+				
+				this.$gdp('YCZ_MyOrderClick')
+				
+				
 			 // 我的订单
 			uni.navigateTo({
 				url: '/pages/myOrder'
 			})	
 			},
 			toMyicon(){
+				
+				this.$gdp('YCZ_integralShopClick')
+				
+				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的金币点击')
 				// #endif
@@ -287,6 +306,11 @@
 				}
 			},
 			toactivity() {
+				
+				this.$gdp( 'YCZ_myActivityClick')
+				
+				
+				
 				// #ifdef MP-WEIXIN
 			    wx.aldstat.sendEvent('我的活动点击')
 				// #endif
@@ -295,11 +319,19 @@
 				})
 			},
 			toMylotteryRecord() {
+				
+				this.$gdp('track', 'YCZ_myWinningRecordClick')
+				
+				
 				uni.navigateTo({
 					url: '/pages/lotteryRecord'
 				})
 			},
 			tomyvideo() {
+				
+				this.$gdp('YCZ_newMediaMarketingQueryClick')
+				
+				
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('新媒体运营查询点击')
 				// #endif

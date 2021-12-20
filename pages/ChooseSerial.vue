@@ -48,6 +48,13 @@ import api from '@/public/api/index'
 			}else{
 			    this.reqSerialScreenList()	
 			}
+            //YCZ_云展厅选择车型页面曝光
+            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+            this.$gdp('YCZ_choiceModel',{
+                'YCZ_sourcePage_var':sourcePage,
+                'YCZ_sourceCarModel_var':"",
+                'YCZ_sourceCarSeries_var':"",
+            })
            
         },
         methods: {
@@ -74,6 +81,11 @@ import api from '@/public/api/index'
             },
             //ID 是左边车系 ， this.serialid是右边车系
             goSerialDetail(item) {
+				
+				
+				this.$gdp('YCZ_clickModel', { "YCZ_choseCarModel_var": item.name, "YCZ_choseCarSeries_var": item.pcSerialGroupName })
+				
+				
                 if(this.type === "calc") {
                     return  uni.navigateTo({
                         url:`/pages/ChooseModels?type=calc&single=true&serialId=${item.pcSerialGroupId}`

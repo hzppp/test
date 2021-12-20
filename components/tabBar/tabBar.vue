@@ -12,10 +12,12 @@
 
 <script>
 	import api from '@/public/api/index'
+
 	export default {
 		name: "tabBar",
 		props: ['current'],
 		data() {
+
 			return {
 				paddingBottomHeight: 0, //苹果X以上手机底部适配高度
 				num:2,
@@ -40,7 +42,9 @@
 					icon: '/static/images/tab5_icon.png',
 					icon_a: '/static/images/tab5_icon_c.png',
 					path: "mypage",
-				}]
+				}],
+				//当前所在页面
+				// currentPage:''
 			};
 		},
 		created() {
@@ -66,6 +70,7 @@
 			tabbarChange(path) {
 				// this.$pageTo.toTab(path);
 				//  云展厅先加上导航可以返回
+
 				if (path == 'exhibition') {
 					uni.navigateTo({
 						url: '/pages/exhibition'
@@ -82,11 +87,23 @@
 					// 	})	
 				    // }
 				} else {
+					
+					// #ifdef MP-WEIXIN
+					if(path=='welfareActivity'){
+						//活动页面打开埋点
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						this.$gdp('YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
+					}else if(path=='live'){
+						//直播页面打开埋点
+						this.$gdp('YCZ_livePageView')
+					}
+					// #endif
+					
+					if(path)
 					uni.switchTab({
 						url: path
 					})
 				}
-
 			},
 			async getLivePage() {
 				let {

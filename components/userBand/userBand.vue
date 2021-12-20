@@ -14,6 +14,7 @@
 <script>
 import login from '@/units/login.js'
 import api from '@/public/api/index.js'
+
     export default {
 		props: {
 			cancleShow: {
@@ -80,6 +81,10 @@ import api from '@/public/api/index.js'
 			    console.log(e.detail.encryptedData);
 			  },
 			async getPhoneNumber(e) {
+				//点击立即注册发生跳转时触发
+				
+				this.$gdp('YCZ_registerNowClick')
+				
 				let {
 					detail
 				} = e
@@ -89,6 +94,10 @@ import api from '@/public/api/index.js'
 			  })
 			  
 			  if(detail.encryptedData &&  detail.iv){
+				//申请试用手机号点击允许时触发
+				
+				this.$gdp('YCZ_phoneGrantPermissions')
+				
 				let data =   await	login.userBind(api,detail.encryptedData,detail.iv)
 				let token  =  uni.getStorageSync('session-3rd')
 				console.log('userBand token'+token)
@@ -97,6 +106,10 @@ import api from '@/public/api/index.js'
 					this.$toast('登录失败,请稍后重试')
 				}else{
 					this.isShow = false
+					//注册成功时触发
+					
+					this.$gdp('YCZ_registerSuccess')
+					
 				}
 				uni.hideLoading()
 				this.$emit('loginSuccess')

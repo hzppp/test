@@ -61,18 +61,21 @@ export default {
 		// 微信登录
         let _data = {}
         let data1 = {}
-		 try{
+		try{
 		 	data1 = await this.uniLogin()//获取jscode
-		 }catch(e){
+		}catch(e){
 		 	console.log('登录获取code失败')
-		 }
+		}
         console.log('uni.login()==================', data1)
         _data['code'] = data1.code
 		
 	    // #ifdef MP-TOUTIAO
 	    _data['type'] = '2'
-	    // #endif	
+	    // #endif
 
+		// #ifdef MP-WEIXIN
+	    _data['type'] = '1'
+	    // #endif
         if (app.globalData.salesId) {
             _data.salesId = app.globalData.salesId
         }
@@ -109,6 +112,7 @@ export default {
 		console.log('自己系统登录login-data' , data)	
 		uni.setStorageSync('bindToken', data.bindToken)
 		if (data.code == 1) {
+			
 		    if (data.token) {//保存sessionKey
 		        this.setSessionKey(data.token)
 				data['time'] =  new Date().getTime()
@@ -175,6 +179,9 @@ export default {
             let {code, data} = await api.getUser()
 			 console.log('用户信息2',data)
             if (code == 1 && data) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gio('setUserId', data.cacOpenId);
+				// #endif
                 app.globalData.haveUserInfoAuth = !!data.wxName
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
@@ -186,8 +193,8 @@ export default {
 	
 	async checkOauthMobile(api){
 		let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			// console.log('用户取消授权了，要重新登录',wxUserInfo)
-		if((wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile )|| !wxUserInfo.wxHead){
+			console.log('用户取消授权了，要重新登录',wxUserInfo)
+		if(wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile){
 			console.log('用户取消授权了，要重新登录')
 			let d = await this.login()
 			if (d ==1 ){
@@ -196,11 +203,14 @@ export default {
 			 let {code, data} = await api.getUser()
 			   console.log('用户信息2',data)
 			 if (code == 1 && data) {
-			     app.globalData.haveUserInfoAuth = !!data.wxName
-			     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-			     app.globalData.wxUserInfo = data
-			     uni.setStorageSync('wxUserInfo', data)
-			     uni.setStorageSync('userPhone', data.oauthMobile)
+				// #ifdef MP-WEIXIN
+				 gioGlobal.gio('setUserId', data.cacOpenId);
+				// #endif
+				app.globalData.haveUserInfoAuth = !!data.wxName
+				uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+				app.globalData.wxUserInfo = data
+				uni.setStorageSync('wxUserInfo', data)
+				uni.setStorageSync('userPhone', data.oauthMobile)
 			 }
 		}
 	
@@ -233,6 +243,9 @@ export default {
 			
 			let {code, data} = await api.getUser()
 			if (code == 1 && data) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gio('setUserId', data.cacOpenId);
+				// #endif
 			    app.globalData.haveUserInfoAuth = !!data.wxName
 			    uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
 			    app.globalData.wxUserInfo = data
