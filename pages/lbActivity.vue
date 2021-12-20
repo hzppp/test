@@ -267,9 +267,9 @@
 				if(wxUserInfo){
 					if(this.lotteryType == 'Vouchers'){
 						this.formShowTitle = '领取代金券'
-						this.shareURL = `/pages/lbActivity?${this.cs}`
+						this.shareURL = `/pages/fissionActivity?${this.cs}`
 					}else{
-						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+						this.shareURL = `/pages/fissionActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
 					}
 				}
 				console.log('shareurl', this.shareURL)
@@ -347,7 +347,7 @@
 		},
 		onShareAppMessage() {
 			let title = this.content.name
-			// let path = `pages/authorization?to=lbActivity&id=${this.content.id}`
+			// let path = `pages/authorization?to=fissionActivity&id=${this.content.id}`
 			// if (app.globalData.salesId) {
 			// 	path += `&salesId=${app.globalData.salesId}`
 			// }
@@ -615,9 +615,9 @@
 				if(wxUserInfo){
 					if(this.lotteryType == 'Vouchers'){
 						this.formShowTitle = '领取代金券'
-						this.shareURL = `/pages/lbActivity?${this.cs}`
+						this.shareURL = `/pages/fissionActivity?${this.cs}`
 					}else{
-						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+						this.shareURL = `/pages/fissionActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
 					}
 				}
 				
