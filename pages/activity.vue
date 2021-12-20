@@ -38,7 +38,8 @@
 
 
 			<view class="zw"></view>
-			<view class="operation-list">
+			<group-Purchase v-if="groupStatus==1" :artDownDate="artDownDate" :groupSize="groupSize" :userGroupDetail="userGroupDetail"></group-Purchase>
+			<view class="operation-list" v-else>
 				<view class="type-c"
 					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
 					<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
@@ -62,9 +63,10 @@
 					<template v-else>
 						<!-- 拼团活动  20211227 未参加拼团和拼团成功-->
 						<template v-if="isGroupPurchase">
-							<view class="enroll-btn purchase-btn"  @tap="purchase">
-								拼团购买
-								<view class="remain">剩余<text class="nums">5648</text>个名额</view>
+							<view class="enroll-btn purchase-btn" @tap="purchase">
+								{{groupStatus==2 ? '查看订单' : '拼团购买'}}
+								<view class="remain" v-if="!grouppSuccess">剩余<text class="nums">5648</text>个名额</view>
+								<view class="success-icon" v-else></view>
 							</view>
 						</template>
 
@@ -140,6 +142,10 @@
 				<view class="role-Popup-closeBtn" @click="closeRolesSwiperPopup"></view>
 			</view>
 		</uni-popup>
+
+		<uni-app ref="groupPupup" :mask-click="false" v-if="groupRemains==0">
+			
+		</uni-app>
 	</view>
 </template>
 
@@ -151,7 +157,7 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-
+	import groupPurchasing from '@/components/groupPurchasing/groupPurchasing'
 	let app = getApp()
 	const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -159,7 +165,8 @@
 			'form-pop': formpop,
 			'page-top': pageTop,
 			'share-pop': shareSuccess,
-			'userBand': userBand
+			'userBand': userBand,
+			'group-Purchase':groupPurchasing
 		},
 		data() {
 			return {
@@ -233,8 +240,10 @@
 					],
 				}],
 				isGroupPurchase:true,
-				grouppinTuanSuccess:true,
-				groupPurchasing:false
+				groupStatus:-1, //当前团状态:0 拼团中，1团过期， 2拼团完成
+				groupSize:0, //拼团人数
+				groupRemains:0,//剩余拼团名额
+				userGroupDetail:{}, //用户团购信息
 			}
 		},
 		mixins: [shouquan],
@@ -281,10 +290,13 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-				cs += `${i}=${options[i]}&`
+				if (i != 'sourceUserId' && i != 'groupUserId') {
+					cs += `${i}=${options[i]}&`
+				}
 			}
 			cs = cs.substr(0, cs.length - 1)
-			this.shareURL = `/pages/activity?${cs}`
+			let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			this.shareURL = wxUserInfo ? `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}` : `/pages/activity?${cs}`
 			console.log('shareurl', this.shareURL)
 		},
 	    onShow() {
@@ -529,8 +541,9 @@
 					ss = 0
 				}
 				let v = [this.add0(days), this.add0(hours), this.add0(minutes), ss]
+				return v;
 				// console.log('vvvvvvv==' + v)
-				this.artDownDate = v
+				
 			},
 			// +0
 			add0(number) {
@@ -568,11 +581,11 @@
 						this.fromShowBtnTitle = '抽奖凭证 CA' + this.activityId + str;
 					}
 
-					this.downDate(data.endTime)
+					this.artDownDate = this.downDate(data.endTime)
 					this.isActStart = ((new Date().getTime() - new Date(data.startTime.replace(/-/g, "/")).getTime()) >
 						0)
 					app.Interval = setInterval(() => {
-						this.downDate(data.endTime)
+						this.artDownDate = this.downDate(data.endTime)
 					}, 1000)
 					this.phone = uni.getStorageSync('userPhone');
 					this.content = data
@@ -595,6 +608,23 @@
 					// 下订活动专用
 					if (data.miniUrl && data.miniUrl.indexOf('type=buyorder') != -1) {
 						this.buyOrder = true
+					}
+
+					// 拼团活动
+					if(data.groupBuyConfigDetail){
+						this.isGroupPurchase = true
+						this.groupRemains = data.count - data.usedCount
+						this.groupSize = data.groupSize
+					}
+					if(data.userGroupDetail){
+						let groupCreateTime = data.userGroupDetail.groupCreateTime
+						let groupEndTime = new Date(groupCreateTime).getTime() + 24*60*60
+						this.groupDownDate = this.downDate(groupEndTime)
+						this.groupPurchasing = new Date().getTime() - new Date(groupCreateTime.replace(/-/g, "/")).getTime() >0 &&  new Date(groupCreateTime.replace(/-/g, "/") + 24*60*60).getTime()-new Date().getTime()>0
+						app.Interval = setInterval(() => {
+							this.groupDownDate = this.downDate(groupEndTime)
+						}, 1000)
+						this.shareURL += `&groupUserId=${data.userGroupDetail.id}`
 					}
 					// 访问活动 记录活动访问次数
 					api.fetchActivityVisit({
@@ -1160,6 +1190,7 @@
 			.purchase-btn{
 				flex-direction: column;
 				font-size: 32rpx;
+				position: relative;
 				.remain{
 					font-size: 20rpx;
 					color: #ffd6be;
@@ -1167,6 +1198,12 @@
 					.nums{
 						color: #FFFFFF;
 					}
+				}
+				.success-icon{
+					position: absolute;
+					.setbg(104rpx,32rpx,'groupIn/success-icon.png');
+					top: -8rpx;
+					right:43rpx;
 				}
 			}
 		}

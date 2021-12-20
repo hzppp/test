@@ -166,7 +166,6 @@
 				showType: '', //showtexteare 输入   success  成功  error  失败
 				payState: '', // 1支付成功（实时刷新结果）   0 支付失败
 				picShow: false
-
 			}
 		},
 		filters: {
