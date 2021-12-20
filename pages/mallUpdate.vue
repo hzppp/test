@@ -1,9 +1,9 @@
 <template>
     <view class="mall-update">
         <view class="update-icon"></view>
-        <view class="update-txt">
-            积分商城升级中，请耐心等待</br>期间可登录<text class="website">mall.changan.com.cn</text>查看
-        </view>
+        <text class="update-txt" selectable="true" user-select="true">
+            积分商城升级中，请耐心等待\n期间可登录<text class="website" selectable="true" user-select="true">mall.changan.com.cn</text>查看
+        </text>
     </view>
 </template>
 
@@ -15,7 +15,19 @@ export default {
         };
     },
     methods: {
-
+        
+        copyText() {
+            uni.setClipboardData({
+                data:'mall.changan.com.cn',
+                success() {
+                    uni.showToast({
+                        title:'已复制到剪贴板',
+                        icon:'none',
+                        position:'top'
+                    })
+                }
+            })
+        },
     },
     created() {
 
