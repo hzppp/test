@@ -209,7 +209,7 @@ export default {
 			 let {code, data} = await api.getUser()
 			   console.log('用户信息2',data)
 			 if (code == 1 && data) {
-				 // #ifdef MP-WEIXIN
+				// #ifdef MP-WEIXIN
 				 gioGlobal.gio('setUserId', data.cacOpenId);
 				 // #endif
 			     app.globalData.haveUserInfoAuth = !!data.wxName

@@ -99,11 +99,18 @@ const trackAttribute={
         btnFrom:"获取实时底价",
         pageFrom:"车辆详情页"
     },
-    
     myPage:{
         btnFrom:"悬浮按钮预约试驾",
         pageFrom:"我的页面"
-    }
+    },
+    exhibitionTotal:{
+        btnFrom:"询底价",
+        pageFrom:"云展厅车辆总页"
+    },
+    exhibitionCar:{
+        btnFrom:"询底价",
+        pageFrom:"云展厅车辆页"
+    },
 }
     export default {
         components: {pop,pyBoomV,userBand},
@@ -143,11 +150,23 @@ const trackAttribute={
         },
         watch: {
             currentCity(n) {
+				this.$gdp('YCZ_chooseCity',{'YCZ_city_var':n.name})
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
+				this.$gdp('YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
+			serialData(n){
+			
+				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':this.serialData.name,
+															'YCZ_carSeries_var':''})
+			},
+			currentDealer(n){
+				
+				this.$gdp('YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
+				
+			},
 			serialId(n){
 			 // if(this.zijie == 'zijie'){
 				//   this.reqSerialDetail(this.serialId)
@@ -159,7 +178,11 @@ const trackAttribute={
 			phoneNum(n){
 			  if(n.length > 11){
 				  this.phoneNum = n.substring(0,11)
-			  }
+			  }else if(n.length==11){
+					
+					this.$gdp('YCZ_iphoneInput')
+					
+				}
 			  this.checkInfo()
 			}
 			
@@ -191,8 +214,16 @@ const trackAttribute={
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
-            this.from =options.from || ""
+            await this.reqSerialDetail(options.serialId)
+            this.from =options.from || "exhibitionTotal"
+            if(this.from){
+                this.$gdp('YCZ_leaveAssetsPageView',{
+                    YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                    YCZ_sourceCarModel_var:this.serialData.name,
+                    YCZ_sourceCarSeries_var:""
+                })
+            }
             
         },
         methods: {
@@ -248,15 +279,7 @@ const trackAttribute={
                 } catch (error) {
                     console.error(error)
                 } finally {
-                    uni.hideLoading()
-                    if(this.from){
-                        this.$gdp('YCZ_leaveAssetsPageView',{
-                            YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
-                            YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
-                            YCZ_sourceCarModel_var:this.serialData.name,
-                            YCZ_sourceCarSeries_var:""
-                        })
-                    }
+                    uni.hideLoading()                   
                 }
             },
             //经销商点击，判断提示
@@ -377,6 +400,14 @@ const trackAttribute={
             },
             //立即预约
             async yuYue() {
+				
+				
+				this.$gdp('YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.serialData.name
+															,'YCZ_mobile_var':this.phoneNum
+															,'YCZ_province_var':''
+															,'YCZ_city_var':this.currentCity.name
+															,'YCZ_distributorName_var':this.currentDealer.name})
+				
 				console.log(this.phoneNum,reg.test(this.phoneNum))
                 if(!reg.test(this.phoneNum)) return uni.showToast({
                     title:"请输入正确的手机号码",
@@ -418,6 +449,17 @@ const trackAttribute={
 						 this.$children[2].isShow = true
 						// #endif
                         console.log('res :>> ', res);
+						
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
+																	,'YCZ_carModel_var':this.currentCaraSerial
+																	,'YCZ_mobile_var':this.phoneNum
+																	,'YCZ_province_var':''
+																	,'YCZ_city_var':this.currentCity.name
+																	,'YCZ_distributorName_var':this.currentDealer.name})
+						
+						
+						//这里
                     }else {
                         return uni.showToast({
                             title:res.msg,
