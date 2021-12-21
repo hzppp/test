@@ -149,6 +149,9 @@ export default {
             let {code, data} = await api.getUser()
             console.log('获取用户信息1', data,code)
             if (code == 1 && data) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gio('setUserId', data.cacOpenId);
+				//endif
                 app.globalData.haveUserInfoAuth = !!data.wxName
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
@@ -163,6 +166,9 @@ export default {
                 let {code, data} = await api.getUser()
 				   console.log('获取用户信息2', data,code)
                 if (code == 1 && data) {
+					// #ifdef MP-WEIXIN
+					gioGlobal.gio('setUserId', data.cacOpenId);
+					//endif
                     app.globalData.haveUserInfoAuth = !!data.wxName
                     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                     app.globalData.wxUserInfo = data
