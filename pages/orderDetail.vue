@@ -353,168 +353,168 @@
 					this.getOrderState(this.orderTime)
 				}, 1000)
 			}
-			},
+		},
 
-			pay() {
-				let that = this
-				pay.pay(this.detailInfo.activityId)
-				console.log('去支付')
-			},
-			disBackPay() {
-				// 取消退款
-
-
+		pay() {
+			let that = this
+			pay.pay(this.detailInfo.activityId)
+			console.log('去支付')
+		},
+		disBackPay() {
+			// 取消退款
 
 
-			},
-			// 退款
-			backPay() {
-				// 支付成功 卡券信息可能没那么快生成
-				if(this.detailInfo.couponEndTime){
-					console.log('发起退款')
-					let time = new Date().getTime()
-					let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
-					let j = endtime - time
-					if (j <= 0 && this.detailInfo.couponStatus != 2) {
-						// 到了有效期
-							// this.$refs.popup.open('center')
-						this.showType = 'showtexteare'
-					
-					} else {
-						// // 还没有到有效期
-						this.showType = 'backerror'
-						this.$refs.popup.open('center')
-					}
-				}else{
-				// 还没有到有效期
-				this.showType = 'backerror'
-				this.$refs.popup.open('center')
-				}
-			},
 
-			goActivity() {
-				// let pages = getCurrentPages();  //获取所有页面栈实例列表
-				// console.log(pages)
+
+		},
+		// 退款
+		backPay() {
+			// 支付成功 卡券信息可能没那么快生成
+			if(this.detailInfo.couponEndTime){
+				console.log('发起退款')
+				let time = new Date().getTime()
+				let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
+				let j = endtime - time
+				if (j <= 0 && this.detailInfo.couponStatus != 2) {
+					// 到了有效期
+						// this.$refs.popup.open('center')
+					this.showType = 'showtexteare'
 				
-				
-				uni.redirectTo({
-					url: `/pages/activity?id=${this.detailInfo.activityId}`
-				})
-			},
-			goDealer() {
-				if (this.detailInfo.latitude && this.detailInfo.longitude) {
-					// uni.navigateTo({
-					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
-					// })
-					uni.openLocation({
-						'latitude': Number(this.detailInfo.latitude),
-						'longitude': Number(this.detailInfo.longitude),
-						'name': this.detailInfo.dealerName,
-						scale: 18,
-						success(sus) {
-							console.log(sus)
-						},
-						fail(res) {
-							console.log(res)
-						}
-					})
-				}
-
-			},
-			toExternalPage(url) {
-				if (url && url.substring(0, 4) == "http") {
-					uni.navigateTo({
-						url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-					})
-				}
-			},
-			toCollectInfor(url) {
-				uni.navigateTo({
-					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-				})
-			},
-			toServices(csUrl) {
-				let baseUrl = domain.getAPI('serversCode')
-				let url = `${baseUrl}?csUrl=${csUrl}`
-				uni.navigateTo({
-					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-				})
-			},
-
-			popCancle1() {
-				this.$refs.popup.close()
-				this.showType = ''
-				uni.redirectTo({
-					url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
-				})
-			},
-
-			popCancle() {
-				this.$refs.popup.close()
-				this.showType = ''
-				setTimeout(() => {
-					this.getOrderDetail()
-				}, 2000)
-				
-				
-				
-
-			},
-			async backSoure() {
-				// this.$refs.popup.close()
-				console.log('确定退款')
-				if (this.backReason.length <= 0) {
-					this.$toast('请先输入退款原因')
-					return
-				}
-				if (this.backReason.length > 200) {
-					this.backReason = this.backReason.substr(0, 200)
-				}
-				let data = await api.apply({
-					"orderId": this.detailInfo.id,
-					"refundReason": this.backReason
-				})
-				if (data.code == 1) {
-					//提交成功
-					this.showType = 'success'
-					this.$refs.popup.open('center')
-					this.state = 3
-				} else if (data.code == 2 || data.code == 3) {
+				} else {
+					// // 还没有到有效期
 					this.showType = 'backerror'
 					this.$refs.popup.open('center')
-					this.$toast(data.msg)
-				}else{
-					this.$toast(data.msg)
 				}
-			},
-			getOrderState(orderState) {
-				let j = orderState // 66 s
-				let minutes = parseInt(j / 60)
-				let ss = Math.floor(j % 60)
-				if (minutes < 0) {
-					minutes = 0
-				}
-				if (ss < 0) {
-					ss = 0
-				}
+			}else{
+			// 还没有到有效期
+			this.showType = 'backerror'
+			this.$refs.popup.open('center')
+			}
+		},
 
-				console.log('时间', j / 1000, minutes, ss)
-				this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
-				if (orderState <= 0 ) {
-					this.timer && clearInterval(this.timer)
-					if(this.state == 0){
-						// 手动改下
-					this.orderText = '订单已失效'
-					this.state = 6 	
+		goActivity() {
+			// let pages = getCurrentPages();  //获取所有页面栈实例列表
+			// console.log(pages)
+			
+			
+			uni.redirectTo({
+				url: `/pages/activity?id=${this.detailInfo.activityId}`
+			})
+		},
+		goDealer() {
+			if (this.detailInfo.latitude && this.detailInfo.longitude) {
+				// uni.navigateTo({
+				// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+				// })
+				uni.openLocation({
+					'latitude': Number(this.detailInfo.latitude),
+					'longitude': Number(this.detailInfo.longitude),
+					'name': this.detailInfo.dealerName,
+					scale: 18,
+					success(sus) {
+						console.log(sus)
+					},
+					fail(res) {
+						console.log(res)
 					}
-					
-					// setTimeout(() => {
-					//   this.getOrderDetail()
-					// }, 1000)
+				})
+			}
+
+		},
+		toExternalPage(url) {
+			if (url && url.substring(0, 4) == "http") {
+				uni.navigateTo({
+					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+				})
+			}
+		},
+		toCollectInfor(url) {
+			uni.navigateTo({
+				url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+			})
+		},
+		toServices(csUrl) {
+			let baseUrl = domain.getAPI('serversCode')
+			let url = `${baseUrl}?csUrl=${csUrl}`
+			uni.navigateTo({
+				url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+			})
+		},
+
+		popCancle1() {
+			this.$refs.popup.close()
+			this.showType = ''
+			uni.redirectTo({
+				url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
+			})
+		},
+
+		popCancle() {
+			this.$refs.popup.close()
+			this.showType = ''
+			setTimeout(() => {
+				this.getOrderDetail()
+			}, 2000)
+			
+			
+			
+
+		},
+		async backSoure() {
+			// this.$refs.popup.close()
+			console.log('确定退款')
+			if (this.backReason.length <= 0) {
+				this.$toast('请先输入退款原因')
+				return
+			}
+			if (this.backReason.length > 200) {
+				this.backReason = this.backReason.substr(0, 200)
+			}
+			let data = await api.apply({
+				"orderId": this.detailInfo.id,
+				"refundReason": this.backReason
+			})
+			if (data.code == 1) {
+				//提交成功
+				this.showType = 'success'
+				this.$refs.popup.open('center')
+				this.state = 3
+			} else if (data.code == 2 || data.code == 3) {
+				this.showType = 'backerror'
+				this.$refs.popup.open('center')
+				this.$toast(data.msg)
+			}else{
+				this.$toast(data.msg)
+			}
+		},
+		getOrderState(orderState) {
+			let j = orderState // 66 s
+			let minutes = parseInt(j / 60)
+			let ss = Math.floor(j % 60)
+			if (minutes < 0) {
+				minutes = 0
+			}
+			if (ss < 0) {
+				ss = 0
+			}
+
+			console.log('时间', j / 1000, minutes, ss)
+			this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
+			if (orderState <= 0 ) {
+				this.timer && clearInterval(this.timer)
+				if(this.state == 0){
+					// 手动改下
+				this.orderText = '订单已失效'
+				this.state = 6 	
 				}
-			},
-		}
+				
+				// setTimeout(() => {
+				//   this.getOrderDetail()
+				// }, 1000)
+			}
+		},
 	}
+}
 </script>
 
 <style lang="less" scoped>

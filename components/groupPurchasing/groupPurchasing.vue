@@ -6,7 +6,7 @@
                 <image :src="item.avatarUrl"></image>
                 <view class="condition" v-if="item.orderStatus==0">待支付</view>
             </view>
-            <button class="add-members" v-for="(item,index) in groupSize" :key="index" hover-class="none" open-type="share" @click="shareBtnClick"></button>
+            <button class="add-members" hover-class="none" open-type="share" @click="shareBtnClick"></button>
         </view>
         <view class="group-btn">
             <view class="count-time">

@@ -38,7 +38,7 @@
 
 
 			<view class="zw"></view>
-			<group-Purchase v-if="groupStatus==1" :artDownDate="artDownDate" :groupSize="groupSize" :userGroupDetail="userGroupDetail"></group-Purchase>
+			<group-Purchase v-if="groupStatus==0" :artDownDate="artDownDate" :groupSize="groupSize" :userGroupDetail="userGroupDetail"></group-Purchase>
 			<view class="operation-list" v-else>
 				<view class="type-c"
 					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
@@ -65,7 +65,7 @@
 						<template v-if="isGroupPurchase">
 							<view class="enroll-btn purchase-btn" @tap="purchase">
 								{{groupStatus==2 ? '查看订单' : '拼团购买'}}
-								<view class="remain" v-if="!grouppSuccess">剩余<text class="nums">5648</text>个名额</view>
+								<view class="remain" v-if="!grouppSuccess">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
 								<view class="success-icon" v-else></view>
 							</view>
 						</template>
@@ -143,9 +143,13 @@
 			</view>
 		</uni-popup>
 
-		<uni-app ref="groupPupup" :mask-click="false" v-if="groupRemains==0">
-			
-		</uni-app>
+		<uni-popup ref="groupPupup" :mask-click="false" v-if="groupRemains == 0">
+			<view class="groupPupup">
+				<view class="no-group-icon"></view>
+				<view class="no-group-txt">很遗憾，没有参团名额了 可以找其它团或开团试试哦~</view>
+				<view class="no-group-btn" @click="closeGroupPopup">好的</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -249,7 +253,10 @@
 		mixins: [shouquan],
 		async onLoad(options) {
 			this.getPxAndRpxRatio()
-
+			//分享进入拼团活动
+			if(options.groupUserId){
+				
+			}
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
@@ -290,14 +297,13 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-				if (i != 'sourceUserId' && i != 'groupUserId') {
+				if (i != 'groupUserId') {
 					cs += `${i}=${options[i]}&`
 				}
 			}
 			cs = cs.substr(0, cs.length - 1)
-			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			this.shareURL = wxUserInfo ? `/pages/lbActivity?${cs}&sourceUserId=${wxUserInfo.id}` : `/pages/activity?${cs}`
-			console.log('shareurl', this.shareURL)
+			this.shareURL = `/pages/activity?${cs}`
+			console.log('shareurl11111', this.shareURL)
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -401,7 +407,7 @@
 					// #ifdef MP-WEIXIN
 					// 未购买
 					uni.navigateTo({
-						url: `/pages/buyOrder?activityId=${this.content.id}`
+						url: `/pages/buyOrder?activityId=${this.content.id}&activityType=1`
 					})
 					// #endif
 
@@ -611,20 +617,24 @@
 					}
 
 					// 拼团活动
-					if(data.groupBuyConfigDetail){
+					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					let userGroupDetail = data.userGroupDetail
+					
+					//如果有拼团活动团信息详情
+					if(groupBuyConfigDetail){
 						this.isGroupPurchase = true
-						this.groupRemains = data.count - data.usedCount
-						this.groupSize = data.groupSize
+						this.groupRemains = groupBuyConfigDetail.surplusCount
+						if(this.groupRemains == 0){
+							this.$refs['groupPupup'].open()
+						}
+						this.groupSize = groupBuyConfigDetail.groupSize
 					}
-					if(data.userGroupDetail){
-						let groupCreateTime = data.userGroupDetail.groupCreateTime
-						let groupEndTime = new Date(groupCreateTime).getTime() + 24*60*60
-						this.groupDownDate = this.downDate(groupEndTime)
-						this.groupPurchasing = new Date().getTime() - new Date(groupCreateTime.replace(/-/g, "/")).getTime() >0 &&  new Date(groupCreateTime.replace(/-/g, "/") + 24*60*60).getTime()-new Date().getTime()>0
-						app.Interval = setInterval(() => {
-							this.groupDownDate = this.downDate(groupEndTime)
-						}, 1000)
-						this.shareURL += `&groupUserId=${data.userGroupDetail.id}`
+					
+					if(userGroupDetail){
+						this.groupStatus = userGroupDetail.groupStatus
+						console.log("当前团状态",this.groupStatus)
+						this.shareURL += `&groupUserId=${userGroupDetail.id}`
+						console.log('shareurl', this.shareURL)
 					}
 					// 访问活动 记录活动访问次数
 					api.fetchActivityVisit({
@@ -800,6 +810,9 @@
 			closeRolesSwiperPopup() {
 				this.$refs['roleImgPopup'].close()
 				this.rolesSwiperDuration = 0
+			},
+			closeGroupPopup() {
+				this.$refs['groupPupup'].close()
 			},
 		}
 	}
@@ -1208,5 +1221,35 @@
 			}
 		}
 	}
-	
+	.groupPupup{
+		width: 560rpx;
+		height: 586rpx;
+		background: #ffffff;
+		border-radius: 20rpx;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		padding: 0 80rpx;
+		box-sizing: border-box;
+		font-size: 32rpx;
+		color: #333333;
+		line-height: 48rpx;
+		.no-group-icon{
+			.setbg(240rpx, 240rpx, 'groupIn/no-groups.png');
+		}
+		.no-group-txt{
+			margin:20rpx auto 60rpx;
+		}
+		.no-group-btn{
+			width: 360rpx;
+			height: 88rpx;
+			line-height: 88rpx;
+			text-align: center;
+			font-size: 32rpx;
+			background: #fa8845;
+			border-radius: 44rpx;
+			color: #ffffff;
+		}
+	}
 </style>

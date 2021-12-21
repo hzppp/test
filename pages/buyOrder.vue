@@ -646,7 +646,7 @@
 				}
 				let ly = this.from
 				let lydx = this.currentObj
-				let source, sourceId
+				let source, sourceId,activityType
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
 				console.log('车型', this.crtSerialItem)
@@ -654,7 +654,9 @@
 				console.log('来源对象', lydx)
 				source = 1
 				sourceId = lydx.id
+				activityType = lydx.activityType
 				let pam = {
+					activityType,
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
