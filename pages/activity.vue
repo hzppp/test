@@ -41,13 +41,13 @@
 			<!-- 拼团中 -->
 			<view class="group-purchase" v-if="groupStatus==0" >
 				<template v-if="!isBeInvited">
-					<view class="group-text">还差<text class="nums">{{remainGroups}}</text>名好友支付即可拼团成功</view>
+					<view class="group-text">还差<text class="nums">{{payRemains}}</text>名好友支付即可拼团成功</view>
 					<view class="group-list">
 						<view class="group-members" v-for="(item,index) in groupAllUserInfoList" :key="index">
 							<image :src="item.avatarUrl"></image>
 							<view class="condition" v-if="item.orderStatus==0">待支付</view>
 						</view>
-						<button class="add-members" hover-class="none" open-type="share" @click="shareBtnClick"></button>
+						<button class="add-members" v-for="(item,index) in remainGroups"  :key="index" hover-class="none" open-type="share" @click="shareBtnClick"></button>
 					</view>
 					
 				</template>
@@ -69,7 +69,20 @@
 					</view>
 					<template v-if="!isBeInvited">
 						<view class="share-btn" v-if="!isPay" @tap="purchase">去支付</view>
-						<button class="share-btn" v-else hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<template v-else>
+							<!--  #ifdef MP-WEIXIN  -->
+							<button v-if="content.sharePosterPic"
+								:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+								@tap='shareChoise()'>分享好友</button>
+
+							<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+							<!-- #endif -->
+							<!--  #ifndef MP-WEIXIN  -->
+							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+							<!-- #endif -->
+						</template>
 					</template>
 					<template v-else>
 						<view class="share-btn" @tap="purchase">参与拼团</view>
@@ -86,14 +99,25 @@
 						@tap="formShow">{{haveBuy?'查看订单':'活动已结束'}}</button>
 				</view>
 				<view class="type-a" v-else-if="content.needApply == 1">
-					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button>
+					<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button> -->
+					<!--  #ifdef MP-WEIXIN  -->
+					<button v-if="content.sharePosterPic"
+						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+						@tap='shareChoise()'>分享好友</button>
 
+					<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+					<!-- #endif -->
+					<!--  #ifndef MP-WEIXIN  -->
+					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+					<!-- #endif -->
 					<template v-if="!isActStart ">
 						<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
 							:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
 						<!-- 下订活动活动未开始不允许点击 -->
-						<button v-if="buyOrder" :class="'enroll-btn enroll-btn3'"
+						<button v-if="buyOrder || isGroupPurchase" :class="'enroll-btn enroll-btn3'"
 							:style="{width:canShare?'420rpx':'686rpx'}">活动未开始</button>
 					</template>
 
@@ -102,8 +126,8 @@
 						<template v-if="isGroupPurchase">
 							<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
 								{{groupBtnObj.text}}
-								<view class="remain" v-if="!grouppSuccess">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
-								<view class="success-icon" v-else></view>
+								<view class="success-icon" v-if="groupStatus==2"></view>
+								<view class="remain" v-else-if="isPay">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
 							</view>
 						</template>
 
@@ -135,7 +159,7 @@
 		</view>
 
 		<view class="myred" @tap='tapmyred()' v-if="red.redDone"></view>
-		<uni-popup ref="popup" type="center" :mask-click="false">
+		<uni-popup ref="redpopup" type="center" :mask-click="false">
 			<view v-if="!red.redDone" class="redOpenV">
 				<view @tap='redOpen()' class="redOpenVBtn"></view>
 				<!-- <image  src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/redBack.png" mode="aspectFit"></image> -->
@@ -180,11 +204,29 @@
 			</view>
 		</uni-popup>
 
-		<uni-popup ref="groupPupup" :mask-click="false" v-if="groupRemains == 0">
+		<uni-popup ref="groupPupup" :mask-click="false" >
 			<view class="groupPupup">
 				<view class="no-group-icon"></view>
 				<view class="no-group-txt">很遗憾，没有参团名额了 可以找其它团或开团试试哦~</view>
 				<view class="no-group-btn" @click="closeGroupPopup">好的</view>
+			</view>
+		</uni-popup>
+
+		<!-- 底部按钮区域E -->
+		<uni-popup ref="popup" type="bottom">
+			<view class="shareBtnBackV">
+				<view class="shareBtnV">
+					<view class="shareBtn" @tap="shareHB()">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changansharePY.png"> </image>
+						<view class="text">海报分享</view>
+					</view>
+					<button class="shareBtn" open-type="share">
+						<image src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/changanshareFD.png"> </image>
+						<view class="text1">分享微信好友</view>
+					</button>
+				</view>
+				<view class="line"></view>
+				<button @tap="shareCancle()">取消</button>
 			</view>
 		</uni-popup>
 	</view>
@@ -283,14 +325,15 @@
 				isGroupPurchase:true,
 				groupStatus:-1, //当前团状态:0 拼团中，1团过期， 2拼团完成
 				groupSize:0, //拼团人数
-				groupRemains:0,//剩余拼团名额
+				groupRemains:0,//剩余团数
 				groupAllUserInfoList:[], //团员信息
 				remainGroups:0, //成团还差人数
+				payRemains:0,//成团还差支付人数
 				groupDownDate:[],
 				isPay:true, 
 				groupBtnObj:{
-					canOperate:false,
-					text:""
+					canOperate:true,
+					text:"拼团购买"
 				},
 				sourceUserId:0, //邀请人id
 				groupId:0, //团id
@@ -304,7 +347,19 @@
 		mixins: [shouquan],
 		async onLoad(options) {
 			this.getPxAndRpxRatio()
-			
+				if (options.scene) {
+				// 分享海报来的
+				let url = decodeURIComponent(options.scene)
+				url = this.changURl(url)
+				//id=69&lotteryType=grid&type=wawaji&actSelect=1&sourceUserId=66
+				let array = url.split("&")
+				array.forEach((item, index) => {
+					let arr = item.split("=")
+					if (arr) {
+						options[arr[0]] = arr[1]
+					}
+				})
+			}
 			if (options.tolbActivity) {
 				uni.reLaunch({
 					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
@@ -490,6 +545,55 @@
 				wx.aldstat.sendEvent('活动分享点击')
 				// #endif			
 			},
+			shareChoise() {
+				// #ifdef MP-WEIXIN
+				this.content.sharePosterPic && this.$refs.popup.open("bottom")
+				// #endif
+			},
+			// 分享好友关闭
+			shareCancle() {
+				this.$refs.popup.close()
+			},
+			shareHB() {
+				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
+					encodeURIComponent(this.content.sharePosterPic)
+				uni.navigateTo({
+					url: url
+				})
+				this.$refs.popup.close()
+			},
+			changURl(url) {
+				console.log(url)
+				//D=69&L=G&P=W&A=1&O=66
+				if (url.indexOf('D') != -1) { // 新
+					url = url.replace('P', 'type')
+					url = url.replace('L', 'lotteryType')
+					url = url.replace('D', 'id')
+					url = url.replace('G', 'grid')
+					url = url.replace('W', 'wawaji')
+					url = url.replace('A', 'actSelect')
+					url = url.replace('O', 'sourceUserId')
+					url = url.replace('V', 'Vouchers')
+					url = url.replace('C', 'veriCode') //签到码
+					url = url.replace('=S', '=checkIn')
+					url = url.replace(/@/g, '=')
+					url = url.replace(/_/g, '&')
+					url = url.replace('K', 'packets')
+					url = url.replace('GI', 'groupId')
+				} else { // 旧
+					//dd=69&ll=gg&tt=ww&aa=1&ss=66
+					url = url.replace('tt', 'type')
+					url = url.replace('ll', 'lotteryType')
+					url = url.replace('dd', 'id')
+					url = url.replace('gg', 'grid')
+					url = url.replace('ww', 'wawaji')
+					url = url.replace('aa', 'actSelect')
+					url = url.replace('ss', 'sourceUserId')
+				}
+				return url
+
+
+			},
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
 				// #ifdef MP-WEIXIN
@@ -671,9 +775,7 @@
 							this.groupBtnObj.text = "去支付"
 							this.isPay = false
 						}
-						// if(this.groupRemains == 0){
-						// 	this.$refs['groupPupup'].open()
-						// }
+						
 						this.groupSize = groupBuyConfigDetail.groupSize
 					
 						let userGroupDetail = clueInfo.data.userGroupDetail
@@ -697,6 +799,8 @@
 							this.groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
 							//剩余成团人数
 							this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
+							let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
+							this.payRemains = this.groupSize - payList.length
 							if(this.isPay){
 								this.shareURL += `&groupId=${userGroupDetail.id}`
 							}
@@ -777,7 +881,7 @@
 				console.log('红包状态', status)
 				if (status == 0) {
 					//未开过
-					this.$refs.popup.open('center')
+					this.$refs.redpopup.open('center')
 				} else if (status == 1) {
 					// 开过
 					this.redRecord()
@@ -857,10 +961,10 @@
 
 
 			closePop() {
-				this.$refs.popup.close()
+				this.$refs.redpopup.close()
 			},
 			tapmyred() {
-				this.$refs.popup.open('center')
+				this.$refs.redpopup.open('center')
 			},
 			subSuccess() {
 				// 留资成功
@@ -930,11 +1034,16 @@
 			//获取团信息
 			async getGroupInfo(id){
 				let {code,data = {}} = await api.getGroupBuyInfo({id})
-				if(code == 1){
+				if(code == 1 && data){
 					this.groupStatus =  data.groupStatus
 					this.groupAllUserInfoList = data.groupAllUserInfoList;
 					//剩余成团人数
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
+					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
+					this.payRemains = this.groupSize - payList.length
+					if(this.remainGroups == 0){
+						this.$refs['groupPupup'].open()
+					}
 					if(this.isPay){
 						this.shareURL += `&groupId=${data.id}`
 					}
@@ -1382,6 +1491,10 @@
 						color: #FFFFFF;
 					}
 				}
+				&.gray{
+					background: #999999;
+					color: #ffffff;
+				}
 				.success-icon{
 					position: absolute;
 					.setbg(104rpx,32rpx,'groupIn/success-icon.png');
@@ -1445,7 +1558,7 @@
             
         }
         .group-members{
-            margin:0 30rpx;
+            margin:0 20rpx;
             .condition{
                font-size: 20rpx;
                color: #999999;
@@ -1525,4 +1638,64 @@
             }
         }
     }
+	.shareBtnBackV {
+		border-top-left-radius: 10rpx;
+		border-top-right-radius: 10rpx;
+		width: 100%;
+		height: 331rpx;
+		background: #ffffff;
+
+		.shareBtnV {
+			width: 90%;
+			margin: auto;
+			display: flex;
+
+			.shareBtn {
+				text-align: center;
+				width: 50%;
+				height: 230rpx;
+				margin: auto;
+			}
+
+			image {
+				width: 88rpx;
+				height: 88rpx;
+				margin-top: 50rpx;
+			}
+
+			.text {
+				width: 100%;
+				height: 23rpx;
+				text-align: center;
+				margin-top: 20rpx;
+				font-size: 24rpx;
+				color: #666666;
+			}
+
+			.text1 {
+				width: 100%;
+				height: 23rpx;
+				text-align: center;
+				margin-top: -20rpx;
+				font-size: 24rpx;
+				color: #666666;
+			}
+		}
+
+		.line {
+			background: #ebebeb;
+			height: 1rpx;
+			width: 100%;
+			// margin-top: ;
+		}
+
+		button {
+			width: 100%;
+			color: #333333;
+			background: #ffffff;
+			font-size: 33rpx;
+			margin: auto;
+			margin-top: 10rpx;
+		}
+	}
 </style>

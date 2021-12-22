@@ -4,14 +4,15 @@
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
-				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1">{{groupStatusTxt}}</view>
-				<view :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
+				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1  && detailInfo.groupDetail.groupStatus==0">{{groupStatusTxt}}</view>	
+				<view class="lIdcode1" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail.groupStatus==2">核销码生成中</view>
+				<view v-else :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
 			</view>
 			<view class="headerInfo">
 				<view class="lDetail">
 					<view class="prizeName">{{detailInfo.productName}}</view>
 					<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
-					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupStatus ==2) || detailInfo.activityType ==0">
+					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupDetail.groupStatus ==2) || detailInfo.activityType ==0">
 						<view
 							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
 							核销码：
@@ -78,7 +79,7 @@
 				</view>
 			</view>
 			<view class="boomV" v-if="state===0">
-				<view class="share-btn" @tap='goActivity()'>活动详情</view>
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='pay()'>去支付</view>
 			</view>
 			<!-- <view class="boomV" v-if="state==3">
@@ -86,11 +87,16 @@
 				<view class="buyBtn" @tap='disBackPay()'>取消退款</view>
 			</view> -->
 			<view class="boomV" v-if="state==2">
-				<view class="share-btn" @tap='goActivity()'>活动详情</view>
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='backPay()'>退款</view>
 			</view>
 			<view class="boomV" v-if="state==6 || state==5 || state==4 || state==1 || state==3" @tap='goActivity()'>
 				<view class="activityDeatil">活动详情</view>
+			</view>
+			
+			<view class="boomV" v-if="state==1 && detailInfo.activityType ==1">
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
+				<button class="share-btn" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 			</view>
 		</view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
@@ -141,7 +147,8 @@
 		<view class="soure" @tap='backSoure()'>确定退款</view>
 		</view>
 	</view>
-	<uni-popup ref="verifyCodeFailPupup" :mask-click="false" v-if="state == 7">
+	<!-- 核销码生成失败  -->
+	<uni-popup ref="verifyCodeFailPupup" :mask-click="false">
 		<view class="verifyCodeFailPupup">
 			<view class="verifyCode-fail-icon"></view>
 			<view class="text-txt1">对不起，核销码生成失败</view>
@@ -174,7 +181,8 @@
 				showType: '', //showtexteare 输入   success  成功  error  失败
 				payState: '', // 1支付成功（实时刷新结果）   0 支付失败
 				picShow: false,
-				groupStatusTxt:"" //团剩余时间
+				groupStatusTxt:"", //团剩余时间
+				shareURL:"/pages/activity"
 			}
 		},
 		filters: {
@@ -222,6 +230,10 @@
 
 					case 5: {
 						return '已退款'
+						break;
+					}
+					case 7: {
+						return '核销码生成失败'
 						break;
 					}
 					default: {
@@ -286,12 +298,24 @@
 			if (id) {
 				this.getDeatil(id)
 			}
-			
+			let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			this.shareURL += `?sourceUserId=${wxUserInfo.id}`
 		},
 		onUnload() {
 			console.log('onUnload')
 			this.timer1 && clearInterval(this.timer1)
 			this.timer && clearInterval(this.timer)
+		},
+		onShareAppMessage() {
+			console.log("shareURL",this.shareURL)
+			let title = this.detailInfo.name
+			let path = this.shareURL
+			let imageUrl = this.detailInfo.sharePic || this.detailInfo.detailPic
+			return {
+				title: title,
+				path: path,
+				imageUrl: imageUrl
+			}
 		},
 		methods: {
 			async getDeatil() {
@@ -341,11 +365,16 @@
 				this.detailInfo.distance = distance.countLatLng(parseFloat(latitude), parseFloat(longitude),
 					parseFloat(this.detailInfo.latitude), parseFloat(this.detailInfo.longitude))
 			}
-			
+			if(this.detailInfo.activityId){
+				this.shareURL += `&id=${this.detailInfo.activityId}`
+			}
+			if(this.detailInfo.groupDetail && this.detailInfo.groupDetail.id){
+				this.shareURL += `&groupId=${this.detailInfo.groupDetail.id}`
+			}
 			console.log('请求完了哈',this.detailInfo)
 			
 			this.state = this.detailInfo.status
-			if (this.detailInfo.couponStatus == -1) {
+			if (this.detailInfo.couponStatus == -1 && this.detailInfo.activityType != 1) {
 				this.timer1 && clearInterval(this.timer1)
 				this.$nextTick(function() {
 					//success showtexteare
@@ -364,8 +393,8 @@
 			}
 			//拼团中
 			if(this.state == 1 && this.detailInfo.activityType ==1){
-				let expireTime = this.detailInfo.expireTime
-				if(expireTime>0){
+				let expireTime = this.detailInfo.groupDetail.expireTime
+				if(expireTime && expireTime>0){
 					this.timer2 && clearInterval(this.timer2)
 					this.timer2 = setInterval(() => {
 						expireTime = expireTime - 1000
@@ -416,7 +445,12 @@
 			this.$refs.popup.open('center')
 			}
 		},
-
+		// 分享按钮被点击
+		shareBtnClick() {
+			// #ifdef MP-WEIXIN
+			wx.aldstat.sendEvent('活动分享点击')
+			// #endif			
+		},
 		goActivity() {
 			// let pages = getCurrentPages();  //获取所有页面栈实例列表
 			// console.log(pages)
@@ -523,7 +557,7 @@
 				ss = 0
 			}
 
-			console.log('时间', j / 1000, minutes, ss)
+			// console.log('时间', j / 1000, minutes, ss)
 			this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
 			if (orderState <= 0 ) {
 				this.timer && clearInterval(this.timer)
@@ -553,19 +587,13 @@
 			if (ss < 0) {
 				ss = 0
 			}
-			console.log(expireTime,this.groupStatusTxt)
-			this.groupStatusTxt =(hours > 9 ? hours : ('0' + hours)) + ":" (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后过期'
-			if (orderState <= 0 ) {
+		
+			this.groupStatusTxt =(hours > 9 ? hours : ('0' + hours)) + ":" + (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后过期'
+			if (expireTime <= 0 ) {
 				this.timer2 && clearInterval(this.timer2)
 				if(this.state == 1){
-					// 手动改下
-					this.groupStatusTxt = '订单已失效'
-					this.state = 6 	
+					this.getDeatil(this.id)	
 				}
-				
-				// setTimeout(() => {
-				//   this.getOrderDetail()
-				// }, 1000)
 			}
 		}
 	}
@@ -639,7 +667,8 @@
 
 			.lIdcode5,
 			.lIdcode4,
-			.lIdcode6 {
+			.lIdcode6,
+			.lIdcode7{
 				position: absolute;
 				top: 26rpx;
 				right: 36rpx;
@@ -818,7 +847,7 @@
 			margin-top: 40rpx;
 			padding-bottom: constant(safe-area-inset-bottom);
 			padding-bottom: env(safe-area-inset-bottom);
-
+		
 			.activityDeatil {
 				width: 686rpx;
 				height: 88rpx;
@@ -832,8 +861,7 @@
 				text-align: center;
 			}
 
-			.share-btn {
-				width: 236rpx;
+			.to-activity-btn,.share-btn {
 				height: 88rpx;
 				color: #fa8845;
 				border: 2rpx solid #fa8845;
@@ -843,8 +871,17 @@
 				margin: auto;
 				text-align: center;
 				line-height: 88rpx;
+				
 			}
+			.share-btn{
+				width: 420rpx;
+				background-color: #FA8845;
+				color:#ffffff;
+			}
+			.to-activity-btn{
+				width: 236rpx;
 
+			}
 			.buyBtn {
 				margin: auto;
 				width: 420rpx;
@@ -971,5 +1008,29 @@
 		/*  #ifdef  MP-TOUTIAO */
 		height: 457rpx;
 		/*  #endif  */
+	}
+	.verifyCodeFailPupup{
+		width: 560rpx;
+		height: 374rpx;
+		background: #ffffff;
+		border-radius: 20rpx;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 36rpx;
+		color: #333333;
+		line-height: 54rpx;
+		.verifyCode-fail-icon{
+			.setbg(130rpx, 130rpx, 'groupIn/fail-icon.png');
+			margin-bottom: 37rpx;
+		}
+		.text-txt1{
+
+		}
+		.text-txt2{
+			font-size: 28rpx;
+			color: #999999;
+		}
 	}
 </style>
