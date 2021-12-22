@@ -546,7 +546,7 @@
 																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
 																'YCZ_gender_var':app.globalData.wxUserInfo.gender,
 																'YCZ_mobile_var':this.phone,
-																'YCZ_likes_var':''})
+																'YCZ_likes_var':'-'})
 					
 					
 					console.log("成功留资",ly ,lydx.from,lydx.activityType)

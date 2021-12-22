@@ -81,7 +81,7 @@ export default {
 			// 进入车辆详情页面时触发埋点
 			console.log("this.serialData",this.serialData)
 			this.$gdp('YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
-														'YCZ_carSeries_var':'',
+														'YCZ_carSeries_var':'-',
 														'YCZ_sourcePage_var':sourcePage})
 			
         },
@@ -89,7 +89,7 @@ export default {
 		playVideo(){
 			
 			this.$gdp('YCZ_videoClick',{'YCZ_videoID_var':'',
-														'YCZ_videoName_var':'',
+														'YCZ_videoName_var':'-',
 														'YCZ_carModel_var':this.serialData.name,
 														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
 			

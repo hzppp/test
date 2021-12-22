@@ -227,9 +227,9 @@
 							//YCZ_车型对比页曝光
 							this.$gdp( 'YCZ_modelContrastPageView',{
 								'YCZ_carModel1_var':this.leftSerial.name,
-								'YCZ_carSeries1_var':"",
+								'YCZ_carSeries1_var':"-",
 								'YCZ_carModel2_var':this.rightSerial.name,
-								'YCZ_carSeries2_var':""
+								'YCZ_carSeries2_var':"-"
 							})
                         },
                         fail:err=>{

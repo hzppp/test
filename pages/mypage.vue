@@ -320,7 +320,7 @@
 			},
 			toMylotteryRecord() {
 				
-				this.$gdp('track', 'YCZ_myWinningRecordClick')
+				this.$gdp('YCZ_myWinningRecordClick')
 				
 				
 				uni.navigateTo({

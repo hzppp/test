@@ -681,12 +681,14 @@
 					// 留资成功 吊起支付
 					
 					
-					this.$gdp('YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
-																'YCZ_activityName_var':this.currentObj.name,
-																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
-																'YCZ_gender_var':app.globalData.wxUserInfo.gender,
-																'YCZ_mobile_var':this.phone,
-																'YCZ_likes_var':''})
+					this.$gdp('YCZ_activitySignUp',{
+						'YCZ_activityId_var':this.currentObj.id,
+						'YCZ_activityName_var':this.currentObj.name,
+						'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
+						'YCZ_gender_var':app.globalData.wxUserInfo.gender,
+						'YCZ_mobile_var':this.phone,
+						'YCZ_likes_var':'-'
+					})
 						
 					
 				 await this.pay()

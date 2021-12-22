@@ -190,7 +190,7 @@ const COUNTDOWN = 60
                         YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
                         YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
                         YCZ_sourceCarModel_var:this.serialData.name,
-                        YCZ_sourceCarSeries_var:""
+                        YCZ_sourceCarSeries_var:"-"
                     })
                 }
 				// console.log('currentDealer',this.currentDealer,this.currentCity)

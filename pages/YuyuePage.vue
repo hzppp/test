@@ -178,7 +178,7 @@ const trackAttribute={
 			currentCaraSerial(n){
 
 				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
-															'YCZ_carSeries_var':''})
+															'YCZ_carSeries_var':'-'})
 				
 				
 			},
@@ -206,8 +206,8 @@ const trackAttribute={
                     this.$gdp('YCZ_leaveAssetsPageView',{
                         YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
                         YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
-                        YCZ_sourceCarModel_var:this.currentCaraSerial,
-                        YCZ_sourceCarSeries_var:""
+                        YCZ_sourceCarModel_var:this.currentCaraSerial?this.currentCaraSerial:'-',
+                        YCZ_sourceCarSeries_var:"-"
                     })
                 }
 				 this.show = false
@@ -255,7 +255,7 @@ const trackAttribute={
                     YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
                     YCZ_sourceCarModel_var:this.currentCaraSerial,
-                    YCZ_sourceCarSeries_var:""
+                    YCZ_sourceCarSeries_var:"-"
                 })
             }
             
@@ -431,7 +431,7 @@ const trackAttribute={
 						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
 																	,'YCZ_carModel_var':this.currentCaraSerial
 																	,'YCZ_mobile_var':this.phoneNum
-																	,'YCZ_province_var':''
+																	,'YCZ_province_var':'-'
 																	,'YCZ_city_var':this.currentCity.name
 																	,'YCZ_distributorName_var':this.currentDealer.name})
 						
