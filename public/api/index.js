@@ -1338,7 +1338,7 @@ module.exports = {
 			data
 		} = await request({
 			url: domain.getAPI('getGroupBuyInfo'),
-			method: "get",
+			method: "GET",
 			data: para,
 			header: {
 				'content-type': 'application/x-www-form-urlencoded'
