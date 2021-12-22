@@ -4,13 +4,14 @@
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
-				<view :class="'lIdcode' + state">{{ state | formatState }}</view>
+				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1">{{groupStatusTxt}}</view>
+				<view :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
 			</view>
 			<view class="headerInfo">
 				<view class="lDetail">
 					<view class="prizeName">{{detailInfo.productName}}</view>
 					<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
-					<view class="prizeCode">
+					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupStatus ==2) || detailInfo.activityType ==0">
 						<view
 							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
 							核销码：
@@ -140,7 +141,13 @@
 		<view class="soure" @tap='backSoure()'>确定退款</view>
 		</view>
 	</view>
-	
+	<uni-popup ref="verifyCodeFailPupup" :mask-click="false" v-if="state == 7">
+		<view class="verifyCodeFailPupup">
+			<view class="verifyCode-fail-icon"></view>
+			<view class="text-txt1">对不起，核销码生成失败</view>
+			<text class="text-txt2" selectable="true" user-select="true">请电话联系400-888-6677</text>
+		</view>
+	</uni-popup>	
 	</view>
 </template>
 
@@ -162,10 +169,12 @@
 				orderText: '',
 				timer: '',
 				timer1: '',
+				timer2:"",
 				backReason: '',
 				showType: '', //showtexteare 输入   success  成功  error  失败
 				payState: '', // 1支付成功（实时刷新结果）   0 支付失败
-				picShow: false
+				picShow: false,
+				groupStatusTxt:"" //团剩余时间
 			}
 		},
 		filters: {
@@ -180,7 +189,7 @@
 				return YY + MM + DD + " " + hh + mm + '后再来申请退款吧'
 
 			},
-			formatState(state) {
+			formatState(state,activityType) {
 				// console.log('parseInt(state)', parseInt(state))
 				switch (parseInt(state)) {
 					case 6: {
@@ -192,7 +201,7 @@
 						break;
 					}
 					case 1: {
-						return '已支付'
+						return activityType ? '拼团中' : '已支付'
 						break;
 					}
 
@@ -353,6 +362,22 @@
 					this.getOrderState(this.orderTime)
 				}, 1000)
 			}
+			//拼团中
+			if(this.state == 1 && this.detailInfo.activityType ==1){
+				let expireTime = this.detailInfo.expireTime
+				if(expireTime>0){
+					this.timer2 && clearInterval(this.timer2)
+					this.timer2 = setInterval(() => {
+						expireTime = expireTime - 1000
+						this.getGroupState(expireTime)
+					}, 1000)
+				}
+				
+			}
+			//核销码生成失败
+			if(this.state == 7 && this.detailInfo.activityType ==1){
+				this.$refs['verifyCodeFailPupup'].open()
+			}	
 		},
 
 		pay() {
@@ -513,6 +538,36 @@
 				// }, 1000)
 			}
 		},
+		getGroupState(expireTime){
+			let j = expireTime 
+			let tt = 1000 * 60 * 60
+			let hours = parseInt((j % (tt * 24)) / (tt))
+			let minutes = parseInt((j % (tt)) / (1000 * 60))
+			let ss = Math.floor(j / 1000 % 60)
+			if (hours < 0) {
+				hours = 0
+			}
+			if (minutes < 0) {
+				minutes = 0
+			}
+			if (ss < 0) {
+				ss = 0
+			}
+			console.log(expireTime,this.groupStatusTxt)
+			this.groupStatusTxt =(hours > 9 ? hours : ('0' + hours)) + ":" (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后过期'
+			if (orderState <= 0 ) {
+				this.timer2 && clearInterval(this.timer2)
+				if(this.state == 1){
+					// 手动改下
+					this.groupStatusTxt = '订单已失效'
+					this.state = 6 	
+				}
+				
+				// setTimeout(() => {
+				//   this.getOrderDetail()
+				// }, 1000)
+			}
+		}
 	}
 }
 </script>
@@ -566,7 +621,6 @@
 				color: #A5ABAF;
 				font-size: 24rpx;
 			}
-
 			.lIdcode0,
 			.lIdcode3,
 			.lIdcode1,
@@ -585,7 +639,6 @@
 
 			.lIdcode5,
 			.lIdcode4,
-
 			.lIdcode6 {
 				position: absolute;
 				top: 26rpx;
@@ -598,7 +651,11 @@
 				border-radius: 20rpx;
 				padding: 0 15rpx 0;
 			}
-
+			.groupIn1{
+				background: #e64848;
+				border: 1px solid #e64848;
+				color: #ffffff;
+			}
 		}
 
 		.headerInfo {
