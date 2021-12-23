@@ -4,12 +4,16 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
-          <view class="code">订单ID：{{ item.outTradeNo }}</view>
-		      <view :class="['playState' ,item.activityType && item.status ==1 ? 'groupState1' : 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
-          <view class="title">{{ item.productName }}</view>
-          <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
-		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
-          <view class="detail">{{"¥" +  item.totalFee  }}</view>
+          <view class="order-status">
+            <view class="code">订单ID：{{ item.outTradeNo }}</view>
+            <view :class="['playState' ,item.activityType && item.status ==1 ? 'groupState1' : 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
+          </view>
+          <view class="order-info">
+            <view class="title">{{ item.productName }}</view>
+            <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
+            <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
+            <view class="detail">{{"¥" +  item.totalFee  }}</view>
+          </view>
         </view>
       </view>
       <view class="no-more" v-if="noMore">没有更多了</view>
@@ -146,50 +150,58 @@ name: "lotteryRecord",
     width: 686rpx;
     box-sizing: border-box;
     .item{
-      background: url("token: 3ec22bf4-3f87-4c15-9333-c5a05ce4e234");
-      .setbg(686rpx,214rpx,'lottery_record_icon1.png');
+      width:686rpx;
+      // .setbg(686rpx,214rpx,'lottery_record_icon1.png');
       position: relative;
       width: 100%;
-      height: 252rpx;
       margin-bottom: 24rpx;
+      .order-status,.order-info{
+        background: #ffffff;
+        border-radius: 20px;
+      }
+      .order-status{
+        padding:22rpx 30rpx 18rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .order-info{
+        position: relative;
+        padding:30rpx;
+        &:after{
+          content: "";
+          position: absolute;
+          top:0;
+          width:626rpx;
+          left:50%;
+          margin-left: -313rpx;
+          border-top:1rpx dashed #ebebeb;
+        }
+      }
       .code{
-        position: absolute;
-        left: 30rpx;
-        top: 30rpx;
         color:#333;
         font-size: 24rpx;
       }
       .title{
-        position: absolute;
-        left: 30rpx;
-        top: 110rpx;
         color: #333333;
-		font-weight: 800;
+        font-weight: 800;
         font-size: 32rpx;
-		text-overflow: ellipsis;
-	     white-space: nowrap;
-		 overflow: hidden;
-		 width: 500rpx;
-		
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 500rpx;
+        line-height: 1;
+        margin-bottom: 19rpx;
       }
-      .time{
-        position: absolute;
-        left: 30rpx;
-        bottom: 60rpx;
+      .time,.time1{
         color: #999;
         font-size: 24rpx;
+        line-height: 38rpx;
       }
-	  .time1{
-	    position: absolute;
-	    left: 30rpx;
-	    bottom: 30rpx;
-	    color: #999;
-	    font-size: 24rpx;
-	  }
       .detail{
         position: absolute;
-        right: 40rpx;
-        bottom: 115rpx;
+        right:30rpx;
+        top: 30rpx;
         color: #FA8845;
         font-size: 32rpx;
       }
@@ -222,9 +234,6 @@ name: "lotteryRecord",
   border-radius: 44rpx;
 }
 .playState{
-	position: absolute;
-	right: 30rpx;
-	top: 22rpx;
 	font-size: 24rpx;
 	font-weight: 500;
 	text-align: center;
@@ -260,11 +269,15 @@ name: "lotteryRecord",
 .state5,.state7{
 	color: #CCCCCC;
 	border: 1px solid #CCCCCC;
-  white-space: pre-line; 
-  height: 70rpx;
-  line-height: 35rpx;
   border-radius:20rpx;
-
+}
+.state7{
+  white-space: pre-line; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 66rpx;
+  line-height: 1.15;
 }
 .groupState1{
   color: #ffffff;
