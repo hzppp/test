@@ -254,7 +254,6 @@
 				for(let i=0;i<val.length;i++){
 					let modelNameArray = val[i].modelName.toString().split(' ')
 					ArrayName['YCZ_carModel'+(i+1).toString()+'_var']=modelNameArray[0]
-					// ArrayName['YCZ_carSeries'+(i+1).toString()+'_var']=val[i].serialGorup
 					ArrayName['YCZ_configure'+(i+1).toString()+'_var']=modelNameArray[modelNameArray.length-1]
 				}
 				

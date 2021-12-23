@@ -76,22 +76,25 @@ export default {
             } catch (error) {
                 console.error(error)
             }
-            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+            let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
 			
 			// 进入车辆详情页面时触发埋点
-			console.log("this.serialData",this.serialData)
-			this.$gdp('YCZ_carDetailPageView',{'YCZ_carModel_var':this.serialData.name,
-														'YCZ_carSeries_var':'-',
-														'YCZ_sourcePage_var':sourcePage})
+			// console.log("this.serialData",this.serialData)
+			this.$gdp('YCZ_carDetailPageView',{
+                'YCZ_carModel_var':this.serialData.name,
+                'YCZ_carSeries_var':'-',
+                'YCZ_sourcePage_var':sourcePage})
 			
         },
 		//开始播放视频 触发埋点
 		playVideo(){
-			
-			this.$gdp('YCZ_videoClick',{'YCZ_videoID_var':'',
-														'YCZ_videoName_var':'-',
-														'YCZ_carModel_var':this.serialData.name,
-														'YCZ_carSeries_var':this.serialData.pcSerialGroupName})
+			//车辆详情页视频播放时触发
+			this.$gdp('YCZ_videoClick',{
+                'YCZ_videoID_var':'-',
+                'YCZ_videoName_var':'-',
+                'YCZ_carModel_var':this.serialData.name,
+                'YCZ_carSeries_var':"-"
+            })
 			
 		},
         //预约试驾
