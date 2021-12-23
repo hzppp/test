@@ -4,8 +4,8 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
-          <view class="code">订单ID：{{ item.outTradeNo }}{{item.activityType}}</view>
-		      <view :class="['playState' ,item.activityType ? 'groupState' +  item.status: 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
+          <view class="code">订单ID：{{ item.outTradeNo }}</view>
+		      <view :class="['playState' ,item.activityType && item.status ==1 ? 'groupState1' : 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
           <view class="title">{{ item.productName }}</view>
           <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
 		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
@@ -83,7 +83,7 @@ name: "lotteryRecord",
       }
 
       case 7: {
-        return '核销码生成失败'
+        return '核销码\n生成失败'
         break;
       }
 
@@ -231,27 +231,27 @@ name: "lotteryRecord",
 	position: absolute;
 	right: 30rpx;
 	top: 22rpx;
-	height: 40rpx;
 	font-size: 24rpx;
 	font-weight: 500;
-	text-align: left;
+	text-align: center;
 	color: #FA8845;
-	padding: 0 18rpx 0;
-	line-height:40rpx;
+	padding: 0 18rpx;
 	border: 1px solid #FA8845;
 	border-radius: 20rpx;
+  height: 40rpx;
+  line-height: 40rpx;
 }
 
 
-.state0,.groupState0{
+.state0{
 	color: #F04242;
 	border: 1px solid #F04242;
 }
-.state2,.groupState2{
+.state2{
 	color: #FA8845;
 	border: 1px solid #FA8845;
 }
-.state4,.groupState4{
+.state4{
 	color: #FFD4B1;
 	border: 1px solid #FFD4B1;
 }
@@ -259,16 +259,22 @@ name: "lotteryRecord",
 	color: #333333;
 	border: 1px solid #333333;
 }
-.state3,.groupState3{
+.state3{
 	color: #999999;
 	border: 1px solid #999999;
 }
-.state5,.groupState5,.groupState7{
+.state5,.state7{
 	color: #CCCCCC;
 	border: 1px solid #CCCCCC;
+  white-space: pre-line; 
+  height: 70rpx;
+  line-height: 35rpx;
+  border-radius:20rpx;
+
 }
 .groupState1{
   color: #ffffff;
   background: #e64848;
+ 
 }
 </style>

@@ -420,8 +420,6 @@
 			}
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}&sourceUserId=${wxUserInfo.id}`
-			console.log('shareurl', this.shareURL)
-			
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -834,7 +832,7 @@
 							this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 							let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 							this.payRemains = this.groupSize - payList.length
-							if(this.isPay){
+							if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 								this.shareURL += `&groupId=${userGroupDetail.id}`
 							}
 							console.log("shareURL",this.shareURL)

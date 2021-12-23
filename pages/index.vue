@@ -269,7 +269,7 @@
 			if (!currentLocation) {
 				return
 			}
-			// console.log('index_app.globalData.currentLocation',  this.provinceList,app.globalData.currentLocation)
+			console.log('index_app.globalData.currentLocation',  this.provinceList,app.globalData.currentLocation)
 			const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace('市',
 				'') == currentLocation.selectedCityData.pro.replace('省', '').replace('市', ''))
 			if (crtLocationProvinceItem) {
@@ -279,7 +279,7 @@
 				this.cityList = this.crtProvinceItem.cities
 				this.crtCityItem = crtLocationCityItem
 
-				// console.log('===================tstst===================', this.crtProvinceItem, this.crtCityItem)
+				console.log('===================tstst===================', this.crtProvinceItem, this.crtCityItem)
 				// const resData = (await this.getCityId()) || [1000000022,1000000022]
 				// const provinceId = this.crtProvinceItem.id
 				await this.getPageData()
@@ -475,10 +475,6 @@
 				// #endif
 				this.sgList = this.pageData.heatSgList
 				console.log("过滤后的pageData",this.pageData)
-				
-				//监听滑动时候 模块曝光
-				this.MonitorSlide()
-
 			},
 			async getNearDealer(){
 			        let  cityId;
@@ -497,7 +493,7 @@
 					   city = currentLocation.cityData.city;     
 					   pro  =  currentLocation.cityData.pro
 					}
-					// console.log('provinceList',city,pro)
+					console.log('provinceList',city,pro)
 				    if (city&&pro) {
 				    	const crtLocationProvinceItem = this.provinceList.find(item => item.name.replace('省', '').replace(
 				    		'市', '') == pro.replace('省', '').replace('市', ''))
@@ -521,7 +517,7 @@
 				    	}
 				    }
 				   
-				//    console.log('provinceList',this.nearDealer)
+				   console.log('provinceList',this.nearDealer)
 			
 			
 					
@@ -780,7 +776,7 @@
 				switch(item.redirectType) {
 					case 0: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -814,7 +810,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
+						   if(item.miniUrl.indexOf('fissionActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
 							   // 跳转到本喜爱但不是活动页
 							   api.fetchActivityVisit({
 							   	'activityId': item.id
@@ -852,7 +848,7 @@
 					}
 					default: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -869,7 +865,7 @@
 			goMP(id, type, sourceId) { //跳转pcauto+
 				const oUrl =
 					`/pages_live/changanVerticalLiveRoom/changanVerticalLiveRoom?id=${id}&type=${type}&sourceId=${sourceId}`
-				// console.log('oUrl', oUrl)
+				console.log('oUrl', oUrl)
 				// #ifndef MP-WEIXIN
 				this.$toast('请在微信搜索本小程序参与')
 				// #endif
