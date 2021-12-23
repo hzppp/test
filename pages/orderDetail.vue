@@ -4,13 +4,17 @@
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
-				<view :class="'lIdcode' + state">{{ state | formatState }}</view>
+				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1  && detailInfo.groupDetail.groupStatus==0">{{groupStatusTxt}}</view>	
+				<view class="lIdcode1" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail.groupStatus==2">核销码生成中</view>
+				<view v-else :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
 			</view>
 			<view class="headerInfo">
 				<view class="lDetail">
-					<view class="prizeName">{{detailInfo.productName}}</view>
-					<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
-					<view class="prizeCode">
+					<view class="product-info">
+						<view class="prizeName">{{detailInfo.productName}}</view>
+						<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
+					</view>
+					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupDetail.groupStatus ==2) || detailInfo.activityType ==0">
 						<view
 							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
 							核销码：
@@ -77,7 +81,7 @@
 				</view>
 			</view>
 			<view class="boomV" v-if="state===0">
-				<view class="share-btn" @tap='goActivity()'>活动详情</view>
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='pay()'>去支付</view>
 			</view>
 			<!-- <view class="boomV" v-if="state==3">
@@ -85,11 +89,16 @@
 				<view class="buyBtn" @tap='disBackPay()'>取消退款</view>
 			</view> -->
 			<view class="boomV" v-if="state==2">
-				<view class="share-btn" @tap='goActivity()'>活动详情</view>
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
 				<view class="buyBtn" @tap='backPay()'>退款</view>
 			</view>
 			<view class="boomV" v-if="state==6 || state==5 || state==4 || state==1 || state==3" @tap='goActivity()'>
 				<view class="activityDeatil">活动详情</view>
+			</view>
+			
+			<view class="boomV" v-if="state==1 && detailInfo.activityType ==1">
+				<view class="to-activity-btn" @tap='goActivity()'>活动详情</view>
+				<button class="share-btn" hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 			</view>
 		</view>
 		<uni-popup ref="popup" type="center" :mask-click="false">
@@ -140,7 +149,14 @@
 		<view class="soure" @tap='backSoure()'>确定退款</view>
 		</view>
 	</view>
-	
+	<!-- 核销码生成失败  -->
+	<uni-popup ref="verifyCodeFailPupup" :mask-click="false">
+		<view class="verifyCodeFailPupup">
+			<view class="verifyCode-fail-icon"></view>
+			<view class="text-txt1">对不起，核销码生成失败</view>
+			<text class="text-txt2" selectable="true" user-select="true">请电话联系400-888-6677</text>
+		</view>
+	</uni-popup>	
 	</view>
 </template>
 
@@ -162,11 +178,13 @@
 				orderText: '',
 				timer: '',
 				timer1: '',
+				timer2:"",
 				backReason: '',
 				showType: '', //showtexteare 输入   success  成功  error  失败
 				payState: '', // 1支付成功（实时刷新结果）   0 支付失败
-				picShow: false
-
+				picShow: false,
+				groupStatusTxt:"", //团剩余时间
+				shareURL:"/pages/activity"
 			}
 		},
 		filters: {
@@ -181,7 +199,7 @@
 				return YY + MM + DD + " " + hh + mm + '后再来申请退款吧'
 
 			},
-			formatState(state) {
+			formatState(state,activityType) {
 				// console.log('parseInt(state)', parseInt(state))
 				switch (parseInt(state)) {
 					case 6: {
@@ -193,7 +211,7 @@
 						break;
 					}
 					case 1: {
-						return '已支付'
+						return activityType ? '拼团中' : '已支付'
 						break;
 					}
 
@@ -214,6 +232,10 @@
 
 					case 5: {
 						return '已退款'
+						break;
+					}
+					case 7: {
+						return '核销码生成失败'
 						break;
 					}
 					default: {
@@ -278,12 +300,24 @@
 			if (id) {
 				this.getDeatil(id)
 			}
-			
+			let wxUserInfo = uni.getStorageSync('wxUserInfo')
+			this.shareURL += `?sourceUserId=${wxUserInfo.id}`
 		},
 		onUnload() {
 			console.log('onUnload')
 			this.timer1 && clearInterval(this.timer1)
 			this.timer && clearInterval(this.timer)
+		},
+		onShareAppMessage() {
+			console.log("shareURL",this.shareURL)
+			let title = this.detailInfo.name
+			let path = this.shareURL
+			let imageUrl = this.detailInfo.sharePic || this.detailInfo.detailPic
+			return {
+				title: title,
+				path: path,
+				imageUrl: imageUrl
+			}
 		},
 		methods: {
 			async getDeatil() {
@@ -333,11 +367,16 @@
 				this.detailInfo.distance = distance.countLatLng(parseFloat(latitude), parseFloat(longitude),
 					parseFloat(this.detailInfo.latitude), parseFloat(this.detailInfo.longitude))
 			}
-			
+			if(this.detailInfo.activityId){
+				this.shareURL += `&id=${this.detailInfo.activityId}`
+			}
+			if(this.detailInfo.groupDetail && this.detailInfo.groupDetail.id){
+				this.shareURL += `&groupId=${this.detailInfo.groupDetail.id}`
+			}
 			console.log('请求完了哈',this.detailInfo)
 			
 			this.state = this.detailInfo.status
-			if (this.detailInfo.couponStatus == -1) {
+			if (this.detailInfo.couponStatus == -1 && this.detailInfo.activityType != 1) {
 				this.timer1 && clearInterval(this.timer1)
 				this.$nextTick(function() {
 					//success showtexteare
@@ -354,168 +393,213 @@
 					this.getOrderState(this.orderTime)
 				}, 1000)
 			}
-			},
-
-			pay() {
-				let that = this
-				pay.pay(this.detailInfo.activityId)
-				console.log('去支付')
-			},
-			disBackPay() {
-				// 取消退款
-
-
-
-
-			},
-			// 退款
-			backPay() {
-				// 支付成功 卡券信息可能没那么快生成
-				if(this.detailInfo.couponEndTime){
-					console.log('发起退款')
-					let time = new Date().getTime()
-					let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
-					let j = endtime - time
-					if (j <= 0 && this.detailInfo.couponStatus != 2) {
-						// 到了有效期
-							// this.$refs.popup.open('center')
-						this.showType = 'showtexteare'
-					
-					} else {
-						// // 还没有到有效期
-						this.showType = 'backerror'
-						this.$refs.popup.open('center')
-					}
-				}else{
-				// 还没有到有效期
-				this.showType = 'backerror'
-				this.$refs.popup.open('center')
+			//拼团中
+			if(this.state == 1 && this.detailInfo.activityType ==1){
+				let expireTime = this.detailInfo.groupDetail.expireTime
+				if(expireTime && expireTime>0){
+					this.timer2 && clearInterval(this.timer2)
+					this.timer2 = setInterval(() => {
+						expireTime = expireTime - 1000
+						this.getGroupState(expireTime)
+					}, 1000)
 				}
-			},
-
-			goActivity() {
-				// let pages = getCurrentPages();  //获取所有页面栈实例列表
-				// console.log(pages)
 				
-				
-				uni.redirectTo({
-					url: `/pages/activity?id=${this.detailInfo.activityId}`
-				})
-			},
-			goDealer() {
-				if (this.detailInfo.latitude && this.detailInfo.longitude) {
-					// uni.navigateTo({
-					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
-					// })
-					uni.openLocation({
-						'latitude': Number(this.detailInfo.latitude),
-						'longitude': Number(this.detailInfo.longitude),
-						'name': this.detailInfo.dealerName,
-						scale: 18,
-						success(sus) {
-							console.log(sus)
-						},
-						fail(res) {
-							console.log(res)
-						}
-					})
-				}
+			}
+			//核销码生成失败
+			if(this.state == 7 && this.detailInfo.activityType ==1){
+				this.$refs['verifyCodeFailPupup'].open()
+			}	
+		},
 
-			},
-			toExternalPage(url) {
-				if (url && url.substring(0, 4) == "http") {
-					uni.navigateTo({
-						url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-					})
-				}
-			},
-			toCollectInfor(url) {
-				uni.navigateTo({
-					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-				})
-			},
-			toServices(csUrl) {
-				let baseUrl = domain.getAPI('serversCode')
-				let url = `${baseUrl}?csUrl=${csUrl}`
-				uni.navigateTo({
-					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
-				})
-			},
+		pay() {
+			let that = this
+			pay.pay(this.detailInfo.activityId)
+			console.log('去支付')
+		},
+		disBackPay() {
+			// 取消退款
 
-			popCancle1() {
-				this.$refs.popup.close()
-				this.showType = ''
-				uni.redirectTo({
-					url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
-				})
-			},
 
-			popCancle() {
-				this.$refs.popup.close()
-				this.showType = ''
-				setTimeout(() => {
-					this.getOrderDetail()
-				}, 2000)
-				
-				
-				
 
-			},
-			async backSoure() {
-				// this.$refs.popup.close()
-				console.log('确定退款')
-				if (this.backReason.length <= 0) {
-					this.$toast('请先输入退款原因')
-					return
-				}
-				if (this.backReason.length > 200) {
-					this.backReason = this.backReason.substr(0, 200)
-				}
-				let data = await api.apply({
-					"orderId": this.detailInfo.id,
-					"refundReason": this.backReason
-				})
-				if (data.code == 1) {
-					//提交成功
-					this.showType = 'success'
-					this.$refs.popup.open('center')
-					this.state = 3
-				} else if (data.code == 2 || data.code == 3) {
+
+		},
+		// 退款
+		backPay() {
+			// 支付成功 卡券信息可能没那么快生成
+			if(this.detailInfo.couponEndTime){
+				console.log('发起退款')
+				let time = new Date().getTime()
+				let endtime = new Date(this.detailInfo.couponEndTime.replace(/-/g, '/')).getTime()  //卡券结束时间
+				let j = endtime - time
+				if (j <= 0 && this.detailInfo.couponStatus != 2) {
+					// 到了有效期
+						// this.$refs.popup.open('center')
+					this.showType = 'showtexteare'
+				
+				} else {
+					// // 还没有到有效期
 					this.showType = 'backerror'
 					this.$refs.popup.open('center')
-					this.$toast(data.msg)
-				}else{
-					this.$toast(data.msg)
 				}
-			},
-			getOrderState(orderState) {
-				let j = orderState // 66 s
-				let minutes = parseInt(j / 60)
-				let ss = Math.floor(j % 60)
-				if (minutes < 0) {
-					minutes = 0
-				}
-				if (ss < 0) {
-					ss = 0
-				}
-
-				console.log('时间', j / 1000, minutes, ss)
-				this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
-				if (orderState <= 0 ) {
-					this.timer && clearInterval(this.timer)
-					if(this.state == 0){
-						// 手动改下
-					this.orderText = '订单已失效'
-					this.state = 6 	
+			}else{
+			// 还没有到有效期
+			this.showType = 'backerror'
+			this.$refs.popup.open('center')
+			}
+		},
+		// 分享按钮被点击
+		shareBtnClick() {
+			// #ifdef MP-WEIXIN
+			wx.aldstat.sendEvent('活动分享点击')
+			// #endif			
+		},
+		goActivity() {
+			// let pages = getCurrentPages();  //获取所有页面栈实例列表
+			// console.log(pages)
+			
+			
+			uni.redirectTo({
+				url: `/pages/activity?id=${this.detailInfo.activityId}`
+			})
+		},
+		goDealer() {
+			if (this.detailInfo.latitude && this.detailInfo.longitude) {
+				// uni.navigateTo({
+				// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
+				// })
+				uni.openLocation({
+					'latitude': Number(this.detailInfo.latitude),
+					'longitude': Number(this.detailInfo.longitude),
+					'name': this.detailInfo.dealerName,
+					scale: 18,
+					success(sus) {
+						console.log(sus)
+					},
+					fail(res) {
+						console.log(res)
 					}
-					
-					// setTimeout(() => {
-					//   this.getOrderDetail()
-					// }, 1000)
+				})
+			}
+
+		},
+		toExternalPage(url) {
+			if (url && url.substring(0, 4) == "http") {
+				uni.navigateTo({
+					url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+				})
+			}
+		},
+		toCollectInfor(url) {
+			uni.navigateTo({
+				url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+			})
+		},
+		toServices(csUrl) {
+			let baseUrl = domain.getAPI('serversCode')
+			let url = `${baseUrl}?csUrl=${csUrl}`
+			uni.navigateTo({
+				url: `/pages/webview?webURL=${encodeURIComponent(url)}`,
+			})
+		},
+
+		popCancle1() {
+			this.$refs.popup.close()
+			this.showType = ''
+			uni.redirectTo({
+				url: `/pages/buyOrder?activityId=${this.detailInfo.activityId}`,
+			})
+		},
+
+		popCancle() {
+			this.$refs.popup.close()
+			this.showType = ''
+			setTimeout(() => {
+				this.getOrderDetail()
+			}, 2000)
+			
+			
+			
+
+		},
+		async backSoure() {
+			// this.$refs.popup.close()
+			console.log('确定退款')
+			if (this.backReason.length <= 0) {
+				this.$toast('请先输入退款原因')
+				return
+			}
+			if (this.backReason.length > 200) {
+				this.backReason = this.backReason.substr(0, 200)
+			}
+			let data = await api.apply({
+				"orderId": this.detailInfo.id,
+				"refundReason": this.backReason
+			})
+			if (data.code == 1) {
+				//提交成功
+				this.showType = 'success'
+				this.$refs.popup.open('center')
+				this.state = 3
+			} else if (data.code == 2 || data.code == 3) {
+				this.showType = 'backerror'
+				this.$refs.popup.open('center')
+				this.$toast(data.msg)
+			}else{
+				this.$toast(data.msg)
+			}
+		},
+		getOrderState(orderState) {
+			let j = orderState // 66 s
+			let minutes = parseInt(j / 60)
+			let ss = Math.floor(j % 60)
+			if (minutes < 0) {
+				minutes = 0
+			}
+			if (ss < 0) {
+				ss = 0
+			}
+
+			// console.log('时间', j / 1000, minutes, ss)
+			this.orderText = (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后失效'
+			if (orderState <= 0 ) {
+				this.timer && clearInterval(this.timer)
+				if(this.state == 0){
+					// 手动改下
+				this.orderText = '订单已失效'
+				this.state = 6 	
 				}
-			},
+				
+				// setTimeout(() => {
+				//   this.getOrderDetail()
+				// }, 1000)
+			}
+		},
+		getGroupState(expireTime){
+			let j = expireTime 
+			let tt = 1000 * 60 * 60
+			let hours = parseInt((j % (tt * 24)) / (tt))
+			let minutes = parseInt((j % (tt)) / (1000 * 60))
+			let ss = Math.floor(j / 1000 % 60)
+			if (hours < 0) {
+				hours = 0
+			}
+			if (minutes < 0) {
+				minutes = 0
+			}
+			if (ss < 0) {
+				ss = 0
+			}
+		
+			this.groupStatusTxt =(hours > 9 ? hours : ('0' + hours)) + ":" + (minutes > 9 ? minutes : ('0' + minutes)) + ":" + (ss > 9 ? ss : ('0' + ss)) + '后过期'
+			if (expireTime <= 0 ) {
+				this.timer2 && clearInterval(this.timer2)
+				if(this.state == 1){
+					this.getDeatil(this.id)	
+				}
+			}
 		}
 	}
+}
 </script>
 
 <style lang="less" scoped>
@@ -567,7 +651,6 @@
 				color: #A5ABAF;
 				font-size: 24rpx;
 			}
-
 			.lIdcode0,
 			.lIdcode3,
 			.lIdcode1,
@@ -586,8 +669,8 @@
 
 			.lIdcode5,
 			.lIdcode4,
-
-			.lIdcode6 {
+			.lIdcode6,
+			.lIdcode7{
 				position: absolute;
 				top: 26rpx;
 				right: 36rpx;
@@ -599,7 +682,11 @@
 				border-radius: 20rpx;
 				padding: 0 15rpx 0;
 			}
-
+			.groupIn1{
+				background: #e64848;
+				border: 1px solid #e64848;
+				color: #ffffff;
+			}
 		}
 
 		.headerInfo {
@@ -622,13 +709,19 @@
 				background: #FFFFFF;
 				padding: 42rpx;
 				border-bottom: 1px dashed #ebebeb;
-
+				.product-info{
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 20rpx;
+					line-height: 1;
+				}
 				.prizeName {
 					position: relative;
 					color: #000;
 					font-weight: 600;
 					font-size: 36rpx;
-					margin-bottom: 20rpx;
+					line-height: 1;
 				}
 
 				.prizeCode {
@@ -636,9 +729,7 @@
 					display: flex;
 					font-size: 26rpx;
 					color: #999;
-					height: 30rpx;
-					line-height: 30rpx;
-
+					margin-bottom: 30rpx;	
 					.code {
 						font-size: 32rpx;
 						font-weight: 500;
@@ -652,12 +743,12 @@
 				}
 
 				.services-btn {
-					line-height: 58rpx;
 					font-size: 36rpx;
 					text-align: center;
 					color: #fa8845;
 					float: right;
-					transform: translateY(-70%)
+					line-height: 1;
+					// transform: translateY(-70%)
 				}
 
 				.prizeScore {
@@ -762,7 +853,7 @@
 			margin-top: 40rpx;
 			padding-bottom: constant(safe-area-inset-bottom);
 			padding-bottom: env(safe-area-inset-bottom);
-
+		
 			.activityDeatil {
 				width: 686rpx;
 				height: 88rpx;
@@ -776,8 +867,7 @@
 				text-align: center;
 			}
 
-			.share-btn {
-				width: 236rpx;
+			.to-activity-btn,.share-btn {
 				height: 88rpx;
 				color: #fa8845;
 				border: 2rpx solid #fa8845;
@@ -787,8 +877,17 @@
 				margin: auto;
 				text-align: center;
 				line-height: 88rpx;
+				
 			}
+			.share-btn{
+				width: 420rpx;
+				background-color: #FA8845;
+				color:#ffffff;
+			}
+			.to-activity-btn{
+				width: 236rpx;
 
+			}
 			.buyBtn {
 				margin: auto;
 				width: 420rpx;
@@ -915,5 +1014,29 @@
 		/*  #ifdef  MP-TOUTIAO */
 		height: 457rpx;
 		/*  #endif  */
+	}
+	.verifyCodeFailPupup{
+		width: 560rpx;
+		height: 374rpx;
+		background: #ffffff;
+		border-radius: 20rpx;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 36rpx;
+		color: #333333;
+		line-height: 54rpx;
+		.verifyCode-fail-icon{
+			.setbg(130rpx, 130rpx, 'groupIn/fail-icon.png');
+			margin-bottom: 37rpx;
+		}
+		.text-txt1{
+
+		}
+		.text-txt2{
+			font-size: 28rpx;
+			color: #999999;
+		}
 	}
 </style>

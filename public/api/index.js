@@ -1244,9 +1244,7 @@ module.exports = {
 			data
 		} = await request({
 			url: domain.getAPI('orderDetail') +"/" +para.id,
-			method: "GET",
-			data: para
-			
+			method: "GET"
 		})
 		return data
 	},
@@ -1334,7 +1332,20 @@ module.exports = {
 		})
 		return data
 	},
-	
+
+	getGroupBuyInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getGroupBuyInfo'),
+			method: "GET",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
 
 	
 }

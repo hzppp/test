@@ -176,7 +176,7 @@ export default {
 				    uni.setStorageSync('userPhone', data.oauthMobile)
                 }
             }
-            console.log('用户信息1',app.globalData.haveUserInfoAuth)
+            // console.log('用户信息1',app.globalData.haveUserInfoAuth)
         } else {
            let d = await this.login()
 		   if (d ==1 ){

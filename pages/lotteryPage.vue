@@ -411,7 +411,6 @@
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
 				}).then(res => {
-					console.log('tttttt', res)
 					if (res.code == 10) {
 						uni.showToast({
 							title: res.msg,
@@ -526,7 +525,6 @@
 					activityId: this.activityId
 				}).then(res => {
 					uni.hideLoading()
-					console.log('tttttt', res)
 					if (res.code == 10) {
 						uni.showToast({
 							title: res.msg,
@@ -585,7 +583,6 @@
 				this.lotteryRes = await api.handleStartLottery({
 					activityId: this.activityId
 				}).then(res => {
-					console.log('tttttt', res)
 					if (res.code == 10) {
 						uni.showToast({
 							title: res.msg,

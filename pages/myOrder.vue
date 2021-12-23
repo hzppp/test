@@ -4,8 +4,8 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
-          <view class="code">订单ID：{{ item.outTradeNo }}</view>
-		  <view :class="['playState' ,'state' +  item.status ]">{{item.status | formatState}}</view>
+          <view class="code">订单ID：{{ item.outTradeNo }}{{item.activityType}}</view>
+		      <view :class="['playState' ,item.activityType ? 'groupState' +  item.status: 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
           <view class="title">{{ item.productName }}</view>
           <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
 		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
@@ -46,48 +46,53 @@ name: "lotteryRecord",
     formatTimeMins(time) {
       return time ? time.substr(0,time.length-3) : time;
     },
-  formatState(state) {
+  formatState(state,activityType) {
   	// console.log('parseInt(state)', parseInt(state))
-  	switch (parseInt(state)) {
-  		case 6: {
-  			return '已失效'
-  			break;
-  		}
-  		case 0: {
-  			return '待支付'
-  			break;
-  		}
-  		case 1: {
-  			return '已支付'
-  			break;
-  		}
+    switch (parseInt(state)) {
+      case 6: {
+        return '已失效'
+        break;
+      }
+      case 0: {
+        return '待支付'
+        break;
+      }
+      case 1: {
+        return activityType ? '拼团中' : '已支付'
+        break;
+      }
   
-  		case 2: {
-  			return '待使用'
-  			break;
-  		}
+      case 2: {
+        return '待使用'
+        break;
+      }
   
-  		case 3: {
-  			return '退款中'
-  			break;
-  		}
+      case 3: {
+        return '退款中'
+        break;
+      }
   
-  		case 4: {
-  			return '已核销'
-  			break;
-  		}
+      case 4: {
+        return '已核销'
+        break;
+      }
   
-  		case 5: {
-  			return '已退款'
-  			break;
-  		}
-  		default: {
-  			return '已失效'
-  			break;
-  		}
+      case 5: {
+        return '已退款'
+        break;
+      }
+
+      case 7: {
+        return '核销码生成失败'
+        break;
+      }
+
+      default: {
+        return '已失效'
+        break;
+      }
   
-  	}
-  
+    }
    },
   },
   onReachBottom() {
@@ -116,6 +121,7 @@ name: "lotteryRecord",
       let data = await api.orders({pageNum,pageSize})
       if(data.code == 1){
         uni.hideLoading()
+        data.rows = data.rows.filter(item=>(item.activityType == 1 && item.status !=6) || item.activityType != 1)
         if(data.hasNext){
           this.pageNum++
         }else{
@@ -230,22 +236,22 @@ name: "lotteryRecord",
 	font-weight: 500;
 	text-align: left;
 	color: #FA8845;
-	padding: 0 10rpx 0;
+	padding: 0 18rpx 0;
 	line-height:40rpx;
 	border: 1px solid #FA8845;
 	border-radius: 20rpx;
 }
 
 
-.state0{
+.state0,.groupState0{
 	color: #F04242;
 	border: 1px solid #F04242;
 }
-.state2{
+.state2,.groupState2{
 	color: #FA8845;
 	border: 1px solid #FA8845;
 }
-.state4{
+.state4,.groupState4{
 	color: #FFD4B1;
 	border: 1px solid #FFD4B1;
 }
@@ -253,12 +259,16 @@ name: "lotteryRecord",
 	color: #333333;
 	border: 1px solid #333333;
 }
-.state3{
+.state3,.groupState3{
 	color: #999999;
 	border: 1px solid #999999;
 }
-.state5{
+.state5,.groupState5,.groupState7{
 	color: #CCCCCC;
 	border: 1px solid #CCCCCC;
+}
+.groupState1{
+  color: #ffffff;
+  background: #e64848;
 }
 </style>

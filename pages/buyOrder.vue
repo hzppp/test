@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="buyOrder-container">
 		<userBand @loginSuccess='getStoragePhone'></userBand>
 		<view class="buyOrder">
 			<view class="orderHeader" v-if="products && products.name">
@@ -647,7 +647,7 @@
 				}
 				let ly = this.from
 				let lydx = this.currentObj
-				let source, sourceId
+				let source, sourceId,activityType
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
 				console.log('车型', this.crtSerialItem)
@@ -655,7 +655,9 @@
 				console.log('来源对象', lydx)
 				source = 1
 				sourceId = lydx.id
+				activityType = lydx.activityType
 				let pam = {
+					activityType,
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -679,8 +681,6 @@
 
 				if (data.code == 1) {
 					// 留资成功 吊起支付
-					
-					
 					this.$gdp('YCZ_activitySignUp',{
 						'YCZ_activityId_var':this.currentObj.id,
 						'YCZ_activityName_var':this.currentObj.name,
@@ -689,10 +689,8 @@
 						'YCZ_mobile_var':this.phone,
 						'YCZ_likes_var':'-'
 					})
-						
-					
-				 await this.pay()
-				 this.buyOrderIng = false
+					await this.pay()
+					this.buyOrderIng = false
 				} else if (data.code == 2) {
 					// 重复留资了
 					await this.pay()
@@ -794,6 +792,10 @@
 
 
 <style lang="scss" scoped>
+	.buyOrder-container{
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+	}
 	.no-data {
 		padding: 32rpx 0;
 		text-align: center;
