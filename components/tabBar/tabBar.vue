@@ -12,10 +12,12 @@
 
 <script>
 	import api from '@/public/api/index'
+
 	export default {
 		name: "tabBar",
 		props: ['current'],
 		data() {
+
 			return {
 				paddingBottomHeight: 0, //苹果X以上手机底部适配高度
 				num:2,
@@ -40,7 +42,9 @@
 					icon: '/static/images/tab5_icon.png',
 					icon_a: '/static/images/tab5_icon_c.png',
 					path: "mypage",
-				}]
+				}],
+				//当前所在页面
+				// currentPage:''
 			};
 		},
 		created() {

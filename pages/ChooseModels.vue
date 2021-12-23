@@ -23,6 +23,7 @@
 
 <script>
 	import api from '@/public/api/index'
+
 	export default {
 		data() {
 			return {
@@ -37,7 +38,8 @@
                 type: "",
                 sort: "",
                 modelId:'', //车型id
-                originSerialId: '' //原来进入的车系id
+                originSerialId: '' ,//原来进入的车系id
+				modelName:'',//车型名称
 			}
 		},
 		methods: {
@@ -47,6 +49,8 @@
                 this.single = options.single || false
                 this.type = options.type || ""
                 this.serialId = options.serialId || ""
+				this.modelName = options.modelName || ""
+				
                 this.pages = options.pages || ""
                 this.mids = options.mids || ""
                 this.sort = options.sort || ""
@@ -80,7 +84,7 @@
                     tempMids = this.mids
                     console.log('2 :>> ', 2);
                 }
-                console.log('tempMids :>> ', tempMids,typeof(tempMids));
+                console.log('tempMids :>> ',this.modelsList,this.currentValue, tempMids,typeof(tempMids));
                 // newMids = tempMids.split(",")
                 // this.addGlobalSelectCar(newMids)
                 if(this.pages === "canpei" && this.originSerialId) {
@@ -112,10 +116,21 @@
                     //     url:`/pages/canpei?serialId=${this.serialId}&mids=${tempMids}&tabWhich=2&ref='ref'`
                     // })
                 }
+
+				
+				this.$gdp( 'YCZ_addCarModelClick',{'YCZ_carModel_var':this.modelName})
+				
             },
             //goSingle 单选跳转
             goSingle(item) {
                 if(this.type === "calc") {
+					
+					
+					this.$gdp('YCZ_carBuyCalculatorPageView',{'YCZ_sourcePage_var':'ChooseModels',
+																			'YCZ_sourceCarModel_var':item.name,
+																			'YCZ_sourceCarSeries_var':'-'})//item.serialGroupName
+					
+					
                     uni.redirectTo({
                         url:`/pages/calc?serialId=${this.serialId}&id=${item.pcModelId}`
                     })

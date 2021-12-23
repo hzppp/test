@@ -12,23 +12,29 @@
 		<!--  #ifndef MP-TOUTIAO  -->
 			<viewTabBar :current="0"></viewTabBar>
 		<!-- #endif -->
-		<testDrive aldEventName="首页预约试驾点击"></testDrive>
-		<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
-		<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
+		<testDrive aldEventName="首页预约试驾点击" from="index"></testDrive>
+		
+		<view class="block" :data-key=0 >
+			<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
+			<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
+		</view>
+		
 		<view class="content">
+			
 			<view class="hotAct">
 				<view :class="fontLoaded ? 'hotTab autoFont': 'hotTab'">
 					热销车型
 				</view>
 				<scroll-view scroll-x="true" show-scrollbar class="hotCar">
-					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item)">
+					<view class="hotCarItem" v-for="(item,index) in sgList" :key="index" @tap="goLookCar(item,index)">
 						<image :src="item.picCoverUrl" class="img"></image>
 						<view class="title">{{item.name.trim() ? item.name : '无'}}</view>
 					</view>
 				</scroll-view>
 			</view>
+			
 			<view class="hotAct">
-				<view class="hotTab">
+				<view class="hotTab block" :data-key=1>
 					云展厅
 				</view>
 				<view class="actItem vrCar" @tap="goVr">
@@ -37,7 +43,7 @@
 			</view>
 			
 			<view class="hotAct">
-				<view class="hotTabMore" >
+				<view class="hotTabMore block" :data-key=2>
 					最近门店
 				</view>
 				<view class="hotmore" @tap="goMoreDel()">查看更多
@@ -73,9 +79,11 @@
 				<view class="hotTab">
 					精选
 				</view>
-				<view v-for="(item,index) in pageData.list" :key="index" class="actItem"
-					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id)">
+				<view v-for="(item,index) in pageData.list" :key="index" class="actItem block" :data-key="index+3"
+					@tap="handleLinkHot(item.contentType,item.contentId,item.status,item.livestreamId,item.id,index,item.title)">
+
 					<view :class="item.contentType == 3 ? 'playType':''">
+						
 						<!--contentType 1文章资讯，2活动，3直播-->
 						<!--status 当为直播类型时 1直播中  2预告  3回放-->
 						<!--            <view class="icon1 status_3">YYYY-MM-DD HH-MM开播</view>-->
@@ -104,6 +112,7 @@
 							<view class="title ovh">{{item.title}}</view>
 						</view>
 					</view>
+
 				</view>
 			</view>
 		</view>
@@ -119,7 +128,9 @@
 	import distance from '@/units/distance'
 	import pageTopCity from '@/components/pageTopCity/pageTopCity'
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
+	
 	let app = getApp()
+
 	export default {
 		components: {
 			viewTabBar: tabBar,
@@ -155,9 +166,13 @@
 					cityId:'',
 					proId:'',
 					name:''
-				}
+				},
+				hotNDelF: JSON.stringify({ YCZ_area_var: '最近门店', YCZ_position_var: '1', YCZ_flowName_var: '北京燕长风商贸有限公司北辰亚运村分公司', YCZ_sourcePage_var: '' }),
 			}
 		},
+		// mounted() {
+		// 	gdp('track', 'YCZ_homeShow', { YCZ_area_var: '' ,YCZ_position_var: '',YCZ_flowName_var: '',YCZ_sourcePage_var: ''});
+		// },
 		computed: {
 			selectCity() {
 				let text = ''
@@ -242,8 +257,12 @@
 		},
 		onHide() {
 			clearTimeout(this.timeOutEvent); 
+			if(this.$cmSwiper){
+				this.$cmSwiper.timeOutEvent=null
+			}
 		},
 		async onShow(options) {
+			
 			await distance.getLocation()
 			await this.reqProvinceCityList()
 			let currentLocation = app.globalData.currentLocation
@@ -268,7 +287,7 @@
 			}
 			clearInterval(this.timeOutEvent) 
 			this.timeOutEvent = setInterval(() => {
-				console.log('开始及时')
+				// console.log('开始及时')
 			  	// #ifdef MP-WEIXIN
 				if(this.$refs.cmSwiper && this.pageData.banners&& this.pageData.banners.length> 0){
 				// console.log(this.$refs.cmSwiper)
@@ -284,21 +303,16 @@
 				this.$children[2].moveRight()
 			}
 			// #endif
-			  
 		},
 		watch: {
 			indexCity: function(newVal) {
-				console.log('indexCity===========', newVal)
+				// console.log('indexCity===========', newVal)
 			}
 		},
 		async onLoad(options) {
-			// let sgList = await api.getSgList().then(res => {
-			// 	console.log('sssssssss', res)
-			// 	return res.code == 1 && res.data ? res.data : []
-			// })
-			// this.sgList = [...sgList]	
 		},
-		onUnload() {},
+		onUnload() {
+		},
 		onShareAppMessage() {
 			let title = '长安云车展'
 			let path = `pages/authorization?to=index`
@@ -312,7 +326,131 @@
 				imageUrl: imageUrl
 			}
 		},
+		
+		
 		methods: {
+			//曝光埋点
+			exposure(args){
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				for(let i=0 ;i<args.length;i++){
+	
+					if(args[i]==0){ //轮播模块曝光
+
+					}else if(args[i]==1){ //热销车型曝光
+
+						for(let i=0;i<this.sgList.length;i++){
+							this.$gdp('YCZ_homeShow', { "YCZ_area_var": '热销车型', "YCZ_position_var": i+1 ,"YCZ_flowName_var":this.sgList[i].name,'YCZ_sourcePage_var':sourcePage})
+						}
+					}else if(args[i]==2){ //云展厅曝光
+						this.$gdp('YCZ_homeShow', { "YCZ_area_var": '云展厅', "YCZ_position_var": 1 ,"YCZ_flowName_var":'云展厅','YCZ_sourcePage_var':sourcePage})
+					}else if(args[i]==3){ //最近门店曝光
+						this.$gdp('YCZ_homeShow', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name,'YCZ_sourcePage_var':sourcePage})
+					}else{ //精选曝光
+						this.$gdp('YCZ_homeShow', { "YCZ_area_var": '精选', "YCZ_position_var": args[i]-3 ,"YCZ_flowName_var":this.pageData.list[args[i]-4].title,'YCZ_sourcePage_var':sourcePage})
+					}
+				}
+			},
+			MonitorSlide(){
+				
+				// #ifdef MP-WEIXIN
+				
+				this.$nextTick(()=>{
+					
+					class BadIntersectionObserver {
+					  constructor(options) {
+					    this.$options = {
+					      context: null,
+					      selector: null,
+					      onEach: res => res.dataset,
+					      onFinal: () => null,
+					      relativeTo: null,
+					      threshold: 0.5,
+					      delay: 200,
+					      observeAll: false,
+					      initialRatio: 0,
+					      ...options,
+					    }
+					    this.$observer = null
+					  }
+					
+					  connect() {
+					    if (this.$observer) return this
+					    this.$observer = this._createObserver()
+					    return this
+					  }
+					
+					  reconnect() {
+					    this.disconnect()
+					    this.connect()
+					  }
+					
+					  disconnect() {
+					    if (!this.$observer) return
+					    const ob = this.$observer
+					    if (ob.$timer) clearTimeout(ob.$timer)
+					    ob.disconnect()
+					    this.$observer = null
+					  }
+					
+					  _createObserver() {
+					    const opt = this.$options
+					    const observerOptions = {
+					      thresholds: [0.5],
+					      observeAll: opt.observeAll,
+					      initialRatio: opt.initialRatio,
+					    }
+					
+					    // 创建监听器
+					    const ob = opt.context
+					      ? opt.context.createIntersectionObserver(observerOptions)
+					      : wx.createIntersectionObserver(null, observerOptions)
+					
+					    // 相交区域设置
+					    if (opt.relativeTo) ob.relativeTo(opt.relativeTo)
+					    else ob.relativeToViewport()
+					
+					    // 开始监听
+					    let finalData = []
+					    let isCollecting = false
+					    ob.observe(opt.selector, res => {
+					      const { intersectionRatio } = res
+					      const visible = intersectionRatio >= opt.threshold
+					      if (!visible) return
+					
+					      const data = opt.onEach(res)
+					      finalData.push(data)
+					
+					      if (isCollecting) return
+					      isCollecting = true
+					
+					      setTimeout(() => {
+					        opt.onFinal.call(null, finalData)
+					        finalData = []
+					        isCollecting = false
+					      }, opt.delay)
+					    })
+					    return ob
+					  }
+					}
+					
+					let that = this
+					this.ob = new BadIntersectionObserver({
+					  selector: '.block',
+					  observeAll: true,
+					  context: this,
+					  onEach: ({ dataset }) => {
+						const { key } = dataset || {}
+						return key
+					  },
+					  onFinal: args => {
+						  if(!args) return
+						that.exposure(args)
+					  },
+					})
+					this.ob.connect()
+				})
+				// #endif
+			},
 			async getPageData() {
 				const cityId = this.crtCityItem.id
 				const cityCode = this.crtCityItem.code
@@ -328,7 +466,7 @@
 
 				//抖音小程序隐藏特定活动
 				// #ifndef MP-WEIXIN
-					console.log("pageData",this.pageData)
+					// console.log("pageData",this.pageData)
 					let array = this.pageData.banners.length>0 ? this.pageData.banners.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.redirectUrl.indexOf('banH=true') == -1):[]
 					this.pageData.banners = array
 					//精选活动
@@ -438,7 +576,7 @@
 					let city = currentLocation.selectedCityData.city || currentLocation.cityData.city
 
 					const provinceList = await this.reqProvinceList()
-					console.log('sdsdsd', provinceList)
+					// console.log('sdsdsd', provinceList)
 					const crtLocationProvinceItem = provinceList.find(item => item.name.replace('省', '').replace('市',
 						'') == pro.replace('省', '').replace('市', ''))
 					if (crtLocationProvinceItem) {
@@ -448,7 +586,7 @@
 						if (crtLocationCityItem) {
 							this.crtProvinceItem = crtLocationProvinceItem
 							this.crtCityItem = crtLocationCityItem
-							console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
+							// console.log('this.crtProvinceItem', this.crtProvinceItem, this.crtCityItem)
 							return [crtLocationProvinceItem.id, crtLocationCityItem.id]
 						}
 					}
@@ -461,7 +599,7 @@
 					res = await api.fetchProvinceList().then(res => {
 						return res.code == 1 ? res.data : []
 					})
-					console.log('rrr', res)
+					// console.log('rrr', res)
 					return res
 				} catch (err) {
 					this.showToast('获取省份信息失败')
@@ -478,7 +616,7 @@
 					}).then(res => {
 						return res.code == 1 ? res.data : []
 					})
-					console.log('ccc', res)
+					// console.log('ccc', res)
 					return res
 				} catch (err) {
 					this.showToast('获取城市信息失败')
@@ -490,17 +628,19 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击查看更多')
 				// #endif
-				console.log('去更多经销商	',this.currentCity)
+				// console.log('去更多经销商	',this.currentCity)
 				// var nearDealer = JSON.stringify(this.currentCity);
 				uni.navigateTo({
 					url: `/pages/moreDealer?nearDealer=${this.nearDealer.id}`
 				})
+				
+				
 			},
 			goDealer(){
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击导航')
 				// #endif
-				console.log('去经销商',this.nearDealer)
+				// console.log('去经销商',this.nearDealer)
 				if(this.nearDealer && this.nearDealer.lngX && this.nearDealer.lngY &&  this.nearDealer.distance  != undefined && this.nearDealer.distance  != Infinity){
 					// uni.navigateTo({
 					// 	url:`/pages/map?latitude=${this.nearDealer.lngY}&longitude=${this.nearDealer.lngX}&des=${this.nearDealer.name}`
@@ -542,11 +682,14 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('首页最近门店点击预约试驾')
 				// #endif
-				console.log('预约试驾',this.nearDealer)
+				// console.log('预约试驾',this.nearDealer)
 				 var nearDealer = JSON.stringify(this.nearDealer);
 				uni.navigateTo({
-					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}`
+					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '首页', "YCZ_sourceButtonName_var": '最近门店预约试驾' })
+				
 			},
 			goVr() {
 				// #ifdef MP-WEIXIN
@@ -563,16 +706,21 @@
 				// #endif
 				
 				
+				this.$gdp( 'YCZ_homeClick', { "YCZ_area_var": '云展厅', "YCZ_position_var": 1 ,"YCZ_flowName_var":'云展厅'})
+				
 				
 			},
-			handleLinkHot(type, id, status, sourceId,liveSoureId) {
+			handleLinkHot(type, id, status, sourceId,liveSoureId,index,title) {
+				
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": '精选', "YCZ_position_var": index+1 ,"YCZ_flowName_var":title})
+				
 				// type = 3
 				// id = 48965835
 				// status = 'verticalLive'
 				// status = 1
 				//type:1资讯，2活动，3直播
 				//status:1直播中，2预告，3回放
-				console.log('type,id,status', type, id, status, typeof(type))
+				// console.log('type,id,status', type, id, status, typeof(type))
 				switch (type) {
 					case 1: {
 						// #ifdef MP-WEIXIN
@@ -760,13 +908,17 @@
 					url: '/pages/activity?id=50'
 				})
 			},
-			goLookCar(item) {
+			goLookCar(item,index) {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('热销车型点击')
 				// #endif
 				uni.navigateTo({
 					url: `/pages/LookCar?id=${item.pcSerialGroupId}`
 				})
+				
+				
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": '热销车型', "YCZ_position_var": index+1 ,"YCZ_flowName_var":item.name})
+				
 			},
 			goArticlePage() {
 				uni.navigateTo({

@@ -256,7 +256,7 @@
 			// #ifndef MP-WEIXIN
 			try {
 				const res = uni.getSystemInfoSync();
-				console.log('platform', res.platform)
+				
 				if (res.platform === 'android') {
 					this.isIOS = false
 				}

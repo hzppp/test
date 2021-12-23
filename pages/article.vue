@@ -30,7 +30,7 @@
 		</getFormidbox>
     <testDrive></testDrive>
 		<view :class="!isIpx ? 'share-btn' : 'share-btn ipx'">
-			<button open-type="share" plain="true" hover-class="none">分享给好友</button>
+			<button open-type="share" plain="true" hover-class="none" @click="shareBtnClick">分享给好友</button>
 		</view>
 	</view>
 </template>
@@ -44,6 +44,7 @@
 
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
+
 	let app = getApp()
 	export default {
 		components: {
@@ -137,6 +138,8 @@
 				this.content = content
 			}
 			// this.$refs.loading.changeLoading(false)
+			//触发埋点
+			this.setGdp()
 		},
     mounted() {
       uni.hideLoading()
@@ -152,7 +155,36 @@
 			}
 		},
 		methods: {
-
+			onShareAppMessage() {
+				
+				
+				this.$gdp( 'YCZ_shareFriend',{
+					'YCZ_activityId_var':'-'
+					,'YCZ_activityName_var':'-'
+					,'YCZ_infoId_var':this.articleId
+					,'YCZ_infoName_var':this.title
+				})
+					
+			  },
+			shareBtnClick() {
+				// #ifdef MP-WEIXIN
+				wx.aldstat.sendEvent('活动分享点击')
+				
+				
+				this.$gdp('YCZ_shareFriendButtonClick',{
+					'YCZ_activityId_var':'-'
+					,'YCZ_activityName_var':'-'
+					,'YCZ_infoId_var':this.articleId
+					,'YCZ_infoName_var':this.title})
+				// #endif			
+				
+			},
+			setGdp() {
+				
+				
+				this.$gdp('YCZ_infoContentDetailPageView',{'YCZ_infoId_var':this.articleId,'YCZ_infoName_var':this.title})
+				
+			},
 		}
 	}
 </script>

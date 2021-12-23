@@ -31,15 +31,33 @@ var DOMAIN_T = {
 	// changan:"http://192.168.30.207:7080",
 	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	// webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/',
 	UPC:'https://qa-upc2.pc.com.cn',
 	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
 
-
+//云车展小程序配置信息
+//测试环境
+var CONFIG_T = {
+	accountID:'ac8e9fff9218d0b4',
+	datasourceID:'a8baef5711ad838e',
+	appId:'wxb36fb5205e5afb36',
+	host:'//cbd-api.changan.com.cn:9090',
+	version:version
+}
+//正式环境
+var CONFIG_R = {
+	accountID:'b17c69986984a3be',
+	datasourceID:'8c8866d4dd9f349c',
+	appId:'wxe6ffa5dceb3b003b',
+	host:'//cbd-api.changan.com.cn:9092',
+	version:version
+}
 
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
+const CONFIG = (CUR_ENV === ENV.RELEASE) ? CONFIG_R : CONFIG_T;
 
 
 const config = {
@@ -47,7 +65,7 @@ const config = {
 	appName: '长安云车展',
 
 	DOMAIN: DOMAIN,
-	
+	CONFIG: CONFIG,
 	version:version,
 
 	CUR_ENV: (CUR_ENV === ENV.RELEASE),//环境判断 true 正式
@@ -329,3 +347,4 @@ const config = {
 }
 
 module.exports = config;
+

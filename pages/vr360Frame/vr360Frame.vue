@@ -29,7 +29,7 @@
 				this.data = curParam.data
 				this.title = _dataPam.name
 				this.imageurl = _dataPam.img
-				console.log(this.imageurl)
+				// console.log(this.imageurl)
 
 				this.src = this.src + `vr360.html?data=${_data}`
 				if(app.globalData.wxUserInfo&&app.globalData.wxUserInfo.openId){

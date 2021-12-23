@@ -23,6 +23,7 @@
 
 <script>
 const app = getApp()
+
 export default {
 name: "testDrive",
   props: {
@@ -41,6 +42,10 @@ name: "testDrive",
     position: {
       type: Number,
       default: 4
+    },
+    from:{
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -67,8 +72,16 @@ name: "testDrive",
         
       }
       uni.navigateTo({
-         url: `/pages/YuyuePage`
+         url: `/pages/YuyuePage?from=${this.from}`
       })
+      let sourcePage={
+        "index":"首页",
+        "myPage":"我的页面",
+        "activity":"活动页面"
+      }
+      
+      this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": sourcePage[this.from], "YCZ_sourceButtonName_var": '悬浮按钮预约试驾' })
+      
     },
     onChange(e) {
       if (e.detail.source === "touch") {
