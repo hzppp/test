@@ -436,6 +436,7 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = this.shareURL
+			console.log("this.shareURL444444", this.shareURL)
 			// api.shareActivity(this.content.id).then(res => {
 			// 	console.log(res)
 			// 	if (res.data > 0) {
@@ -448,6 +449,12 @@
 				path: path,
 				imageUrl: imageUrl
 			}
+			this.$gdp( 'YCZ_shareFriend',{
+				'YCZ_activityId_var':this.activityId
+				,'YCZ_activityName_var':this.content.name
+				,'YCZ_infoId_var':'-'
+				,'YCZ_infoName_var':'-'}
+			)
 		},
 
 		methods: {
@@ -612,17 +619,6 @@
 
 
 			},
-			//分享给好友成功时触发
-			onShareAppMessage() {
-				
-	
-				this.$gdp( 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
-															,'YCZ_activityName_var':this.content.name
-															,'YCZ_infoId_var':'-'
-															,'YCZ_infoName_var':'-'})
-					
-				
-			  },
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
 				// #ifdef MP-WEIXIN
