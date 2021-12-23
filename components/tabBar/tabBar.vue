@@ -91,7 +91,7 @@
 					// #ifdef MP-WEIXIN
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
-						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
 						this.$gdp('YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
 					}else if(path=='live'){
 						//直播页面打开埋点

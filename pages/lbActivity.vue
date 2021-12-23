@@ -384,8 +384,8 @@
 				
 				this.$gdp('YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
 															,'YCZ_activityName_var':this.content.name
-															,'YCZ_infoId_var':''
-															,'YCZ_infoName_var':''})
+															,'YCZ_infoId_var':'-'
+															,'YCZ_infoName_var':'-'})
 					
 			  },
 			imgBindload () {
@@ -560,7 +560,7 @@
 			shareBtnClick() {
 				
 				wx.aldstat.sendEvent('活动分享点击')
-				this.$gdp( 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'','YCZ_infoName_var':''})
+				this.$gdp( 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'-','YCZ_infoName_var':'-'})
 					
 			},
 			async getPhoneNumber(e) {
