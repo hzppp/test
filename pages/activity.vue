@@ -328,7 +328,7 @@
 						['2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7']
 					],
 				}],
-				isGroupPurchase:true,
+				isGroupPurchase:false,
 				groupStatus:-1, //当前团状态:0 拼团中，1团过期， 2拼团完成
 				groupSize:0, //拼团人数
 				groupRemains:0,//剩余团数
