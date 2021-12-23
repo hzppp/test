@@ -244,17 +244,20 @@
 				this.max = val.length;
 				this.width = 280 + val.length * 250;
 
-				let ArrayName ={'YCZ_carModel1_var':'','YCZ_carSeries1_var':'','YCZ_configure1_var':'',
-								'YCZ_carModel2_var':'','YCZ_carSeries2_var':'','YCZ_configure2_var':'',
-								'YCZ_carModel3_var':'','YCZ_carSeries3_var':'','YCZ_configure3_var':'',
-								'YCZ_carModel4_var':'','YCZ_carSeries4_var':'','YCZ_configure4_var':'',
-								'YCZ_carModel5_var':'','YCZ_carSeries5_var':'','YCZ_configure5_var':'',
-								'YCZ_carModel6_var':'','YCZ_carSeries6_var':'','YCZ_configure6_var':''}
+				let ArrayName ={'YCZ_carModel1_var':'-','YCZ_carSeries1_var':'-','YCZ_configure1_var':'-','YCZ_price1_var':'-', 
+								'YCZ_carModel2_var':'-','YCZ_carSeries2_var':'-','YCZ_configure2_var':'-','YCZ_price2_var':'-',
+								'YCZ_carModel3_var':'-','YCZ_carSeries3_var':'-','YCZ_configure3_var':'-',
+								'YCZ_carModel4_var':'-','YCZ_carSeries4_var':'-','YCZ_configure4_var':'-',
+								'YCZ_carModel5_var':'-','YCZ_carSeries5_var':'-','YCZ_configure5_var':'-',
+								'YCZ_carModel6_var':'-','YCZ_carSeries6_var':'-','YCZ_configure6_var':'-'}
 
 				for(let i=0;i<val.length;i++){
+					if(i<2){
+						ArrayName['YCZ_price'+(i+1).toString()+'_var']=this.Data.detailArray[0].detail[0].groupDetail[1]
+					}
 					let modelNameArray = val[i].modelName.toString().split(' ')
-					ArrayName['YCZ_carModel'+(i+1).toString()+'_var']=val[i].modelName
-					ArrayName['YCZ_carSeries'+(i+1).toString()+'_var']=val[i].serialGorup
+					ArrayName['YCZ_carModel'+(i+1).toString()+'_var']=modelNameArray[0]
+					// ArrayName['YCZ_carSeries'+(i+1).toString()+'_var']=val[i].serialGorup
 					ArrayName['YCZ_configure'+(i+1).toString()+'_var']=modelNameArray[modelNameArray.length-1]
 				}
 				

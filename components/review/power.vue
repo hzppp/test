@@ -56,7 +56,7 @@ export default {
 				
 				this.$gdp('YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
 																		'YCZ_price_var':model.price+'万',
-																		'YCZ_carModel_var':model.name,
+																		'YCZ_carModel_var':names[0],
 																		'YCZ_carSeries_var':''})
 				
 			}

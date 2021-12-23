@@ -306,7 +306,7 @@
 		methods: {
 			setGdp() {
 				
-				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
 				this.$gdp('YCZ_activiDetailPageView',{
 					'YCZ_activityId_var':this.activityId,
 					'YCZ_activityName_var':this.content.name,
