@@ -739,7 +739,6 @@
 				// 	})
 				// 	return
 				//  }
-				//  console.log('clueDetail',clueDetail)
 				//  if(!clueDetail){
 				// 	 console.log('订单生成失败')
 				// 	 this.$toast(clueInfo.msg)

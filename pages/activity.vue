@@ -132,7 +132,7 @@
 								<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
 									{{groupBtnObj.text}}
 									<view class="success-icon" v-if="groupStatus==2"></view>
-									<view class="remain" v-else-if="isPay">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
+									<view class="remain" v-else-if="isPay && groupBtnObj.canOperate">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
 								</view>
 							</template>
 

@@ -5,7 +5,7 @@
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
 				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1  && detailInfo.groupDetail.groupStatus==0">{{groupStatusTxt}}</view>	
-				<view class="lIdcode1" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail.groupStatus==2">核销码生成中</view>
+				<view class="lIdcode1 createCode" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail.groupStatus==2">核销码\n生成中</view>
 				<view v-else :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
 			</view>
 			<view class="headerInfo">
@@ -683,6 +683,15 @@
 				background: #e64848;
 				border: 1px solid #e64848;
 				color: #ffffff;
+			}
+			.createCode{
+				white-space: pre-line; 
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 66rpx;
+				line-height: 1.15;
+	
 			}
 		}
 
