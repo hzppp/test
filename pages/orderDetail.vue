@@ -256,7 +256,6 @@
 				let hour = t.getHours();
 				let min = t.getMinutes();
 				let sec = t.getSeconds();
-				console.log('time', t.getFullYear())
 				if (month < 10) {
 					month = '0' + month;
 				}
@@ -294,7 +293,6 @@
 			const {
 				id = 0
 			} = options
-			console.log('id', id)
 			this.id = id
 			this.payState = options.pay
 			if (id) {
@@ -304,7 +302,6 @@
 			this.shareURL += `?sourceUserId=${wxUserInfo.id}`
 		},
 		onUnload() {
-			console.log('onUnload')
 			this.timer1 && clearInterval(this.timer1)
 			this.timer && clearInterval(this.timer)
 		},
