@@ -39,7 +39,7 @@
 
 			
 			<!-- 拼团中 -->
-			<template  v-if="groupStatus==0 && remainGroups>0" >
+			<template  v-if="groupStatus==0" >
 				<view class="zw2"></view>
 				<view class="group-purchase">
 					<template v-if="!isBeInvited">
@@ -414,7 +414,7 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-				if (i != 'groupId' && i != 'sourceUserId') {
+				if (i != 'ald_share_src' && i != 'groupId' && i != 'sourceUserId') {
 					cs += `${i}=${options[i]}&`
 				}
 			}
@@ -528,8 +528,8 @@
 			//拼团购买
 			purchase(){
 				
-				// 下订活动单独处理
-				if (this.haveBuy) {
+				// 如果已成团
+				if (this.groupStatus ==2) {
 					//已经购买且有有有效订单
 					uni.navigateTo({
 						url: `/pages/orderDetail?id=${this.orderDetail.orderId}`

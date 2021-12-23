@@ -275,7 +275,6 @@ name: "lotteryRecord",
 .state5,.state7{
 	color: #CCCCCC;
 	border: 1px solid #CCCCCC;
-  border-radius:20rpx;
 }
 .state7{
   white-space: pre-line; 
