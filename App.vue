@@ -47,7 +47,7 @@
 				animation: false
 			})
 			// #endif
-			// console.log('App Launch')
+			console.log('App Launch')
 			if (uni.canIUse('loadFontFace')) {
 				let _this = this
 				console.log("支持自定义字体");
@@ -73,10 +73,11 @@
 
 		},
 		onShow: function() {
-			// console.log('App Show')
+			console.log('App Show')
+			
 		},
 		onHide: function() {
-			// console.log('App Hide')
+			console.log('App Hide')
 		},
 		methods: {}
 	}

@@ -419,9 +419,8 @@
 				}
 			}
 			cs = cs.substr(0, cs.length - 1)
-			
 			this.shareURL = `/pages/activity?${cs}&sourceUserId=${wxUserInfo.id}`
-			// console.log('shareurl11111', this.shareURL)
+			console.log('shareurl', this.shareURL)
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -550,6 +549,7 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
 				// #endif			
+				
 			},
 			shareChoise() {
 				// #ifdef MP-WEIXIN

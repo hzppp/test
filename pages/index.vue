@@ -336,7 +336,11 @@
 					this.pageData.list = list
 				// #endif
 				this.sgList = this.pageData.heatSgList
-				// console.log("过滤后的pageData",this.pageData)
+				console.log("过滤后的pageData",this.pageData)
+				
+				//监听滑动时候 模块曝光
+				this.MonitorSlide()
+
 			},
 			async getNearDealer(){
 			        let  cityId;

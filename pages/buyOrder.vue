@@ -680,6 +680,7 @@
 
 				if (data.code == 1) {
 					// 留资成功 吊起支付
+									
 				 await this.pay()
 				 this.buyOrderIng = false
 				} else if (data.code == 2) {
