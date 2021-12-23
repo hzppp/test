@@ -353,7 +353,7 @@
 		mixins: [shouquan],
 		async onLoad(options) {
 			this.getPxAndRpxRatio()
-				if (options.scene) {
+			if (options.scene) {
 				// 分享海报来的
 				let url = decodeURIComponent(options.scene)
 				url = this.changURl(url)
@@ -392,7 +392,7 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			console.log("options.type", options.type)
+			console.log("options", options)
 			if (options.type) {
 				this.activityType = options.type || ''
 			}
