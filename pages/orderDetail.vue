@@ -10,8 +10,10 @@
 			</view>
 			<view class="headerInfo">
 				<view class="lDetail">
-					<view class="prizeName">{{detailInfo.productName}}</view>
-					<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
+					<view class="product-info">
+						<view class="prizeName">{{detailInfo.productName}}</view>
+						<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
+					</view>
 					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupDetail.groupStatus ==2) || detailInfo.activityType ==0">
 						<view
 							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
@@ -707,13 +709,19 @@
 				background: #FFFFFF;
 				padding: 42rpx;
 				border-bottom: 1px dashed #ebebeb;
-
+				.product-info{
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 20rpx;
+					line-height: 1;
+				}
 				.prizeName {
 					position: relative;
 					color: #000;
 					font-weight: 600;
 					font-size: 36rpx;
-					margin-bottom: 20rpx;
+					line-height: 1;
 				}
 
 				.prizeCode {
@@ -721,9 +729,7 @@
 					display: flex;
 					font-size: 26rpx;
 					color: #999;
-					height: 30rpx;
-					line-height: 30rpx;
-
+					margin-bottom: 30rpx;	
 					.code {
 						font-size: 32rpx;
 						font-weight: 500;
@@ -737,12 +743,12 @@
 				}
 
 				.services-btn {
-					line-height: 58rpx;
 					font-size: 36rpx;
 					text-align: center;
 					color: #fa8845;
 					float: right;
-					transform: translateY(-70%)
+					line-height: 1;
+					// transform: translateY(-70%)
 				}
 
 				.prizeScore {
