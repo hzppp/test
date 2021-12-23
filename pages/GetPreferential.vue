@@ -99,11 +99,18 @@ const trackAttribute={
         btnFrom:"获取实时底价",
         pageFrom:"车辆详情页"
     },
-    
     myPage:{
         btnFrom:"悬浮按钮预约试驾",
         pageFrom:"我的页面"
-    }
+    },
+    exhibitionTotal:{
+        btnFrom:"询底价",
+        pageFrom:"云展厅车辆总页"
+    },
+    exhibitionCar:{
+        btnFrom:"询底价",
+        pageFrom:"云展厅车辆页"
+    },
 }
     export default {
         components: {pop,pyBoomV,userBand},
@@ -137,7 +144,8 @@ const trackAttribute={
                 isNoData:false,
 				zijie:'',
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
@@ -152,7 +160,7 @@ const trackAttribute={
 			serialData(n){
 			
 				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':this.serialData.name,
-															'YCZ_carSeries_var':''})
+															'YCZ_carSeries_var':'-'})
 			},
 			currentDealer(n){
 				
@@ -206,16 +214,19 @@ const trackAttribute={
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
-            if(options.from){
+            await this.reqSerialDetail(options.serialId)
+            this.from =options.from || "exhibitionTotal"
+            if(this.from){
                 this.$gdp('YCZ_leaveAssetsPageView',{
-                    YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
-                    YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
-                    YCZ_sourceCarModel_var:"",
-                    YCZ_sourceCarSeries_var:this.currentCaraSerial
+                    YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                    YCZ_sourceCarModel_var:this.serialData.name,
+                    YCZ_sourceCarSeries_var:"-"
                 })
             }
-        },
+
+            
+        }, 
         methods: {
             getStoragePhone() {
 				let phone = uni.getStorageSync('userPhone');
@@ -262,13 +273,14 @@ const trackAttribute={
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1 ) {
                         this.serialData = data
+                        
                     }else {
                         this.isNoData = true
                     }
                 } catch (error) {
                     console.error(error)
                 } finally {
-                    uni.hideLoading()
+                    uni.hideLoading()                   
                 }
             },
             //经销商点击，判断提示
@@ -393,7 +405,7 @@ const trackAttribute={
 				
 				this.$gdp('YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.serialData.name
 															,'YCZ_mobile_var':this.phoneNum
-															,'YCZ_province_var':''
+															,'YCZ_province_var':'-'
 															,'YCZ_city_var':this.currentCity.name
 															,'YCZ_distributorName_var':this.currentDealer.name})
 				
@@ -443,7 +455,7 @@ const trackAttribute={
 						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
 																	,'YCZ_carModel_var':this.currentCaraSerial
 																	,'YCZ_mobile_var':this.phoneNum
-																	,'YCZ_province_var':''
+																	,'YCZ_province_var':'-'
 																	,'YCZ_city_var':this.currentCity.name
 																	,'YCZ_distributorName_var':this.currentDealer.name})
 						
