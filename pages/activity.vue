@@ -37,125 +37,131 @@
 			</view>
 
 
-			<view class="zw"></view>
+			
 			<!-- 拼团中 -->
-			<view class="group-purchase" v-if="groupStatus==0" >
-				<template v-if="!isBeInvited">
-					<view class="group-text">还差<text class="nums">{{payRemains}}</text>名好友支付即可拼团成功</view>
-					<view class="group-list">
-						<view class="group-members" v-for="(item,index) in groupAllUserInfoList" :key="index">
-							<image :src="item.avatarUrl"></image>
-							<view class="condition" v-if="item.orderStatus==0">待支付</view>
-						</view>
-						<button class="add-members" v-for="(item,index) in remainGroups"  :key="index" hover-class="none" open-type="share" @click="shareBtnClick"></button>
-					</view>
-					
-				</template>
-				<template v-else>
-					<view class="inviter-info">
-						<image class="invite-avatar" :src="sourceUserInfo.avatarUrl" mode="widthFix"></image>
-						<view class="inviter-text">
-							<view class="inviter-name"><text class="name">{{ sourceUserInfo.nickName }}</text>邀请你参与拼团</view>
-							<view class="group-nums">仅剩<text class="nums">{{remainGroups}}</text>个名额</view>
-						</view>
-					</view>
-				</template>
-				<view class="group-btn">
-					<view class="count-time">
-						倒计时：
-						<view class="db">{{groupDownDate[1]}}</view>时
-						<view class="db">{{groupDownDate[2]}}</view>分
-						<view class="db">{{groupDownDate[3]}}</view>秒
-					</view>
+			<template  v-if="groupStatus==0 && remainGroups>0" >
+				<view class="zw2"></view>
+				<view class="group-purchase">
 					<template v-if="!isBeInvited">
-						<view class="share-btn" v-if="!isPay" @tap="purchase">去支付</view>
-						<template v-else>
-							<!--  #ifdef MP-WEIXIN  -->
-							<button v-if="content.sharePosterPic"
-								:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-								@tap='shareChoise()'>分享好友</button>
-
-							<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-							<!-- #endif -->
-							<!--  #ifndef MP-WEIXIN  -->
-							<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-								hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-							<!-- #endif -->
-						</template>
-					</template>
-					<template v-else>
-						<view class="share-btn" @tap="purchase">参与拼团</view>
-					</template>
-				</view>
-			</view>
-			<view class="operation-list" v-else>
-				<view class="type-c"
-					v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
-					<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
-					<button v-else
-						:class="haveBuy?'over-btn1':'over-btn'"
-						style="width::'686rpx;border-radius: 44rpx;"
-						@tap="formShow">{{haveBuy?'查看订单':'活动已结束'}}</button>
-				</view>
-				<view class="type-a" v-else-if="content.needApply == 1">
-					<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button> -->
-					<!--  #ifdef MP-WEIXIN  -->
-					<button v-if="content.sharePosterPic"
-						:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						@tap='shareChoise()'>分享好友</button>
-
-					<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-					<!-- #endif -->
-					<!--  #ifndef MP-WEIXIN  -->
-					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-						hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
-					<!-- #endif -->
-					<template v-if="!isActStart ">
-						<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
-							:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
-						<!-- 下订活动活动未开始不允许点击 -->
-						<button v-if="buyOrder || isGroupPurchase" :class="'enroll-btn enroll-btn3'"
-							:style="{width:canShare?'420rpx':'686rpx'}">活动未开始</button>
-					</template>
-
-					<template v-else>
-						<!-- 拼团活动  20211227 未参加拼团和拼团成功-->
-						<template v-if="isGroupPurchase">
-							<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
-								{{groupBtnObj.text}}
-								<view class="success-icon" v-if="groupStatus==2"></view>
-								<view class="remain" v-else-if="isPay">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
+						<view class="group-text">还差<text class="nums">{{payRemains}}</text>名好友支付即可拼团成功</view>
+						<view class="group-list">
+							<view class="group-members" v-for="(item,index) in groupAllUserInfoList" :key="index">
+								<image :src="item.avatarUrl"></image>
+								<view class="condition" v-if="item.orderStatus==0">待支付</view>
 							</view>
-						</template>
-
-						<!-- 其他活动 -->
-						<template v-else>
-							<button v-if="buyOrder && !haveBuy && (!content.products[0] || content.products[0].stock == 0)" 
-							:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn enroll-btn3'">
-								已被抢完啦
-							</button>
+							<button class="add-members" v-for="(item,index) in remainGroups"  :key="index" hover-class="none" open-type="share" @click="shareBtnClick"></button>
+						</view>
+						
+					</template>
+					<template v-else>
+						<view class="inviter-info">
+							<image class="invite-avatar" :src="sourceUserInfo.avatarUrl" mode="widthFix"></image>
+							<view class="inviter-text">
+								<view class="inviter-name"><text class="name">{{ sourceUserInfo.nickName }}</text>邀请你参与拼团</view>
+								<view class="group-nums">仅剩<text class="nums">{{remainGroups}}</text>个名额</view>
+							</view>
+						</view>
+					</template>
+					<view class="group-btn">
+						<view class="count-time">
+							倒计时：
+							<view class="db">{{groupDownDate[1]}}</view>时
+							<view class="db">{{groupDownDate[2]}}</view>分
+							<view class="db">{{groupDownDate[3]}}</view>秒
+						</view>
+						<template v-if="!isBeInvited">
+							<view class="share-btn" v-if="!isPay" @tap="purchase">去支付</view>
 							<template v-else>
-								<button
-									:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-									open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
-									:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
-								<button
-									:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
-									:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
-									v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+								<!--  #ifdef MP-WEIXIN  -->
+								<button v-if="content.sharePosterPic"
+									:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+									@tap='shareChoise()'>分享好友</button>
+
+								<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+									hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+								<!-- #endif -->
+								<!--  #ifndef MP-WEIXIN  -->
+								<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+									hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+								<!-- #endif -->
 							</template>
 						</template>
-					</template>
+						<template v-else>
+							<view class="share-btn" @tap="purchase">参与拼团</view>
+						</template>
+					</view>
+				</view>
+			</template>
+			<template v-else>
+				<view class="zw"></view>
+				<view class="operation-list">
+					<view class="type-c"
+						v-if="(artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0) || isActEnded ">
+						<button v-if="!buyOrder" class="over-btn" hover-class="none">活动已结束</button>
+						<button v-else
+							:class="haveBuy?'over-btn1':'over-btn'"
+							style="width::'686rpx;border-radius: 44rpx;"
+							@tap="formShow">{{haveBuy?'查看订单':'活动已结束'}}</button>
+					</view>
+					<view class="type-a" v-else-if="content.needApply == 1">
+						<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+							open-type="share" @click="shareBtnClick" v-if="canShare">分享好友</button> -->
+						<!--  #ifdef MP-WEIXIN  -->
+						<button v-if="content.sharePosterPic"
+							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+							@tap='shareChoise()'>分享好友</button>
 
+						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- #endif -->
+						<template v-if="!isActStart ">
+							<button v-if="isApply && !buyOrder" :class="'enroll-btn enroll-btn3'"
+								:style="{width:canShare?'420rpx':'686rpx'}">已报名，活动未开始</button>
+							<!-- 下订活动活动未开始不允许点击 -->
+							<button v-if="buyOrder || isGroupPurchase" :class="'enroll-btn enroll-btn3'"
+								:style="{width:canShare?'420rpx':'686rpx'}">活动未开始</button>
+						</template>
+
+						<template v-else>
+							<!-- 拼团活动  20211227 未参加拼团和拼团成功-->
+							<template v-if="isGroupPurchase">
+								<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
+									{{groupBtnObj.text}}
+									<view class="success-icon" v-if="groupStatus==2"></view>
+									<view class="remain" v-else-if="isPay">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
+								</view>
+							</template>
+
+							<!-- 其他活动 -->
+							<template v-else>
+								<button v-if="buyOrder && !haveBuy && (!content.products[0] || content.products[0].stock == 0)" 
+								:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn enroll-btn3'">
+									已被抢完啦
+								</button>
+								<template v-else>
+									<button
+										:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+										open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" v-if="!phone"
+										:style="{width:canShare?'420rpx':'686rpx'}">{{buyOrder?'报名购买':'报名活动'}}</button>
+									<button
+										:class=" (isApply && activityType != 'wawaji' && voucherShow)?'enroll-btn4':'enroll-btn'"
+										:style="{width:canShare?'420rpx':'686rpx'}" @tap="formShow"
+										v-else>{{buyOrder?(haveBuy?'查看订单':'报名购买'):fromShowBtnTitle}}</button>
+								</template>
+							</template>
+						</template>
+
+					</view>
+					<view class="type-b" v-else-if="content.needApply == 0">
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+							open-type="share" @click="shareBtnClick">分享好友</button>
+					</view>
 				</view>
-				<view class="type-b" v-else-if="content.needApply == 0">
-					<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-						open-type="share" @click="shareBtnClick">分享好友</button>
-				</view>
-			</view>
+			</template>
 		</view>
 
 		<view class="myred" @tap='tapmyred()' v-if="red.redDone"></view>
@@ -1030,6 +1036,10 @@
 			},
 			closeGroupPopup() {
 				this.$refs['groupPupup'].close()
+				uni.reLaunch({
+					url:`pages/activity?id=${this.activityId}`
+				});
+
 			},
 			//获取团信息
 			async getGroupInfo(id){
@@ -1041,7 +1051,7 @@
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 					this.payRemains = this.groupSize - payList.length
-					if(this.remainGroups == 0){
+					if(this.remainGroups <= 0){
 						this.$refs['groupPupup'].open()
 					}
 					if(this.isPay){
@@ -1534,6 +1544,11 @@
 			border-radius: 44rpx;
 			color: #ffffff;
 		}
+	}
+	.zw2{
+		height: 360rpx;
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 	.group-purchase{
         position: fixed;

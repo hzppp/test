@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="buyOrder-container">
 		<userBand @loginSuccess='getStoragePhone'></userBand>
 		<view class="buyOrder">
 			<view class="orderHeader" v-if="products && products.name">
@@ -783,6 +783,10 @@
 
 
 <style lang="scss" scoped>
+	.buyOrder-container{
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+	}
 	.no-data {
 		padding: 32rpx 0;
 		text-align: center;
