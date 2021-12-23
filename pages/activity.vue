@@ -420,6 +420,7 @@
 			}
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}&sourceUserId=${wxUserInfo.id}`
+			console.log("this.shareURL1111111111", this.shareURL)
 		},
 	    onShow() {
 		   if(this.activityId){
@@ -835,7 +836,7 @@
 							if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 								this.shareURL += `&groupId=${userGroupDetail.id}`
 							}
-							console.log("shareURL",this.shareURL)
+							console.log("shareURL222222",this.shareURL)
 						}else if(this.sourceUserId && this.groupId){
 							this.isBeInvited = true
 							this.queryingUserInfor(this.sourceUserId)
@@ -1081,8 +1082,9 @@
 					if(this.remainGroups <= 0){
 						this.$refs['groupPupup'].open()
 					}
-					if(this.isPay){
+					if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 						this.shareURL += `&groupId=${data.id}`
+						console.log("shareURL333333333",this.shareURL)
 					}
 					let expireTime = data.expireTime
 					if (this.groupStatus == 0) {
