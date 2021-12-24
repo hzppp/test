@@ -130,7 +130,7 @@
 	import customSwiper from '@/components/blackmonth-swiper/homeSwiper'
 	
 	let app = getApp()
-
+	
 	export default {
 		components: {
 			viewTabBar: tabBar,
@@ -167,7 +167,7 @@
 					proId:'',
 					name:''
 				},
-				hotNDelF: JSON.stringify({ YCZ_area_var: '最近门店', YCZ_position_var: '1', YCZ_flowName_var: '北京燕长风商贸有限公司北辰亚运村分公司', YCZ_sourcePage_var: '' }),
+				hotNDelF: JSON.stringify({ YCZ_area_var: '最近门店', YCZ_position_var: '1', YCZ_flowName_var: '北京燕长风商贸有限公司北辰亚运村分公司', YCZ_sourcePage_var: getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-" }),
 			}
 		},
 		// mounted() {
@@ -262,7 +262,6 @@
 			}
 		},
 		async onShow(options) {
-			
 			await distance.getLocation()
 			await this.reqProvinceCityList()
 			let currentLocation = app.globalData.currentLocation
@@ -331,7 +330,7 @@
 		methods: {
 			//曝光埋点
 			exposure(args){
-				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
 				for(let i=0 ;i<args.length;i++){
 	
 					if(args[i]==0){ //轮播模块曝光
@@ -688,7 +687,7 @@
 					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.currentCity.cityId}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=nearStore`
 				})
 				this.$gdp('YCZ_homeClick', { "YCZ_area_var": '最近门店', "YCZ_position_var": 1 ,"YCZ_flowName_var":this.nearDealer.name})
-				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '首页', "YCZ_sourceButtonName_var": '最近门店预约试驾' })
+				this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-", "YCZ_sourceButtonName_var": '最近门店预约试驾' })
 				
 			},
 			goVr() {
