@@ -684,7 +684,7 @@
 				border: 1px solid #e64848;
 				color: #ffffff;
 			}
-			.createCode{
+			.createCode,.lIdcode7{
 				white-space: pre-line; 
 				display: flex;
 				align-items: center;
