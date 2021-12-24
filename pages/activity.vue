@@ -789,8 +789,8 @@
 					
 						let userGroupDetail = clueInfo.data.userGroupDetail
 
-						//有团信息，则已经参团
-						if(userGroupDetail && userGroupDetail.id){
+						//有团信息和订单信息，则已经参团
+						if(userGroupDetail && userGroupDetail.id && this.orderDetail && this.orderDetail.orderId){
 							this.groupStatus =  userGroupDetail.groupStatus
 							if(this.groupStatus == 2){
 								this.groupBtnObj.canOperate =true;
@@ -1039,6 +1039,7 @@
 			},
 			closeGroupPopup() {
 				this.$refs['groupPupup'].close()
+				this.groupStatus=-1
 				this.isBeInvited=false;
 				this.groupId=0;
 				this.getData()
