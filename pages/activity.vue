@@ -510,7 +510,7 @@
 			//拼团购买
 			purchase(){
 				
-				// 如果已成团
+				// 如果已成团或者未支付，则跳转支付页面
 				if (this.groupStatus ==2 || !this.isPay) {
 					//已经购买且有有有效订单
 					uni.navigateTo({
@@ -520,7 +520,8 @@
 					if(this.isActEnded){
 						return
 					}
-					if(this.groupStatus !=0 && !this.groupBtnObj.canOperate){
+					//团过期或者拼团完成,或者无参团名额
+					if(this.groupStatus !=0 || !this.groupBtnObj.canOperate){
 						return;
 					}	
 					// #ifdef MP-WEIXIN
