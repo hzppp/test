@@ -6,7 +6,7 @@
 				<view class="name">{{products.name}}</view>
 				<view class="price1">¥ </view>
 				<view class="price">{{ products.price}}</view>
-				<view class="stock">{{'剩余库存: ' + products.stock}}</view>
+				<view class="stock" v-if="activityType!=1">{{'剩余库存: ' + products.stock}}</view>
 
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
@@ -152,7 +152,11 @@
 				sourceUserId: '',
 				products: {}, // 关联商品
 				orderDetail: {} ,//当前活动订单状态
-				buyOrderIng:false
+				buyOrderIng:false,
+				groupId:0, //团id
+				surplusCount:"", //剩余团数
+				remainGroups:"",//团剩余名额
+				activityType:0,
 			}
 		},
 		watch: {
@@ -173,7 +177,6 @@
 			},
 			smsCode(code) {
 				this.canSubmit = this.ifcanSubmit()
-				
 			}
 		},
 
@@ -236,6 +239,7 @@
 			}
 			this.id = options.activityId
 			this.sourceUserId = options.sourceUserId
+			this.groupId = options.groupId
 			await distance.getLocation()
 			await login.checkLogin(api)
 			this.getData()
@@ -275,8 +279,29 @@
 					let clueInfo = await api.getClueInfo({
 						activityId: this.id
 					})
+					
 					if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-
+					this.activityType = data.activityType
+					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					//如果有拼团活动团信息详情
+					if(this.activityType == 1 && groupBuyConfigDetail){
+						// this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+						this.surplusCount = 0
+						if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+							this.ifcanSubmit()
+						}
+						if(this.groupId){
+							let groupData = await api.getGroupBuyInfo({id:this.groupId})
+							let userGroupDetail = groupData.data.userGroupDetail
+							if(userGroupDetail && userGroupDetail.id){
+								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+								this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
+								if(this.sourceUserId && this.remainGroups==0){
+									this.ifcanSubmit()
+								}
+							}
+						}
+					}
 					this.currentObj = data
 					if (data.products) {
 						this.products = data.products[0]
@@ -420,7 +445,12 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
-
+				if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+					return false
+				}
+				if(this.sourceUserId && this.groupId && this.remainGroups == 0){
+					return false;
+				}
 				if (!this.products || this.products.stock <= 0) {
 					//当前没有库存了
 					return false
@@ -432,6 +462,8 @@
 				} else {
 					return false
 				}
+				
+				
 				return true
 			},
 
@@ -630,8 +662,19 @@
 				   // 防止重复点击
 				   return
 			   }
-
-              if (!this.products || this.products.stock <= 0) {
+				if(this.currentObj.activityType == 1){
+					//针对发起人,判断剩余团数
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+						return;
+					}
+					//针对参团人,判断团剩余人数
+					if(this.sourceUserId && this.remainGroups == 0){
+						this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+						return;
+					}
+				}
+              	if (!this.products || this.products.stock <= 0) {
 				 this.$toast('商品太火爆，被抢完了')
 				}
 				if (!this.ifcanSubmit()) {

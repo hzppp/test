@@ -331,9 +331,9 @@
 				isGroupPurchase:false,
 				groupStatus:-1, //当前团状态:0 拼团中，1团过期， 2拼团完成
 				groupSize:0, //拼团人数
-				groupRemains:0,//剩余团数
+				groupRemains:"",//剩余团数
 				groupAllUserInfoList:[], //团员信息
-				remainGroups:-1, //成团还差人数
+				remainGroups:"", //成团还差人数
 				payRemains:0,//成团还差支付人数
 				groupDownDate:[],
 				isPay:true, 
@@ -530,7 +530,7 @@
 					//如果是被邀请进来的
 					if(this.isBeInvited){
 						uni.navigateTo({
-							url: `/pages/buyOrder?activityId=${this.content.id}&sourceUserId=${this.sourceUserId}`
+							url: `/pages/buyOrder?activityId=${this.content.id}&sourceUserId=${this.sourceUserId}&groupId=${this.groupId}`
 						})
 					}else{
 						uni.navigateTo({
@@ -768,7 +768,7 @@
 						this.isGroupPurchase = true
 						this.groupRemains = groupBuyConfigDetail.surplusCount //剩余团数
 						
-						if(this.groupRemains ==0){
+						if(this.groupRemains <=0){
 							this.groupBtnObj.canOperate =false;
 							this.groupBtnObj.text = "已被抢完啦"
 						}else if(!this.isApply){
@@ -1063,10 +1063,12 @@
 					}else{
 						if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 							this.shareURL += `&groupId=${data.id}`
-							console.log("shareURL333333333",this.shareURL)
 						}
 					}
 					let expireTime = data.expireTime
+					if(this.expireTime == 0){
+						this.$refs['groupPupup'].open()
+					}
 					if (this.groupStatus == 0) {
 						this.groupDownDate = this.downDate("",expireTime)
 						this.timer && clearInterval(this.timer)
