@@ -333,7 +333,7 @@
 				groupSize:0, //拼团人数
 				groupRemains:0,//剩余团数
 				groupAllUserInfoList:[], //团员信息
-				remainGroups:0, //成团还差人数
+				remainGroups:-1, //成团还差人数
 				payRemains:0,//成团还差支付人数
 				groupDownDate:[],
 				isPay:true, 
@@ -539,7 +539,7 @@
 						return
 					}
 					//团过期或者拼团完成,或者无参团名额
-					if(this.groupStatus !=0 || !this.groupBtnObj.canOperate){
+					if(this.groupStatus !=0 && !this.groupBtnObj.canOperate){
 						return;
 					}	
 					// #ifdef MP-WEIXIN
