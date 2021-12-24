@@ -142,6 +142,9 @@ name: "lotteryRecord",
     })
     this.getRecordList()
   },
+  async onShow() {
+    this.getRecordList()
+  }
  
 }
 </script>
