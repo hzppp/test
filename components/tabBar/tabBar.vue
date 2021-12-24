@@ -22,6 +22,7 @@
 				paddingBottomHeight: 0, //苹果X以上手机底部适配高度
 				num:2,
 				currentk:0,
+				currentPageUrl:"",
 				list: [{
 					text: '首页',
 					icon: '/static/images/tab1_icon.png', //未选中图标
@@ -50,7 +51,7 @@
 		created() {
 			console.log('tttttt')
 			this.getLivePage();
-
+			this.currentPageUrl=getCurrentPages().length>0? getCurrentPages()[getCurrentPages().length-1].route:"-"
 
 			let that = this;
 			uni.getSystemInfo({
@@ -92,7 +93,7 @@
 					if(path=='welfareActivity'){
 						//活动页面打开埋点
 						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
-						this.$gdp('YCZ_activityPageView', { "YCZ_sourcePage_var": sourcePage})
+						this.$gdp('YCZ_activityPageView', { "YCZ_sourcePage_var": this.currentPageUrl})
 					}else if(path=='live'){
 						//直播页面打开埋点
 						this.$gdp('YCZ_livePageView')
