@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST; 
+const CUR_ENV = ENV.RELEASE; 
 const version = 1056;
 
 
@@ -56,7 +56,7 @@ var CONFIG_R = {
 
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
-const CONFIG = (CUR_ENV === ENV.RELEASE) ? CONFIG_R : CONFIG_R;
+const CONFIG = (CUR_ENV === ENV.RELEASE) ? CONFIG_R : CONFIG_T;
 
 
 const config = {
