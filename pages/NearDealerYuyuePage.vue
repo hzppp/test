@@ -190,7 +190,7 @@ const COUNTDOWN = 60
                 this.$gdp('YCZ_leaveAssetsPageView',{
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
-                    YCZ_sourceCarModel_var:"",
+                    YCZ_sourceCarModel_var:"-",
                     YCZ_sourceCarSeries_var:this.serialData.name
                 })
             }
