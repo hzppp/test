@@ -784,6 +784,8 @@
 							this.groupBtnObj.canOperate =true;
 							this.groupBtnObj.text = "去支付"
 							this.isPay = false
+						}else{
+							this.isPay = true
 						}
 						
 						this.groupSize = groupBuyConfigDetail.groupSize
