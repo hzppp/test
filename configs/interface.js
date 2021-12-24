@@ -56,7 +56,7 @@ var CONFIG_R = {
 
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
 
-const CONFIG = (CUR_ENV === ENV.RELEASE) ? CONFIG_R : CONFIG_T;
+const CONFIG = (CUR_ENV === ENV.RELEASE) ? CONFIG_R : CONFIG_R;
 
 
 const config = {
