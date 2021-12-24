@@ -39,7 +39,7 @@
 
 			
 			<!-- 拼团中 -->
-			<template  v-if="groupStatus==0 && remainGroups>0" >
+			<template  v-if="groupStatus==0" >
 				<view class="zw2"></view>
 				<view class="group-purchase">
 					<template v-if="!isBeInvited">
@@ -132,7 +132,7 @@
 								<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
 									{{groupBtnObj.text}}
 									<view class="success-icon" v-if="groupStatus==2"></view>
-									<view class="remain" v-else-if="isPay">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
+									<view class="remain" v-else-if="isPay && groupBtnObj.canOperate">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
 								</view>
 							</template>
 
@@ -328,7 +328,7 @@
 						['2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7']
 					],
 				}],
-				isGroupPurchase:true,
+				isGroupPurchase:false,
 				groupStatus:-1, //当前团状态:0 拼团中，1团过期， 2拼团完成
 				groupSize:0, //拼团人数
 				groupRemains:0,//剩余团数
@@ -353,7 +353,7 @@
 		mixins: [shouquan],
 		async onLoad(options) {
 			this.getPxAndRpxRatio()
-				if (options.scene) {
+			if (options.scene) {
 				// 分享海报来的
 				let url = decodeURIComponent(options.scene)
 				url = this.changURl(url)
@@ -392,7 +392,7 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			console.log("options.type", options.type)
+			console.log("options", options)
 			if (options.type) {
 				this.activityType = options.type || ''
 			}
@@ -414,20 +414,19 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-				if (i != 'groupId' && i != 'sourceUserId') {
+				if (i != 'ald_share_src' && i != 'groupId' && i != 'sourceUserId') {
 					cs += `${i}=${options[i]}&`
 				}
 			}
 			cs = cs.substr(0, cs.length - 1)
 			this.shareURL = `/pages/activity?${cs}&sourceUserId=${wxUserInfo.id}`
-			console.log('shareurl', this.shareURL)
-			
+			console.log("this.shareURL1111111111", this.shareURL)
 		},
 	    onShow() {
 		   if(this.activityId){
 			    this.getData()
 		   }
-	     
+
 	    },
 		onHide() {
 			if (app.Interval) {
@@ -437,6 +436,7 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = this.shareURL
+			console.log("this.shareURL444444", this.shareURL)
 			// api.shareActivity(this.content.id).then(res => {
 			// 	console.log(res)
 			// 	if (res.data > 0) {
@@ -449,6 +449,12 @@
 				path: path,
 				imageUrl: imageUrl
 			}
+			this.$gdp( 'YCZ_shareFriend',{
+				'YCZ_activityId_var':this.activityId
+				,'YCZ_activityName_var':this.content.name
+				,'YCZ_infoId_var':'-'
+				,'YCZ_infoName_var':'-'}
+			)
 		},
 
 		methods: {
@@ -522,8 +528,8 @@
 			//拼团购买
 			purchase(){
 				
-				// 下订活动单独处理
-				if (this.haveBuy) {
+				// 如果已成团
+				if (this.groupStatus ==2 || !this.isPay) {
 					//已经购买且有有有效订单
 					uni.navigateTo({
 						url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
@@ -613,17 +619,6 @@
 
 
 			},
-			//分享给好友成功时触发
-			onShareAppMessage() {
-				
-	
-				this.$gdp( 'YCZ_shareFriend',{'YCZ_activityId_var':this.activityId
-															,'YCZ_activityName_var':this.content.name
-															,'YCZ_infoId_var':'-'
-															,'YCZ_infoName_var':'-'})
-					
-				
-			  },
 			// 看车按钮被点击
 			seeCarBtnClick(serialGroupItem) {
 				// #ifdef MP-WEIXIN
@@ -793,15 +788,18 @@
 					if(data.activityType == 1 && groupBuyConfigDetail){
 						this.isGroupPurchase = true
 						this.groupRemains = groupBuyConfigDetail.surplusCount //剩余团数
-						if(!this.isApply){
-							if(this.groupRemains ==0){
-								this.groupBtnObj.canOperate =false;
-								this.groupBtnObj.text = "已被抢完啦"
-							}else{
-								this.groupBtnObj.canOperate =true;
-								this.groupBtnObj.text = "拼团购买"
-							}
+						
+						if(this.groupRemains ==0){
+							this.groupBtnObj.canOperate =false;
+							this.groupBtnObj.text = "已被抢完啦"
+						}else if(!this.isApply){
+							this.groupBtnObj.canOperate =true;
+							this.groupBtnObj.text = "拼团购买"
+						}else if((!data.products[0] || data.products[0].stock == 0)){
+							this.groupBtnObj.canOperate =false;
+							this.groupBtnObj.text = "已被抢完啦"
 						}
+						
 						//留咨但是未支付
 						if(this.orderDetail && this.orderDetail.orderId && this.orderDetail.orderStatus == 0){
 							this.groupBtnObj.canOperate =true;
@@ -834,10 +832,10 @@
 							this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 							let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 							this.payRemains = this.groupSize - payList.length
-							if(this.isPay){
+							if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 								this.shareURL += `&groupId=${userGroupDetail.id}`
 							}
-							console.log("shareURL",this.shareURL)
+							console.log("shareURL222222",this.shareURL)
 						}else if(this.sourceUserId && this.groupId){
 							this.isBeInvited = true
 							this.queryingUserInfor(this.sourceUserId)
@@ -1065,9 +1063,9 @@
 			},
 			closeGroupPopup() {
 				this.$refs['groupPupup'].close()
-				uni.reLaunch({
-					url:`pages/activity?id=${this.activityId}`
-				});
+				this.isBeInvited=false;
+				this.groupId=0;
+				this.getData()
 
 			},
 			//获取团信息
@@ -1082,9 +1080,11 @@
 					this.payRemains = this.groupSize - payList.length
 					if(this.remainGroups <= 0){
 						this.$refs['groupPupup'].open()
-					}
-					if(this.isPay){
-						this.shareURL += `&groupId=${data.id}`
+					}else{
+						if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
+							this.shareURL += `&groupId=${data.id}`
+							console.log("shareURL333333333",this.shareURL)
+						}
 					}
 					let expireTime = data.expireTime
 					if (this.groupStatus == 0) {

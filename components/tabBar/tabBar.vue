@@ -48,6 +48,7 @@
 			};
 		},
 		created() {
+			console.log('tttttt')
 			this.getLivePage();
 
 

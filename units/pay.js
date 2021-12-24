@@ -83,9 +83,18 @@ export default {
 					if (callback) {
 						callback(1)
 					} else {
-						uni.redirectTo({
-							url: `/pages/orderDetail?id=${order.orderId}&pay=1`
-						})
+						//如果是拼团活动，支付成功跳活动详情页
+						if(data.activityType == 1){
+							uni.redirectTo({
+								url: `/pages/activity?id=${id}`
+							})
+						}else{
+							uni.redirectTo({
+								url: `/pages/orderDetail?id=${order.orderId}&pay=1`
+							})
+						}
+						
+						
 					}
 
 				},
