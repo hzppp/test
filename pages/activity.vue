@@ -426,7 +426,7 @@
 		   if(this.activityId){
 			    this.getData()
 		   }
-	     
+
 	    },
 		onHide() {
 			if (app.Interval) {
@@ -511,7 +511,7 @@
 			purchase(){
 				
 				// 如果已成团
-				if (this.groupStatus ==2) {
+				if (this.groupStatus ==2 || !this.isPay) {
 					//已经购买且有有有效订单
 					uni.navigateTo({
 						url: `/pages/orderDetail?id=${this.orderDetail.orderId}`
@@ -766,15 +766,18 @@
 					if(data.activityType == 1 && groupBuyConfigDetail){
 						this.isGroupPurchase = true
 						this.groupRemains = groupBuyConfigDetail.surplusCount //剩余团数
-						if(!this.isApply){
-							if(this.groupRemains ==0){
-								this.groupBtnObj.canOperate =false;
-								this.groupBtnObj.text = "已被抢完啦"
-							}else{
-								this.groupBtnObj.canOperate =true;
-								this.groupBtnObj.text = "拼团购买"
-							}
+						
+						if(this.groupRemains ==0){
+							this.groupBtnObj.canOperate =false;
+							this.groupBtnObj.text = "已被抢完啦"
+						}else if(!this.isApply){
+							this.groupBtnObj.canOperate =true;
+							this.groupBtnObj.text = "拼团购买"
+						}else if((!data.products[0] || data.products[0].stock == 0)){
+							this.groupBtnObj.canOperate =false;
+							this.groupBtnObj.text = "已被抢完啦"
 						}
+						
 						//留咨但是未支付
 						if(this.orderDetail && this.orderDetail.orderId && this.orderDetail.orderStatus == 0){
 							this.groupBtnObj.canOperate =true;
@@ -1036,9 +1039,9 @@
 			},
 			closeGroupPopup() {
 				this.$refs['groupPupup'].close()
-				uni.reLaunch({
-					url:`pages/activity?id=${this.activityId}`
-				});
+				this.isBeInvited=false;
+				this.groupId=0;
+				this.getData()
 
 			},
 			//获取团信息
@@ -1053,10 +1056,11 @@
 					this.payRemains = this.groupSize - payList.length
 					if(this.remainGroups <= 0){
 						this.$refs['groupPupup'].open()
-					}
-					if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
-						this.shareURL += `&groupId=${data.id}`
-						console.log("shareURL333333333",this.shareURL)
+					}else{
+						if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
+							this.shareURL += `&groupId=${data.id}`
+							console.log("shareURL333333333",this.shareURL)
+						}
 					}
 					let expireTime = data.expireTime
 					if (this.groupStatus == 0) {
