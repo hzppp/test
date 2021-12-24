@@ -528,7 +528,7 @@
 			//拼团购买
 			purchase(){
 				
-				// 如果已成团
+				// 如果已成团或者未支付，则跳转支付页面
 				if (this.groupStatus ==2 || !this.isPay) {
 					//已经购买且有有有效订单
 					uni.navigateTo({
@@ -538,7 +538,8 @@
 					if(this.isActEnded){
 						return
 					}
-					if(this.groupStatus !=0 && !this.groupBtnObj.canOperate){
+					//团过期或者拼团完成,或者无参团名额
+					if(this.groupStatus !=0 || !this.groupBtnObj.canOperate){
 						return;
 					}	
 					// #ifdef MP-WEIXIN
@@ -811,8 +812,8 @@
 					
 						let userGroupDetail = clueInfo.data.userGroupDetail
 
-						//有团信息，则已经参团
-						if(userGroupDetail && userGroupDetail.id){
+						//有团信息和订单信息，则已经参团
+						if(userGroupDetail && userGroupDetail.id && this.orderDetail && this.orderDetail.orderId){
 							this.groupStatus =  userGroupDetail.groupStatus
 							if(this.groupStatus == 2){
 								this.groupBtnObj.canOperate =true;
@@ -1063,6 +1064,7 @@
 			},
 			closeGroupPopup() {
 				this.$refs['groupPupup'].close()
+				this.groupStatus=-1
 				this.isBeInvited=false;
 				this.groupId=0;
 				this.getData()

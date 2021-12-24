@@ -235,7 +235,7 @@
 						break;
 					}
 					case 7: {
-						return '核销码生成失败'
+						return '核销码\n生成失败'
 						break;
 					}
 					default: {
@@ -691,6 +691,7 @@
 				justify-content: center;
 				height: 66rpx;
 				line-height: 1.15;
+				text-align: center;
 	
 			}
 		}
@@ -736,6 +737,7 @@
 					font-size: 26rpx;
 					color: #999;
 					margin-bottom: 30rpx;	
+					align-items: center;
 					.code {
 						font-size: 32rpx;
 						font-weight: 500;
