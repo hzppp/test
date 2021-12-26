@@ -1101,6 +1101,10 @@
 							this.groupDownDate = this.downDate("",expireTime)
 						}, 1000)
 					}
+				}else{
+					//团过期，暂无拼团名额
+					this.$refs['groupPupup'].open()
+					
 				}
 			},
 			// 如果是分享链接,获取分享人的信息
