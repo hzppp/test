@@ -143,6 +143,9 @@ name: "lotteryRecord",
     uni.showLoading({
       title: '正在加载...'
     })
+    if(this.dataList.length>0){
+      this.dataList=[]
+    }
     this.getRecordList()
   }
  
