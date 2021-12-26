@@ -35,6 +35,7 @@
 import api from '@/public/api/index'
 import login from '@/units/login'
 import userBand from '@/components/userBand/userBand'
+
 export default {
 name: "lotteryRecord",
  components:{userBand},
@@ -105,6 +106,11 @@ name: "lotteryRecord",
     }
 			
 	},
+	onShow(){
+		
+		this.$gdp('YCZ_myOrderPageView')
+		
+	},
   methods:{
     goDetail(id) {
       //
@@ -137,6 +143,9 @@ name: "lotteryRecord",
     uni.showLoading({
       title: '正在加载...'
     })
+    if(this.dataList.length>0){
+      this.dataList=[]
+    }
     this.getRecordList()
   }
  
