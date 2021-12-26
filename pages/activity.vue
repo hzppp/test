@@ -39,7 +39,7 @@
 
 			
 			<!-- 拼团中 -->
-			<template  v-if="groupStatus==0" >
+			<template  v-if="groupStatus==0 && isActStart && !isActEnded" >
 				<view class="zw2"></view>
 				<view class="group-purchase">
 					<template v-if="!isBeInvited">
@@ -1090,7 +1090,7 @@
 						}
 					}
 					let expireTime = data.expireTime
-					if(this.expireTime == 0){
+					if(this.expireTime <=0){
 						this.$refs['groupPupup'].open()
 					}
 					if (this.groupStatus == 0) {
