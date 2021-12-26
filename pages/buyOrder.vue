@@ -255,6 +255,7 @@
 					activityId: this.id
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
+				let groupBuyConfigDetail = data.groupBuyConfigDetail
 				//如果有拼团活动团信息详情
 				if(this.activityType == 1 && groupBuyConfigDetail){
 					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
