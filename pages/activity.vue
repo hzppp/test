@@ -39,7 +39,7 @@
 
 			
 			<!-- 拼团中 -->
-			<template  v-if="groupStatus==0" >
+			<template  v-if="groupStatus==0 && isActStart && !isActEnded" >
 				<view class="zw2"></view>
 				<view class="group-purchase">
 					<template v-if="!isBeInvited">
@@ -1077,6 +1077,10 @@
 							this.groupDownDate = this.downDate("",expireTime)
 						}, 1000)
 					}
+				}else{
+					//团过期，暂无拼团名额
+					this.$refs['groupPupup'].open()
+					
 				}
 			},
 			// 如果是分享链接,获取分享人的信息
@@ -1625,7 +1629,7 @@
 		}
         .add-members{
             .setbg(100rpx,100rpx,'groupIn/add.png');
-            margin:0 30rpx;
+            margin:0 20rpx;
         }
         .group-btn{
             display: flex;

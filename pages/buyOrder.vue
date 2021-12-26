@@ -255,7 +255,24 @@
 					activityId: this.id
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-							
+				//如果有拼团活动团信息详情
+				if(this.activityType == 1 && groupBuyConfigDetail){
+					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						this.ifcanSubmit()
+					}
+					if(this.groupId){
+						let groupData = await api.getGroupBuyInfo({id:this.groupId})
+						let userGroupDetail = groupData.data
+						if(userGroupDetail && userGroupDetail.id){
+							let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+							this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
+							if(this.sourceUserId && this.remainGroups==0){
+								this.ifcanSubmit()
+							}
+						}
+					}
+				}			
 				this.currentObj = data
 				if (data.products) {
 					this.products = data.products[0]
@@ -291,7 +308,7 @@
 						}
 						if(this.groupId){
 							let groupData = await api.getGroupBuyInfo({id:this.groupId})
-							let userGroupDetail = groupData.data.userGroupDetail
+							let userGroupDetail = groupData.data
 							if(userGroupDetail && userGroupDetail.id){
 								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
 								this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
@@ -738,7 +755,19 @@
 			},
 			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
 			async pay() {
-
+			  if(this.activityType == 1){
+				await this.getData();
+				//针对发起人,判断剩余团数
+				if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+					this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+					return;
+				}
+				//针对参团人,判断团剩余人数
+				if(this.sourceUserId && this.remainGroups == 0){
+					this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+					return;
+				}
+			  }	
 			  await	pay.pay(this.id)
 			  setTimeout(()=>{
 				// 延时
