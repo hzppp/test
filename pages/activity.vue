@@ -436,6 +436,7 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = this.shareURL
+			console.log("this.shareURL444444", this.shareURL)
 			// api.shareActivity(this.content.id).then(res => {
 			// 	console.log(res)
 			// 	if (res.data > 0) {
@@ -448,8 +449,25 @@
 				path: path,
 				imageUrl: imageUrl
 			}
+			this.$gdp( 'YCZ_shareFriend',{
+				'YCZ_activityId_var':this.activityId
+				,'YCZ_activityName_var':this.content.name
+				,'YCZ_infoId_var':'-'
+				,'YCZ_infoName_var':'-'}
+			)
 		},
+
 		methods: {
+			setGdp() {
+				
+				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
+				this.$gdp('YCZ_activiDetailPageView',{
+					'YCZ_activityId_var':this.activityId,
+					'YCZ_activityName_var':this.content.name,
+					'YCZ_sourcePage_var':sourcePage})
+				
+				
+			},
 			formShow() {
 				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
 					// 针对有抽奖凭证的 不能点击
@@ -549,6 +567,7 @@
 			shareBtnClick() {
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动分享点击')
+				this.$gdp('YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'-','YCZ_infoName_var':'-'})
 				// #endif			
 				
 			},
@@ -684,6 +703,9 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
+					
+					this.$gdp('YCZ_phoneGrantPermissions')
+					
 					try {
 						let {
 							data
@@ -843,6 +865,8 @@
 					}, 1000)
 					this.phone = uni.getStorageSync('userPhone');
 					this.content = data
+					//设置进入页面的埋点
+					this.setGdp()
 					if (this.liveUrl) {
 						this.content.liveUrl = this.liveUrl
 					}
@@ -1625,7 +1649,7 @@
 		}
         .add-members{
             .setbg(100rpx,100rpx,'groupIn/add.png');
-            margin:0 30rpx;
+            margin:0 20rpx;
         }
         .group-btn{
             display: flex;
