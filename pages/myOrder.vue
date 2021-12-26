@@ -6,7 +6,7 @@
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
           <view class="order-status">
             <view class="code">订单ID：{{ item.outTradeNo }}</view>
-            <view class="playState state7" v-if="item.activityType==1 && item.status==1 && item.groupDetail.groupStatus==2">核销码\n生成中</view>
+            <view class="playState state7" v-if="item.activityType==1 && item.status==1 && item.groupDetail && item.groupDetail.groupStatus==2">核销码\n生成中</view>
             <view v-else :class="['playState' ,item.activityType && item.status ==1 ? 'groupState1' : 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
           </view>
           <view class="order-info">
