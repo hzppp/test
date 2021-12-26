@@ -264,7 +264,7 @@
 					}
 					if(this.groupId){
 						let groupData = await api.getGroupBuyInfo({id:this.groupId})
-						let userGroupDetail = groupData.data.userGroupDetail
+						let userGroupDetail = groupData.data
 						if(userGroupDetail && userGroupDetail.id){
 							let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
 							this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
