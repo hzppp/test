@@ -137,12 +137,12 @@ name: "lotteryRecord",
     }
   },
   async onLoad() {
+    
+  },
+  async onShow() {
     uni.showLoading({
       title: '正在加载...'
     })
-    this.getRecordList()
-  },
-  async onShow() {
     this.getRecordList()
   }
  
