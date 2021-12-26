@@ -266,7 +266,7 @@
 						let userGroupDetail = groupData.data
 						if(userGroupDetail && userGroupDetail.id){
 							let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
-							this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
+							this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
 							if(this.sourceUserId && this.remainGroups==0){
 								this.ifcanSubmit()
 							}
@@ -311,7 +311,7 @@
 							let userGroupDetail = groupData.data
 							if(userGroupDetail && userGroupDetail.id){
 								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
-								this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
+								this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
 								if(this.sourceUserId && this.remainGroups==0){
 									this.ifcanSubmit()
 								}
