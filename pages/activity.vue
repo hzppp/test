@@ -1076,6 +1076,9 @@
 						this.timer = setInterval(() => {
 							expireTime = expireTime - 1000
 							this.groupDownDate = this.downDate("",expireTime)
+							if(this.groupDownDate[0] <=0 && this.groupDownDate[1] <=0 && this.groupDownDate[2]<=0 && this.groupDownDate[3]<=0){
+								this.$refs['groupPupup'].open()
+							}
 						}, 1000)
 					}
 				}else{
