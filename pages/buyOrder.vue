@@ -286,8 +286,7 @@
 					let groupBuyConfigDetail = data.groupBuyConfigDetail
 					//如果有拼团活动团信息详情
 					if(this.activityType == 1 && groupBuyConfigDetail){
-						// this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
-						this.surplusCount = 0
+						this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
 						if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
 							this.ifcanSubmit()
 						}
