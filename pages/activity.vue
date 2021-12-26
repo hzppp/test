@@ -1649,7 +1649,7 @@
 		}
         .add-members{
             .setbg(100rpx,100rpx,'groupIn/add.png');
-            margin:0 30rpx;
+            margin:0 20rpx;
         }
         .group-btn{
             display: flex;
