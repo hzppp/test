@@ -6,8 +6,7 @@
 				<view class="name">{{products.name}}</view>
 				<view class="price1">¥ </view>
 				<view class="price">{{ products.price}}</view>
-				<view class="stock" v-if="activityType!=1">{{'剩余库存: ' + products.stock}}</view>
-
+				<view class="stock" v-if="activityType!=1 && products.stock">{{'剩余库存: ' + products.stock}}</view>
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
 			<image v-if="products&&products.picUrl.length>4" mode="widthFix" :src="products.picUrl" />
@@ -157,7 +156,7 @@
 				groupId:0, //团id
 				surplusCount:"", //剩余团数
 				remainGroups:"",//团剩余名额
-				activityType:0,
+				activityType:-1,
 			}
 		},
 		watch: {
@@ -251,12 +250,30 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.id)
-							
+				this.activityType = data.activityType		
 				let clueInfo = await api.getClueInfo({
 					activityId: this.id
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-							
+				let groupBuyConfigDetail = data.groupBuyConfigDetail
+					//如果有拼团活动团信息详情
+				if(this.activityType == 1 && groupBuyConfigDetail){
+					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						this.ifcanSubmit()
+					}
+					if(this.groupId){
+						let groupData = await api.getGroupBuyInfo({id:this.groupId})
+						let userGroupDetail = groupData.data.userGroupDetail
+						if(userGroupDetail && userGroupDetail.id){
+							let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+							this.remainGroups =  this.groupSize - groupAllUserInfoList.length //团剩余名额
+							if(this.sourceUserId && this.remainGroups==0){
+								this.ifcanSubmit()
+							}
+						}
+					}
+				}				
 				this.currentObj = data
 				if (data.products) {
 					this.products = data.products[0]
