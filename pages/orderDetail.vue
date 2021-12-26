@@ -4,8 +4,8 @@
 			<view class="headerT">
 				<view class="lId">订单ID：{{detailInfo.outTradeNo}}</view>
 				<view class="lIdorderState" v-if="state==0">{{orderText}}</view>
-				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1  && detailInfo.groupDetail.groupStatus==0">{{groupStatusTxt}}</view>	
-				<view class="lIdcode1 createCode" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail.groupStatus==2">核销码\n生成中</view>
+				<view class="lIdorderState" v-if="state==1 && detailInfo.activityType==1  && detailInfo.groupDetail && detailInfo.groupDetail.groupStatus==0">{{groupStatusTxt}}</view>	
+				<view class="lIdcode1 createCode" v-if="state==1 && detailInfo.activityType==1 && detailInfo.groupDetail && detailInfo.groupDetail.groupStatus==2">核销码\n生成中</view>
 				<view v-else :class="detailInfo.activityType==1 && state==1  ? 'lIdcode1 groupIn1' : 'lIdcode' + state">{{ state | formatState(detailInfo.activityType) }}</view>
 			</view>
 			<view class="headerInfo">
@@ -14,7 +14,7 @@
 						<view class="prizeName">{{detailInfo.productName}}</view>
 						<view class="services-btn">{{"¥ " + detailInfo.totalFee}}</view>
 					</view>
-					<view class="prizeCode" v-if="(detailInfo.activityType==1 &&  detailInfo.groupDetail.groupStatus ==2) || detailInfo.activityType ==0">
+					<view class="prizeCode" v-if="(detailInfo.activityType==1  && detailInfo.groupDetail && detailInfo.groupDetail.groupStatus ==2) || detailInfo.activityType ==0">
 						<view
 							v-if="detailInfo.verifyCode && detailInfo.verifyCode.length && state !=5 && state !=6 && state !=1">
 							核销码：
