@@ -771,12 +771,12 @@
 						if(this.groupRemains <=0){
 							this.groupBtnObj.canOperate =false;
 							this.groupBtnObj.text = "已被抢完啦"
-						}else if(!this.isApply){
-							this.groupBtnObj.canOperate =true;
-							this.groupBtnObj.text = "拼团购买"
 						}else if((!data.products[0] || data.products[0].stock == 0)){
 							this.groupBtnObj.canOperate =false;
 							this.groupBtnObj.text = "已被抢完啦"
+						}else{
+							this.groupBtnObj.canOperate =true;
+							this.groupBtnObj.text = "拼团购买"
 						}
 						
 						//留咨但是未支付
@@ -818,6 +818,7 @@
 							}
 							console.log("shareURL222222",this.shareURL)
 						}else if(this.sourceUserId && this.groupId){
+							console.log("isBeInvited",this.isBeInvited)
 							this.isBeInvited = true
 							this.queryingUserInfor(this.sourceUserId)
 							//根据团id获取团信息
@@ -1058,7 +1059,7 @@
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 					this.payRemains = this.groupSize - payList.length
-					if(this.remainGroups <= 0){
+					if(this.remainGroups <= 0 || this.groupStatus!=0){
 						this.$refs['groupPupup'].open()
 					}else{
 						if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
@@ -1066,7 +1067,7 @@
 						}
 					}
 					let expireTime = data.expireTime
-					if(this.expireTime == 0){
+					if(this.expireTime <= 0){
 						this.$refs['groupPupup'].open()
 					}
 					if (this.groupStatus == 0) {
