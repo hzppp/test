@@ -132,7 +132,7 @@
 							<template v-if="isGroupPurchase">
 								<view :class="['enroll-btn purchase-btn',{gray:!groupBtnObj.canOperate}]" @tap="purchase">
 									{{groupBtnObj.text}}
-									<view class="success-icon" v-if="groupStatus==2"></view>
+									<view class="success-icon2" v-if="groupStatus==2"></view>
 									<view class="remain" v-else-if="isPay && groupBtnObj.canOperate">剩余<text class="nums">{{groupRemains}}</text>个名额</view>
 								</view>
 							</template>
@@ -1516,7 +1516,7 @@
 					background: #999999;
 					color: #ffffff;
 				}
-				.success-icon{
+				.success-icon2{
 					position: absolute;
 					.setbg(104rpx,32rpx,'groupIn/success-icon.png');
 					top: -8rpx;
