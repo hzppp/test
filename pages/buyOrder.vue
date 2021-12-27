@@ -256,6 +256,7 @@
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
 				this.activityType = data.activityType
+				let groupBuyConfigDetail = data.groupBuyConfigDetail
 				//如果有拼团活动团信息详情
 				if(this.activityType == 1 && groupBuyConfigDetail){
 					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
@@ -285,6 +286,43 @@
 		},
 
 		methods: {
+			async getGroupData() {
+				try {
+					let {
+						data = {}
+					} = await api.getActivityContent(this.id)
+
+					let clueInfo = await api.getClueInfo({
+						activityId: this.id
+					})
+					
+					if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
+					this.activityType = data.activityType
+					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					//如果有拼团活动团信息详情
+					if(this.activityType == 1 && groupBuyConfigDetail){
+						this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+						if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+							this.ifcanSubmit()
+						}
+						if(this.groupId){
+							let groupData = await api.getGroupBuyInfo({id:this.groupId})
+							let userGroupDetail = groupData.data
+							if(userGroupDetail && userGroupDetail.id){
+								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+								this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
+								if(this.sourceUserId && this.remainGroups==0){
+									this.ifcanSubmit()
+								}
+							}
+						}
+					}
+				} catch (err) {
+					console.error(err)
+				} finally {
+					
+				}
+			},
 			async getData() {
 				try {
 					uni.showLoading({
@@ -737,10 +775,9 @@
 					.sourceUserId != 0) {
 					pam.sourceUserId = this.sourceUserId
 				}
-				console.log('留资参数', pam)
+				console.log('留资参数', pam,this.crtDistrictItem.name)
 				this.buyOrderIng = true
 				let data = await api.submitClue(pam)
-
 				if (data.code == 1) {
 					// 留资成功 吊起支付
 					this.$gdp('YCZ_activitySignUp',{
@@ -765,9 +802,9 @@
 				console.log(data)
 			},
 			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
-			async pay() {
+			async pay() {	
 			  if(this.activityType == 1){
-				await this.getData();
+				await this.getGroupData();
 				//针对发起人,判断剩余团数
 				if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
 					this.$toast('已经被抢完啦，可以晚点再来看看哦～')
