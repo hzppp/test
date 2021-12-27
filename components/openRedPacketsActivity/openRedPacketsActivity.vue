@@ -1,7 +1,7 @@
 <template>
     <view class="red-package-page">
        <view class="package-top" :style="'top:' + navHeight + 'px'">
-            <!-- 中奖纪录 -->
+            <!-- 中奖记录 -->
 			<win-records :winnerRecords="winnerRecords" :autoplay="autoplay" v-if="winnerRecords && winnerRecords.length>=3"/>
             <!-- 我的红包 -->
             <view class="mypackage-btn" @tap="goMyPackage">我的红包</view>
@@ -57,7 +57,7 @@ export default {
         }
     },
     components: {
-        winRecords,//中奖纪录
+        winRecords,//中奖记录
         inviteRecords,//邀请记录
         drawTips,//抽奖说明
         packetPopup //中奖弹窗
