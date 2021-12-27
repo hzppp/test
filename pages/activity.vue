@@ -1060,7 +1060,8 @@
 					this.groupAllUserInfoList = data.groupAllUserInfoList;
 					let sourceUserInfo = this.groupAllUserInfoList.filter(item=>item.userId == this.sourceUserId)
 					this.sourceUserInfo = sourceUserInfo[0]
-
+					let wxUserInfo = uni.getStorageSync('wxUserInfo')
+					
 					//剩余成团人数
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
