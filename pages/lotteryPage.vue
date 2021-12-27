@@ -329,7 +329,7 @@
 				//跳到留资页
 				console.log('this.lotteryActInfo.isApply', this.lotteryActInfo.isApply)
 				const wxUserInfo = uni.getStorageSync('wxUserInfo')
-				const url = `/pages/lbActivity?id=${this.activityId}`
+				const url = `/pages/fissionActivity?id=${this.activityId}`
 				uni.showToast({
 					title: '您暂未留资',
 					icon: "none"

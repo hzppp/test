@@ -194,7 +194,7 @@
 				switch (item.redirectType) {
 					case 0: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.reLaunch({
 								url
 							})
@@ -228,7 +228,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-							if (item.miniUrl.indexOf('lbActivity') == -1 && item.miniUrl.indexOf('activity') == -1) {
+							if (item.miniUrl.indexOf('fissionActivity') == -1 && item.miniUrl.indexOf('activity') == -1) {
 								// 跳转到本喜爱但不是活动页
 								api.fetchActivityVisit({
 									'activityId': item.id
@@ -266,7 +266,7 @@
 					}
 					default: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.reLaunch({
 								url
 							})

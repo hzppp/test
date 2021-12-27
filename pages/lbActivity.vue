@@ -46,16 +46,16 @@
 							<view class="chance-count" v-if="isApply">还有{{scope.chanceCount||0}}次机会</view>
 						</template>
 						<!--  #ifdef MP-WEIXIN  -->
-						<button v-if="content.sharePosterPic"
+						<!-- <button v-if="content.sharePosterPic"
 							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-							@tap='shareChoise()'>分享好友</button>
+							@tap='shareChoise()'>分享好友</button> -->
 
-						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- <button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
 						<!-- #endif -->
 						<!--  #ifndef MP-WEIXIN  -->
-						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+						<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
 						<!-- #endif -->
 						<!-- <view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view> -->
 					</view>
@@ -268,9 +268,9 @@
 				if(wxUserInfo){
 					if(this.lotteryType == 'Vouchers'){
 						this.formShowTitle = '领取代金券'
-						this.shareURL = `/pages/lbActivity?${this.cs}`
+						this.shareURL = `/pages/fissionActivity?${this.cs}`
 					}else{
-						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+						this.shareURL = `/pages/fissionActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
 					}
 				}
 				console.log('shareurl', this.shareURL)
@@ -350,7 +350,7 @@
 		},
 		onShareAppMessage() {
 			let title = this.content.name
-			// let path = `pages/authorization?to=lbActivity&id=${this.content.id}`
+			// let path = `pages/authorization?to=fissionActivity&id=${this.content.id}`
 			// if (app.globalData.salesId) {
 			// 	path += `&salesId=${app.globalData.salesId}`
 			// }
@@ -643,9 +643,9 @@
 				if(wxUserInfo){
 					if(this.lotteryType == 'Vouchers'){
 						this.formShowTitle = '领取代金券'
-						this.shareURL = `/pages/lbActivity?${this.cs}`
+						this.shareURL = `/pages/fissionActivity?${this.cs}`
 					}else{
-						this.shareURL = `/pages/lbActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
+						this.shareURL = `/pages/fissionActivity?${this.cs}&sourceUserId=${wxUserInfo.id}`	
 					}
 				}
 				
@@ -1119,6 +1119,7 @@
 		position: absolute;
 		left:50%;
 		transform: translate(-50%,-145%);
+		height:180rpx;
 	}
 	/deep/.red-package-page .enroll-btn{
 		font-size: 36rpx;
