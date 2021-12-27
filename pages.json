@@ -237,7 +237,7 @@
 			}
          },
 		 {
-		 	"path": "pages/lbActivity",
+		 	"path": "pages/fissionActivity",
 		 	"style": {
 		 		"navigationBarTitleText": "活动详情",
 		 		"enablePullDownRefresh": false,

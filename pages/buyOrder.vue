@@ -255,7 +255,7 @@
 					activityId: this.id
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-				let groupBuyConfigDetail = data.groupBuyConfigDetail
+				this.activityType = data.activityType
 				//如果有拼团活动团信息详情
 				if(this.activityType == 1 && groupBuyConfigDetail){
 					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
@@ -462,12 +462,15 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
-				if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
-					return false
+				if(this.activityType == 1){
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						return false
+					}
+					if(this.sourceUserId && this.groupId && this.remainGroups == 0){
+						return false;
+					}
 				}
-				if(this.sourceUserId && this.groupId && this.remainGroups == 0){
-					return false;
-				}
+				
 				if (!this.products || this.products.stock <= 0) {
 					//当前没有库存了
 					return false

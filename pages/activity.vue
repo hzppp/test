@@ -247,7 +247,6 @@
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
-	import groupPurchasing from '@/components/groupPurchasing/groupPurchasing'
 	let app = getApp()
 	const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -255,8 +254,7 @@
 			'form-pop': formpop,
 			'page-top': pageTop,
 			'share-pop': shareSuccess,
-			'userBand': userBand,
-			'group-Purchase':groupPurchasing
+			'userBand': userBand
 		},
 		data() {
 			return {
@@ -367,9 +365,9 @@
 					}
 				})
 			}
-			if (options.tolbActivity) {
+			if (options.tofissionActivity) {
 				uni.reLaunch({
-					url: '/pages/lbActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
+					url: '/pages/fissionActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
 				})
 				return
 			}
@@ -882,7 +880,7 @@
 					}
 					if (data.h5Link && data.h5Link == 'changan://lbcjactivity') {
 						uni.reLaunch({
-							url: '/pages/lbActivity?id=' + this.activityId
+							url: '/pages/fissionActivity?id=' + this.activityId
 						})
 					}
 					// 下订活动专用
