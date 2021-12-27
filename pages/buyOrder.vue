@@ -17,7 +17,7 @@
 					<view class="list-title">车型</view>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'" class="select">
-						<view style="width: 470rpx">{{showSerialText}}</view>
+						<view style="width: 470rpx;height: 50rpx;">{{showSerialText}}</view>
 					</picker>
 					<view v-else class="select place" @tap="showToast('暂无车型')">
 						<view>暂无车型</view>
@@ -426,6 +426,7 @@
 				this.crtDealerItem = this.dealerList[detail.value]
 			},
 			bindMultiPickerColumnChangeser(e) {
+				 console.log('bindMultiPickerColumnChangeser')
 				let {
 					detail
 				} = e
