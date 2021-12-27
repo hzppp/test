@@ -1,8 +1,9 @@
 <template>
 	<view>
-		<userBand @loginSuccess='getData'></userBand>
+		<userBand @loginSuccess='loginSuccess'></userBand>
 		<view class="activity">
-			<!--    <button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"></button>-->
+			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
+				style="top: 128rpx;"></button>
 			<share-pop ref="shareSuccess"></share-pop>
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'"></page-top>
 			<form-pop ref="formpop" @subSuccess='subSuccess()'></form-pop>
@@ -392,25 +393,26 @@
 				clearInterval(app.Interval)
 				console.log('----------------', this.Interval)
 			}
-			console.log("options", options)
+			
 			if (options.type) {
 				this.activityType = options.type || ''
 			}
 			this.voucherShow = options.voucherShow
+			this.activityId = options.id
+			
+			this.sourceUserId = options.sourceUserId;
+			this.groupId = options.groupId
+
 			await login.checkLogin(api)
 			await login.checkOauthMobile(api)
-			// await login.login()
-			this.activityId = options.id
-			// 数据相关
-			this.getData()
+
 			//分享进入拼团活动
 			let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			this.sourceUserId = options.sourceUserId;
-			if (options.sourceUserId && options.sourceUserId != wxUserInfo.id) {
-				this.sourceUserId = options.sourceUserId;
-				this.groupId = options.groupId
-			}
 			
+			// 数据相关
+			if(this.activityId && wxUserInfo && wxUserInfo.id){
+				this.getData()
+			}
 			// 分享用
 			let cs = ''
 			for (let i in options) {
@@ -418,14 +420,14 @@
 					cs += `${i}=${options[i]}&`
 				}
 			}
-			cs = cs.substr(0, cs.length - 1)
-			this.shareURL = `/pages/activity?${cs}&sourceUserId=${wxUserInfo.id}`
-			console.log("this.shareURL1111111111", this.shareURL)
+			this.cs = cs.substr(0, cs.length - 1)
+			this.shareURL = `/pages/activity?${this.cs}`
 		},
 	    onShow() {
-		   if(this.activityId){
+			let wxUserInfo = uni.getStorageSync('wxUserInfo')
+		    if(this.activityId && wxUserInfo && wxUserInfo.id){
 			    this.getData()
-		   }
+		    }
 
 	    },
 		onHide() {
@@ -436,13 +438,8 @@
 		onShareAppMessage() {
 			let title = this.content.name
 			let path = this.shareURL
-			// api.shareActivity(this.content.id).then(res => {
-			// 	console.log(res)
-			// 	if (res.data > 0) {
-			// 		this.content.shareStatus = 1
-			// 	}
-			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
+			console.log("this.shareURL",this.shareURL)
 			return {
 				title: title,
 				path: path,
@@ -450,6 +447,12 @@
 			}
 		},
 		methods: {
+			loginSuccess(){
+				let wxUserInfo = uni.getStorageSync('wxUserInfo')
+				if(this.activityId && wxUserInfo && wxUserInfo.id){
+					this.getData()
+				}
+			},
 			formShow() {
 				if (this.isApply && this.activityType != 'wawaji' && this.voucherShow) {
 					// 针对有抽奖凭证的 不能点击
@@ -742,6 +745,7 @@
 			},
 
 			async getData() {
+				if(!this.activityId) return;
 				try {
 					uni.showLoading({
 						title: '正在加载...'
@@ -762,7 +766,7 @@
 						this.haveBuy = true
 					}
 					// 拼团活动
-					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					let groupBuyConfigDetail = data ? data.groupBuyConfigDetail :""
 					//如果有拼团活动团信息详情
 					if(data.activityType == 1 && groupBuyConfigDetail){
 						this.isGroupPurchase = true
@@ -789,9 +793,9 @@
 						}
 						
 						this.groupSize = groupBuyConfigDetail.groupSize
-					
+						
 						let userGroupDetail = clueInfo.data.userGroupDetail
-
+						let wxUserInfo = uni.getStorageSync('wxUserInfo')
 						//有团信息和订单信息，则已经参团
 						if(userGroupDetail && userGroupDetail.id && this.orderDetail && this.orderDetail.orderId){
 							this.groupStatus =  userGroupDetail.groupStatus
@@ -813,15 +817,13 @@
 							this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 							let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 							this.payRemains = this.groupSize - payList.length
-							if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
-								this.shareURL += `&groupId=${userGroupDetail.id}`
+							if(this.isPay){
+								this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${this.sourceUserId}&groupId=${userGroupDetail.id}`
 							}
 						}else if(this.orderDetail && this.orderDetail.orderId  && this.orderDetail.orderStatus == 0 && !userGroupDetail){ //有订单但是没有团信息（团长未支付）
 							this.isBeInvited = false
-						}else if(this.sourceUserId && this.groupId ){
-							console.log("isBeInvited",this.isBeInvited)
+						}else if(this.sourceUserId && this.groupId && wxUserInfo && wxUserInfo.id != this.sourceUserId ){
 							this.isBeInvited = true
-							// this.queryingUserInfor(this.sourceUserId)
 							//根据团id获取团信息
 							this.getGroupInfo(this.groupId)
 
@@ -1056,7 +1058,9 @@
 				if(code == 1 && data){
 					this.groupStatus =  data.groupStatus
 					this.groupAllUserInfoList = data.groupAllUserInfoList;
-					this.sourceUserInfo = this.groupAllUserInfoList.filter(item=>item.userId == this.sourceUserId)
+					let sourceUserInfo = this.groupAllUserInfoList.filter(item=>item.userId == this.sourceUserId)
+					this.sourceUserInfo = sourceUserInfo[0]
+
 					//剩余成团人数
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
@@ -1064,8 +1068,8 @@
 					if(this.remainGroups <= 0 || this.groupStatus!=0){
 						this.$refs['groupPupup'].open()
 					}else{
-						if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
-							this.shareURL += `&groupId=${data.id}`
+						if(this.isPay){
+							this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${this.sourceUserId}&groupId=${data.id}`
 						}
 					}
 					let expireTime = data.expireTime
@@ -1089,41 +1093,6 @@
 					
 				}
 			},
-			// 如果是分享链接,获取分享人的信息
-			async queryingUserInfor(id) {
-				let type
-
-				// #ifdef MP-WEIXIN
-				type = 1
-				// #endif
-
-				// #ifdef MP-TOUTIAO
-				type = 2
-				// #endif
-
-				// #ifdef MP-ALIPAY
-				type = 3
-				// #endif
-				try {
-					const { code, data } = await api.queryingUserInfor({
-						id: id,
-						type,
-					})
-					if (code == 1 && data) {
-						// if (data.nickName.length > 6) {
-						// 	this.sourceUserInfo.nickName = data.nickName.substring(0, 6) + "..."
-						// } else {
-						// 	this.sourceUserInfo.nickName = data.nickName
-						// }
-						this.sourceUserInfo.nickName = data.nickName
-						this.sourceUserInfo.avatarUrl = data.avatarUrl
-					}
-				} catch (error) {
-					console.error(error)
-				} finally {
-				}
-			},
-			
 		}
 	}
 </script>
