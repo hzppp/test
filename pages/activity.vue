@@ -402,7 +402,7 @@
 			
 			this.sourceUserId = options.sourceUserId;
 			this.groupId = options.groupId
-
+			console.log("options111111111",options)
 			await login.checkLogin(api)
 			await login.checkOauthMobile(api)
 
@@ -838,7 +838,7 @@
 							let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
 							this.payRemains = this.groupSize - payList.length
 							if(this.isPay){
-								this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${this.sourceUserId}&groupId=${userGroupDetail.id}`
+								this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${wxUserInfo.id}&groupId=${userGroupDetail.id}`
 							}
 						}else if(this.orderDetail && this.orderDetail.orderId  && this.orderDetail.orderStatus == 0 && !userGroupDetail){ //有订单但是没有团信息（团长未支付）
 							this.isBeInvited = false
@@ -1091,7 +1091,7 @@
 						this.$refs['groupPupup'].open()
 					}else{
 						if(this.isPay){
-							this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${this.sourceUserId}&groupId=${data.id}`
+							this.shareURL = `/pages/activity?${this.cs}&sourceUserId=${wxUserInfo.id}&groupId=${data.id}`
 						}
 					}
 					let expireTime = data.expireTime
