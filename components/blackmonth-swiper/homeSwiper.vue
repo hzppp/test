@@ -49,18 +49,7 @@
 				
 			},
 			itemStyle(array){
-				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
-				array.forEach((item,index)=>{
-					if(item.opacity==null){
-						// console.log("变化了",this.swiperList2)
-						this.$gdp('YCZ_homeShow', 
-							{ "YCZ_area_var": 'banner', 
-							"YCZ_position_var": index+1 ,
-							"YCZ_flowName_var":'-',
-							"YCZ_sourcePage_var":sourcePage
-						})
-					}
-				})
+				
 				
 			}
 		},
