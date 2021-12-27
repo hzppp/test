@@ -272,11 +272,10 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('我的金币点击')
 				// #endif
-				
-				uni.navigateTo({
-					url: `/pages/mallUpdate` 
-				})
-				return;
+				// uni.navigateTo({
+				// 	url: `/pages/mallUpdate` 
+				// })
+				// return;
 				let token  =  uni.getStorageSync('session-3rd')
 				if(token){
 					let url = encodeURIComponent(domain.getAPI('mystore') + '?token=' + token)
