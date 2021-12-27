@@ -816,11 +816,12 @@
 							if(this.isPay && this.shareURL.indexOf('&groupId=') < 0){
 								this.shareURL += `&groupId=${userGroupDetail.id}`
 							}
-							console.log("shareURL222222",this.shareURL)
-						}else if(this.sourceUserId && this.groupId){
+						}else if(this.orderDetail && this.orderDetail.orderId  && this.orderDetail.orderStatus == 0 && !userGroupDetail){ //有订单但是没有团信息（团长未支付）
+							this.isBeInvited = false
+						}else if(this.sourceUserId && this.groupId ){
 							console.log("isBeInvited",this.isBeInvited)
 							this.isBeInvited = true
-							this.queryingUserInfor(this.sourceUserId)
+							// this.queryingUserInfor(this.sourceUserId)
 							//根据团id获取团信息
 							this.getGroupInfo(this.groupId)
 
@@ -1055,6 +1056,7 @@
 				if(code == 1 && data){
 					this.groupStatus =  data.groupStatus
 					this.groupAllUserInfoList = data.groupAllUserInfoList;
+					this.sourceUserInfo = this.groupAllUserInfoList.filter(item=>item.userId == this.sourceUserId)
 					//剩余成团人数
 					this.remainGroups =  this.groupSize - this.groupAllUserInfoList.length
 					let payList = this.groupAllUserInfoList.length >0 ? this.groupAllUserInfoList.filter(item=>item.orderStatus==1) :[]
