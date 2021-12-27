@@ -520,10 +520,9 @@
 				return new Promise((relove, resject) => {
 					try{
 						 let url = "https://mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp"
-						 //埋点测试临时修改
-						// if(domain.getCurrentEnv() ==1 ){
-						// 	url = "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp"
-						// }
+						if(domain.getCurrentEnv() ==1 ){
+							url = "https://t-mrobot.pcauto.com.cn/xsp/s/auto/info/price/configSummary.xsp"
+						}
 						uni.request({
 
 							url: url,
