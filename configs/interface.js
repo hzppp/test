@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST; 
-const version = 1056;
+const CUR_ENV = ENV.RELEASE; 
+const version = 1062;
 
 
 

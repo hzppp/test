@@ -291,8 +291,18 @@
 					height: 114,
 					verticalInterval: 7
 				},
-				activityStageInfoList: [{
-					offsetTop: 866,
+				activityStageInfoList: [
+					{
+					offsetTop: 750,
+					offsetLeft: 240,
+					width: 272,
+					height: 114,
+					roleList: [
+						['0-0', '1-3', '2-0', '2-1']
+					],
+				},
+					{
+					offsetTop: 1050,
 					offsetLeft: 165,
 					width: 423,
 					height: 114,
@@ -300,7 +310,7 @@
 						['0-0', '0-3', '1-3', '1-7', '2-0', '2-1']
 					],
 				}, {
-					offsetTop: 1164,
+					offsetTop: 1348,
 					offsetLeft: 59,
 					width: 634,
 					height: 114,
@@ -308,7 +318,7 @@
 						['0-0', '0-3', '0-4', '0-6', '1-2', '1-3', '1-7', '2-0', '2-1']
 					],
 				}, {
-					offsetTop: 1458,
+					offsetTop: 1644,
 					offsetLeft: 59,
 					width: 634,
 					height: 235,
@@ -317,7 +327,7 @@
 						['1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-7'],
 					],
 				},{
-					offsetTop: 1872,
+					offsetTop: 2058,
 					offsetLeft: 59,
 					width: 634,
 					height: 356,
