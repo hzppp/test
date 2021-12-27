@@ -36,9 +36,9 @@
 				<view :class="lotteryType != 'grid'?'luckyWheel':'LuckyGrid'"
 					:style="{backgroundImage: `url(${lotteryActInfo.activityPic})`}">
 					<image :src="lotteryActInfo.activityPic" @load="e => imgBindload()"  class="lottery-bg"></image>
-					<!-- 中奖纪录 -->
+					<!-- 中奖记录 -->
 					<win-records :winnerRecords="lotteryActInfo.winnerRecords" :autoplay="autoplay"/>
-					<view class="lotteryRecord" @tap="golotteryRecord">中奖纪录</view>
+					<view class="lotteryRecord" @tap="golotteryRecord">中奖记录</view>
 
 					<!-- 转盘抽奖 -->
 					<lottery v-if="lotteryType != 'grid'" :prizes="prizes" :runDeg="runDeg" @start="startCallBack"/>
@@ -82,7 +82,7 @@
 						<view class="przie-name">{{lotteryRes.name}}</view>
 					</view>
 					<view class="tFoot">
-						<button :class="['left',activityType!='checkIn'?'':'btn1 btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'查看详情':'查看中奖纪录'}}</button>
+						<button :class="['left',activityType!='checkIn'?'':'btn1 btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'查看详情':'查看中奖记录'}}</button>
 						<button class="right" @tap="closeDialog" v-if="activityType!='checkIn'">继续抽奖</button>
 					</view>
 				</block>
@@ -110,7 +110,7 @@
 						<view class="przie-name">{{lotteryRes.name}}</view>
 					</view>
 					<view class="tFoot">
-						<button :class="['left',activityType!='checkIn'?'':'btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'':'查看中奖纪录'}}</button>
+						<button :class="['left',activityType!='checkIn'?'':'btn-yellow']" @tap="goLotteryDetail(lotteryRes.lotteryId)">{{activityType!='checkIn'?'':'查看中奖记录'}}</button>
 						<button class="right" @tap="closeDialog"  v-if="activityType!='checkIn'"></button>
 					</view>
 				</block>
