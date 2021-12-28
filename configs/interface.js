@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE; 
-const version = 1063;
+const version = 1064;
 
 
 
@@ -51,7 +51,7 @@ var CONFIG_R = {
 	accountID:'b17c69986984a3be',
 	datasourceID:'8c8866d4dd9f349c',
 	appId:'wxe6ffa5dceb3b003b',
-	host:'//cbd-api.changan.com.cn:9092',
+	host:'cbd-api.changan.com.cn:9092',
 	version:version
 }
 

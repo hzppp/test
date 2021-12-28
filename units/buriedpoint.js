@@ -5,7 +5,7 @@ gdp('init', domain.CONFIG.accountID, domain.CONFIG.datasourceID, domain.CONFIG.a
     version: domain.CONFIG.version,
     host: domain.CONFIG.host,
     vue: Vue,
-    debug: true
+    debug: false
 });
 // #ifdef MP-WEIXIN
 gdp('track', 'YCZ_openApplet');
