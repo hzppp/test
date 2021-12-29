@@ -25,7 +25,7 @@
 		async onLoad(options) {
 			// this.$refs.loading.changeLoading(true);
 			app.globalData.haveUserInfoAuth = uni.getStorageSync('haveUserInfoAuth')
-			console.log('页面参数', options, api)
+			// console.log('页面参数', options, api)
 			// to=dynamicDetails-dynamicId=205扫码进来带参方式
 			// options.scene = 'salesId=386-to=carShow-id=89-wxacode'
 			var scene = decodeURIComponent(options.scene)
@@ -54,7 +54,7 @@
 			} else {
 				this.goPage(options)
 			}
-			console.log('code', code)
+			// console.log('code', code)
 
 
 		},

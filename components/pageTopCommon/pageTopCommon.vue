@@ -27,14 +27,12 @@ export default {
     };
   },
   async created(){
-    console.log('tttttt')
     let {
       bottom,height,left,right,top,width
     } = uni.getMenuButtonBoundingClientRect()
     this.height = height + top + Math.floor(top/3)
     this.jnHeight = height
     this.jnTop = top
-    console.log('son==',this.height)
     this.$emit('getTopNavHeigth',this.height)
   },
   methods:{

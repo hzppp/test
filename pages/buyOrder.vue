@@ -1,13 +1,12 @@
 <template>
-	<view>
+	<view class="buyOrder-container">
 		<userBand @loginSuccess='getStoragePhone'></userBand>
 		<view class="buyOrder">
 			<view class="orderHeader" v-if="products && products.name">
 				<view class="name">{{products.name}}</view>
 				<view class="price1">¥ </view>
 				<view class="price">{{ products.price}}</view>
-				<view class="stock">{{'剩余库存: ' + products.stock}}</view>
-
+				<view class="stock" v-if="activityType!=1 && products.stock">{{'剩余库存: ' + products.stock}}</view>
 			</view>
 			<view style="background:#F6F7F8 ; height: 16rpx;width: 100%;"></view>
 			<image v-if="products&&products.picUrl.length>4" mode="widthFix" :src="products.picUrl" />
@@ -18,7 +17,7 @@
 					<view class="list-title">车型</view>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'" class="select">
-						<view style="width: 470rpx">{{showSerialText}}</view>
+						<view style="width: 470rpx;height: 50rpx;">{{showSerialText}}</view>
 					</picker>
 					<view v-else class="select place" @tap="showToast('暂无车型')">
 						<view>暂无车型</view>
@@ -153,7 +152,11 @@
 				sourceUserId: '',
 				products: {}, // 关联商品
 				orderDetail: {} ,//当前活动订单状态
-				buyOrderIng:false
+				buyOrderIng:false,
+				groupId:0, //团id
+				surplusCount:"", //剩余团数
+				remainGroups:"",//团剩余名额
+				activityType:-1,
 			}
 		},
 		watch: {
@@ -174,7 +177,6 @@
 			},
 			smsCode(code) {
 				this.canSubmit = this.ifcanSubmit()
-				
 			}
 		},
 
@@ -237,6 +239,7 @@
 			}
 			this.id = options.activityId
 			this.sourceUserId = options.sourceUserId
+			this.groupId = options.groupId
 			await distance.getLocation()
 			await login.checkLogin(api)
 			this.getData()
@@ -247,12 +250,31 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.id)
-							
+				this.activityType = data.activityType		
 				let clueInfo = await api.getClueInfo({
 					activityId: this.id
 				})
 				if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-							
+				this.activityType = data.activityType
+				let groupBuyConfigDetail = data.groupBuyConfigDetail
+				//如果有拼团活动团信息详情
+				if(this.activityType == 1 && groupBuyConfigDetail){
+					this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						this.ifcanSubmit()
+					}
+					if(this.groupId){
+						let groupData = await api.getGroupBuyInfo({id:this.groupId})
+						let userGroupDetail = groupData.data
+						if(userGroupDetail && userGroupDetail.id){
+							let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+							this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
+							if(this.sourceUserId && this.remainGroups==0){
+								this.ifcanSubmit()
+							}
+						}
+					}
+				}			
 				this.currentObj = data
 				if (data.products) {
 					this.products = data.products[0]
@@ -264,6 +286,43 @@
 		},
 
 		methods: {
+			async getGroupData() {
+				try {
+					let {
+						data = {}
+					} = await api.getActivityContent(this.id)
+
+					let clueInfo = await api.getClueInfo({
+						activityId: this.id
+					})
+					
+					if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
+					this.activityType = data.activityType
+					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					//如果有拼团活动团信息详情
+					if(this.activityType == 1 && groupBuyConfigDetail){
+						this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+						if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+							this.ifcanSubmit()
+						}
+						if(this.groupId){
+							let groupData = await api.getGroupBuyInfo({id:this.groupId})
+							let userGroupDetail = groupData.data
+							if(userGroupDetail && userGroupDetail.id){
+								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+								this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
+								if(this.sourceUserId && this.remainGroups==0){
+									this.ifcanSubmit()
+								}
+							}
+						}
+					}
+				} catch (err) {
+					console.error(err)
+				} finally {
+					
+				}
+			},
 			async getData() {
 				try {
 					uni.showLoading({
@@ -276,23 +335,43 @@
 					let clueInfo = await api.getClueInfo({
 						activityId: this.id
 					})
+					
 					if (clueInfo.code == 1) this.orderDetail = clueInfo.data.orderDetail
-
+					this.activityType = data.activityType
+					let groupBuyConfigDetail = data.groupBuyConfigDetail
+					//如果有拼团活动团信息详情
+					if(this.activityType == 1 && groupBuyConfigDetail){
+						this.surplusCount = groupBuyConfigDetail.surplusCount //剩余团数
+						if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+							this.ifcanSubmit()
+						}
+						if(this.groupId){
+							let groupData = await api.getGroupBuyInfo({id:this.groupId})
+							let userGroupDetail = groupData.data
+							if(userGroupDetail && userGroupDetail.id){
+								let groupAllUserInfoList = userGroupDetail.groupAllUserInfoList;
+								this.remainGroups =  groupBuyConfigDetail.groupSize - groupAllUserInfoList.length //团剩余名额
+								if(this.sourceUserId && this.remainGroups==0){
+									this.ifcanSubmit()
+								}
+							}
+						}
+					}
 					this.currentObj = data
 					if (data.products) {
 						this.products = data.products[0]
 					}
 					this.serialList = this.currentObj.serialGroupList
 
-					if (this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dDis=1') != -1 && !this
+					if (this.currentObj && this.currentObj.miniUrl && this.currentObj.miniUrl.indexOf('dDis=1') != -1 && !this
 						.sourceUserId) {
 						// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
-						console.log('不定位经销商', this.content.miniUrl.indexOf('dDis=1' != -1))
-						this.content.noDistanceDeal = true
+						console.log('不定位经销商', this.currentObj.miniUrl.indexOf('dDis=1' != -1))
+						this.currentObj.noDistanceDeal = true
 					}
-					if (this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dSer=1') != -1) {
+					if (this.currentObj && this.currentObj.miniUrl && this.currentObj.miniUrl.indexOf('dSer=1') != -1) {
 						console.log('不自动车车系')
-						this.content.noSer = true
+						this.currentObj.noSer = true
 					}
 					if (this.currentObj && this.currentObj.noSer) {
 						// 不自动选车型
@@ -347,6 +426,7 @@
 				this.crtDealerItem = this.dealerList[detail.value]
 			},
 			bindMultiPickerColumnChangeser(e) {
+				 console.log('bindMultiPickerColumnChangeser')
 				let {
 					detail
 				} = e
@@ -421,7 +501,15 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
-
+				if(this.activityType == 1){
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						return false
+					}
+					if(this.sourceUserId && this.groupId && this.remainGroups == 0){
+						return false;
+					}
+				}
+				
 				if (!this.products || this.products.stock <= 0) {
 					//当前没有库存了
 					return false
@@ -433,6 +521,8 @@
 				} else {
 					return false
 				}
+				
+				
 				return true
 			},
 
@@ -631,8 +721,19 @@
 				   // 防止重复点击
 				   return
 			   }
-
-              if (!this.products || this.products.stock <= 0) {
+				if(this.currentObj.activityType == 1){
+					//针对发起人,判断剩余团数
+					if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+						this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+						return;
+					}
+					//针对参团人,判断团剩余人数
+					if(this.sourceUserId && this.remainGroups == 0){
+						this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+						return;
+					}
+				}
+              	if (!this.products || this.products.stock <= 0) {
 				 this.$toast('商品太火爆，被抢完了')
 				}
 				if (!this.ifcanSubmit()) {
@@ -647,7 +748,7 @@
 				}
 				let ly = this.from
 				let lydx = this.currentObj
-				let source, sourceId
+				let source, sourceId,activityType
 				console.log('省份', this.crtProvinceItem)
 				console.log('城市', this.crtCityItem)
 				console.log('车型', this.crtSerialItem)
@@ -655,7 +756,9 @@
 				console.log('来源对象', lydx)
 				source = 1
 				sourceId = lydx.id
+				activityType = lydx.activityType
 				let pam = {
+					activityType,
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -673,14 +776,11 @@
 					.sourceUserId != 0) {
 					pam.sourceUserId = this.sourceUserId
 				}
-				console.log('留资参数', pam)
+				console.log('留资参数', pam,this.crtDistrictItem.name)
 				this.buyOrderIng = true
 				let data = await api.submitClue(pam)
-
 				if (data.code == 1) {
 					// 留资成功 吊起支付
-					
-					
 					this.$gdp('YCZ_activitySignUp',{
 						'YCZ_activityId_var':this.currentObj.id,
 						'YCZ_activityName_var':this.currentObj.name,
@@ -689,10 +789,8 @@
 						'YCZ_mobile_var':this.phone,
 						'YCZ_likes_var':'-'
 					})
-						
-					
-				 await this.pay()
-				 this.buyOrderIng = false
+					await this.pay()
+					this.buyOrderIng = false
 				} else if (data.code == 2) {
 					// 重复留资了
 					await this.pay()
@@ -705,8 +803,20 @@
 				console.log(data)
 			},
 			// 生成订单支付  先查询商品剩余数量 - 查留资信息 - 生成订单  - 支付   活动id  
-			async pay() {
-
+			async pay() {	
+			  if(this.activityType == 1){
+				await this.getGroupData();
+				//针对发起人,判断剩余团数
+				if(!this.sourceUserId && !this.groupId && this.surplusCount==0){
+					this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+					return;
+				}
+				//针对参团人,判断团剩余人数
+				if(this.sourceUserId && this.remainGroups == 0){
+					this.$toast('已经被抢完啦，可以晚点再来看看哦～')
+					return;
+				}
+			  }	
 			  await	pay.pay(this.id)
 			  setTimeout(()=>{
 				// 延时
@@ -741,7 +851,6 @@
 				// 	})
 				// 	return
 				//  }
-				//  console.log('clueDetail',clueDetail)
 				//  if(!clueDetail){
 				// 	 console.log('订单生成失败')
 				// 	 this.$toast(clueInfo.msg)
@@ -794,6 +903,10 @@
 
 
 <style lang="scss" scoped>
+	.buyOrder-container{
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+	}
 	.no-data {
 		padding: 32rpx 0;
 		text-align: center;

@@ -163,7 +163,6 @@
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
 	let app = getApp()
-
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
 		components: {
@@ -297,11 +296,9 @@
 				}, 1000)
 				this.phone = uni.getStorageSync('userPhone');
 				this.content = data
-				//数据足够了调用埋点
-				this.setGdp()
 				if (this.sourceUserId) {
 					this.content.sourceUserId = this.sourceUserId
-					
+					console.log('sourceUserId' + this.sourceUserId)
 					// this.$toast('sourceUserId' + this.sourceUserId  )
 				}
 				if (this.shareURL) {
@@ -558,7 +555,6 @@
 			},
 			// 分享按钮被点击
 			shareBtnClick() {
-				
 				wx.aldstat.sendEvent('活动分享点击')
 				this.$gdp( 'YCZ_shareFriendButtonClick',{'YCZ_activityId_var':this.activityId,'YCZ_activityName_var':this.content.name,'YCZ_infoId_var':'-','YCZ_infoName_var':'-'})
 					
@@ -568,9 +564,6 @@
 					detail = {}
 				} = e
 				if (detail.iv) {
-					
-					this.$gdp('YCZ_phoneGrantPermissions')
-					
 					try {
 						let {
 							data

@@ -712,7 +712,6 @@
 						const res = await api.fetchProvinceCityList()
 						if (res.code == 1) {
 							this.provinceList = res.data
-							 console.log(this.provinceList)
 							if (this.provinceList && this.provinceList.length) {
 								this.cities = this.provinceList[0].cities
 							}

@@ -176,7 +176,7 @@ export default {
 				    uni.setStorageSync('userPhone', data.oauthMobile)
                 }
             }
-            console.log('用户信息1',app.globalData.haveUserInfoAuth)
+            // console.log('用户信息1',app.globalData.haveUserInfoAuth)
         } else {
            let d = await this.login()
 		   if (d ==1 ){
@@ -199,8 +199,8 @@ export default {
 	
 	async checkOauthMobile(api){
 		let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			console.log('用户取消授权了，要重新登录',wxUserInfo)
-		if(wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile){
+			// console.log('用户取消授权了，要重新登录',wxUserInfo)
+		if((wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile )|| (wxUserInfo &&!wxUserInfo.wxHead)){
 			console.log('用户取消授权了，要重新登录')
 			let d = await this.login()
 			if (d ==1 ){
