@@ -375,6 +375,7 @@
 					}
 				})
 			}
+			
 			if (options.tofissionActivity) {
 				uni.reLaunch({
 					url: '/pages/fissionActivity?id=' + options.id + '&sourceUserId=' + options.sourceUserId
@@ -424,7 +425,7 @@
 			// 分享用
 			let cs = ''
 			for (let i in options) {
-				if (i != 'ald_share_src' && i != 'groupId' && i != 'sourceUserId') {
+				if (i != 'scene' && i != 'ald_share_src' && i != 'groupId' && i != 'sourceUserId') {
 					cs += `${i}=${options[i]}&`
 				}
 			}
@@ -447,7 +448,7 @@
 			let title = this.content.name
 			let path = this.shareURL
 			let imageUrl = this.content.sharePic || this.content.detailPic
-			console.log("this.shareURL",this.shareURL)
+			console.log("分享好友 this.shareURL",this.shareURL)
 			return {
 				title: title,
 				path: path,
@@ -463,7 +464,6 @@
 
 		methods: {
 			setGdp() {
-				
 				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
 				this.$gdp('YCZ_activiDetailPageView',{
 					'YCZ_activityId_var':this.activityId,
@@ -590,6 +590,7 @@
 				this.$refs.popup.close()
 			},
 			shareHB() {
+				console.log("海报分享 shareURL",this.shareURL)
 				let url = '/pages/sharePost?scene1=' + encodeURIComponent(this.shareURL) + '&shareUrl=' +
 					encodeURIComponent(this.content.sharePosterPic)
 				uni.navigateTo({
