@@ -614,7 +614,7 @@
 					url = url.replace('P', 'type')
 					url = url.replace('L', 'lotteryType')
 					url = url.replace('D', 'id')
-					url = url.replace('=G', 'grid')
+					url = url.replace('G', 'grid')
 					url = url.replace('W', 'wawaji')
 					url = url.replace('A', 'actSelect')
 					url = url.replace('O', 'sourceUserId')
@@ -624,7 +624,7 @@
 					url = url.replace(/@/g, '=')
 					url = url.replace(/_/g, '&')
 					url = url.replace('K', 'packets')
-					url = url.replace('&GI=', '&groupId=')
+					url = url.replace('R', 'groupId')
 				} else { // 旧
 					//dd=69&ll=gg&tt=ww&aa=1&ss=66
 					url = url.replace('tt', 'type')
