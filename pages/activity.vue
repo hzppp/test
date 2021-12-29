@@ -293,7 +293,16 @@
 				},
 				activityStageInfoList: [
 					{
-					offsetTop: 750,
+					offsetTop: 702,
+					offsetLeft: 336,
+					width: 60,
+					height: 114,
+					roleList: [
+						['0-0']
+					],
+				},
+					{
+					offsetTop: 1002,
 					offsetLeft: 240,
 					width: 272,
 					height: 114,
@@ -302,7 +311,7 @@
 					],
 				},
 					{
-					offsetTop: 1050,
+					offsetTop: 1302,
 					offsetLeft: 165,
 					width: 423,
 					height: 114,
@@ -310,7 +319,7 @@
 						['0-0', '0-3', '1-3', '1-7', '2-0', '2-1']
 					],
 				}, {
-					offsetTop: 1348,
+					offsetTop: 1600,
 					offsetLeft: 59,
 					width: 634,
 					height: 114,
@@ -318,7 +327,7 @@
 						['0-0', '0-3', '0-4', '0-6', '1-2', '1-3', '1-7', '2-0', '2-1']
 					],
 				}, {
-					offsetTop: 1644,
+					offsetTop: 1896,
 					offsetLeft: 59,
 					width: 634,
 					height: 235,
@@ -327,7 +336,7 @@
 						['1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-7'],
 					],
 				},{
-					offsetTop: 2058,
+					offsetTop: 2308,
 					offsetLeft: 59,
 					width: 634,
 					height: 356,
@@ -1023,7 +1032,7 @@
 				if ( this.activityId ==  138)
 					this.roleActivityClickFunc({
 						touchX: (e.detail.x - e.currentTarget.offsetLeft) / this.pxAndRpxRatio,
-						touchY: (e.detail.y - e.currentTarget.offsetTop) / this.pxAndRpxRatio
+						touchY: (e.detail.y - e.currentTarget.offsetTop) / this.pxAndRpxRatio,
 					})
 			},
 			
