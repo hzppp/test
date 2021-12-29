@@ -149,7 +149,7 @@
 					let arr = item.split('=')
 					if(arr){
 						console.log('array',arr[0],arr[1])
-						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' || arr[0] == 'nums'){
+						if(arr[0] == 'type' ||arr[0] == 'lotteryType' ||arr[0] == 'id' ||arr[0] == 'grid' ||arr[0] == 'wawaji' || arr[0] == 'actSelect' || arr[0] == 'sourceUserId'|| arr[0] == 'Vouchers' || arr[0] == 'nums' || arr[0] == 'groupId'){
 						  dic[arr[0]] = arr[1]	
 						}
 					}
