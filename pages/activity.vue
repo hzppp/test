@@ -1061,7 +1061,6 @@
 				this.rolePopupSwiperList = roleList.reduce((prev, item) => {
 					return [...prev, ...item]
 				})
-				
 				this.openRolesSwiperPopup(rowIndex * 9 + colIndex)
 			},
 
@@ -1075,9 +1074,17 @@
 			},
 			
 			openRolesSwiperPopup(current = 0) {
-				this.rolesPopupSwiperCurrent = current
+				if(!!current){
+					this.rolesPopupSwiperCurrent = current 
+				}else{
+					this.rolesPopupSwiperCurrent = 0
+				}
+				
 				this.$refs['roleImgPopup'].open()
 				this.rolesSwiperDuration = 500
+				console.log('asdas',this.rolesPopupSwiperCurrent ,this.rolesPopupSwiperCurrent <= 1 && this.rolesPopupSwiperCurrent >=  -1)
+				
+				
 			},
 			
 			closeRolesSwiperPopup() {
