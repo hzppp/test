@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST; 
-const version = 1056;
+const CUR_ENV = ENV.RELEASE; 
+const version = 1064;
 
 
 
@@ -28,9 +28,11 @@ var DOMAIN_T = {
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
+	// changan:"http://192.168.30.207:7080",
 	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	// webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/',
 	UPC:'https://qa-upc2.pc.com.cn',
 	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
@@ -49,7 +51,7 @@ var CONFIG_R = {
 	accountID:'b17c69986984a3be',
 	datasourceID:'8c8866d4dd9f349c',
 	appId:'wxe6ffa5dceb3b003b',
-	host:'//cbd-api.changan.com.cn:9092',
+	host:'cbd-api.changan.com.cn:9092',
 	version:version
 }
 
@@ -329,6 +331,8 @@ const config = {
 		fetchPacketRecords: `${DOMAIN.changan}/api/xcx/redPacket/user/record`,
 		//开启红包
 		openRedPacket: `${DOMAIN.changan}/api/xcx/redPacket/redPacketOpen`,
+		//拼团活动获取团信息
+		getGroupBuyInfo: `${DOMAIN.changan}/api/xcx/activity/selectGroupBuyInfo`,
 	},
 	getAPI(key) {
 		let url;

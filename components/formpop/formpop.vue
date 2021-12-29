@@ -544,9 +544,9 @@
 					this.$gdp('YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
 																'YCZ_activityName_var':this.currentObj.name,
 																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
-																'YCZ_gender_var':app.globalData.wxUserInfo.gender,
+																'YCZ_gender_var':'-',
 																'YCZ_mobile_var':this.phone,
-																'YCZ_likes_var':''})
+																'YCZ_likes_var':'-'})
 					
 					
 					console.log("成功留资",ly ,lydx.from,lydx.activityType)
@@ -712,7 +712,6 @@
 						const res = await api.fetchProvinceCityList()
 						if (res.code == 1) {
 							this.provinceList = res.data
-							 console.log(this.provinceList)
 							if (this.provinceList && this.provinceList.length) {
 								this.cities = this.provinceList[0].cities
 							}

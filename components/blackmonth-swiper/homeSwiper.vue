@@ -49,18 +49,7 @@
 				
 			},
 			itemStyle(array){
-				let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
-				array.forEach((item,index)=>{
-					if(item.opacity==null){
-						// console.log("变化了",this.swiperList2)
-						this.$gdp('YCZ_homeShow', 
-							{ "YCZ_area_var": 'banner', 
-							"YCZ_position_var": index+1 ,
-							"YCZ_flowName_var":'',
-							"YCZ_sourcePage_var":sourcePage
-						})
-					}
-				})
+				
 				
 			}
 		},
@@ -107,7 +96,7 @@
 				switch(item.redirectType) {
 					case 0: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -141,7 +130,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
+						   if(item.miniUrl.indexOf('fissionActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
 							   // 跳转到本喜爱但不是活动页
 							   api.fetchActivityVisit({
 							   	'activityId': item.id
@@ -179,7 +168,7 @@
 					}
 					default: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -289,7 +278,7 @@
 				
 				//主页轮播点击埋点
 				// #ifdef MP-WEIXIN
-				this.$gdp('YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":''})
+				this.$gdp('YCZ_homeClick', { "YCZ_area_var": 'banner', "YCZ_position_var": index+1 ,"YCZ_flowName_var":'-'})
 				// #endif
 				
 				switch (type) {

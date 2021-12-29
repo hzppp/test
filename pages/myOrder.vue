@@ -4,12 +4,17 @@
     <view class="container" v-if="dataList&&dataList.length">
       <view class="list">
         <view class="item" v-for="(item,index) in dataList" :key="index" @tap='goDetail(item.id)'> 
-          <view class="code">订单ID：{{ item.outTradeNo }}</view>
-		  <view :class="['playState' ,'state' +  item.status ]">{{item.status | formatState}}</view>
-          <view class="title">{{ item.productName }}</view>
-          <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
-		  <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
-          <view class="detail">{{"¥" +  item.totalFee  }}</view>
+          <view class="order-status">
+            <view class="code">订单ID：{{ item.outTradeNo }}</view>
+            <view class="playState state7" v-if="item.activityType==1 && item.status==1 && item.groupDetail && item.groupDetail.groupStatus==2">核销码\n生成中</view>
+            <view v-else :class="['playState' ,item.activityType && item.status ==1 ? 'groupState1' : 'state' +  item.status]">{{item.status | formatState(item.activityType)}}</view>
+          </view>
+          <view class="order-info">
+            <view class="title">{{ item.productName }}</view>
+            <view class="time">购买时间：{{item.createTime | formatTimeMins}}</view>
+            <view class="time1">使用期限：{{item.endTime | formatTimeMins}}</view>
+            <view class="detail">{{"¥" +  item.totalFee  }}</view>
+          </view>
         </view>
       </view>
       <view class="no-more" v-if="noMore">没有更多了</view>
@@ -46,48 +51,53 @@ name: "lotteryRecord",
     formatTimeMins(time) {
       return time ? time.substr(0,time.length-3) : time;
     },
-  formatState(state) {
+  formatState(state,activityType) {
   	// console.log('parseInt(state)', parseInt(state))
-  	switch (parseInt(state)) {
-  		case 6: {
-  			return '已失效'
-  			break;
-  		}
-  		case 0: {
-  			return '待支付'
-  			break;
-  		}
-  		case 1: {
-  			return '已支付'
-  			break;
-  		}
+    switch (parseInt(state)) {
+      case 6: {
+        return '已失效'
+        break;
+      }
+      case 0: {
+        return '待支付'
+        break;
+      }
+      case 1: {
+        return activityType ? '拼团中' : '已支付'
+        break;
+      }
   
-  		case 2: {
-  			return '待使用'
-  			break;
-  		}
+      case 2: {
+        return '待使用'
+        break;
+      }
   
-  		case 3: {
-  			return '退款中'
-  			break;
-  		}
+      case 3: {
+        return '退款中'
+        break;
+      }
   
-  		case 4: {
-  			return '已核销'
-  			break;
-  		}
+      case 4: {
+        return '已核销'
+        break;
+      }
   
-  		case 5: {
-  			return '已退款'
-  			break;
-  		}
-  		default: {
-  			return '已失效'
-  			break;
-  		}
+      case 5: {
+        return '已退款'
+        break;
+      }
+
+      case 7: {
+        return '核销码\n生成失败'
+        break;
+      }
+
+      default: {
+        return '已失效'
+        break;
+      }
   
-  	}
-  
+    }
    },
   },
   onReachBottom() {
@@ -116,6 +126,7 @@ name: "lotteryRecord",
       let data = await api.orders({pageNum,pageSize})
       if(data.code == 1){
         uni.hideLoading()
+        data.rows = data.rows.filter(item=>(item.activityType == 1 && item.status !=6) || item.activityType != 1)
         if(data.hasNext){
           this.pageNum++
         }else{
@@ -126,11 +137,18 @@ name: "lotteryRecord",
     }
   },
   async onLoad() {
+    
+  },
+  async onShow() {
     uni.showLoading({
       title: '正在加载...'
     })
+    if(this.dataList.length>0){
+      this.dataList=[]
+    }
     this.getRecordList()
-  },
+
+  }
  
 }
 </script>
@@ -146,50 +164,58 @@ name: "lotteryRecord",
     width: 686rpx;
     box-sizing: border-box;
     .item{
-      background: url("token: 3ec22bf4-3f87-4c15-9333-c5a05ce4e234");
-      .setbg(686rpx,214rpx,'lottery_record_icon1.png');
+      width:686rpx;
+      // .setbg(686rpx,214rpx,'lottery_record_icon1.png');
       position: relative;
       width: 100%;
-      height: 252rpx;
       margin-bottom: 24rpx;
+      .order-status,.order-info{
+        background: #ffffff;
+        border-radius: 20px;
+      }
+      .order-status{
+        padding:22rpx 30rpx 18rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .order-info{
+        position: relative;
+        padding:30rpx;
+        &:after{
+          content: "";
+          position: absolute;
+          top:0;
+          width:626rpx;
+          left:50%;
+          margin-left: -313rpx;
+          border-top:1rpx dashed #ebebeb;
+        }
+      }
       .code{
-        position: absolute;
-        left: 30rpx;
-        top: 30rpx;
         color:#333;
         font-size: 24rpx;
       }
       .title{
-        position: absolute;
-        left: 30rpx;
-        top: 110rpx;
         color: #333333;
-		font-weight: 800;
+        font-weight: 800;
         font-size: 32rpx;
-		text-overflow: ellipsis;
-	     white-space: nowrap;
-		 overflow: hidden;
-		 width: 500rpx;
-		
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 500rpx;
+        line-height: 1;
+        margin-bottom: 19rpx;
       }
-      .time{
-        position: absolute;
-        left: 30rpx;
-        bottom: 60rpx;
+      .time,.time1{
         color: #999;
         font-size: 24rpx;
+        line-height: 38rpx;
       }
-	  .time1{
-	    position: absolute;
-	    left: 30rpx;
-	    bottom: 30rpx;
-	    color: #999;
-	    font-size: 24rpx;
-	  }
       .detail{
         position: absolute;
-        right: 40rpx;
-        bottom: 115rpx;
+        right:30rpx;
+        top: 30rpx;
         color: #FA8845;
         font-size: 32rpx;
       }
@@ -222,18 +248,15 @@ name: "lotteryRecord",
   border-radius: 44rpx;
 }
 .playState{
-	position: absolute;
-	right: 30rpx;
-	top: 22rpx;
-	height: 40rpx;
 	font-size: 24rpx;
 	font-weight: 500;
-	text-align: left;
+	text-align: center;
 	color: #FA8845;
-	padding: 0 10rpx 0;
-	line-height:40rpx;
+	padding: 0 18rpx;
 	border: 1px solid #FA8845;
 	border-radius: 20rpx;
+  height: 40rpx;
+  line-height: 40rpx;
 }
 
 
@@ -257,8 +280,21 @@ name: "lotteryRecord",
 	color: #999999;
 	border: 1px solid #999999;
 }
-.state5{
+.state5,.state7{
 	color: #CCCCCC;
 	border: 1px solid #CCCCCC;
+}
+.state7{
+  white-space: pre-line; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 66rpx;
+  line-height: 1.15;
+}
+.groupState1{
+  color: #ffffff;
+  background: #e64848;
+ 
 }
 </style>

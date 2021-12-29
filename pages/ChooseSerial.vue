@@ -52,8 +52,8 @@ import api from '@/public/api/index'
             let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
             this.$gdp('YCZ_choiceModel',{
                 'YCZ_sourcePage_var':sourcePage,
-                'YCZ_sourceCarModel_var':"",
-                'YCZ_sourceCarSeries_var':"",
+                'YCZ_sourceCarModel_var':"-",
+                'YCZ_sourceCarSeries_var':"-",
             })
            
         },

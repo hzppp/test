@@ -158,10 +158,12 @@
 			onShareAppMessage() {
 				
 				
-				this.$gdp( 'YCZ_shareFriend',{'YCZ_activityId_var':''
-																	,'YCZ_activityName_var':''
-																	,'YCZ_infoId_var':this.articleId
-																	,'YCZ_infoName_var':this.title})
+				this.$gdp( 'YCZ_shareFriend',{
+					'YCZ_activityId_var':'-'
+					,'YCZ_activityName_var':'-'
+					,'YCZ_infoId_var':this.articleId
+					,'YCZ_infoName_var':this.title
+				})
 					
 			  },
 			shareBtnClick() {
@@ -169,10 +171,11 @@
 				wx.aldstat.sendEvent('活动分享点击')
 				
 				
-				this.$gdp('YCZ_shareFriendButtonClick',{'YCZ_activityId_var':''
-																	,'YCZ_activityName_var':''
-																	,'YCZ_infoId_var':this.articleId
-																	,'YCZ_infoName_var':this.title})
+				this.$gdp('YCZ_shareFriendButtonClick',{
+					'YCZ_activityId_var':'-'
+					,'YCZ_activityName_var':'-'
+					,'YCZ_infoId_var':this.articleId
+					,'YCZ_infoName_var':this.title})
 				// #endif			
 				
 			},

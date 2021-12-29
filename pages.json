@@ -237,7 +237,7 @@
 			}
          },
 		 {
-		 	"path": "pages/lbActivity",
+		 	"path": "pages/fissionActivity",
 		 	"style": {
 		 		"navigationBarTitleText": "活动详情",
 		 		"enablePullDownRefresh": false,
@@ -402,7 +402,14 @@
 				"enablePullDownRefresh": false
 				
 			}
-		}
+		},
+		{
+			"path": "pages/mallUpdate",
+			"style": {
+				"navigationBarTitleText": "商城升级中",
+				"enablePullDownRefresh": false
+			}
+	   }
 
 	],
 	"tabBar": {

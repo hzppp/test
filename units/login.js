@@ -149,6 +149,9 @@ export default {
             let {code, data} = await api.getUser()
             console.log('获取用户信息1', data,code)
             if (code == 1 && data) {
+				// #ifdef MP-WEIXIN
+				gioGlobal.gio('setUserId', data.cacOpenId);
+				// #endif
                 app.globalData.haveUserInfoAuth = !!data.wxName
                 uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                 app.globalData.wxUserInfo = data
@@ -163,6 +166,9 @@ export default {
                 let {code, data} = await api.getUser()
 				   console.log('获取用户信息2', data,code)
                 if (code == 1 && data) {
+					// #ifdef MP-WEIXIN
+					gioGlobal.gio('setUserId', data.cacOpenId);
+					// #endif
                     app.globalData.haveUserInfoAuth = !!data.wxName
                     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
                     app.globalData.wxUserInfo = data
@@ -170,7 +176,7 @@ export default {
 				    uni.setStorageSync('userPhone', data.oauthMobile)
                 }
             }
-            console.log('用户信息1',app.globalData.haveUserInfoAuth)
+            // console.log('用户信息1',app.globalData.haveUserInfoAuth)
         } else {
            let d = await this.login()
 		   if (d ==1 ){
@@ -193,8 +199,8 @@ export default {
 	
 	async checkOauthMobile(api){
 		let wxUserInfo = uni.getStorageSync('wxUserInfo')
-			console.log('用户取消授权了，要重新登录',wxUserInfo)
-		if(wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile){
+			// console.log('用户取消授权了，要重新登录',wxUserInfo)
+		if((wxUserInfo && wxUserInfo.mobile && (wxUserInfo.oauthMobile  != wxUserInfo.mobile)  && !wxUserInfo.oauthMobile )|| (wxUserInfo &&!wxUserInfo.wxHead)){
 			console.log('用户取消授权了，要重新登录')
 			let d = await this.login()
 			if (d ==1 ){
@@ -205,12 +211,12 @@ export default {
 			 if (code == 1 && data) {
 				// #ifdef MP-WEIXIN
 				 gioGlobal.gio('setUserId', data.cacOpenId);
-				// #endif
-				app.globalData.haveUserInfoAuth = !!data.wxName
-				uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
-				app.globalData.wxUserInfo = data
-				uni.setStorageSync('wxUserInfo', data)
-				uni.setStorageSync('userPhone', data.oauthMobile)
+				 // #endif
+			     app.globalData.haveUserInfoAuth = !!data.wxName
+			     uni.setStorageSync('haveUserInfoAuth', !!data.wxName)
+			     app.globalData.wxUserInfo = data
+			     uni.setStorageSync('wxUserInfo', data)
+			     uni.setStorageSync('userPhone', data.oauthMobile)
 			 }
 		}
 	
