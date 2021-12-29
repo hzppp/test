@@ -17,7 +17,7 @@
 					<view class="list-title">车型</view>
 					<picker v-if="serialList.length" @change="bindMultiPickerColumnChangeser" mode="selector"
 						:range="serialList" :range-key="'name'" class="select">
-						<view style="width: 470rpx;height: 50rpx;">{{showSerialText}}</view>
+						<view class="picker-item" :class="{place:!showSerialText}">{{showSerialText?showSerialText:"请选择车型"}}</view>
 					</picker>
 					<view v-else class="select place" @tap="showToast('暂无车型')">
 						<view>暂无车型</view>
@@ -29,9 +29,9 @@
 					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange"
 						mode="multiSelector" :range="[provinceList, cities]" :range-key="'name'" class="select"
 						:value="selectIndex">
-						<view v-if="showProvinceCityText&&showProvinceCityText.length" style="width: 470rpx">
+						<view v-if="showProvinceCityText&&showProvinceCityText.length" class="picker-item">
 							{{showProvinceCityText}}</view>
-						<view v-else class="place" style="width: 470rpx">请选择城市</view>
+						<view v-else class="place picker-item">请选择城市</view>
 					</picker>
 					<view class="arrow"></view>
 				</view>
@@ -39,9 +39,9 @@
 					<view class="list-title">地区</view>
 					<picker @change="bindMultiPickerColumnChangeArea" :value="selectDistrictIndex" mode="selector"
 						:range="districtList" :range-key="'name'" class="select">
-						<view v-if="showDistrictText&&showDistrictText.length" style="width: 470rpx">
+						<view v-if="showDistrictText&&showDistrictText.length" class="picker-item">
 							{{showDistrictText}}</view>
-						<view v-else class="place" style="width: 470rpx">请选择地区</view>
+						<view v-else class="place picker-item">请选择地区</view>
 					</picker>
 					<i class="clean-btn" v-if="currentRegion.id" @tap.stop="cleanRegion"></i>
 					<view class="arrow"></view>
@@ -53,12 +53,11 @@
 					<block>
 						<picker v-if="dealerList.length" mode="selector" @change="getDealerChangeIndex"
 							:range="dealerList" :range-key="'name'" class="select" :value="selectDealerIndex">
-							<view style="width: 470rpx">{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
+							<view class="picker-item">{{crtDealerItem.name ? crtDealerItem.name : '请选择经销商'}}</view>
 						</picker>
 						<view v-else class="select">
-							<view v-if="showProvinceCityText&&showProvinceCityText.length" class="place"
-								style="width: 470rpx">暂无对应经销商 </view>
-							<view v-else class="place" style="width: 470rpx">请选择经销商</view>
+							<view v-if="showProvinceCityText&&showProvinceCityText.length" class="place picker-item">暂无对应经销商 </view>
+							<view v-else class="place picker-item">请选择经销商</view>
 						</view>
 						<view class="arrow"></view>
 					</block>
@@ -362,7 +361,6 @@
 						this.products = data.products[0]
 					}
 					this.serialList = this.currentObj.serialGroupList
-
 					if (this.currentObj && this.currentObj.miniUrl && this.currentObj.miniUrl.indexOf('dDis=1') != -1 && !this
 						.sourceUserId) {
 						// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
@@ -990,21 +988,27 @@
 				align-items: center;
 				height: 110rpx;
 				border-bottom: 2rpx solid #EBEBEB;
-
+				position: relative;
 				.list-title {
 					width: 130rpx;
 				}
 
 				.select {
+					width: 556rpx;
 					flex: 1;
-					margin-left: 20rpx;
+					padding-left: 20rpx;
 					height: 100%;
 					display: flex;
 					align-items: center;
-					margin-right: 80rpx;
+					padding-right: 80rpx;
 					font-size: 34rpx;
+					box-sizing: border-box;
 				}
-
+				.picker-item{
+					width: 536rpx;
+					padding-right: 80rpx;
+					box-sizing: border-box;
+				}
 				.get-code {
 					color: #fa8943;
 					font-size: 26rpx;
@@ -1016,11 +1020,14 @@
 				}
 
 				.arrow {
+					position: absolute;
 					width: 12rpx;
 					height: 12rpx;
-					transform: rotate(45deg);
 					border-top: 2rpx solid #999999;
 					border-right: 2rpx solid #999999;
+					right: 6rpx;
+					top:50%;
+					transform: rotate(45deg)translateY(-50%);
 				}
 
 				.clean-btn {

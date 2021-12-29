@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.RELEASE; 
-const version = 1064;
+const version = 1065;
 
 
 
@@ -31,8 +31,8 @@ var DOMAIN_T = {
 	// changan:"http://192.168.30.207:7080",
 	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
-	// webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
-	webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/',
+	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	// webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/', //埋点测试
 	UPC:'https://qa-upc2.pc.com.cn',
 	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
