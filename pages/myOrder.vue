@@ -106,11 +106,6 @@ name: "lotteryRecord",
     }
 			
 	},
-	onShow(){
-		
-		this.$gdp('YCZ_myOrderPageView')
-		
-	},
   methods:{
     goDetail(id) {
       //
@@ -140,6 +135,7 @@ name: "lotteryRecord",
     
   },
   async onShow() {
+    this.$gdp('YCZ_myOrderPageView')
     uni.showLoading({
       title: '正在加载...'
     })
