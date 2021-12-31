@@ -5,10 +5,12 @@ gdp('init', domain.CONFIG.accountID, domain.CONFIG.datasourceID, domain.CONFIG.a
     version: domain.CONFIG.version,
     host: domain.CONFIG.host,
     vue: Vue,
-    debug: false
+    debug: true
 });
 // #ifdef MP-WEIXIN
-gdp('track', 'YCZ_openApplet');
+setTimeout(()=>{
+	gdp('track', 'YCZ_openApplet');
+},1000)
 // #endif
 
 //检测平台是否为微信并埋点

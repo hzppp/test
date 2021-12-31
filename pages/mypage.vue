@@ -88,7 +88,7 @@
 				<!-- #endif -->
 				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
-					<button class="list7Btn"  open-type="contact" bindcontact="handleContact"></button>
+					<button class="list7Btn"  open-type="contact" bindcontact="handleContact" @click="contactKefu"></button>
 					<view class="box-list list7">
 						<view class="p1">联系客服</view>
 						<view class="right isApprove"></view>
