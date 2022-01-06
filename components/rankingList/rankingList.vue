@@ -66,6 +66,7 @@ export default {
             .setbg(750rpx,540rpx,'jigsaw/podium-bg.png');
             padding: 20rpx;
             box-sizing: border-box;
+            position: relative;
         }
         .ranking-text{
             font-size: 24rpx;
@@ -74,15 +75,19 @@ export default {
             color: #ffb5aa;
         }
         .top3{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 66rpx;
+            position: absolute;
+            width:100%;
+            height: 250rpx;
+            bottom:160rpx;
         }
         .winner{
-            margin:0 45rpx;
+            position: absolute;
+            text-align: center;
             .header{
+                height: 120rpx;
+                width: 120rpx;
                 position: relative;
+                margin:0 auto;
                 &:before{
                     content: "";
                     .setbg(56rpx,56rpx,'jigsaw/no1.png');
@@ -109,7 +114,17 @@ export default {
         }
         
         .no1{
-            transform: translateY(20rpx)
+            left: 50%;
+            transform: translateX(-50%)translateY(-20rpx);
+            
+        }
+        .no2{
+            left: 0;
+            transform: translateX(60%)translateY(-20rpx);
+        }
+        .no3{
+            right: 0;
+            transform: translateX(-80%)translateY(-20rpx);
         }
     }
 </style>

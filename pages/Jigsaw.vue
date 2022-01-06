@@ -1,5 +1,5 @@
 <template>
-    <div class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/100%"}' >
+    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/100%"}' >
         <view class="user-info">
             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
             <view class="wxName">{{wxUserInfo.wxName}}</view>
