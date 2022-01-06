@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container">
+	<view :class="['page-container',{'jigsaw-bg':isJigsaw}]">
 		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
@@ -19,7 +19,7 @@
 				<view class="date" v-if="isActEnded">活动已结束</view>
 			</template>
 
-			<view class="content">
+			<view class="content" v-if="!isJigsaw">
 				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 			</view>
 			
@@ -61,7 +61,48 @@
 					</view>
 				</template>
 			</open-red-packets-activity>
-			<template  v-if="activityType && activityType!='packets'">
+			<!-- 拼图活动 -->
+			<jigsaw-activity 
+				:activityId="activityId"
+				v-if="isJigsaw"
+			>
+				<view class="content">
+					<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
+					<view class="jigsaw-detail-btn">
+						<button class="activity-btn-status" v-if="!isActStart">挑战未开始</button>
+						<button class="activity-btn-status" v-else-if="isActEnded">挑战已结束</button>
+						<template v-else>
+							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+								@getphonenumber="getPhoneNumber" v-if="!phone">报名参与</button>
+							<template v-else>
+								<button v-if="!isApply" class="no-apply-btn" @tap="formShow">报名参与</button>
+								<template v-else>
+									<!--  #ifdef MP-WEIXIN  -->
+									<button v-if="content.sharePosterPic"
+										:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+										@tap='shareChoise()'>分享好友</button>
+
+									<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+									<!-- #endif -->
+									<!--  #ifndef MP-WEIXIN  -->
+									<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+									<!-- #endif -->
+									<button :class="'challenge-btn '+ (chanceCount==0?'no-challenge-btn':'')" @tap="startGame">
+										开始挑战
+										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
+									</button>
+								</template>
+								
+							</template>
+							
+						</template>
+						
+					</view>
+				</view>
+			</jigsaw-activity>
+			<template  v-if="activityType && activityType!='packets' && !isJigsaw">
 				<view class="zw"></view>
 				<view class="operation-list">
 					<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
@@ -156,12 +197,12 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
+	import jigsawActivity from '@/components/jigsawActivity/jigsawActivity'
 	let app = getApp()
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -169,7 +210,8 @@
 			'form-pop': formpop,
 			'page-top': pageTop,
 			'userBand': userBand,
-			'open-red-packets-activity':openRedPacketsActivity
+			'open-red-packets-activity':openRedPacketsActivity,
+			'jigsaw-activity':jigsawActivity
 			// 'share-pop': shareSuccess
 		},
 		data() {
@@ -193,6 +235,7 @@
 				isShowCheckInPop:false,  //签到二维码进入报名提示
 				navHeight:0,
 				bgImgLoaded:false,
+				isJigsaw:true,//是否是拼团活动
 			}
 		},
 		mixins: [shouquan],
@@ -237,6 +280,9 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.activityId)
+				if(data.activityType == 2){
+					this.activityType == 'jigsaw'
+				}
 				//从签到二维码进入
 				if(options.scene && options.veriCode && data.miniUrl){
 					let param = data.miniUrl.split('?')[1].split('&')
@@ -391,41 +437,8 @@
 					if(isApply && !this.isActStart){
 						this.formShowTitle = "已报名,活动未开始"
 					}
-					
-					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart) 
-					//是否提交过
-					// if (isApply == 1 && this.activityType == "" && this.isActStart) {
-					// 	if(this.lotteryType == 'Vouchers'){
-					// 		uni.redirectTo({
-					// 		 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-							
-					// 		})
-					// 	}else{
-					// 		uni.reLaunch({
-					// 			url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-							
-					// 		})	
-					// 	}
-						
-					// }
+					this.soureDone = true
 				}
-				// if(code == 10){
-				// 	// 活动以下架
-				// 	console.log('活动已经结束')
-				// 	this.actiDone =  true
-				// }else{
-				// if (data) {
-				// 	let isApply = data.isApply
-				// 	if (isApply == 1) {
-				// 		uni.reLaunch({
-				// 			url: '/pages/lotteryPage?activityId=' + this.activityId
-				// 		})
-				// 	}
-				// }	
-				// }
-				this.soureDone = true
 
 			},
 			//扫码签到
@@ -534,6 +547,12 @@
 				}
 				// #endif
 			},
+			//开始挑战
+			startGame(){
+				uni.navigateTo({
+					url: `/pages/Jigsaw?id=${this.activityId}`
+				})
+			},
 			// 分享按钮被点击
 			shareBtnClick() {
 				wx.aldstat.sendEvent('活动分享点击')
@@ -597,6 +616,9 @@
 					this.getFission()
 					if(this.activityType=="packets"){
 						this.$refs.redPackets.getActivityInfo();
+					}
+					if(this.activityType == 'jigsaw'){
+
 					}
 				}
 			},
@@ -685,6 +707,9 @@
 	// .page-container{
 	// 	position: relative;
 	// }
+	.jigsaw-bg{
+		background: yellow;
+	}
 	.title {
 		line-height: 65rpx;
 		padding: 30rpx 32rpx;
@@ -715,6 +740,7 @@
 
 	.content {
 		font-size: 0;
+		position: relative;
 	}
 
 	.content-image {
@@ -1012,6 +1038,9 @@
 		top:-15rpx;
 		right:-22rpx;
 	}
+	.jigsaw-detail-btn .chance-count{
+		right:0;
+	}
 	// 签到报名弹窗
 	.checkin-popup{
 		.mask;
@@ -1048,6 +1077,50 @@
 			color: #ffffff;
 		}
 	}
+	.jigsaw-detail-btn{
+		position: absolute;
+		width: 100%;
+		bottom: 120rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.activity-btn-status,
+		.no-apply-btn{
+			width: 560rpx;
+			height: 100rpx;
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/activity-status-bg.png) no-repeat center/100%;
+			font-size: 40rpx;
+			color: #ffffff;
+			text-align: center;
+			line-height: 100rpx;
+			font-weight: bold;
+		}
+		.no-apply-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/form-bg.png) no-repeat center/100%;
+		}
+		.share-btn,
+		.challenge-btn{
+			width: 320rpx;
+			height: 100rpx;
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/share-btn-bg.png) no-repeat center/100%;
+			font-size: 40rpx;
+			color: #ffffff;
+			text-align: center;
+			line-height: 100rpx;
+			font-weight: bold;
+			margin:0 12rpx;
+			padding:0;
+			position: relative;
+			overflow: inherit;
+		}
+		.challenge-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/challenge-btn.png) no-repeat center/100%;
+		}
+		.no-challenge-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/no-chance-bg.png) no-repeat center/100%;
+		}
+	}
+	 
 </style>
 <style scoped>
 	/deep/.red-package-page .inviteRecord{

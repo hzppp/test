@@ -409,7 +409,21 @@
 				"navigationBarTitleText": "商城升级中",
 				"enablePullDownRefresh": false
 			}
-	   }
+	    },
+		{
+			"path": "pages/Jigsaw",
+			"style": {
+				"navigationBarTitleText": "拼图游戏",
+				"enablePullDownRefresh": false
+			}
+	    },
+		{
+			"path": "pages/ranking",
+			"style": {
+				"navigationBarTitleText": "排行榜",
+				"enablePullDownRefresh": false
+			}
+	    }
 
 	],
 	"tabBar": {

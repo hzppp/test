@@ -540,13 +540,14 @@
 				if (data.code == 1) { //成功留资
 					
 					//成功报名埋点
-					
-					this.$gdp('YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
-																'YCZ_activityName_var':this.currentObj.name,
-																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
-																'YCZ_gender_var':'-',
-																'YCZ_mobile_var':this.phone,
-																'YCZ_likes_var':'-'})
+					this.$gdp('YCZ_activitySignUp',{
+						'YCZ_activityId_var':this.currentObj.id,
+						'YCZ_activityName_var':this.currentObj.name,
+						'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
+						'YCZ_gender_var':'-',
+						'YCZ_mobile_var':this.phone,
+						'YCZ_likes_var':'-'
+					})
 					
 					
 					console.log("成功留资",ly ,lydx.from,lydx.activityType)
@@ -641,7 +642,7 @@
 					}
 					this.popName = popname
 					
-					if(lydx.activityType == 'packets'){
+					if(lydx.activityType == 'packets' || lydx.activityType == 'jigsaw'){
 						this.$emit('subSuccess')
 					}
 
