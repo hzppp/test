@@ -42,10 +42,13 @@ export default {
 		};
 	},
 	watch: {
-		PropsBaseData(v) {
-			this.baseData = v;
-			console.log("baseData :>> ", v);
-		},
+		PropsBaseData: {
+			immediate: true, 
+			handler (v) {
+				this.baseData = v;
+				console.log("baseData :>> ", v);
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {
