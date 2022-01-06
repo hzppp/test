@@ -42,10 +42,13 @@ export default {
 		};
 	},
 	watch: {
-		PropsPowerData(v) {
-			this.powerData = v;
-			console.log("powerData :>> ", v);
-		},
+		PropsPowerData: {
+			immediate: true, 
+			handler (v) {
+				this.powerData = v;
+				console.log("powerData :>> ", v);
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {

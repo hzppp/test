@@ -42,10 +42,13 @@ export default {
 		};
 	},
 	watch: {
-		PropsExternalData(v) {
-			this.externalData = v;
-			console.log("externalData :>> ", v);
-		},
+		PropsExternalData: {
+			immediate: true, 
+			handler (v) {
+				this.externalData = v;
+				console.log("externalData :>> ", v);
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {
