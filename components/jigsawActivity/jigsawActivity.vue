@@ -58,7 +58,7 @@ export default {
     data() {
         return {
             activityMemoArr:"",
-            chanceCount:"",
+            chanceCount:2,
             userRankInfo:{
                 todayRank:"",
                 sumRank:"",
@@ -73,9 +73,8 @@ export default {
     methods: {
         async getActivityInfo(){
             let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId})
-            console.log("getLotteryActInfo",this.activityId)
             if(code == 1){
-                this.chanceCount = data.chanceCount || 3;
+                this.chanceCount = data.chanceCount;
                 console.log("获取当前抽奖机会",this.chanceCount)
                 this.winnerRecords = data.winnerRecords
                 this.activityMemoArr = data.activityMemo.replace('/n', '/r/s')
@@ -84,6 +83,13 @@ export default {
                     title: msg,
                     icon: "none"
                 })
+            }
+        },
+        async getUserRankInfo(){
+            let {activityId}=this;
+            let {code,data = {}} = await api.getUserRankInfo({activityId})
+            if(code==1){
+                this.userRankInfo = data;
             }
         },
     },

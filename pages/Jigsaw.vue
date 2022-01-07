@@ -73,6 +73,7 @@
 </template>
 <script>
 import api from '@/public/api/index'
+let base64= require('../units/base64.js').Base64;
 export default {
     data() {
         return {
@@ -81,7 +82,7 @@ export default {
             bg:"",
             activeClass: -1,
             boxArractivelass: -1,
-            selectedImg: "https://www1.pcauto.com.cn/zt/gz20210831/toyota/lottery/img/turntable-bg.png",
+            selectedImg: "",
             boxArr: new Array(9).fill(1).map((item, index) => {
                 return index;
             }),
@@ -111,7 +112,8 @@ export default {
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
         this.getActivityInfo()
-        
+        this.randomPictureConfig()
+        console.log("base64",base64.encode('changan12.20auto'))
         
     },
     async onShareAppMessage() {
@@ -127,6 +129,13 @@ export default {
         }
     },
     methods: {
+        async randomPictureConfig(){
+            console.log(this.activityId)
+            let {code,data={},msg=""} = await api.randomPictureConfig({activityId:this.activityId})
+            if(code == 1){
+                this.selectedImg = data.url;
+            }
+        },
         async getActivityInfo(){
             let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
             console.log("getLotteryActInfo",this.activityId)
@@ -164,17 +173,21 @@ export default {
             });
         },
         //开始游戏
-        startGame(){
+        async startGame(){
             if(!this.isStarted){
-                this.pool = this.upsetArr(this.pool);
-                this.isStarted = true;
-                this.isSuccess = false;
-                this.millisecond = 0;
-                this.second = 0;
-                // clearInterval(this.timer);
-                // this.timer = setInterval(()=>{
-                //     this.countTimer()
-                // }, 10);
+                let {code,data={},msg=""} = await api.startJigsaw({activityId:this.activityId})
+                if(code ==1){
+                    this.pool = this.upsetArr(this.pool);
+                    this.isStarted = true;
+                    this.isSuccess = false;
+                    this.millisecond = 0;
+                    this.second = 0;
+                    clearInterval(this.timer);
+                    this.timer = setInterval(()=>{
+                        this.countTimer()
+                    }, 10);
+                }
+                
             }
         },
         //计时
@@ -264,9 +277,18 @@ export default {
             if (this.isTestSuccess(this.pool)) {
                 //清除计时器
                 clearInterval(this.timer);
-                this.isSuccess = true;
-                this.$refs.resultPopup.open()
+                this.saveResult()
+                
             } 
+        },
+        async saveResult(){
+            let result = base64.encode(this.counttime); 
+            let {code,data={},msg=""} = await api.saveResult({activityId:this.activityId,result})
+            if(code == 1){
+                this.isSuccess = true;
+                this.getActivityInfo()
+                this.$refs.resultPopup.open()
+            }
         },
         // 校验是否成功方法
         isTestSuccess(arr) {

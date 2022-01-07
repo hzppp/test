@@ -46,18 +46,17 @@
 							<view class="chance-count" v-if="isApply">还有{{scope.chanceCount||0}}次机会</view>
 						</template>
 						<!--  #ifdef MP-WEIXIN  -->
-						<!-- <button v-if="content.sharePosterPic"
+						<button v-if="content.sharePosterPic"
 							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-							@tap='shareChoise()'>分享好友</button> -->
+							@tap='shareChoise()'>分享好友</button>
 
-						<!-- <button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
+						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 						<!-- #endif -->
 						<!--  #ifndef MP-WEIXIN  -->
-						<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 						<!-- #endif -->
-						<!-- <view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view> -->
 					</view>
 				</template>
 			</open-red-packets-activity>
@@ -65,7 +64,8 @@
 			<jigsaw-activity 
 				:activityId="activityId"
 				v-if="isJigsaw"
-			>
+			>	
+			 <template v-slot="{chanceCount}">
 				<view class="content">
 					<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 					<view class="jigsaw-detail-btn">
@@ -89,7 +89,11 @@
 									<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 									<!-- #endif -->
-									<button :class="'challenge-btn '+ (chanceCount==0?'no-challenge-btn':'')" @tap="startGame">
+									<button v-if="chanceCount" class="challenge-btn" @tap="startGame()" >
+										开始挑战
+										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
+									</button>
+									<button v-else class="challenge-btn no-challenge-btn" >
 										开始挑战
 										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
 									</button>
@@ -101,6 +105,7 @@
 						
 					</view>
 				</view>
+			 </template>
 			</jigsaw-activity>
 			<template  v-if="activityType && activityType!='packets' && !isJigsaw">
 				<view class="zw"></view>
@@ -548,7 +553,7 @@
 				// #endif
 			},
 			//开始挑战
-			startGame(){
+			startGame(chanceCount){
 				uni.navigateTo({
 					url: `/pages/Jigsaw?id=${this.activityId}`
 				})

@@ -423,7 +423,14 @@
 				"navigationBarTitleText": "排行榜",
 				"enablePullDownRefresh": false
 			}
-	    }
+	    },
+		{
+			"path": "pages/historyRanking",
+			"style": {
+				"navigationBarTitleText": "排行榜",
+				"enablePullDownRefresh": false
+			}
+		}
 
 	],
 	"tabBar": {

@@ -1,12 +1,12 @@
 <template>
     <view class="ranking-page">
         <view class="ranking-tab">
-            <view v-for="(item,index) in tabs" :key="index" :class="['tab-item',{'tab-item-cur':curIndex == index}]" @tap="change(index)">
-                {{item}}
+            <view v-for="(item,index) in tabs" :key="index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type)">
+                {{item.name}}
             </view>
         </view>
         <view class="tab-con">
-            <ranking-list/>
+            <ranking-list :activityId="activityId" :type="curIndex"/>
         </view>
     </view>
 </template>
@@ -19,16 +19,22 @@ export default {
     },
     data() {
         return {
-            tabs:['今日排行','昨日排行','总排行'],
+            tabs:[
+                {name:'今日排行',type:0},
+                {name:'昨日排行',type:2},
+                {name:'总排行',type:1}
+            ],
             curIndex:0,
+            activityId:"",
+            type:0,
         };
     },
     onLoad(options) {
-
+        this.activityId = options.id
     },
     methods: {
-        change(index){
-            this.curIndex = index;
+        change(type){
+            this.curIndex = type;
         }
     }
 
