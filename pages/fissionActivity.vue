@@ -61,8 +61,10 @@
 				</template>
 			</open-red-packets-activity>
 			<!-- 拼图活动 -->
-			<jigsaw-activity 
+			<jigsaw-activity
+				ref="jigsaw"
 				:activityId="activityId"
+				:endTime = "content.endTime"
 				v-if="isJigsaw"
 			>	
 			 <template v-slot="{chanceCount}">
@@ -240,7 +242,7 @@
 				isShowCheckInPop:false,  //签到二维码进入报名提示
 				navHeight:0,
 				bgImgLoaded:false,
-				isJigsaw:true,//是否是拼团活动
+				isJigsaw:false,//是否是拼团活动
 			}
 		},
 		mixins: [shouquan],
@@ -286,7 +288,8 @@
 					data = {}
 				} = await api.getActivityContent(this.activityId)
 				if(data.activityType == 2){
-					this.activityType == 'jigsaw'
+					this.activityType = data.activityType
+					this.isJigsaw = true;
 				}
 				//从签到二维码进入
 				if(options.scene && options.veriCode && data.miniUrl){
@@ -360,6 +363,8 @@
 				this.content.actSelect = this.actSelect
 				this.content.activityType = this.activityType
 				this.content.isActStart = this.isActStart
+				console.log("this.activityType",this.activityType)
+				console.log("this.content",this.content)
 				if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dDis=1') != -1 && !this.sourceUserId){
 					// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
 					console.log('不定位经销商',this.content.miniUrl.indexOf('dDis=1' != -1))
@@ -554,8 +559,9 @@
 			},
 			//开始挑战
 			startGame(chanceCount){
+				let endTime =  this.content.endTime ? this.content.endTime.replaceAll("-","/"):""
 				uni.navigateTo({
-					url: `/pages/Jigsaw?id=${this.activityId}`
+					url: `/pages/Jigsaw?id=${this.activityId}&endTime=${endTime}`
 				})
 			},
 			// 分享按钮被点击
@@ -622,8 +628,8 @@
 					if(this.activityType=="packets"){
 						this.$refs.redPackets.getActivityInfo();
 					}
-					if(this.activityType == 'jigsaw'){
-
+					if(this.activityType == 2){
+						this.$refs.jigsaw.getActivityInfo();
 					}
 				}
 			},
@@ -1042,6 +1048,7 @@
 		color: #ffffff;
 		top:-15rpx;
 		right:-22rpx;
+		white-space: nowrap;
 	}
 	.jigsaw-detail-btn .chance-count{
 		right:0;

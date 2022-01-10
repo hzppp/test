@@ -515,6 +515,7 @@
 				}
 
 				let pam = {
+					activityType:lydx.activityType,
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -581,7 +582,7 @@
 								})
 							}else if(lydx.activityType == 'checkIn'){
 								this.popName = 'checkin-success-pop'
-							} else if(lydx.activityType != 'packets'){
+							} else if(lydx.activityType != 'packets' && lydx.activityType != 2){
 								uni.reLaunch({
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 										.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
@@ -592,7 +593,7 @@
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity' 
 
-						if(lydx.activityType == 'checkIn' || lydx.activityType == 'packets'){
+						if(lydx.activityType == 'checkIn' || lydx.activityType == 'packets' || lydx.activityType == 2){
 							this.$emit('subSuccess')
 							
 						}

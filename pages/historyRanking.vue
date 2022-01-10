@@ -5,27 +5,33 @@
                 <view :class="['search-input',{hasChoosed:createTime}]">{{createTime ? createTime :'请选择历史排行日期'}}</view>
             </picker>
         </view>
-        <view class="podium">
-            <view class="ranking-text">只显示前100名</view>
-            <view class="top3">
-                <view :class="['winner','no'+(index+1)]" v-for="(item,index) in top3List" :key="index">
-                    <view class="header">
-                        <image class="wxHead" :src="item.avatarUrl"></image>
+        <template v-if="rankList.length>0">
+            <view class="podium">
+                <view class="ranking-text">只显示前100名</view>
+                <view class="top3">
+                    <view :class="['winner','no'+(index+1)]" v-for="(item,index) in top3List" :key="index">
+                        <view class="header">
+                            <image class="wxHead" :src="item.avatarUrl"></image>
+                        </view>
+                        <view class="wxName">{{item.nickName}}</view>
+                        <view class="time">{{item.score}}秒</view>
                     </view>
-                    <view class="wxName">{{item.nickName}}</view>
-                    <view class="time">{{item.score}}</view>
                 </view>
             </view>
-        </view>
-        <view class="ranking-list">
-            <view class="rank-item" v-for="(item,index) in resetList" :key="index">
-                <view class="rank-left">
-                    <view class="number">{{index+4}}</view>
-                    <image class="wxHead" :src="item.avatarUrl"></image>
-                    <view class="name">{{item.nickName}}</view>
+            <view class="ranking-list" v-if="resetList.length>0">
+                <view class="rank-item" v-for="(item,index) in resetList" :key="index">
+                    <view class="rank-left">
+                        <view class="number">{{index+4}}</view>
+                        <image class="wxHead" :src="item.avatarUrl"></image>
+                        <view class="name">{{item.nickName}}</view>
+                    </view>
+                    <view class="time">{{item.score}}秒</view>
                 </view>
-                <view class="time">{{item.score}}</view>
             </view>
+        </template>
+        <view class="noData" v-else>
+            <view class="no-data-icon"></view>
+            <view class="no-data-txt">现在没有数据哦~</view>
         </view>
         <view class="more-ranking" >
             <view class="more-btn" @tap="toActivity()">返回活动首页</view>
@@ -35,95 +41,15 @@
 
 <script>
 import api from '@/public/api/index'
+import {getYesterDayDate} from '@/units/check'
 export default {
     data() {
         return {
             activityId:"",
             start:"",
             end:"",
-            createTime:this.getDate(),
-            rankList:[
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                }
-            ],
+            createTime:this.getYesterDayDate(),
+            rankList:[],
         };
     },
     computed: {
@@ -131,16 +57,12 @@ export default {
             return this.rankList.length>0?this.rankList.filter((item,index)=>index<3):[]
         },
         resetList(){
-            return this.rankList.length>3?this.rankList.filter((item,index)=>index>=3):[]
-        }
-    },
-    watch:{
-        createTime(val){
-            // this.getRankList();
+            return this.rankList.length>3?this.rankList.filter((item,index)=>index>=3 && index<100):[]
         }
     },
     onLoad(options) {
         this.activityId = options.id
+        this.getRankList();
         this.getActivityInfo()
     },
     methods: {
@@ -156,7 +78,7 @@ export default {
         bindDateChange (e) {
             let that = this
             that.createTime = e.detail.value
-
+            this.getRankList();
         },
         async getRankList(){
             let {activityId,createTime}=this;
@@ -164,6 +86,7 @@ export default {
             if(code==1){
                 this.rankList = data;
             }
+            console.log("this.rankList",this.rankList)
         },
         toActivity(){
             uni.navigateTo({
@@ -364,6 +287,21 @@ export default {
             border-radius: 46rpx;
             color: #fa8845;
             
+        }
+    }
+    .noData{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 200rpx;
+        .no-data-icon{
+            .setbg(670rpx,324rpx,'jigsaw/no-data-icon.png');
+        }
+        .no-data-txt{
+            font-size: 28rpx;
+            color: #999999;
+            margin-top: 20rpx;
         }
     }
 </style>

@@ -1,31 +1,31 @@
 <template>
     <view class="rank-list">
-        <template v-if="!isRankWin">
+        <template v-if="!isRankWin || type == 3">
             <template v-if="rankList.length>0">
                 <view class="podium">
-                    <view class="ranking-text">只显示前100名{{type!=2?'，每5分钟更新一次\n凌晨24:00截止当天挑战':''}}</view>
+                    <view class="ranking-text">{{podiumTxt}}}}</view>
                     <view class="top3">
                         <view :class="['winner','no'+(index+1)]" v-for="(item,index) in top3List" :key="index">
                             <view class="header">
                                 <image class="wxHead" :src="item.avatarUrl"></image>
                             </view>
                             <view class="wxName">{{item.nickName}}</view>
-                            <view class="time">{{item.score}}</view>
+                            <view class="time">{{item.score}}秒</view>
                         </view>
                     </view>
                 </view>
-                <view class="ranking-list">
+                <view class="ranking-list"  v-if="resetList.length>0">
                     <view class="rank-item" v-for="(item,index) in resetList" :key="index">
                         <view class="rank-left">
                             <view class="number">{{index+4}}</view>
                             <image class="wxHead" :src="item.avatarUrl"></image>
                             <view class="name">{{item.nickName}}</view>
                         </view>
-                        <view class="time">{{item.score}}</view>
+                        <view class="time">{{item.score}}秒</view>
                     </view>
                 </view>
-                <view class="mine" v-if="type!=2">
-                    <template v-if="isBlack">
+                <view class="mine" v-if="type!=3">
+                    <template v-if="!isBlack">
                         <view class="rank-left">
                             <view class="number">{{mineRank}}</view>
                             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
@@ -35,19 +35,17 @@
                     </template>
                     <view class="blacker" v-else>您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
                 </view>
-                <view class="more-ranking" v-else>
-                    <view class="more-btn">更多历史榜单</view>
-                </view>
             </template>
             <view class="noData" v-else>
                 <view class="no-data-icon"></view>
                 <view class="no-data-txt">现在没有数据哦~</view>
             </view>
-        </template>
-        <view class="collect-info" v-else-if="type!=2">
-            <view class="win-txt">
-                恭喜您，{{type==0?'日榜已于1月18日挑战成功':'总排行榜第8名'}}\n获得{{type==0?'日榜':'总榜'}}排行奖励一份，请登记邮寄信息
+            <view class="more-ranking" v-if="type==3">
+                <view class="more-btn" @tap="toHistory">更多历史榜单</view>
             </view>
+        </template>
+        <view class="collect-info" v-else-if="type!=3">
+            <view class="win-txt">{{winTxt}}</view>
             <view class="info-form">
                 <view class="form-item">
                     <view class="input-label">邮寄姓名</view>
@@ -78,7 +76,7 @@
 
 <script>
 import api from '@/public/api/index'
-import {checkPhone,trim} from '@/units/check'
+import {checkPhone,trim, getYesterDayDate} from '@/units/check'
 export default {
     props: {
         activityId:{
@@ -89,7 +87,7 @@ export default {
             type: Number,
             default: 0
         },
-        createTime:{
+        endTime:{
             type: String,
             default: ""
         }
@@ -99,7 +97,43 @@ export default {
             return this.rankList.length>0?this.rankList.filter((item,index)=>index<3):[]
         },
         resetList(){
-            return this.rankList.length>3?this.rankList.filter((item,index)=>index>=3):[]
+            return this.rankList.length>3?this.rankList.filter((item,index)=>index>=3 && index<100):[]
+        },
+        podiumTxt(){
+            switch(this.type) {
+				case 1: {
+                    return '只显示前100名，每5分钟更新一次\n凌晨24:00截止当天挑战'
+                    break;
+                }
+                case 2: {
+                    return `只显示前100名，每5分钟更新一次\n${this.endTime}截止挑战`
+                    break;
+                }
+                case 3: {
+                    return '只显示前100名'
+                    break;
+                }
+                default: {
+                    return '只显示前100名'
+                    break;
+                }
+                        }
+        },
+        winTxt(){
+            switch(this.type) {
+				case 1: {
+                    return `日榜已于${this.todayRankWinDate}挑战成功,\n获得日榜排行奖励一份，请登记邮寄信息`
+                    break;
+                }
+                case 2: {
+                    return `恭喜您，总排行榜第${this.mineRank}名\n获得总榜排行奖励一份，请登记邮寄信息`
+                    break;
+                }
+                default: {
+                    return ''
+                    break;
+                }
+            }
         }
     },
     watch: {
@@ -107,10 +141,15 @@ export default {
             if(val){
                 this.getWinInfo()
             }
-            
         },
         type(val){
-
+            if(val == 3){
+                this.createTime = this.getDate()
+            }else{
+                this.createTime = ""
+            }
+            this.getUserRankInfo()
+            this.getRankList()
         }
     },
     components: {},
@@ -118,105 +157,24 @@ export default {
         return {
             wxUserInfo:{},
             mineRank:0,
-            mineScore:"5.88秒",
+            mineScore:"",
             isRankWin:false,
+            todayRankWinDate:"",
             isBlack:false,
-            rankList:[
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                },
-                {
-                    activityId:1,
-                    avatarUrl:"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLicVBmSTBeWWllgOh8U0s564YRiaV0XQuMFm46MKnaGZWn0D6icDM0H48kQbo1Dqxv9ic7A6SwgMficSw/132",
-                    createTime:"",
-                    id:1,
-                    nickName:"Crystal～",
-                    score:"5.88秒",
-                    updateTime:"",
-                    userId:"",
-                }
-            ],
+            rankList:[],
             saveInfo:{
-                activityId:this.activityId,
                 address:"",
                 mobile:"",
                 userName:"",
-                createTime:""
             },
-            submiting:false
+            submiting:false,
+            createTime:""
         };
     },
     methods: {
         async getRankList(){
-            let {activityId,type}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type})
+            let {activityId,type,createTime}=this;
+            let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
             if(code==1){
                 this.rankList = data;
             }
@@ -225,16 +183,17 @@ export default {
             let {activityId}=this;
             let {code,data = {}} = await api.getUserRankInfo({activityId})
             if(code==1){
-                this.mineRank = this.type==0?data.todayRank:this.type==1?data.sumRank:"";
-                this.mineScore = this.type==0?data.todayBest:this.type==1?data.historyBest:"";
-                this.isRankWin = this.type==0?data.isTodayRankWin:this.type==1?data.isSumRankWin:false;
+                this.mineRank = this.type==1?data.todayRank:this.type==2?data.sumRank:"";
+                this.mineScore = this.type==1?data.todayBest:this.type==2?data.historyBest:"";
+                this.isRankWin = this.type==1?data.isTodayRankWin:this.type==2?data.isSumRankWin:false;
+                this.todayRankWinDate = data.todayRankWinDate ? `${data.todayRankWinDate.split("-")[1]}月${data.todayRankWinDate.split("-")[2]}日` :''
                 this.isBlack = data.isBlack;
             }
         },
         async getWinInfo(){
-            let {activityId}=this;
-            let {code,data = {}} = await api.selectWinInfo({activityId})
-            if(code == 1){
+            let {activityId,type}=this;
+            let {code,data = {}} = await api.selectWinInfo({activityId,type})
+            if(code == 1 && data){
                 this.saveInfo= data;
             }
         },
@@ -255,15 +214,17 @@ export default {
 				this.$toast('请先输入正确的邮寄电话')
 				return
 			}
-            if (!checkPhone(this.saveInfo.address)) {
+            if (!this.saveInfo.address) {
 				this.$toast('请先输入邮寄地址')
 				return
 			}
             this.submiting = true
-            let {activityId,address,mobile,userName} = this.saveInfo
-            let {code,data = {},msg} = await api.saveWinInfo(this.saveInfo)
-            if (data.code == 1) {
+            let {address,mobile,userName} = this.saveInfo
+            let {activityId,type} =this
+            let {code,data = {},msg} = await api.saveWinInfo({activityId,type,address,mobile,userName})
+            if (code == 1) {
                 this.$toast('提交成功')
+                this.getWinInfo()
                 this.submiting = false
             }else{
                 this.$toast(msg)
@@ -271,9 +232,20 @@ export default {
             }
         },
         toHistory(){
+            let {activityId}=this;
             uni.navigateTo({
                 url: `/pages/historyRanking?id=${activityId}`
             })
+        },
+        getDate(){
+            const date = new Date(new Date().getTime() - 3600 * 1000 * 24 * 1)
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            month = month > 9 ? month : '0' + month;
+            day = day > 9 ? day : '0' + day;
+            console.log(`${year}-${month}-${day}`)
+            return `${year}-${month}-${day}`;
         }
     },
     created() {
@@ -281,9 +253,8 @@ export default {
     },
     mounted() {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
-        console.log(this.wxUserInfo)
-        // this.getUserRankInfo()
-        // this.getRankList()
+        this.getUserRankInfo()
+        this.getRankList()
     },
 };
 </script>
@@ -415,6 +386,8 @@ export default {
     }
     .mine{
         .setbg(100%,128rpx,'jigsaw/black-bg.png');
+        min-height: 128rpx;
+        height: auto;
         position: fixed;
         bottom:0;
         left:0;
@@ -426,6 +399,7 @@ export default {
         z-index: 99;
         padding:0 36rpx;
         color: #ffffff;
+        box-sizing: border-box;
         .name,.number{
             color: #ffffff;
         }

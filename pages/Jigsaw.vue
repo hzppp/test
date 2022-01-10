@@ -1,5 +1,5 @@
 <template>
-    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/100%"}' >
+    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/100% 100%;"}' >
         <view class="user-info">
             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
             <view class="wxName">{{wxUserInfo.wxName}}</view>
@@ -26,34 +26,34 @@
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
             <view class="challenge-con">
                 <image class="wxHead" :src="wxUserInfo.wxHead"></image>
-                <view class="used-time">您的成绩为：<text class="time">10.28秒</text></view>
+                <view class="used-time">您的成绩为：<text class="time">{{counttime}}秒</text></view>
                 <view class="rank-btn">
                     <view class="rank-item rank-date">
                         <text class="label">今日排行</text>
-                        <view class="rank-con">
+                         <view class="rank-con" @tap="toRank(1)">
                             <view v-if="!userRankInfo.todayAward" class="rank-info">
-                                <text class="number" v-if="userRankInfo.todayRank">208</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
+                                <text class="number" v-if="userRankInfo.todayRank">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
                             </view>
                             <view v-else class="award">
                                 获得奖励
                             </view>
                         </view>
                         <view class="rank-best-con">
-                            今日最佳：{{userRankInfo.todayBest ? userRankInfo.todayBest:'暂无成绩'}}
+                            今日最佳：{{userRankInfo.todayBest && userRankInfo.todayBest != -1 ? userRankInfo.todayBest:'暂无成绩'}}
                         </view>
                     </view>
                     <view class="rank-item rank-total">
                         <text class="label">历史排行</text>
-                        <view class="rank-con">
+                         <view class="rank-con" @tap="toRank(2)">
                             <view v-if="!userRankInfo.historyAward"  class="rank-info">
-                                <text class="number" v-if="userRankInfo.sumRank">208</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
+                                <text class="number" v-if="userRankInfo.sumRank">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
                             </view>
                             <view v-else class="award">
                                 获得奖励
                             </view>
                         </view>
                         <view class="rank-best-con">
-                            历史最佳：{{userRankInfo.historyBest ? userRankInfo.historyBest:'暂无成绩'}}
+                            历史最佳：{{userRankInfo.historyBest && userRankInfo.historyBest != -1 ? userRankInfo.historyBest:'暂无成绩'}}
                         </view>
                     </view>
                 </view>
@@ -65,7 +65,7 @@
                 <button class="share-btn" hover-class="none" open-type="share" @click="shareBtnClick" v-else>分享好友</button>
             </view>
             <view class="btn-group">
-                <navigator :url="'/pages/ranking?id='+ activityId" class="btn">排行榜</navigator>
+                <navigator :url="'/pages/ranking?id='+ activityId +'&endTime='+ endTime" class="btn">排行榜</navigator>
                 <navigator :url="'/pages/fissionActivity?id='+ activityId" class="btn">返回首页</navigator>
             </view>
         </uni-popup>
@@ -97,7 +97,7 @@ export default {
             isStarted:false,
             isSuccess:false,
             chanceCount:0,
-             userRankInfo:{
+            userRankInfo:{
                 todayRank:"",
                 sumRank:"",
                 historyBest:"",
@@ -105,15 +105,16 @@ export default {
                 todayAward:0,
                 historyAward:0,
             },
+            endTime:""
        }
     },
     onLoad(options) {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
-        this.getActivityInfo()
+        this.endTime = options.endTime || ""
+        this.getActivityInfo(0)
         this.randomPictureConfig()
-        console.log("base64",base64.encode('changan12.20auto'))
         
     },
     async onShareAppMessage() {
@@ -136,10 +137,33 @@ export default {
                 this.selectedImg = data.url;
             }
         },
-        async getActivityInfo(){
-            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
-            console.log("getLotteryActInfo",this.activityId)
+        async getActivityInfo(type=1){
+            const url = `/pages/fissionActivity?id=${this.activityId}`
+            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,activityType:2})
             if(code == 1){
+                if (!data.isApply) {
+                    uni.showToast({
+                        title: '您暂未留资',
+                        icon: "none"
+                    })
+                    setTimeout(() => {
+                        uni.reLaunch({
+                            url
+                        })
+                    }, 2000)
+				    return;
+			    }else if(data.chanceCount==0 && type==0){
+                    uni.showToast({
+                        title: '您没有挑战机会',
+                        icon: "none"
+                    })
+                    setTimeout(() => {
+                        uni.reLaunch({
+                            url
+                        })
+                    }, 2000)
+                    return;
+                }
                 this.bg = data.activityPic
                 this.chanceCount = data.chanceCount
             }else{
@@ -168,10 +192,20 @@ export default {
             return arr;
         },
         upsetArr(arr) {
-            return arr.sort(function() {
-                return Math.random() > 0.5 ? -1 : 1;
-            });
+            for (var i = 0, len = arr.length; i < len; i++) {
+                var a = parseInt(Math.random() * len);
+                if(a == i) a = parseInt(Math.random() * len);
+                var temp = arr[a];
+                arr[a] = arr[i]; // 随机替换
+                arr[i] = temp;
+            }
+            return arr;
         },
+        // upsetArr(arr) {
+        //     return arr.sort(function() {
+        //         return Math.random() > 0.5 ? -1 : 1;
+        //     });
+        // },
         //开始游戏
         async startGame(){
             if(!this.isStarted){
@@ -186,6 +220,8 @@ export default {
                     this.timer = setInterval(()=>{
                         this.countTimer()
                     }, 10);
+                }else{
+                    this.$toast(msg)
                 }
                 
             }
@@ -198,7 +234,7 @@ export default {
                 this.millisecond=0;
                 this.second=this.second+1;
             }
-            this.counttime=`${this.second?this.second:'0'}:${this.millisecond?this.millisecond/10:'00'}`
+            this.counttime=`${this.second?this.second:'0'}.${this.millisecond?this.millisecond/10:'00'}`
         
         },
         //重新排序
@@ -287,6 +323,7 @@ export default {
             if(code == 1){
                 this.isSuccess = true;
                 this.getActivityInfo()
+                this.getUserRankInfo()
                 this.$refs.resultPopup.open()
             }
         },
@@ -296,6 +333,19 @@ export default {
                 return item.index === i;
             });
         },
+        async getUserRankInfo(){
+            let {activityId}=this;
+            let {code,data = {}} = await api.getUserRankInfo({activityId})
+            if(code==1){
+                this.userRankInfo = data;
+            }
+        },
+        toRank(){
+            let {activityId,endTime}=this;
+            uni.navigateTo({
+                url: `/pages/ranking?id=${activityId}&type=${type}&endTime=${endTime}`
+            })
+        }
     }
 }
 </script>
@@ -310,6 +360,7 @@ export default {
         padding:32rpx;
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.5);
+        overflow: hidden;
         .user-info{
             display: flex;
             align-items: center;
@@ -523,6 +574,7 @@ export default {
             color: #ffffff;
             top:-15rpx;
             right:0;
+            white-space: nowrap;
         }
         .share-btn{
             font-size: 36rpx;

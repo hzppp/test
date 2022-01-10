@@ -3,9 +3,9 @@
         <view class="rank-btn">
             <view class="rank-item rank-date">
                 <text class="label">日榜</text>
-                <view class="rank-con">
+                <view class="rank-con" @tap="toRank(1)">
                     <view v-if="!userRankInfo.todayAward" class="rank-info">
-                        <text class="number" v-if="userRankInfo.todayRank">208</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
+                        <text class="number" v-if="userRankInfo.todayRank">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
                     </view>
                     <view v-else class="award">
                         获得奖励
@@ -13,14 +13,14 @@
                     <view class="arrow-right"></view>
                 </view>
                 <view class="rank-best-con">
-                    今日最佳：{{userRankInfo.todayBest ? userRankInfo.todayBest:'暂无成绩'}}
+                    今日最佳：{{userRankInfo.todayBest && userRankInfo.todayBest != -1 ? userRankInfo.todayBest:'暂无成绩'}}
                 </view>
             </view>
             <view class="rank-item rank-total">
                 <text class="label">总榜</text>
-                <view class="rank-con">
+                <view class="rank-con"  @tap="toRank(2)">
                     <view v-if="!userRankInfo.historyAward"  class="rank-info">
-                        <text class="number" v-if="userRankInfo.sumRank">208</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
+                        <text class="number" v-if="userRankInfo.sumRank">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
                     </view>
                     <view v-else class="award">
                         获得奖励
@@ -28,7 +28,7 @@
                     <view class="arrow-right"></view>
                 </view>
                 <view class="rank-best-con">
-                    历史最佳：{{userRankInfo.historyBest ? userRankInfo.historyBest:'暂无成绩'}}
+                    历史最佳：{{userRankInfo.historyBest && userRankInfo.historyBest != -1 ? userRankInfo.historyBest:'暂无成绩'}}
                 </view>
             </view>
         </view>
@@ -50,6 +50,10 @@ export default {
             type: String,
             default: ""
         },
+        endTime:{
+            type: String,
+            default:""
+        }
     },
     components: {
         inviteRecords,//邀请记录
@@ -72,10 +76,9 @@ export default {
     },
     methods: {
         async getActivityInfo(){
-            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId})
+            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,activityType:2})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
-                console.log("获取当前抽奖机会",this.chanceCount)
                 this.winnerRecords = data.winnerRecords
                 this.activityMemoArr = data.activityMemo.replace('/n', '/r/s')
             }else{
@@ -92,12 +95,20 @@ export default {
                 this.userRankInfo = data;
             }
         },
+        toRank(type){
+            let {activityId}=this;
+            let endTime =  this.endTime ? this.endTime.replaceAll("-","/"):""
+            uni.navigateTo({
+                url: `/pages/ranking?id=${activityId}&type=${type}&endTime=${endTime}`
+            })
+        }
     },
     created() {
 
     },
     mounted() {
         this.getActivityInfo()
+        this.getUserRankInfo()
     },
 };
 </script>
@@ -141,6 +152,10 @@ export default {
             }
             .rank-info{
                 padding: 0 10rpx;
+                font-size: 24rpx;
+                .number{
+                    font-size: 44rpx;
+                }
             }
             .arrow-right{
                 .setbg(32rpx,32rpx,'jigsaw/arrow-right.png');

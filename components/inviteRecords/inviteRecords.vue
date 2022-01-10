@@ -162,7 +162,7 @@ export default {
 		border: 2rpx solid #333333;
 		border-radius: 20rpx;
 		margin:0 auto;
-		padding:20rpx;
+		padding:64rpx 20rpx 20rpx 20rpx;
 		box-sizing: border-box;
 		position: relative;
 		margin-top: 76rpx;
@@ -200,13 +200,17 @@ export default {
 			background: #ffffff;
 			border: 2rpx solid #333333;
 			border-radius: 10rpx;
+			box-sizing: border-box;
 			position: relative;
 			z-index: 9;
-			margin-bottom: 20rpx;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			padding:0 20rpx;
+			margin:0 auto 20rpx;
+		}
+		.time{
+			white-space: nowrap;
 		}
 		.nodata {
 			background: none;

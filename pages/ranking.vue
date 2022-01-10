@@ -6,7 +6,7 @@
             </view>
         </view>
         <view class="tab-con">
-            <ranking-list :activityId="activityId" :type="curIndex"/>
+            <ranking-list :activityId="activityId" :type="curIndex" :endTime="endTime"/>
         </view>
     </view>
 </template>
@@ -20,17 +20,19 @@ export default {
     data() {
         return {
             tabs:[
-                {name:'今日排行',type:0},
-                {name:'昨日排行',type:2},
-                {name:'总排行',type:1}
+                {name:'今日排行',type:1},
+                {name:'昨日排行',type:3},
+                {name:'总排行',type:2}
             ],
-            curIndex:0,
+            curIndex:1,
             activityId:"",
-            type:0,
+            endTime:""
         };
     },
     onLoad(options) {
         this.activityId = options.id
+        this.curIndex = options.type || 1
+        this.endTime = options.endTime || ""
     },
     methods: {
         change(type){
