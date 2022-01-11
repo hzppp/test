@@ -23,7 +23,7 @@
             <view class="btn start-btn" id="start" @click="startGame()">开始游戏</view>
             <view class="game-reminder">点击【开始挑战】即扣除挑战机会</view>
         </template>
-        <view class="btn start-btn" @click="onceSuccess()">一键拼图成功</view>
+        <view class="btn start-btn" @click="onceSuccess()" v-else>一键拼图成功</view>
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
             <view class="challenge-con">
                 <image class="wxHead" :src="wxUserInfo.wxHead"></image>
