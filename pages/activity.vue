@@ -907,7 +907,15 @@
 					if (data.miniUrl && data.miniUrl.indexOf('type=buyorder') != -1) {
 						this.buyOrder = true
 					}
-
+					if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dDis=1') != -1 && !this.sourceUserId){
+						// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
+						console.log('不定位经销商',this.content.miniUrl.indexOf('dDis=1' != -1))
+						this.content.noDistanceDeal = true
+					} 
+					if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dSer=1') != -1){
+						console.log('不自动车车系')
+						this.content.noSer = true
+					} 
 					
 					// 访问活动 记录活动访问次数
 					api.fetchActivityVisit({
