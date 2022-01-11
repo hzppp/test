@@ -515,7 +515,7 @@
 				}
 
 				let pam = {
-					activityType:lydx.activityType,
+					activityType:lydx.activityType>=0?lydx.activityType:"",
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -643,7 +643,7 @@
 					}
 					this.popName = popname
 					
-					if(lydx.activityType == 'packets' || lydx.activityType == 'jigsaw'){
+					if(lydx.activityType == 'packets' || lydx.activityType == 2){
 						this.$emit('subSuccess')
 					}
 

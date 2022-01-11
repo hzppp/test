@@ -1,5 +1,5 @@
 <template>
-    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/100% 100%;"}' >
+    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/cover;"}' >
         <view class="user-info">
             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
             <view class="wxName">{{wxUserInfo.wxName}}</view>
@@ -58,7 +58,7 @@
                     </view>
                 </view>
                 <view class="game-rule">每日最终排行榜将在次日凌晨1点前统计\n要记得明天来看哦~</view>
-                <view class="challenge-btn" v-if="chanceCount>0">
+                <view class="challenge-btn" v-if="chanceCount>0" @tap="onceAgain">
                     继续挑战
                     <view class="chance-count">还有{{chanceCount||0}}次机会</view>
                 </view>
@@ -243,6 +243,7 @@ export default {
         },
         //再玩一次
         onceAgain(){
+            this.$refs.resultPopup.close()
             this.reOrder();
             this.startGame();
         },

@@ -289,12 +289,14 @@
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
 						'changan://lbcjactivity')) {
-					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
-						uni.showToast({
-							title: "活动结束啦",
-							icon: "none"
-						})
-						return
+					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType != 1 && item.activityType != 2){
+						if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+							uni.showToast({
+								title: "活动结束啦",
+								icon: "none"
+							})
+							return
+						}
 					}
 				}
 		

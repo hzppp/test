@@ -311,7 +311,7 @@
 				// 分享用
 				let cs = ''
 				for (let i in options) {
-					if (i != 'scene' && i != 'sourceUserId' && i!='veriCode') {
+					if (i != 'scene' && i != 'ald_share_src' && i != 'sourceUserId' && i!='veriCode') {
 						cs += `${i}=${options[i]}&`
 					}
 

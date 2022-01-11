@@ -293,8 +293,8 @@ export default {
                 &:before{
                     content: "";
                     position: absolute;
-                    top: -22rpx;
-                    left: -22rpx;
+                    top: -21rpx;
+                    left: -21rpx;
                 }
             }
             .wxHead{
@@ -321,6 +321,9 @@ export default {
                 &:before{
                     .setbg(56rpx,56rpx,'jigsaw/no1.png');
                 }
+                .wxHead{
+                    border:4rpx solid #fedb58
+                }
             }
         }
         .no2{
@@ -330,6 +333,9 @@ export default {
                     .setbg(56rpx,56rpx,'jigsaw/no2.png');
                 }
             }
+            .wxHead{
+                border:4rpx solid #c2ddf0
+            }
         }
         .no3{
             right: 5%;
@@ -337,6 +343,9 @@ export default {
                 &:before{
                     .setbg(56rpx,56rpx,'jigsaw/no3.png');
                 }
+            }
+            .wxHead{
+                border:4rpx solid #f0cbbe
             }
         }
     }
