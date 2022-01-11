@@ -297,10 +297,10 @@
 			}, 4000); //这里设置定时
 			  
 			// #ifdef MP-TOUTIAO
-			if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
-				// console.log(this.$refs.cmSwiper)
-				this.$children[2].moveRight()
-			}
+			// if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
+			// 	// console.log(this.$refs.cmSwiper)
+			// 	this.$children[2].moveRight()
+			// }
 			// #endif
 		},
 		watch: {
