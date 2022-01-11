@@ -7,7 +7,7 @@
                 {{item.name}}
             </view>
             <view class="price">
-                ¥<text>{{item.minPrice | formatThousand}}</text>起
+                ¥<text>{{item.minPrice | formatThousand}}</text>{{item.isShowQi?'起':''}}
             </view>
 		</view>
     </view>
@@ -28,7 +28,8 @@ import api from '@/public/api/index'
                 rightSerialId:"", //右边车系id
                 pages:"",
                 type:"",
-				dealersId:""
+				dealersId:"",
+                
             }
         },
         onLoad(options) {
@@ -66,6 +67,15 @@ import api from '@/public/api/index'
 			      	if (res.code == 1) {
 			      		let dealer = res.data.dealer
 			      		this.serialData = res.data.serialGroups
+                        this.serialData.forEach(item => {
+                            let minPrice = item.price.split("-")[0]
+                            let maxPrice = item.price.split("-")[1]
+                            if(minPrice == maxPrice){
+                                item.isShowQi = false
+                            }else{
+                                item.isShowQi = true
+                            }
+                        });
 			      	} 
 			      
 			},
@@ -74,6 +84,15 @@ import api from '@/public/api/index'
                     const {code,data} = await api.fetchSerialScreenList({showPrice:1})
                     if(code === 1) {
                         this.serialData = data
+                        this.serialData.forEach(item => {
+                            let minPrice = item.price.split("-")[0]
+                            let maxPrice = item.price.split("-")[1]
+                            if(minPrice == maxPrice){
+                                item.isShowQi = false
+                            }else{
+                                item.isShowQi = true
+                            }
+                        });
                     }
                 } catch (error) {
                     console.error(error)
