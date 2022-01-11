@@ -284,12 +284,11 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动点击')
 				// #endif	
-
-				console.log('item.redirectType', item)
+				
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
-						'changan://lbcjactivity')) {
-					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType != 1 && item.activityType != 2){
+						'changan://lbcjactivity')) {		
+					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType == 0){
 						if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
 							uni.showToast({
 								title: "活动结束啦",
@@ -398,7 +397,6 @@
 				this.welfarePageNumber = 1
 				this.isLoadGetActivity = true
 				this.activityListPageNumber = 1
-				this.activityList = []
 				this.welfareList = []
 				this.isActivityInit = false
 				this.isWelfareInit = false
@@ -413,7 +411,7 @@
 						let {
 							rows
 						} = await api.getactivity(cityId, 5, this.activityListPageNumber)
-						this.activityListPageNumber++
+						
 						if (rows.length > 0) {
 							this.isLoadGetActivity = true
 						}
@@ -444,8 +442,11 @@
 								return;
 							}
 						// #endif
+						if(this.activityListPageNumber == 1){
+							this.activityList = []
+						}
 						this.activityList = [...this.activityList, ...rows]
-
+						this.activityListPageNumber++
 						console.log('activityList', this.activityList)
 					} catch (err) {
 						console.error(err)

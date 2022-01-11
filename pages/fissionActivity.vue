@@ -2,7 +2,7 @@
 	<view :class="['page-container',{'jigsaw-bg':isJigsaw}]">
 		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
-			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
+			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth(callback,'activity')"
 				style="top: 128rpx;"></button>
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse="sourceUserId" @getTopNavHeigth="getTopNavHeigth">
@@ -64,10 +64,9 @@
 			<jigsaw-activity
 				ref="jigsaw"
 				:activityId="activityId"
-				:endTime = "content.endTime"
 				v-if="isJigsaw"
 			>	
-			 <template v-slot="{chanceCount}">
+			 <template v-slot="{chanceCount,maxCount}">
 				<view class="content">
 					<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 					<view class="jigsaw-detail-btn">
@@ -91,11 +90,7 @@
 									<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
 										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 									<!-- #endif -->
-									<button v-if="chanceCount" class="challenge-btn" @tap="startGame()" >
-										开始挑战
-										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
-									</button>
-									<button v-else class="challenge-btn no-challenge-btn" >
+									<button :class="['challenge-btn',{'no-challenge-btn':!chanceCount}]" :maxCoun="maxCount" @tap="startGame()" >
 										开始挑战
 										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
 									</button>
@@ -270,7 +265,6 @@
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType = options.type || ''
-			console.log("activityId",this.activityId,options)
 			this.actSelect = options.actSelect || ''
 			
 			if (app.Interval) {
@@ -414,7 +408,7 @@
 			// 	}
 			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
-			console.log('fenxiang ', this.shareURL)
+			console.log('分享 ', this.shareURL)
 			return {
 				title: title,
 				path: this.shareURL,
@@ -558,10 +552,18 @@
 				// #endif
 			},
 			//开始挑战
-			startGame(chanceCount){
+			startGame(){
+				if(this.$refs.jigsaw.todayUserCount <= 0){
+					return
+				}
+				if(this.$refs.jigsaw.maxCount <= this.$refs.jigsaw.todayUserCount){
+					this.$toast("您已超过每日挑战次数，请明天再来吧～")
+					return
+				}
 				let endTime =  this.content.endTime ? this.content.endTime.replaceAll("-","/"):""
+				app.globalData.avtivityEndTime = endTime;
 				uni.navigateTo({
-					url: `/pages/Jigsaw?id=${this.activityId}&endTime=${endTime}`
+					url: `/pages/Jigsaw?id=${this.activityId}`
 				})
 			},
 			// 分享按钮被点击
@@ -641,6 +643,9 @@
 				if(this.activityType=="packets"){
 					await this.getFission()
 					this.$refs.redPackets.getActivityInfo()
+				}else if(this.activityType == 2){
+					await this.getFission()
+					this.$refs.jigsaw.getActivityInfo()
 				}
 				let wxUserInfo = uni.getStorageSync('wxUserInfo')
 				console.log("getData wxUserInfo",wxUserInfo)

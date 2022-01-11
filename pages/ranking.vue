@@ -6,7 +6,7 @@
             </view>
         </view>
         <view class="tab-con">
-            <ranking-list :activityId="activityId" :type="curIndex" :endTime="endTime"/>
+            <ranking-list :activityId="activityId" :type="curIndex"/>
         </view>
     </view>
 </template>
@@ -26,13 +26,11 @@ export default {
             ],
             curIndex:1,
             activityId:"",
-            endTime:""
         };
     },
     onLoad(options) {
         this.activityId = options.id
         this.curIndex = options.type || 1
-        this.endTime = options.endTime || ""
     },
     methods: {
         change(type){

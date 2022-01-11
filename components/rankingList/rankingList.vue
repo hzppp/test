@@ -25,7 +25,7 @@
                     </view>
                 </view>
                 <view class="mine" v-if="type!=3">
-                    <template v-if="!isBlack">
+                    <template v-if="!isBlack && mineRank">
                         <view class="rank-left">
                             <view class="number">{{mineRank}}</view>
                             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
@@ -77,6 +77,7 @@
 <script>
 import api from '@/public/api/index'
 import {checkPhone,trim, getYesterDayDate} from '@/units/check'
+let app = getApp()
 export default {
     props: {
         activityId:{
@@ -86,10 +87,6 @@ export default {
         type:{
             type: Number,
             default: 0
-        },
-        endTime:{
-            type: String,
-            default: ""
         }
     },
     computed: {
@@ -100,13 +97,14 @@ export default {
             return this.rankList.length>3?this.rankList.filter((item,index)=>index>=3 && index<100):[]
         },
         podiumTxt(){
+            let endTime = app.globalData.avtivityEndTime
             switch(this.type) {
 				case 1: {
                     return '只显示前100名，每5分钟更新一次\n凌晨24:00截止当天挑战'
                     break;
                 }
                 case 2: {
-                    return `只显示前100名，每5分钟更新一次\n${this.endTime}截止挑战`
+                    return `只显示前100名，每5分钟更新一次\n${endTime}截止挑战`
                     break;
                 }
                 case 3: {

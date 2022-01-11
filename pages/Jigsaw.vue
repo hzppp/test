@@ -23,6 +23,7 @@
             <view class="btn start-btn" id="start" @click="startGame()">开始游戏</view>
             <view class="game-reminder">点击【开始挑战】即扣除挑战机会</view>
         </template>
+        <view class="btn start-btn" @click="onceSuccess()">一键拼图成功</view>
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
             <view class="challenge-con">
                 <image class="wxHead" :src="wxUserInfo.wxHead"></image>
@@ -65,7 +66,7 @@
                 <button class="share-btn" hover-class="none" open-type="share" @click="shareBtnClick" v-else>分享好友</button>
             </view>
             <view class="btn-group">
-                <navigator :url="'/pages/ranking?id='+ activityId +'&endTime='+ endTime" class="btn">排行榜</navigator>
+                <navigator :url="'/pages/ranking?id='+ activityId" class="btn">排行榜</navigator>
                 <navigator :url="'/pages/fissionActivity?id='+ activityId" class="btn">返回首页</navigator>
             </view>
         </uni-popup>
@@ -105,14 +106,12 @@ export default {
                 todayAward:0,
                 historyAward:0,
             },
-            endTime:""
        }
     },
     onLoad(options) {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
-        this.endTime = options.endTime || ""
         this.getActivityInfo(0)
         this.randomPictureConfig()
         
@@ -342,11 +341,16 @@ export default {
             }
         },
         toRank(){
-            let {activityId,endTime}=this;
+            let {activityId}=this;
             uni.navigateTo({
-                url: `/pages/ranking?id=${activityId}&type=${type}&endTime=${endTime}`
+                url: `/pages/ranking?id=${activityId}&type=${type}`
             })
-        }
+        },
+        // 测试一键拼图成功
+        onceSuccess(){
+            clearInterval(this.timer);
+            this.saveResult()
+        },
     }
 }
 </script>

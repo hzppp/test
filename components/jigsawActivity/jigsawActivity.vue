@@ -49,10 +49,6 @@ export default {
         activityId:{
             type: String,
             default: ""
-        },
-        endTime:{
-            type: String,
-            default:""
         }
     },
     components: {
@@ -62,7 +58,9 @@ export default {
     data() {
         return {
             activityMemoArr:"",
-            chanceCount:2,
+            chanceCount:0,
+            maxCount:0,
+            todayUserCount:0,
             userRankInfo:{
                 todayRank:"",
                 sumRank:"",
@@ -79,7 +77,9 @@ export default {
             let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,activityType:2})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
+                this.maxCount = data.maxCount;
                 this.winnerRecords = data.winnerRecords
+                this.todayUserCount = data.todayUserCount
                 this.activityMemoArr = data.activityMemo.replace('/n', '/r/s')
             }else{
                 uni.showToast({
@@ -97,9 +97,8 @@ export default {
         },
         toRank(type){
             let {activityId}=this;
-            let endTime =  this.endTime ? this.endTime.replaceAll("-","/"):""
             uni.navigateTo({
-                url: `/pages/ranking?id=${activityId}&type=${type}&endTime=${endTime}`
+                url: `/pages/ranking?id=${activityId}&type=${type}`
             })
         }
     },

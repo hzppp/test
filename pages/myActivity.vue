@@ -114,20 +114,20 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动点击')
 				// #endif	
-
-				console.log('item.redirectType', item)
+				
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
 						'changan://lbcjactivity')) {
-					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
-						uni.showToast({
-							title: "活动结束啦",
-							icon: "none"
-						})
-						return
+					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType == 0){
+						if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+							uni.showToast({
+								title: "活动结束啦",
+								icon: "none"
+							})
+							return
+						}
 					}
 				}
-		
 				// if(item.redirectType == 2 && item.miniUrl && item.miniUrl.split('&')[1])
 				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
 				switch (item.redirectType) {
