@@ -1,6 +1,6 @@
 <template>
     <view  class="rank-list">
-        <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'" class="scroll-view">
+        <scroll-view scroll-y="true" @scrolltolower="loadMore()" :scroll-top='scrollTop' @scroll="scroll" class="scroll-view">
             <view class="ranking-view">
                 <template v-if="!isRankWin || type == 3">
                     <template v-if="rankList.length>0">
@@ -26,24 +26,14 @@
                                 <view class="time">{{item.score}}秒</view>
                             </view>
                         </view>
-                        <view class="mine" v-if="type!=3 && historyBest!=-1">
-                            <template v-if="!isBlack && mineRank && mineScore">
-                                <view class="rank-left">
-                                    <view class="number">{{mineRank}}</view>
-                                    <image class="wxHead" :src="wxUserInfo.wxHead"></image>
-                                    <view class="name">{{wxUserInfo.wxName}}</view>
-                                </view>
-                                <view class="time">{{mineScore}}秒</view>
-                            </template>
-                            <view class="blacker" v-else-if="isBlack">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
+                        <view v-show="isLoadMore">
+                            <uni-load-more :status="loadStatus"></uni-load-more>
                         </view>
+                        
                     </template>
                     <view class="noData" v-else>
                         <view class="no-data-icon"></view>
                         <view class="no-data-txt">现在没有数据哦~</view>
-                    </view>
-                    <view class="more-ranking" v-if="type==3">
-                        <view class="more-btn" @tap="toHistory">更多历史榜单</view>
                     </view>
                 </template>
                 <view class="collect-info" v-else-if="type!=3">
@@ -91,6 +81,18 @@ export default {
         type:{
             type: Number,
             default: 0
+        },
+        mineRank:{
+            type: Number,
+            default: 0
+        },
+        todayRankWinDate:{
+            type: String,
+            default: ""
+        },
+        isRankWin:{
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -144,27 +146,17 @@ export default {
                 this.getWinInfo()
             }
         },
-        // type(val){
-        //     console.log(val)
-        //     if(val == 3){
-        //         this.createTime = getYesterDayDate()
-        //     }else{
-        //         this.createTime = ""
-        //     }
-        //     this.getUserRankInfo()
-        //     this.getRankList()
-        // }
+        type(val){
+			this.goTop()
+        }
     },
     components: {},
     data() {
         return {
-            wxUserInfo:{},
-            mineRank:0,
-            mineScore:"",
-            historyBest:-1,
-            isRankWin:false,
-            todayRankWinDate:"",
-            isBlack:false,
+            scrollTop: 0,
+            old: {
+                scrollTop: 0
+            },
             rankList:[],
             saveInfo:{
                 address:"",
@@ -173,44 +165,52 @@ export default {
             },
             submiting:false,
             createTime:"",
-            scrollHeight:500,
-            formBtntxt:"提交"
+            scrollHeight:0,
+            formBtntxt:"提交",
+            loadStatus: 'loading', //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
+			isLoadMore: false, //是否加载中
+            pageNum:1,
+            pageSize:10,
+            total:0
         };
     },
     methods: {
+        loadMore() { //上拉触底函数
+            console.log(333333333333 + '加载更多')
+            if (!this.isLoadMore && this.pageNum<=this.total) { //此处判断，上锁，防止重复请求
+                 this.pageNum++
+                this.isLoadMore = true
+                // this.getRankList()
+            }
+        },
         async getRankList(){
-            let {activityId,type,createTime}=this;
+            let {activityId,type,createTime,pageNum,pageSize}=this;
             let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
             if(code==1){
                 this.rankList = data;
-                // this.$nextTick(() => {
-                if(this.rankList.length>0){
-                   uni.createSelectorQuery()
-                    .in(this)
-                    .select(".ranking-view")
-                    .boundingClientRect((data) => {
-                        console.log("height",data)
-                        this.scrollHeight = data.height;
-                    })
-                    .exec()    
+                this.isLoadMore = false
+                // this.total = Math.ceil(data.total / pageSize)
+                this.getScrollHeight()
+            }
+        },
+        getScrollHeight() {
+            let that = this;
+            let list = uni.createSelectorQuery().in(this).select('.ranking-view');
+            setTimeout(() => {
+                list.boundingClientRect(data => {
+                console.log(data)
+                if (data) {
+                    if (data.height && data.height == '' || data.height && data.height == null || data.height && data.height ==
+                    'null') {
+                        that.getScrollHeight();
+                    }
+                    that.scrollHeight = data.height +50;
+                    this.$emit('setScrollHeight',this.scrollHeight)
                 }
-                    
-                // })
-            }
+                }).exec();
+            }, 0);
         },
-        async getUserRankInfo(){
-            let {activityId}=this;
-            let {code,data = {}} = await api.getUserRankInfo({activityId})
-            if(code==1){
-                this.mineRank = this.type==1?data.todayRank:this.type==2?data.sumRank:"";
-                this.mineScore = this.type==1?data.todayBest:this.type==2?data.historyBest:"";
-                this.historyBest = data.historyBest
-                this.isRankWin = this.type==1?data.isTodayRankWin:this.type==2?data.isSumRankWin:false;
-                this.$emit('showRankWin',{isTodayRankWin:data.isTodayRankWin,isSumRankWin:data.isSumRankWin});
-                this.todayRankWinDate = data.todayRankWinDate ? `${data.todayRankWinDate.split("-")[1]}月${data.todayRankWinDate.split("-")[2]}日` :''
-                this.isBlack = data.isBlack;
-            }
-        },
+        
         async getWinInfo(){
             let {activityId,type}=this;
             let {code,data = {}} = await api.selectWinInfo({activityId,type})
@@ -258,19 +258,28 @@ export default {
             uni.navigateTo({
                 url: `/pages/historyRanking?id=${activityId}`
             })
+        },
+        scroll(e) {
+            console.log("scroll")
+            this.old.scrollTop = e.detail.scrollTop
+        },
+        goTop() {
+            this.scrollTop = this.old.scrollTop
+            this.$nextTick(() => {
+                this.scrollTop = 0
+            });
         }
     },
     created() {
 
     },
     mounted() {
-        this.wxUserInfo = uni.getStorageSync('wxUserInfo')
+        
         if(this.type == 3){
             this.createTime = getYesterDayDate()
         }else{
             this.createTime = ""
         }
-        this.getUserRankInfo()
         this.getRankList()
     },
 };
@@ -400,8 +409,7 @@ export default {
         display: flex;
         align-items: center;
     }
-    .ranking-list .number,
-    .mine .number{
+    .ranking-list .number{
         font-size: 32rpx;
         font-family: DIN, DIN-Bold;
         font-weight: 700;
@@ -409,69 +417,18 @@ export default {
         text-align: center;
         color: #666666;
     }
-    .ranking-list .wxHead,
-    .mine .wxHead{
+    .ranking-list .wxHead{
         width: 88rpx;
         height: 88rpx;
         overflow: hidden;
         margin:0 24rpx 0 38rpx;
         border-radius: 50%;
     }
-    .ranking-list .name,
-    .mine .name{
+    .ranking-list .name{
         font-size: 32rpx;
         color: #333333;
     }
-    .mine{
-        .setbg(100%,128rpx,'jigsaw/black-bg.png');
-        position: fixed;
-        bottom:0;
-        left:0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
-        z-index: 99;
-        padding:0 36rpx;
-        color: #ffffff;
-        box-sizing: border-box;
-        .name,.number{
-            color: #ffffff;
-        }
-    }
-    .blacker{
-        font-size: 28rpx;
-        color: #ffffff;
-        text-align: center;
-        white-space: pre-line;
-        margin:0 auto;
-    }
-    .more-ranking{
-        position: fixed;
-        bottom:0;
-        left:0;
-        width: 100%;
-        height: 112rpx;
-        background: #ffffff;
-        padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        .more-btn{
-            width: 686rpx;
-            height: 88rpx;
-            font-size: 32rpx;
-            text-align: center;
-            line-height: 88rpx;
-            border: 2rpx solid #fa8845;
-            border-radius: 46rpx;
-            color: #fa8845;
-            
-        }
-    }
+    
     .noData{
         display: flex;
         align-items: center;
