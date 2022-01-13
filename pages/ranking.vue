@@ -1,5 +1,5 @@
 <template>
-    <view class="ranking-page">
+    <view class="ranking-page" v-if="activityId">
         <view class="ranking-tab">
             <view v-for="(item,index) in tabs" :key="index" :id="'tabNum'+index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type,index)">
                 {{item.name}}
@@ -7,7 +7,7 @@
             </view>
         </view>
         <swiper :current="currentTab" class="tab-con" duration="300" @change="swiperChange">
-            <swiper-item  v-for="(item,index) in tabs" :key="index">
+            <swiper-item v-for="(item,index) in tabs" :key="index">
                 <ranking-list :activityId="activityId" :type="curIndex" v-if="curIndex == item.type" @showRankWin="showRankWin"/>
             </swiper-item>
         </swiper>

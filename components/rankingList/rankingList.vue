@@ -1,6 +1,6 @@
 <template>
     <view  class="rank-list">
-        <scroll-view  scroll-y="true" :style="'height:'+scrollHeight+'px'">
+        <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'">
             <view class="ranking-view">
                 <template v-if="!isRankWin || type == 3">
                     <template v-if="rankList.length>0">
@@ -173,7 +173,7 @@ export default {
             },
             submiting:false,
             createTime:"",
-            scrollHeight:0
+            scrollHeight:500
         };
     },
     methods: {
@@ -182,16 +182,19 @@ export default {
             let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
             if(code==1){
                 this.rankList = data;
-                this.$nextTick(() => {
-                    uni.createSelectorQuery()
-                        .in(this)
-                        .select(".ranking-view")
-                        .boundingClientRect((data) => {
-                            console.log("height",data.height)
-                            this.scrollHeight = data.height;
-                        })
-                        .exec()
-                })
+                // this.$nextTick(() => {
+                if(this.rankList.length>0){
+                   uni.createSelectorQuery()
+                    .in(this)
+                    .select(".ranking-view")
+                    .boundingClientRect((data) => {
+                        console.log("height",data)
+                        this.scrollHeight = data.height;
+                    })
+                    .exec()    
+                }
+                    
+                // })
             }
         },
         async getUserRankInfo(){
@@ -431,6 +434,7 @@ export default {
         z-index: 99;
         padding:0 36rpx;
         color: #ffffff;
+        box-sizing: border-box;
         .name,.number{
             color: #ffffff;
         }

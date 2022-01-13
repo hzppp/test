@@ -95,9 +95,15 @@ export default {
             console.log("this.rankList",this.rankList)
         },
         toActivity(){
-            uni.navigateTo({
-                url: `/pages/fissionActivity?id=${this.activityId}`
+            var pages = getCurrentPages();
+            pages.forEach((item,index)=>{
+                if(item.route == 'pages/fissionActivity'){
+                    uni.navigateBack({
+                        delta:pages.length-(index+1)
+                    });
+                }
             })
+            
         },
    
     }

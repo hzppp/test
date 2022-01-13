@@ -323,7 +323,7 @@ export default {
         async saveResult(){
             let timeStamp = new Date().getTime();
             console.log("时间明文",`changan${this.activityId}${this.counttime}${timeStamp}auto555`)
-            console.log("时间加密",md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`))  )
+            console.log("时间加密",md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`)))
             let {code,data={},msg=""} = await api.saveResult({
                 activityId:this.activityId,
                 timeStamp,
