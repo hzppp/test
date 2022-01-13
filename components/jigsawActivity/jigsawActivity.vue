@@ -34,9 +34,9 @@
         </view>
         <slot :chanceCount="chanceCount"></slot>
         <!-- 邀请记录 -->
-	    <invite-records :activityId="activityId" type="jigsaw"/>
+        <invite-records :activityId="activityId" type="jigsaw"/>
         <!-- 抽奖说明 -->
-	    <draw-tips :activityMemoArr="activityMemoArr" type="jigsaw"/>
+        <draw-tips :activityMemoArr="activityMemoArr" type="jigsaw"/>
     </view>
 </template>
 
@@ -116,6 +116,8 @@ export default {
     @import '@/static/less/public.less';
     .jigsaw-activity{
         position: relative;
+        background: #ffe88b;
+        padding-bottom: 60rpx;
         .rank-btn{
             position: absolute;
             top:217rpx;

@@ -54,7 +54,6 @@ export default {
 			.contentTips {
 				width: 100%;
 				height: 346rpx;
-				overflow: scroll;
 				font-size: 28rpx;
 				line-height: 54rpx;
 				

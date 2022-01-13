@@ -1,5 +1,5 @@
 <template>
-    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/cover;"}' >
+    <view class="jigsaw-play-page" :style='{background: "url(" + bg + ") no-repeat center top/cover;"}'>
         <view class="user-info">
             <image class="wxHead" :src="wxUserInfo.wxHead"></image>
             <view class="wxName">{{wxUserInfo.wxName}}</view>
@@ -67,7 +67,7 @@
             </view>
             <view class="btn-group">
                 <navigator :url="'/pages/ranking?id='+ activityId" class="btn">排行榜</navigator>
-                <navigator :url="'/pages/fissionActivity?id='+ activityId" class="btn">返回首页</navigator>
+                <view class="btn" @tap="toIndex">返回首页</view>
             </view>
         </uni-popup>
     </view>
@@ -115,6 +115,12 @@ export default {
         this.getActivityInfo(0)
         this.randomPictureConfig()
         
+    },
+    onShow() {
+        this.$refs.resultPopup.close()
+        this.pool = this.generateMatrix(3, 212, 212)
+        this.getActivityInfo(0)
+        this.randomPictureConfig()
     },
     async onShareAppMessage() {
         let {data = {}} = await api.getActivityContent(this.activityId)
@@ -215,6 +221,7 @@ export default {
                     this.isSuccess = false;
                     this.millisecond = 0;
                     this.second = 0;
+                    this.counttime = 0;
                     clearInterval(this.timer);
                     this.timer = setInterval(()=>{
                         this.countTimer()
@@ -234,17 +241,13 @@ export default {
                 this.second=this.second+1;
             }
             this.counttime=`${this.second?this.second:'0'}.${this.millisecond?this.millisecond/10:'00'}`
-        
-        },
-        //重新排序
-        reOrder() {
-            this.pool = this.upsetArr(this.pool);
-        },
+        },  
         //再玩一次
         onceAgain(){
+            this.isStarted = false;
             this.$refs.resultPopup.close()
-            this.reOrder();
-            this.startGame();
+            this.randomPictureConfig()
+            this.pool = this.generateMatrix(3, 212, 212)
         },
         //手指按下屏幕
         handleTouchstart(event, item,index){
@@ -351,6 +354,9 @@ export default {
             clearInterval(this.timer);
             this.saveResult()
         },
+        toIndex(){
+            uni.navigateBack()
+        }
     }
 }
 </script>
@@ -572,7 +578,11 @@ export default {
 		}
         .chance-count{
             position: absolute;
-            .setbg(132rpx,32rpx,'redpackage/chance-bg.png');
+            .setbg(auto,32rpx,'redpackage/chance-bg.png');
+            min-width: 132rpx;
+            padding:0 10rpx;
+            box-sizing: border-box;
+            background-size:cover;
             font-size: 20rpx;
             text-align: center;
             line-height: 32rpx;

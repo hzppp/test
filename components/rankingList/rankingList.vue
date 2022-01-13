@@ -1,76 +1,80 @@
 <template>
-    <view class="rank-list">
-        <template v-if="!isRankWin || type == 3">
-            <template v-if="rankList.length>0">
-                <view class="podium">
-                    <view class="ranking-text">{{podiumTxt}}}}</view>
-                    <view class="top3">
-                        <view :class="['winner','no'+(index+1)]" v-for="(item,index) in top3List" :key="index">
-                            <view class="header">
-                                <image class="wxHead" :src="item.avatarUrl"></image>
+    <view  class="rank-list">
+        <scroll-view  scroll-y="true" :style="'height:'+scrollHeight+'px'">
+            <view class="ranking-view">
+                <template v-if="!isRankWin || type == 3">
+                    <template v-if="rankList.length>0">
+                        <view class="podium">
+                            <view class="ranking-text">{{podiumTxt}}</view>
+                            <view class="top3">
+                                <view :class="['winner','no'+(index+1)]" v-for="(item,index) in top3List" :key="index">
+                                    <view class="header">
+                                        <image class="wxHead" :src="item.avatarUrl"></image>
+                                    </view>
+                                    <view class="wxName">{{item.nickName}}</view>
+                                    <view class="time">{{item.score}}秒</view>
+                                </view>
                             </view>
-                            <view class="wxName">{{item.nickName}}</view>
-                            <view class="time">{{item.score}}秒</view>
                         </view>
-                    </view>
-                </view>
-                <view class="ranking-list"  v-if="resetList.length>0">
-                    <view class="rank-item" v-for="(item,index) in resetList" :key="index">
-                        <view class="rank-left">
-                            <view class="number">{{index+4}}</view>
-                            <image class="wxHead" :src="item.avatarUrl"></image>
-                            <view class="name">{{item.nickName}}</view>
+                        <view class="ranking-list"  v-if="resetList.length>0">
+                            <view class="rank-item" v-for="(item,index) in resetList" :key="index">
+                                <view class="rank-left">
+                                    <view class="number">{{index+4}}</view>
+                                    <image class="wxHead" :src="item.avatarUrl"></image>
+                                    <view class="name">{{item.nickName}}</view>
+                                </view>
+                                <view class="time">{{item.score}}秒</view>
+                            </view>
                         </view>
-                        <view class="time">{{item.score}}秒</view>
-                    </view>
-                </view>
-                <view class="mine" v-if="type!=3">
-                    <template v-if="!isBlack && mineRank">
-                        <view class="rank-left">
-                            <view class="number">{{mineRank}}</view>
-                            <image class="wxHead" :src="wxUserInfo.wxHead"></image>
-                            <view class="name">{{wxUserInfo.wxName}}</view>
+                        <view class="mine" v-if="type!=3 && historyBest!=-1">
+                            <template v-if="!isBlack && mineRank && mineScore">
+                                <view class="rank-left">
+                                    <view class="number">{{mineRank}}</view>
+                                    <image class="wxHead" :src="wxUserInfo.wxHead"></image>
+                                    <view class="name">{{wxUserInfo.wxName}}</view>
+                                </view>
+                                <view class="time">{{mineScore}}秒</view>
+                            </template>
+                            <view class="blacker" v-else-if="isBlack && historyBest!=-1">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
                         </view>
-                        <view class="time">{{mineScore}}</view>
                     </template>
-                    <view class="blacker" v-else>您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
-                </view>
-            </template>
-            <view class="noData" v-else>
-                <view class="no-data-icon"></view>
-                <view class="no-data-txt">现在没有数据哦~</view>
-            </view>
-            <view class="more-ranking" v-if="type==3">
-                <view class="more-btn" @tap="toHistory">更多历史榜单</view>
-            </view>
-        </template>
-        <view class="collect-info" v-else-if="type!=3">
-            <view class="win-txt">{{winTxt}}</view>
-            <view class="info-form">
-                <view class="form-item">
-                    <view class="input-label">邮寄姓名</view>
-                    <view class="input-con">
-                        <input type="text" :always-embed="true" v-model="saveInfo.userName" placeholder="请填写姓名"
-						placeholder-class="placeholder"  class="input"></input>
+                    <view class="noData" v-else>
+                        <view class="no-data-icon"></view>
+                        <view class="no-data-txt">现在没有数据哦~</view>
                     </view>
-                </view>
-                <view class="form-item">
-                    <view class="input-label">邮寄电话</view>
-                    <view class="input-con">
-                        <input type="text" :always-embed="true" v-model="saveInfo.mobile" placeholder="请填写电话号码"
-						placeholder-class="placeholder" class="input"></input>
+                    <view class="more-ranking" v-if="type==3">
+                        <view class="more-btn" @tap="toHistory">更多历史榜单</view>
                     </view>
-                </view>
-                <view class="form-item form-txtarea">
-                    <view class="input-label">邮寄地址</view>
-                    <view class="input-con">
-                        <textarea maxlength="80" placeholder="请填写收货地址"
-						placeholder-class="placeholder" v-model="saveInfo.address" class="input"></textarea>
+                </template>
+                <view class="collect-info" v-else-if="type!=3">
+                    <view class="win-txt">{{winTxt}}</view>
+                    <view class="info-form">
+                        <view class="form-item">
+                            <view class="input-label">邮寄姓名</view>
+                            <view class="input-con">
+                                <input type="text" :always-embed="true" v-model="saveInfo.userName" placeholder="请填写姓名"
+                                placeholder-class="placeholder"  class="input"></input>
+                            </view>
+                        </view>
+                        <view class="form-item">
+                            <view class="input-label">邮寄电话</view>
+                            <view class="input-con">
+                                <input type="text" :always-embed="true" v-model="saveInfo.mobile" placeholder="请填写电话号码"
+                                placeholder-class="placeholder" class="input"></input>
+                            </view>
+                        </view>
+                        <view class="form-item form-txtarea">
+                            <view class="input-label">邮寄地址</view>
+                            <view class="input-con">
+                                <textarea maxlength="80" placeholder="请填写收货地址"
+                                placeholder-class="placeholder" v-model="saveInfo.address" class="input"></textarea>
+                            </view>
+                        </view>
                     </view>
+                    <view class="submit" @tap='submit()'>提交</view>
                 </view>
             </view>
-            <view class="submit" @tap='submit()'>提交</view>
-        </view>
+        </scroll-view>
     </view>
 </template>
 
@@ -156,6 +160,7 @@ export default {
             wxUserInfo:{},
             mineRank:0,
             mineScore:"",
+            historyBest:-1,
             isRankWin:false,
             todayRankWinDate:"",
             isBlack:false,
@@ -166,7 +171,8 @@ export default {
                 userName:"",
             },
             submiting:false,
-            createTime:""
+            createTime:"",
+            scrollHeight:0
         };
     },
     methods: {
@@ -175,6 +181,14 @@ export default {
             let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
             if(code==1){
                 this.rankList = data;
+                uni.createSelectorQuery()
+					.in(this)
+					.select(".ranking-view")
+					.boundingClientRect((data) => {
+                        console.log("type",data.height)
+						this.scrollHeight = data.height;
+					})
+					.exec()
             }
         },
         async getUserRankInfo(){
@@ -183,6 +197,7 @@ export default {
             if(code==1){
                 this.mineRank = this.type==1?data.todayRank:this.type==2?data.sumRank:"";
                 this.mineScore = this.type==1?data.todayBest:this.type==2?data.historyBest:"";
+                this.historyBest = data.historyBest
                 this.isRankWin = this.type==1?data.isTodayRankWin:this.type==2?data.isSumRankWin:false;
                 this.todayRankWinDate = data.todayRankWinDate ? `${data.todayRankWinDate.split("-")[1]}月${data.todayRankWinDate.split("-")[2]}日` :''
                 this.isBlack = data.isBlack;
@@ -261,6 +276,14 @@ export default {
     @import '@/static/less/public.less';
     .rank-list{
         padding-bottom: 150rpx;
+        width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        .ranking-view{
+            min-height: calc(100vh - 88rpx);
+            position: relative;
+            overflow: hidden;
+        }   
         .podium{
             .setbg(750rpx,540rpx,'jigsaw/podium-bg.png');
             padding: 20rpx;
@@ -362,6 +385,9 @@ export default {
             align-items: center;
             height: 135rpx;
             border-bottom:1px solid #ebebeb;
+            &:last-child{
+                border-bottom: none;
+            }
         }
         
     }
@@ -401,8 +427,8 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
+        bottom: constant(safe-area-inset-bottom);
+		bottom: env(safe-area-inset-bottom);
         z-index: 99;
         padding:0 36rpx;
         color: #ffffff;
@@ -425,8 +451,8 @@ export default {
         width: 100%;
         height: 112rpx;
         background: #ffffff;
-        padding-bottom: constant(safe-area-inset-bottom);
-		padding-bottom: env(safe-area-inset-bottom);
+        bottom: constant(safe-area-inset-bottom);
+		bottom: env(safe-area-inset-bottom);
         display: flex;
         justify-content: center;
         align-items: center;

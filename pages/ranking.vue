@@ -1,13 +1,15 @@
 <template>
     <view class="ranking-page">
         <view class="ranking-tab">
-            <view v-for="(item,index) in tabs" :key="index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type)">
+            <view v-for="(item,index) in tabs" :key="index" :id="'tabNum'+index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type)">
                 {{item.name}}
             </view>
         </view>
-        <view class="tab-con">
-            <ranking-list :activityId="activityId" :type="curIndex"/>
-        </view>
+        <swiper :current="currentTab" class="tab-con" duration="300" @change="swiperChange">
+            <swiper-item  v-for="(item,index) in tabs" :key="index">
+                <ranking-list :activityId="activityId" :type="curIndex"/>
+            </swiper-item>
+        </swiper>
     </view>
 </template>
 
@@ -26,6 +28,7 @@ export default {
             ],
             curIndex:1,
             activityId:"",
+            currentTab:0,
         };
     },
     onLoad(options) {
@@ -35,7 +38,33 @@ export default {
     methods: {
         change(type){
             this.curIndex = type;
-        }
+        },
+        swiperChange(e){
+            let index = e.target.current;
+            this.setScrollLeft(index)
+            this.currentTab = index;
+            this.curIndex=this.tabs[index].type;
+        },
+        async setScrollLeft(tabIndex) {
+            let leftWidthSum = 0;
+            for (var i = 0; i <= tabIndex; i++) {
+                let nowElement = await this.getWidth('tabNum' + i);
+                leftWidthSum = leftWidthSum + nowElement.width;
+            }
+            let winWidth = uni.getSystemInfoSync().windowWidth;
+            this.scrollLeft = leftWidthSum > winWidth ? (leftWidthSum - winWidth) : 0
+        },
+         getWidth: function(id) { //得到元素的宽高
+            return new Promise((res, rej) => {
+                uni.createSelectorQuery().select("#" + id).fields({
+                    size: true,
+                    scrollOffset: true
+                }, (data) => {
+                    res(data);
+                }).exec();
+            })
+        },
+
     }
 
 };
@@ -43,11 +72,17 @@ export default {
 
 <style scoped lang="less">
     .ranking-page{
-        width: 100%;
-        min-height: 100vh;
+        width: 100vw;
+        height: 100vh;
         background: #f8f8f8;
+        overflow-x: hidden;
     }
     .ranking-tab{
+        position: fixed;
+        top:0;
+        left:0;
+        width: 100%;
+        z-index: 100;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -76,5 +111,12 @@ export default {
                 }
             }
         }
+    }
+    .tab-con{
+        width: 100%;
+        overflow: hidden;
+        padding-top: 88rpx;
+        min-height: 100vh;
+        box-sizing: border-box;
     }
 </style>

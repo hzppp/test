@@ -414,7 +414,8 @@
 			"path": "pages/Jigsaw",
 			"style": {
 				"navigationBarTitleText": "拼图游戏",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"disableScroll":true
 			}
 	    },
 		{
@@ -428,7 +429,8 @@
 			"path": "pages/historyRanking",
 			"style": {
 				"navigationBarTitleText": "排行榜",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"disableScroll":true
 			}
 		}
 

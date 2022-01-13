@@ -1,5 +1,5 @@
 <template>
-	<view :class="['page-container',{'jigsaw-bg':isJigsaw}]">
+	<view class="page-container">
 		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
 			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth(callback,'activity')"
@@ -66,7 +66,7 @@
 				:activityId="activityId"
 				v-if="isJigsaw"
 			>	
-			 <template v-slot="{chanceCount,maxCount}">
+			 <template v-slot="{chanceCount}">
 				<view class="content">
 					<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 					<view class="jigsaw-detail-btn">
@@ -382,6 +382,9 @@
 		onShow() {
 			if(this.activityType=="packets"){
 				this.$refs.redPackets.autoplay=true
+			}else if(this.activityType==2){
+				this.$refs.jigsaw.getActivityInfo();
+				this.$refs.jigsaw.getUserRankInfo()
 			}
 		},
 		onHide() {
@@ -553,7 +556,7 @@
 			},
 			//开始挑战
 			startGame(){
-				if(this.$refs.jigsaw.todayUserCount <= 0){
+				if(this.$refs.jigsaw.chanceCount <= 0){
 					return
 				}
 				if(this.$refs.jigsaw.maxCount <= this.$refs.jigsaw.todayUserCount){
@@ -723,9 +726,6 @@
 	// .page-container{
 	// 	position: relative;
 	// }
-	.jigsaw-bg{
-		background: yellow;
-	}
 	.title {
 		line-height: 65rpx;
 		padding: 30rpx 32rpx;
@@ -1046,7 +1046,11 @@
 	}
 	.chance-count{
 		position: absolute;
-		.setbg(132rpx,32rpx,'redpackage/chance-bg.png');
+		.setbg(auto,32rpx,'redpackage/chance-bg.png');
+		min-width: 132rpx;
+		padding:0 10rpx;
+		box-sizing: border-box;
+		background-size:cover;
 		font-size: 20rpx;
 		text-align: center;
 		line-height: 32rpx;

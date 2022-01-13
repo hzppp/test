@@ -154,6 +154,8 @@ export default {
 		text-align: center;
 		font-size: 24rpx;
 		margin-top: 32rpx;
+		position: relative;
+		z-index: 10;
 	}
 	.jigsaw-inviteRecord{
 		width: 706rpx;
@@ -214,7 +216,7 @@ export default {
 		}
 		.nodata {
 			background: none;
-			line-height: 520rpx;
+			line-height: 460rpx;
 		}
 	}
 </style>
