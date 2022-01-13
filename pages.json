@@ -409,8 +409,21 @@
 				"navigationBarTitleText": "商城升级中",
 				"enablePullDownRefresh": false
 			}
+	   },
+		{
+			"path": "pages/invitationLetter/Search",
+			"style": {
+				"navigationBarTitleText": "到店邀请函",
+				"enablePullDownRefresh": false
+			}
+			},
+		{
+			"path": "pages/invitationLetter/Result",
+			"style": {
+				"navigationBarTitleText": "到店邀请函",
+				"enablePullDownRefresh": false
+			}
 	   }
-
 	],
 	"tabBar": {
 		"custom": true,
