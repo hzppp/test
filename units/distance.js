@@ -97,6 +97,7 @@ export default {
         if(!lat1){
           return
         }
+		if(lat1 === lat2 && lng1 === lng2) return 0
         var EARTH_RADIUS = 6378137.0;    //单位M
         var PI = Math.PI;
       
