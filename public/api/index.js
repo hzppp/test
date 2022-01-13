@@ -1347,6 +1347,19 @@ module.exports = {
 		return data
 	},
 
+	getInvitaionLetter: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getInvitaionLetter'),
+			method: "GET",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
 
 	randomPictureConfig: async (para) => {
 		let {
@@ -1390,6 +1403,20 @@ module.exports = {
 		return data
 	},
 
+	sendToStore: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('sendToStore'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+			
 	startJigsaw: async (para) => {
 		let {
 			data
