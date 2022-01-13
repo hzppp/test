@@ -3,11 +3,12 @@
         <view class="ranking-tab">
             <view v-for="(item,index) in tabs" :key="index" :id="'tabNum'+index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type)">
                 {{item.name}}
+                <view class="chance-count" v-if="index!=1">获得奖励</view>
             </view>
         </view>
         <swiper :current="currentTab" class="tab-con" duration="300" @change="swiperChange">
             <swiper-item  v-for="(item,index) in tabs" :key="index">
-                <ranking-list :activityId="activityId" :type="curIndex"/>
+                <ranking-list :activityId="activityId" :type="curIndex" @showRankWin="showRankWin"/>
             </swiper-item>
         </swiper>
     </view>
@@ -64,6 +65,10 @@ export default {
                 }).exec();
             })
         },
+        showRankWin(type=1,isRankWin = false){
+            console.log("type",type);
+            console.log("isRankWin",isRankWin);
+        }
 
     }
 
@@ -71,6 +76,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+    @import '@/static/less/public.less';
     .ranking-page{
         width: 100vw;
         height: 100vh;
@@ -118,5 +124,17 @@ export default {
         padding-top: 88rpx;
         min-height: 100vh;
         box-sizing: border-box;
+    }
+    .chance-count{
+        position: absolute;
+        .setbg(100rpx,32rpx,'jigsaw/win-icon.png');
+        box-sizing: border-box;
+        background-size:cover;
+        font-size: 20rpx;
+        text-align: center;
+        line-height: 32rpx;
+        color: #ffffff;
+        top:-24rpx;
+        right:0;
     }
 </style>

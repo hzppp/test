@@ -82,7 +82,7 @@ export default {
         },
         async getRankList(){
             let {activityId,createTime}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type:2,createTime})
+            let {code,data = {}} = await api.getRankInfo({activityId,type:3,createTime})
             if(code==1){
                 this.rankList = data;
             }

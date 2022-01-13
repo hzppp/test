@@ -26,7 +26,7 @@
                                 <view class="time">{{item.score}}秒</view>
                             </view>
                         </view>
-                        <view class="mine" v-if="type!=3 && historyBest!=-1">
+                        <view class="mine" v-if="type!=3 && mineRank && mineScore && historyBest!=-1">
                             <template v-if="!isBlack && mineRank && mineScore">
                                 <view class="rank-left">
                                     <view class="number">{{mineRank}}</view>
@@ -181,14 +181,16 @@ export default {
             let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
             if(code==1){
                 this.rankList = data;
-                uni.createSelectorQuery()
-					.in(this)
-					.select(".ranking-view")
-					.boundingClientRect((data) => {
-                        console.log("type",data.height)
-						this.scrollHeight = data.height;
-					})
-					.exec()
+                this.$nextTick(() => {
+                    uni.createSelectorQuery()
+                        .in(this)
+                        .select(".ranking-view")
+                        .boundingClientRect((data) => {
+                            console.log("type",data.height)
+                            this.scrollHeight = data.height;
+                        })
+                        .exec()
+                })
             }
         },
         async getUserRankInfo(){
@@ -199,6 +201,9 @@ export default {
                 this.mineScore = this.type==1?data.todayBest:this.type==2?data.historyBest:"";
                 this.historyBest = data.historyBest
                 this.isRankWin = this.type==1?data.isTodayRankWin:this.type==2?data.isSumRankWin:false;
+                if(this.type!=3){
+                    this.$emit('showRankWin',this.type,this.isRankWin);
+                }
                 this.todayRankWinDate = data.todayRankWinDate ? `${data.todayRankWinDate.split("-")[1]}月${data.todayRankWinDate.split("-")[2]}日` :''
                 this.isBlack = data.isBlack;
             }
