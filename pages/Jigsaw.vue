@@ -74,7 +74,7 @@
 </template>
 <script>
 import api from '@/public/api/index'
-let base64= require('../units/base64.js').Base64;
+import md5 from "@/units/md5";
 export default {
     data() {
         return {
@@ -321,8 +321,15 @@ export default {
             } 
         },
         async saveResult(){
-            let result = base64.encode(this.counttime); 
-            let {code,data={},msg=""} = await api.saveResult({activityId:this.activityId,result})
+            let timeStamp = new Date().getTime();
+            console.log("时间明文",`changan${this.activityId}${this.counttime}${timeStamp}auto555`)
+            console.log("时间加密",md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`))  )
+            let {code,data={},msg=""} = await api.saveResult({
+                activityId:this.activityId,
+                timeStamp,
+                score:this.counttime,
+                signStr:md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`))    
+            })
             if(code == 1){
                 this.isSuccess = true;
                 this.getActivityInfo()

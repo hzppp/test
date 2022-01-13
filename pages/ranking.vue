@@ -1,14 +1,14 @@
 <template>
     <view class="ranking-page">
         <view class="ranking-tab">
-            <view v-for="(item,index) in tabs" :key="index" :id="'tabNum'+index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type)">
+            <view v-for="(item,index) in tabs" :key="index" :id="'tabNum'+index" :class="['tab-item',{'tab-item-cur':curIndex == item.type}]" @tap="change(item.type,index)">
                 {{item.name}}
-                <view class="chance-count" v-if="index!=1">获得奖励</view>
+                <view class="chance-count" v-if="(index==2 && isSumRankWin) || (index==0 && isTodayRankWin)">获得奖励</view>
             </view>
         </view>
         <swiper :current="currentTab" class="tab-con" duration="300" @change="swiperChange">
             <swiper-item  v-for="(item,index) in tabs" :key="index">
-                <ranking-list :activityId="activityId" :type="curIndex" @showRankWin="showRankWin"/>
+                <ranking-list :activityId="activityId" :type="curIndex" v-if="curIndex == item.type" @showRankWin="showRankWin"/>
             </swiper-item>
         </swiper>
     </view>
@@ -30,6 +30,8 @@ export default {
             curIndex:1,
             activityId:"",
             currentTab:0,
+            isTodayRankWin:false,
+            isSumRankWin:false
         };
     },
     onLoad(options) {
@@ -37,8 +39,10 @@ export default {
         this.curIndex = options.type || 1
     },
     methods: {
-        change(type){
+        change(type,index){
             this.curIndex = type;
+            this.setScrollLeft(index)
+            this.currentTab = index;
         },
         swiperChange(e){
             let index = e.target.current;
@@ -65,9 +69,9 @@ export default {
                 }).exec();
             })
         },
-        showRankWin(type=1,isRankWin = false){
-            console.log("type",type);
-            console.log("isRankWin",isRankWin);
+        showRankWin(data){
+            this.isTodayRankWin=data.isTodayRankWin
+            this.isSumRankWin = data.isSumRankWin
         }
 
     }

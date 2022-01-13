@@ -71,7 +71,7 @@
                             </view>
                         </view>
                     </view>
-                    <view class="submit" @tap='submit()'>提交</view>
+                    <view class="submit" @tap='submit()'>{{saveInfo.userName?'修改':'提交'}}</view>
                 </view>
             </view>
         </scroll-view>
@@ -144,15 +144,16 @@ export default {
                 this.getWinInfo()
             }
         },
-        type(val){
-            if(val == 3){
-                this.createTime = this.getDate()
-            }else{
-                this.createTime = ""
-            }
-            this.getUserRankInfo()
-            this.getRankList()
-        }
+        // type(val){
+        //     console.log(val)
+        //     if(val == 3){
+        //         this.createTime = getYesterDayDate()
+        //     }else{
+        //         this.createTime = ""
+        //     }
+        //     this.getUserRankInfo()
+        //     this.getRankList()
+        // }
     },
     components: {},
     data() {
@@ -186,7 +187,7 @@ export default {
                         .in(this)
                         .select(".ranking-view")
                         .boundingClientRect((data) => {
-                            console.log("type",data.height)
+                            console.log("height",data.height)
                             this.scrollHeight = data.height;
                         })
                         .exec()
@@ -201,9 +202,7 @@ export default {
                 this.mineScore = this.type==1?data.todayBest:this.type==2?data.historyBest:"";
                 this.historyBest = data.historyBest
                 this.isRankWin = this.type==1?data.isTodayRankWin:this.type==2?data.isSumRankWin:false;
-                if(this.type!=3){
-                    this.$emit('showRankWin',this.type,this.isRankWin);
-                }
+                this.$emit('showRankWin',{isTodayRankWin:data.isTodayRankWin,isSumRankWin:data.isSumRankWin});
                 this.todayRankWinDate = data.todayRankWinDate ? `${data.todayRankWinDate.split("-")[1]}月${data.todayRankWinDate.split("-")[2]}日` :''
                 this.isBlack = data.isBlack;
             }
@@ -254,16 +253,6 @@ export default {
             uni.navigateTo({
                 url: `/pages/historyRanking?id=${activityId}`
             })
-        },
-        getDate(){
-            const date = new Date(new Date().getTime() - 3600 * 1000 * 24 * 1)
-            let year = date.getFullYear();
-            let month = date.getMonth() + 1;
-            let day = date.getDate();
-            month = month > 9 ? month : '0' + month;
-            day = day > 9 ? day : '0' + day;
-            console.log(`${year}-${month}-${day}`)
-            return `${year}-${month}-${day}`;
         }
     },
     created() {
@@ -271,6 +260,11 @@ export default {
     },
     mounted() {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
+        if(this.type == 3){
+            this.createTime = getYesterDayDate()
+        }else{
+            this.createTime = ""
+        }
         this.getUserRankInfo()
         this.getRankList()
     },
@@ -432,12 +426,11 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        bottom: constant(safe-area-inset-bottom);
-		bottom: env(safe-area-inset-bottom);
+        padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
         z-index: 99;
         padding:0 36rpx;
         color: #ffffff;
-        box-sizing: border-box;
         .name,.number{
             color: #ffffff;
         }
@@ -456,8 +449,8 @@ export default {
         width: 100%;
         height: 112rpx;
         background: #ffffff;
-        bottom: constant(safe-area-inset-bottom);
-		bottom: env(safe-area-inset-bottom);
+        padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
         display: flex;
         justify-content: center;
         align-items: center;
