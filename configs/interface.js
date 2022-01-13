@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE; 
+const CUR_ENV = ENV.TEST; 
 const version = 1068;
 
 
@@ -333,6 +333,10 @@ const config = {
 		openRedPacket: `${DOMAIN.changan}/api/xcx/redPacket/redPacketOpen`,
 		//拼团活动获取团信息
 		getGroupBuyInfo: `${DOMAIN.changan}/api/xcx/activity/selectGroupBuyInfo`,
+
+		//小程序预约到店邀请函信息
+		getInvitaionLetter: `${DOMAIN.changan}/api/xcx/clue/toStoreInvitation`,
+		sendToStore: `${DOMAIN.changan}/api/xcx/clue/toStoreSend`,
 	},
 	getAPI(key) {
 		let url;
