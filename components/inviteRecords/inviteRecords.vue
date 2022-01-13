@@ -1,5 +1,5 @@
 <template>
-    <view class="inviteRecord" v-if="isRecordsShow || (!isRecordsShow&&inviteRecordList&&inviteRecordList.length)">
+    <view :class="type=='jigsaw'?'jigsaw-inviteRecord':'inviteRecord'" v-if="isRecordsShow || (!isRecordsShow&&inviteRecordList&&inviteRecordList.length)">
         <view class="title titleK">邀请记录</view>
         <block v-if="inviteRecordList&&inviteRecordList.length">
             <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
@@ -26,6 +26,10 @@ import api from '@/public/api/index'
 export default {
     props:{
         activityId:{
+            type: String,
+            default: ""
+        },
+		type:{
             type: String,
             default: ""
         },
@@ -69,6 +73,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+	@import '@/static/less/public.less';
     .inviteRecord {
 		color: #333333;
 		padding: 40rpx 20rpx 30rpx;
@@ -95,7 +100,13 @@ export default {
 			align-items: center;
 			border-radius: 10rpx;
 
-			.item-left{
+			
+		}
+
+		
+	}
+	.item{
+		.item-left{
                 display: flex;
                 align-items: center;
             }
@@ -124,24 +135,88 @@ export default {
 				color: #999999;
 				font-size: 24rpx;
 			}
-		}
+	}
+	.nodata {
+		border-radius: 10rpx;
+		margin-bottom: 20rpx;
+		background: #eef1f5;
+		height: 212rpx;
+		line-height: 212rpx;
+		font-size: 28rpx;
+		color: #999999;
+		text-align: center;
+		position: relative;
+		z-index: 9;
+	}
 
-		.nodata {
+	.more {
+		color: #999999;
+		text-align: center;
+		font-size: 24rpx;
+		margin-top: 32rpx;
+		position: relative;
+		z-index: 10;
+	}
+	.jigsaw-inviteRecord{
+		width: 706rpx;
+		height: 560rpx;
+		background: linear-gradient(0deg,#9dfff2 0%, #f8ffed 100%);
+		border: 2rpx solid #333333;
+		border-radius: 20rpx;
+		margin:0 auto;
+		padding:64rpx 20rpx 20rpx 20rpx;
+		box-sizing: border-box;
+		position: relative;
+		margin-top: 76rpx;
+		.title{
+			.setbg(260rpx,76rpx,'jigsaw/title-bg.png');
+			position: absolute;
+			left:50%;
+			margin-left:-130rpx;
+			top:-38rpx;
+			z-index: 19;
+			font-size: 36rpx;
+			font-weight: 700;
+			text-align: center;
+			color: #ffffff;
+			line-height: 76rpx;
+			padding: 0
+		}
+		&:after{
+			content: "";
+			width: 666rpx;
+			height: 520rpx;
+			background: #edfffc;
+			border: 2px solid #333333;
+			border-radius: 14px;
+			position: absolute;
+			left:50%;
+			top:50%;
+			margin-left:-333rpx;
+			margin-top:-260rpx;
+			box-sizing: border-box;
+		}
+		.item{
+			width: 626rpx;
+			height: 112rpx;
+			background: #ffffff;
+			border: 2rpx solid #333333;
 			border-radius: 10rpx;
-			margin-bottom: 20rpx;
-			background: #eef1f5;
-			height: 212rpx;
-			line-height: 212rpx;
-			font-size: 28rpx;
-			color: #999999;
-			text-align: center;
+			box-sizing: border-box;
+			position: relative;
+			z-index: 9;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding:0 20rpx;
+			margin:0 auto 20rpx;
 		}
-
-		.more {
-			color: #999999;
-			text-align: center;
-			font-size: 24rpx;
-            margin-top: 32rpx;
+		.time{
+			white-space: nowrap;
+		}
+		.nodata {
+			background: none;
+			line-height: 460rpx;
 		}
 	}
 </style>

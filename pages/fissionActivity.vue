@@ -2,7 +2,7 @@
 	<view class="page-container">
 		<userBand :cancleShow='sourceUserId' @loginSuccess='getData'></userBand>
 		<view class="activity" v-if="soureDone">
-			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth"
+			<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" @tap="getWxUserInfoAuth(callback,'activity')"
 				style="top: 128rpx;"></button>
 			<!-- <share-pop ref="shareSuccess"></share-pop> -->
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情' " :noShowHouse="sourceUserId" @getTopNavHeigth="getTopNavHeigth">
@@ -19,7 +19,7 @@
 				<view class="date" v-if="isActEnded">活动已结束</view>
 			</template>
 
-			<view class="content">
+			<view class="content" v-if="!isJigsaw">
 				<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
 			</view>
 			
@@ -46,22 +46,65 @@
 							<view class="chance-count" v-if="isApply">还有{{scope.chanceCount||0}}次机会</view>
 						</template>
 						<!--  #ifdef MP-WEIXIN  -->
-						<!-- <button v-if="content.sharePosterPic"
+						<button v-if="content.sharePosterPic"
 							:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
-							@tap='shareChoise()'>分享好友</button> -->
+							@tap='shareChoise()'>分享好友</button>
 
-						<!-- <button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
+						<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 						<!-- #endif -->
 						<!--  #ifndef MP-WEIXIN  -->
-						<!-- <button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
-							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button> -->
+						<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+							hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
 						<!-- #endif -->
-						<!-- <view class="share-txt">分享好友报名可获得一次拆红包机会哦~</view> -->
 					</view>
 				</template>
 			</open-red-packets-activity>
-			<template  v-if="activityType && activityType!='packets'">
+			<!-- 拼图活动 -->
+			<jigsaw-activity
+				ref="jigsaw"
+				:activityId="activityId"
+				v-if="isJigsaw"
+			>	
+			 <template v-slot="{chanceCount}">
+				<view class="content">
+					<image class="content-image" :src="content.detailPic" mode="widthFix" lazy-load="false" @load="e => imgBindload()" style="height:auto"></image>
+					<view class="jigsaw-detail-btn">
+						<button class="activity-btn-status" v-if="!isActStart">挑战未开始</button>
+						<button class="activity-btn-status" v-else-if="isActEnded">挑战已结束</button>
+						<template v-else>
+							<button class="enroll-btn enroll-btn2" open-type="getPhoneNumber"
+								@getphonenumber="getPhoneNumber" v-if="!phone">报名参与</button>
+							<template v-else>
+								<button v-if="!isApply" class="no-apply-btn" @tap="formShow">报名参与</button>
+								<template v-else>
+									<!--  #ifdef MP-WEIXIN  -->
+									<button v-if="content.sharePosterPic"
+										:class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')" hover-class="none"
+										@tap='shareChoise()'>分享好友</button>
+
+									<button v-else :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+									<!-- #endif -->
+									<!--  #ifndef MP-WEIXIN  -->
+									<button :class="'share-btn ' + (content.shareStatus == 0 ? 'share-tip':'')"
+										hover-class="none" open-type="share" @click="shareBtnClick">分享好友</button>
+									<!-- #endif -->
+									<button :class="['challenge-btn',{'no-challenge-btn':!chanceCount}]" :maxCoun="maxCount" @tap="startGame()" >
+										开始挑战
+										<view class="chance-count">还有{{chanceCount||0}}次机会</view>
+									</button>
+								</template>
+								
+							</template>
+							
+						</template>
+						
+					</view>
+				</view>
+			 </template>
+			</jigsaw-activity>
+			<template  v-if="activityType && activityType!='packets' && !isJigsaw">
 				<view class="zw"></view>
 				<view class="operation-list">
 					<view class="type-c" v-if="artDownDate[0] <= 0 && artDownDate[1] <= 0 && artDownDate[2] <= 0 ">
@@ -156,12 +199,12 @@
 	import login from '@/units/login'
 	import api from '@/public/api/index'
 	import shouquan from '@/units/shouquan'
-
 	import formpop from '@/components/formpop/formpop'
 	import pageTop from '@/components/pageTop/pageTop'
 	import shareSuccess from '@/components/shareSuccess/shareSuccess'
 	import userBand from '@/components/userBand/userBand'
 	import openRedPacketsActivity from '@/components/openRedPacketsActivity/openRedPacketsActivity'
+	import jigsawActivity from '@/components/jigsawActivity/jigsawActivity'
 	let app = getApp()
 	// const ctx = uni.createCanvasContext('myCanvas')
 	export default {
@@ -169,7 +212,8 @@
 			'form-pop': formpop,
 			'page-top': pageTop,
 			'userBand': userBand,
-			'open-red-packets-activity':openRedPacketsActivity
+			'open-red-packets-activity':openRedPacketsActivity,
+			'jigsaw-activity':jigsawActivity
 			// 'share-pop': shareSuccess
 		},
 		data() {
@@ -193,6 +237,7 @@
 				isShowCheckInPop:false,  //签到二维码进入报名提示
 				navHeight:0,
 				bgImgLoaded:false,
+				isJigsaw:false,//是否是拼团活动
 			}
 		},
 		mixins: [shouquan],
@@ -220,7 +265,6 @@
 			this.sourceUserId = options.sourceUserId
 			this.activityId = options.id
 			this.activityType = options.type || ''
-			console.log("activityId",this.activityId,options)
 			this.actSelect = options.actSelect || ''
 			
 			if (app.Interval) {
@@ -237,6 +281,10 @@
 				let {
 					data = {}
 				} = await api.getActivityContent(this.activityId)
+				if(data.activityType == 2){
+					this.activityType = data.activityType
+					this.isJigsaw = true;
+				}
 				//从签到二维码进入
 				if(options.scene && options.veriCode && data.miniUrl){
 					let param = data.miniUrl.split('?')[1].split('&')
@@ -257,7 +305,7 @@
 				// 分享用
 				let cs = ''
 				for (let i in options) {
-					if (i != 'scene' && i != 'sourceUserId' && i!='veriCode') {
+					if (i != 'scene' && i != 'ald_share_src' && i != 'sourceUserId' && i!='veriCode') {
 						cs += `${i}=${options[i]}&`
 					}
 
@@ -309,6 +357,8 @@
 				this.content.actSelect = this.actSelect
 				this.content.activityType = this.activityType
 				this.content.isActStart = this.isActStart
+				console.log("this.activityType",this.activityType)
+				console.log("this.content",this.content)
 				if(this.content && this.content.miniUrl && this.content.miniUrl.indexOf('dDis=1') != -1 && !this.sourceUserId){
 					// dDis=1 且不是裂变进来的（sourceUserId为空） 就不随机经销商
 					console.log('不定位经销商',this.content.miniUrl.indexOf('dDis=1' != -1))
@@ -332,6 +382,9 @@
 		onShow() {
 			if(this.activityType=="packets"){
 				this.$refs.redPackets.autoplay=true
+			}else if(this.activityType==2){
+				this.$refs.jigsaw.getActivityInfo();
+				this.$refs.jigsaw.getUserRankInfo()
 			}
 		},
 		onHide() {
@@ -358,7 +411,7 @@
 			// 	}
 			// })
 			let imageUrl = this.content.sharePic || this.content.detailPic
-			console.log('fenxiang ', this.shareURL)
+			console.log('分享 ', this.shareURL)
 			return {
 				title: title,
 				path: this.shareURL,
@@ -391,41 +444,8 @@
 					if(isApply && !this.isActStart){
 						this.formShowTitle = "已报名,活动未开始"
 					}
-					
-					console.log('getFission是否提交过isApply' , isApply,this.activityType,this.isActStart) 
-					//是否提交过
-					// if (isApply == 1 && this.activityType == "" && this.isActStart) {
-					// 	if(this.lotteryType == 'Vouchers'){
-					// 		uni.redirectTo({
-					// 		 url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-							
-					// 		})
-					// 	}else{
-					// 		uni.reLaunch({
-					// 			url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=' + this
-					// 				.lotteryType + "&shareURL=" + encodeURIComponent(this.shareURL)
-							
-					// 		})	
-					// 	}
-						
-					// }
+					this.soureDone = true
 				}
-				// if(code == 10){
-				// 	// 活动以下架
-				// 	console.log('活动已经结束')
-				// 	this.actiDone =  true
-				// }else{
-				// if (data) {
-				// 	let isApply = data.isApply
-				// 	if (isApply == 1) {
-				// 		uni.reLaunch({
-				// 			url: '/pages/lotteryPage?activityId=' + this.activityId
-				// 		})
-				// 	}
-				// }	
-				// }
-				this.soureDone = true
 
 			},
 			//扫码签到
@@ -534,6 +554,21 @@
 				}
 				// #endif
 			},
+			//开始挑战
+			startGame(){
+				if(this.$refs.jigsaw.chanceCount <= 0){
+					return
+				}
+				if(this.$refs.jigsaw.maxCount <= this.$refs.jigsaw.todayUserCount){
+					this.$toast("您已超过每日挑战次数，请明天再来吧～")
+					return
+				}
+				let endTime =  this.content.endTime ? this.content.endTime.replaceAll("-","/"):""
+				app.globalData.avtivityEndTime = endTime;
+				uni.navigateTo({
+					url: `/pages/Jigsaw?id=${this.activityId}`
+				})
+			},
 			// 分享按钮被点击
 			shareBtnClick() {
 				wx.aldstat.sendEvent('活动分享点击')
@@ -598,6 +633,9 @@
 					if(this.activityType=="packets"){
 						this.$refs.redPackets.getActivityInfo();
 					}
+					if(this.activityType == 2){
+						this.$refs.jigsaw.getActivityInfo();
+					}
 				}
 			},
 			async getData() {
@@ -608,6 +646,9 @@
 				if(this.activityType=="packets"){
 					await this.getFission()
 					this.$refs.redPackets.getActivityInfo()
+				}else if(this.activityType == 2){
+					await this.getFission()
+					this.$refs.jigsaw.getActivityInfo()
 				}
 				let wxUserInfo = uni.getStorageSync('wxUserInfo')
 				console.log("getData wxUserInfo",wxUserInfo)
@@ -715,6 +756,7 @@
 
 	.content {
 		font-size: 0;
+		position: relative;
 	}
 
 	.content-image {
@@ -1004,13 +1046,21 @@
 	}
 	.chance-count{
 		position: absolute;
-		.setbg(132rpx,32rpx,'redpackage/chance-bg.png');
+		.setbg(auto,32rpx,'redpackage/chance-bg.png');
+		min-width: 132rpx;
+		padding:0 10rpx;
+		box-sizing: border-box;
+		background-size:cover;
 		font-size: 20rpx;
 		text-align: center;
 		line-height: 32rpx;
 		color: #ffffff;
 		top:-15rpx;
 		right:-22rpx;
+		white-space: nowrap;
+	}
+	.jigsaw-detail-btn .chance-count{
+		right:0;
 	}
 	// 签到报名弹窗
 	.checkin-popup{
@@ -1048,6 +1098,50 @@
 			color: #ffffff;
 		}
 	}
+	.jigsaw-detail-btn{
+		position: absolute;
+		width: 100%;
+		bottom: 120rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.activity-btn-status,
+		.no-apply-btn{
+			width: 560rpx;
+			height: 100rpx;
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/activity-status-bg.png) no-repeat center/100%;
+			font-size: 40rpx;
+			color: #ffffff;
+			text-align: center;
+			line-height: 100rpx;
+			font-weight: bold;
+		}
+		.no-apply-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/form-bg.png) no-repeat center/100%;
+		}
+		.share-btn,
+		.challenge-btn{
+			width: 320rpx;
+			height: 100rpx;
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/share-btn-bg.png) no-repeat center/100%;
+			font-size: 40rpx;
+			color: #ffffff;
+			text-align: center;
+			line-height: 100rpx;
+			font-weight: bold;
+			margin:0 12rpx;
+			padding:0;
+			position: relative;
+			overflow: inherit;
+		}
+		.challenge-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/challenge-btn.png) no-repeat center/100%;
+		}
+		.no-challenge-btn{
+			background: url(https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/jigsaw/no-chance-bg.png) no-repeat center/100%;
+		}
+	}
+	 
 </style>
 <style scoped>
 	/deep/.red-package-page .inviteRecord{

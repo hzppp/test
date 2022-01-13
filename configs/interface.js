@@ -5,7 +5,7 @@ var ENV = {
 }
 //当前环境 （上线前检查）！！！！
 const CUR_ENV = ENV.TEST; 
-const version = 1068;
+const version = 1065;
 
 
 
@@ -337,6 +337,21 @@ const config = {
 		//小程序预约到店邀请函信息
 		getInvitaionLetter: `${DOMAIN.changan}/api/xcx/clue/toStoreInvitation`,
 		sendToStore: `${DOMAIN.changan}/api/xcx/clue/toStoreSend`,
+		
+		//随机生成图片
+		randomPictureConfig: `${DOMAIN.changan}/api/xcx/jigsaw/randomPictureConfig`,
+		//成绩记录
+		saveResult: `${DOMAIN.changan}/api/xcx/jigsaw/saveResult`,
+		//排行榜
+		getRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/selectRank`,
+		//开始拼图
+		startJigsaw: `${DOMAIN.changan}/api/xcx/jigsaw/startJigsaw`,
+		//用户排名信息
+		getUserRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/userRankInfo`,
+		//录入中奖信息
+		saveWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/saveInfo`,
+		//查询中奖信息
+		selectWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/selectInfo`,
 	},
 	getAPI(key) {
 		let url;

@@ -22,7 +22,6 @@ export default {
             }
         },
         getWxUserInfoAuth(callback,from="") {
-            // console.log('getWxUserInfoAuth', e)
             if(app.globalData.hasAuthorized) return;
             app.globalData.hasAuthorized = true;
 
@@ -130,6 +129,12 @@ export default {
                         const {data,code} = sRes
                         if(code == 1) {
                             console.log("登陆成功时触发")
+                            if(data.nickName){
+                                data['wxName']=data.nickName
+                            }
+                            if(data.avatarUrl){
+                                data['wxHead']=data.avatarUrl
+                            }
                             //登陆成功时触发
 			                this.$gdp('YCZ_loginSuccess')
                             uni.setStorageSync('haveUserInfoAuth',true)
@@ -150,6 +155,12 @@ export default {
                                 console.log('sssres',sRes)
                                 let {data,code} = sRes
                                 if(code == 1) {
+                                    if(data.nickName){
+										data['wxName']=data.nickName
+									}
+									if(data.avatarUrl){
+										data['wxHead']=data.avatarUrl
+									}
                                     uni.setStorageSync('haveUserInfoAuth',true)
                                     app.globalData.haveUserInfoAuth = !!sRes.wxName
                                     this.haveUserInfoAuth = !!sRes.wxName
@@ -164,6 +175,9 @@ export default {
                 fail: (res) => {
                     //拒绝授权
                     console.log('拒绝授权', res)
+                    if(from == 'activity'){
+                        this.$toast('需要授权信息后才可以报名活动哦～')
+                    }
                     uni.setStorageSync('haveUserInfoAuth',false)
                     app.globalData.haveUserInfoAuth = false
                     this.haveUserInfoAuth = false

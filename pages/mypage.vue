@@ -97,7 +97,7 @@
 				<!-- #endif -->
 				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
-					<button class="list7Btn"  open-type="contact" bindcontact="handleContact" @click="contactKefu"></button>
+					<button class="list7Btn"   @click="contactKefu"></button>
 					<view class="box-list list7">
 						<view class="p1">联系客服</view>
 						<view class="right isApprove"></view>
@@ -140,7 +140,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
-	
+	import {checkVersion} from '@/units/check';
 	let app = getApp()
 	export default {
 		components: {
@@ -229,6 +229,20 @@
 		methods: {
 			
 			contactKefu(){
+				
+				let res =  checkVersion('2.19.0')
+				if(res >= 0){
+					wx.openCustomerServiceChat({
+					  extInfo: {url: 'https://work.weixin.qq.com/kfid/kfc205ab4705fdf1977?enc_scene=ENC7b8LYeCE9dP3mAYRTDtKWDkmjD7N2jPJVpCPAfe4yP9Y3UiDetwkvKG7sUi4yRh47q'},
+					  corpId: 'wx2b418a3d21bf8228',
+					  success(res) {}
+					})
+				}else{
+				 	uni.showToast({
+				 		title:'当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试',
+						icon:'none'
+				 	})
+				}
 				
 				this.$gdp( 'YCZ_contactCustomerServiceClick')
 				

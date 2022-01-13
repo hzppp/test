@@ -42,10 +42,13 @@ export default {
 		};
 	},
 	watch: {
-		PropsInternalData(v) {
-			this.internalData = v;
-			console.log("internalData :>> ", v);
-		},
+		PropsInternalData: {
+			immediate: true, 
+			handler (v) {
+				this.internalData = v;
+				console.log("internalData :>> ", v);
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {

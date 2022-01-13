@@ -27,12 +27,12 @@
 						</view>
 					</block> -->
 					<view class="car_btn">
-						<block v-if="leftSerial.jumpType == 1">
+						<!-- <block v-if="leftSerial.jumpType == 1"> -->
 							<view @tap.stop="yuYue(leftSerial.serialId)" class="left-btn">预约试驾</view>
-						</block>
-						<block v-else>
+						<!-- </block> -->
+						<!-- <block v-else>
 							<view class="none left-btn" @tap.stop>预约试驾</view>
-						</block>
+						</block> -->
 					</view>
 				</view>
 				<view class="line">官方价</view>
@@ -60,12 +60,12 @@
 						</view>
 					</block> -->
 					<view class="car_btn">
-						<block v-if="rightSerial.jumpType == 1">
+						<!-- <block v-if="rightSerial.jumpType == 1"> -->
 							<view @tap.stop="yuYue(rightSerial.serialId)" class="right-btn">预约试驾</view>
-						</block>
-						<block v-else>
+						<!-- </block> -->
+						<!-- <block v-else>
 							<view class="none right-btn" @tap.stop>预约试驾</view>
-						</block>
+						</block> -->
 					</view>
 				</view>
 			</view>
@@ -228,9 +228,6 @@
 						width: 200rpx;
 						height: 65rpx;
 					}
-					.none{
-						background: #cfd2d5;
-					}
                     .left-btn {
                         width: 200rpx;
                         height: 64rpx;
@@ -247,6 +244,9 @@
                         color: #ffffff;
                         background-color: #55a4f1;
                     }
+					.none{
+						background: #cfd2d5;
+					}
 				}
 			}
 			.line{

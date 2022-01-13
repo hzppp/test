@@ -1361,6 +1361,48 @@ module.exports = {
 		return data
 	},
 
+	randomPictureConfig: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('randomPictureConfig'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+
+	saveResult: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('saveResult'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+
+	getRankInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getRankInfo'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+
 	sendToStore: async (para) => {
 		let {
 			data
@@ -1374,5 +1416,57 @@ module.exports = {
 		})
 		return data
 	},
-	
+			
+	startJigsaw: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('startJigsaw'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+	getUserRankInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('getUserRankInfo'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+	saveWinInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('saveWinInfo'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
+	selectWinInfo: async (para) => {
+		let {
+			data
+		} = await request({
+			url: domain.getAPI('selectWinInfo'),
+			method: "POST",
+			data: para,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}
+		})
+		return data
+	},
 }
