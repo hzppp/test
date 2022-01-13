@@ -13,7 +13,7 @@
 			<viewTabBar :current="0"></viewTabBar>
 		<!-- #endif -->
 		<testDrive aldEventName="首页预约试驾点击" from="index"></testDrive>
-		
+		<testDrive aldEventName="首页微信客服点击" from="index" type="custservice" ></testDrive>
 		<view class="block" :data-key=0 >
 			<customSwiper ref='cmSwiper' :swiper-list="pageData.banners"  v-if="pageData.banners && pageData.banners.length> 0"></customSwiper>
 			<image class="morenpic" src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/changanMoren.png" v-else></image>
@@ -297,10 +297,10 @@
 			}, 4000); //这里设置定时
 			  
 			// #ifdef MP-TOUTIAO
-			if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
-				// console.log(this.$refs.cmSwiper)
-				this.$children[2].moveRight()
-			}
+			// if(this.$children[2] && this.pageData.banners&& this.pageData.banners.length> 0){
+			// 	// console.log(this.$refs.cmSwiper)
+			// 	this.$children[2].moveRight()
+			// }
 			// #endif
 		},
 		watch: {

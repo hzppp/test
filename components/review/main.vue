@@ -42,9 +42,12 @@ export default {
 		};
 	},
 	watch: {
-		PropsMainData(v) {
-			this.mainData = v;
-		},
+		PropsMainData: {
+			immediate: true, // 很重要！！！
+			handler (v) {
+				this.mainData = v;
+			}
+		}
 	},
 };
 </script>

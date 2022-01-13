@@ -75,6 +75,13 @@
 		computed: {
 			pageData() {
 				return this.$store.state.pageData
+			},
+			midObj(){
+				const {mid1,mid2} = this; 
+				return {
+					mid1,
+					mid2
+				}
 			}
 		},
 		onUnload() {
@@ -89,12 +96,18 @@
 				}
 				this.init()
 			},
-            mid1() {
-                this.getVsDownData(this.mid1,this.mid2)
-            },
-            mid2() {
-                this.getVsDownData(this.mid1,this.mid2)
-            },
+			midObj (val) {
+				console.log(val,val.mid1,val.mid2)
+				if(val.mid1 && val.mid2){
+					this.getVsDownData(this.mid1,this.mid2)
+				}
+			},
+            // mid1() {
+            //     this.getVsDownData(this.mid1,this.mid2)
+            // },
+            // mid2() {
+            //     this.getVsDownData(this.mid1,this.mid2)
+            // },
             leftSerialId() {
                 this.reqModelsBySerialId("left", this.leftSerialId)
                 this.getVsData()
