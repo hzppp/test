@@ -1,6 +1,6 @@
 <template>
     <view  class="rank-list">
-        <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'">
+        <scroll-view scroll-y="true" :style="'height:'+scrollHeight+'px'" class="scroll-view">
             <view class="ranking-view">
                 <template v-if="!isRankWin || type == 3">
                     <template v-if="rankList.length>0">
@@ -26,7 +26,7 @@
                                 <view class="time">{{item.score}}秒</view>
                             </view>
                         </view>
-                        <view class="mine" v-if="type!=3 && mineRank && mineScore && historyBest!=-1">
+                        <view class="mine" v-if="type!=3 && historyBest!=-1">
                             <template v-if="!isBlack && mineRank && mineScore">
                                 <view class="rank-left">
                                     <view class="number">{{mineRank}}</view>
@@ -35,7 +35,7 @@
                                 </view>
                                 <view class="time">{{mineScore}}秒</view>
                             </template>
-                            <view class="blacker" v-else-if="isBlack && historyBest!=-1">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
+                            <view class="blacker" v-else-if="isBlack">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
                         </view>
                     </template>
                     <view class="noData" v-else>
@@ -71,7 +71,7 @@
                             </view>
                         </view>
                     </view>
-                    <view class="submit" @tap='submit()'>{{saveInfo.userName?'修改':'提交'}}</view>
+                    <view class="submit" @tap='submit()'>{{formBtntxt}}</view>
                 </view>
             </view>
         </scroll-view>
@@ -173,7 +173,8 @@ export default {
             },
             submiting:false,
             createTime:"",
-            scrollHeight:500
+            scrollHeight:500,
+            formBtntxt:"提交"
         };
     },
     methods: {
@@ -215,6 +216,7 @@ export default {
             let {code,data = {}} = await api.selectWinInfo({activityId,type})
             if(code == 1 && data){
                 this.saveInfo= data;
+                this.formBtntxt = "修改"
             }
         },
         async submit(){
@@ -277,11 +279,11 @@ export default {
 <style scoped lang="less">
     @import '@/static/less/public.less';
     .rank-list{
-        padding-bottom: 150rpx;
+        
         width: 100%;
         overflow: hidden;
         box-sizing: border-box;
-        .ranking-view{
+        .ranking-view,.scroll-view{
             min-height: calc(100vh - 88rpx);
             position: relative;
             overflow: hidden;
@@ -380,6 +382,7 @@ export default {
         position: relative;
         z-index: 10;
         padding:16rpx 33rpx 16rpx 43rpx;
+        padding-bottom: 150rpx;
         box-sizing: border-box;
         .rank-item{
             display: flex;
@@ -421,8 +424,6 @@ export default {
     }
     .mine{
         .setbg(100%,128rpx,'jigsaw/black-bg.png');
-        min-height: 128rpx;
-        height: auto;
         position: fixed;
         bottom:0;
         left:0;

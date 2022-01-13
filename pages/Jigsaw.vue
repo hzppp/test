@@ -21,7 +21,7 @@
         </view>
         <template v-if="!isStarted">
             <view class="btn start-btn" id="start" @click="startGame()">开始游戏</view>
-            <view class="game-reminder">点击【开始挑战】即扣除挑战机会</view>
+            <view class="game-reminder">点击【开始游戏】即扣除挑战机会</view>
         </template>
         <view class="btn start-btn" @click="onceSuccess()" v-else>一键拼图成功</view>
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
@@ -112,15 +112,12 @@ export default {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
-        this.getActivityInfo(0)
         this.randomPictureConfig()
         
     },
     onShow() {
-        this.$refs.resultPopup.close()
-        this.pool = this.generateMatrix(3, 212, 212)
         this.getActivityInfo(0)
-        this.randomPictureConfig()
+        this.onceAgain()
     },
     async onShareAppMessage() {
         let {data = {}} = await api.getActivityContent(this.activityId)

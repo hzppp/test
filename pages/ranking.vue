@@ -37,37 +37,20 @@ export default {
     onLoad(options) {
         this.activityId = options.id
         this.curIndex = options.type || 1
+        this.tabs.forEach((item,index) => {
+            if(item.type == this.curIndex){
+                this.currentTab = index;
+            }})
     },
     methods: {
         change(type,index){
             this.curIndex = type;
-            this.setScrollLeft(index)
             this.currentTab = index;
         },
         swiperChange(e){
             let index = e.target.current;
-            this.setScrollLeft(index)
             this.currentTab = index;
             this.curIndex=this.tabs[index].type;
-        },
-        async setScrollLeft(tabIndex) {
-            let leftWidthSum = 0;
-            for (var i = 0; i <= tabIndex; i++) {
-                let nowElement = await this.getWidth('tabNum' + i);
-                leftWidthSum = leftWidthSum + nowElement.width;
-            }
-            let winWidth = uni.getSystemInfoSync().windowWidth;
-            this.scrollLeft = leftWidthSum > winWidth ? (leftWidthSum - winWidth) : 0
-        },
-         getWidth: function(id) { //得到元素的宽高
-            return new Promise((res, rej) => {
-                uni.createSelectorQuery().select("#" + id).fields({
-                    size: true,
-                    scrollOffset: true
-                }, (data) => {
-                    res(data);
-                }).exec();
-            })
         },
         showRankWin(data){
             this.isTodayRankWin=data.isTodayRankWin
