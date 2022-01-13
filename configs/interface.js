@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE; 
-const version = 1075;
+const CUR_ENV = ENV.TEST; 
+const version = 1065;
 
 
 
@@ -333,6 +333,22 @@ const config = {
 		openRedPacket: `${DOMAIN.changan}/api/xcx/redPacket/redPacketOpen`,
 		//拼团活动获取团信息
 		getGroupBuyInfo: `${DOMAIN.changan}/api/xcx/activity/selectGroupBuyInfo`,
+
+		
+		//随机生成图片
+		randomPictureConfig: `${DOMAIN.changan}/api/xcx/jigsaw/randomPictureConfig`,
+		//成绩记录
+		saveResult: `${DOMAIN.changan}/api/xcx/jigsaw/saveResult`,
+		//排行榜
+		getRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/selectRank`,
+		//开始拼图
+		startJigsaw: `${DOMAIN.changan}/api/xcx/jigsaw/startJigsaw`,
+		//用户排名信息
+		getUserRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/userRankInfo`,
+		//录入中奖信息
+		saveWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/saveInfo`,
+		//查询中奖信息
+		selectWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/selectInfo`,
 	},
 	getAPI(key) {
 		let url;

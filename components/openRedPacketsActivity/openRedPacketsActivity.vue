@@ -84,7 +84,7 @@ export default {
             })
         },
         async getActivityInfo(){
-            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
+            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,activityType:1})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
                 console.log("获取当前抽奖机会",this.chanceCount)
@@ -119,9 +119,6 @@ export default {
     }
 }
 </script>
-<style lang="css" scoped>
-    
-</style>
 <style lang="less" scoped>
     
     @import '@/static/less/public.less';
