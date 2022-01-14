@@ -264,7 +264,7 @@
 				// #ifndef MP-WEIXIN
 					rows = rows.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.duibaUrl.indexOf('banH=true') == -1)
 					console.log("过滤后的rows",rows)
-					if(rows.length<4){
+					if(rows.length<4 && this.activityList.length==0){
 						this.activityList = [...this.activityList, ...rows]
 						console.log('activityList', this.activityList)
 						this.getList()
