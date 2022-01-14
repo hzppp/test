@@ -8,7 +8,7 @@
             @scrolltolower="loadMore" 
            >
             <view class="ranking-view">
-                <template v-if="!isRankWin || type == 3">
+                <template v-if="(type ==1 && !isTodayRankWin) || (type ==2 && !isSumRankWin) || type == 3">
                     <template v-if="rankList.length>0">
                         <view class="podium">
                             <view class="ranking-text">{{podiumTxt}}</view>
@@ -41,7 +41,7 @@
                         <view class="no-data-txt">现在没有数据哦~</view>
                     </view>
                 </template>
-                <view class="collect-info" v-else-if="type!=3">
+                <view class="collect-info" v-else-if="type!=3 && (isTodayRankWin ||isSumRankWin)">
                     <view class="win-txt">{{winTxt}}</view>
                     <view class="info-form">
                         <view class="form-item">
@@ -96,6 +96,14 @@ export default {
             default: ""
         },
         isRankWin:{
+            type: Boolean,
+            default: false
+        },
+        isTodayRankWin:{
+            type: Boolean,
+            default: false
+        },
+        isSumRankWin:{
             type: Boolean,
             default: false
         }

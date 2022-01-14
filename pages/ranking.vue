@@ -12,6 +12,8 @@
                     :activityId="activityId" 
                     :type="curIndex" 
                     :isRankWin="isRankWin"
+                    :isSumRankWin="isSumRankWin"
+                    :isTodayRankWin="isTodayRankWin"
                     :todayRankWinDate="todayRankWinDate"
                     :mineRank="mineRank"
                     v-if="curIndex == item.type" 
@@ -19,17 +21,19 @@
                 />
             </swiper-item>
         </swiper>
-        <view class="mine" v-if="curIndex!=3 && historyBest!=-1 && !isRankWin">
-            <template v-if="!isBlack && mineRank && mineScore">
+        <template v-if="curIndex!=3 && !isRankWin">
+            <view class="mine" v-if="!isBlack && mineRank!=-1 && mineScore!=-1">
                 <view class="rank-left">
                     <view class="number">{{mineRank}}</view>
                     <image class="wxHead" :src="wxUserInfo.wxHead"></image>
                     <view class="name">{{wxUserInfo.wxName}}</view>
                 </view>
                 <view class="time">{{mineScore}}秒</view>
-            </template>
-            <view class="blacker" v-else-if="isBlack">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
-        </view>
+            </view>
+            <view class="mine" v-else-if="isBlack && historyBest!=-1">
+                <view class="blacker">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
+            </view>
+        </template>
         <view class="more-ranking" v-if="curIndex==3">
             <view class="more-btn" @tap="toHistory">更多历史榜单</view>
         </view>

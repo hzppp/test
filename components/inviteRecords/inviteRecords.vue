@@ -1,23 +1,25 @@
 <template>
     <view :class="type=='jigsaw'?'jigsaw-inviteRecord':'inviteRecord'" v-if="isRecordsShow || (!isRecordsShow&&inviteRecordList&&inviteRecordList.length)">
         <view class="title titleK">邀请记录</view>
-        <block v-if="inviteRecordList&&inviteRecordList.length">
-            <view class="item" v-for="(item,index) in inviteRecordList" :key="index">
-                <view class="item-left">
-                    <view class="imgView">
-                        <image class="img" :src="item.wxHead"></image>
-                    </view>
-                    <view class="name">{{item.wxName}}</view>
-                </view>
-                <view class="time">{{item.joinTime}} 加入</view>
-            </view>
-        </block>
-        <view class="nodata" v-else>
-            您还没有邀请记录哦！快去邀请好友参与吧~
-        </view>
-        <view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
-            查看更多 >
-        </view>
+		<view class="jigsaw-inviteRecord-inner">
+			<block v-if="inviteRecordList&&inviteRecordList.length">
+				<view class="item" v-for="(item,index) in inviteRecordList" :key="index">
+					<view class="item-left">
+						<view class="imgView">
+							<image class="img" :src="item.wxHead"></image>
+						</view>
+						<view class="name">{{item.wxName}}</view>
+					</view>
+					<view class="time">{{item.joinTime}} 加入</view>
+				</view>
+			</block>
+			<view class="nodata" v-else>
+				您还没有邀请记录哦！快去邀请好友参与吧~
+			</view>
+			<view class="more" @tap="goInviteRecord" v-if="inviteRecordCount>3">
+				查看更多 >
+			</view>
+		</view>
     </view>
 </template>
 <script>
@@ -159,12 +161,12 @@ export default {
 	}
 	.jigsaw-inviteRecord{
 		width: 706rpx;
-		height: 560rpx;
+		height: auto;
 		background: linear-gradient(0deg,#9dfff2 0%, #f8ffed 100%);
 		border: 2rpx solid #333333;
 		border-radius: 20rpx;
 		margin:0 auto;
-		padding:64rpx 20rpx 20rpx 20rpx;
+		padding:20rpx;
 		box-sizing: border-box;
 		position: relative;
 		margin-top: 76rpx;
@@ -182,22 +184,18 @@ export default {
 			line-height: 76rpx;
 			padding: 0
 		}
-		&:after{
-			content: "";
+		.jigsaw-inviteRecord-inner{
 			width: 666rpx;
-			height: 520rpx;
+			height: 100%;
 			background: #edfffc;
 			border: 2px solid #333333;
 			border-radius: 14px;
-			position: absolute;
-			left:50%;
-			top:50%;
-			margin-left:-333rpx;
-			margin-top:-260rpx;
 			box-sizing: border-box;
+			padding: 62rpx 20rpx 32rpx 20rpx;
+			position: relative;
 		}
 		.item{
-			width: 626rpx;
+			width: 100%;
 			height: 112rpx;
 			background: #ffffff;
 			border: 2rpx solid #333333;
@@ -216,7 +214,9 @@ export default {
 		}
 		.nodata {
 			background: none;
-			line-height: 460rpx;
+			height: 200rpx;
+			line-height: 200rpx;
+			margin-bottom: 30rpx;
 		}
 	}
 </style>
