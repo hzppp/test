@@ -23,7 +23,7 @@
             <view class="btn start-btn" id="start" @click="startGame()">开始游戏</view>
             <view class="game-reminder">点击【开始游戏】即扣除挑战机会</view>
         </template>
-        <view class="btn start-btn" @click="onceSuccess()" v-else>一键拼图成功</view>
+        <!-- <view class="btn start-btn" @click="onceSuccess()" v-else>一键拼图成功</view> -->
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
             <view class="challenge-con">
                 <image class="wxHead" :src="wxUserInfo.wxHead"></image>
@@ -33,7 +33,7 @@
                         <text class="label">今日排行</text>
                          <view class="rank-con" @tap="toRank(1)">
                             <view v-if="!userRankInfo.todayAward" class="rank-info">
-                                <text class="number" v-if="userRankInfo.todayRank">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
+                               <text class="number" v-if="userRankInfo.todayRank&&userRankInfo.todayRank!=-1">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank&&userRankInfo.todayRank!=-1?'名':'暂无排名'}}
                             </view>
                             <view v-else class="award">
                                 获得奖励
@@ -47,7 +47,7 @@
                         <text class="label">历史排行</text>
                          <view class="rank-con" @tap="toRank(2)">
                             <view v-if="!userRankInfo.historyAward"  class="rank-info">
-                                <text class="number" v-if="userRankInfo.sumRank">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
+                                <text class="number" v-if="userRankInfo.sumRank&&userRankInfo.sumRank!=-1">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank&&userRankInfo.sumRank!=-1?'名':'暂无排名'}}
                             </view>
                             <view v-else class="award">
                                 获得奖励
@@ -112,12 +112,22 @@ export default {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
+        this.getActivityInfo(0)
         this.randomPictureConfig()
         
     },
     onShow() {
-        this.getActivityInfo(0)
-        this.onceAgain()
+        if(this.$refs.resultPopup && this.isSuccess){
+            this.$refs.resultPopup.close()
+            this.pool = this.generateMatrix(3, 212, 212)
+            this.getActivityInfo(0)
+            this.randomPictureConfig()
+            this.isStarted=false;
+        }
+        
+        
+    },
+    onHide(){
     },
     async onShareAppMessage() {
         let {data = {}} = await api.getActivityContent(this.activityId)

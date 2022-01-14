@@ -5,7 +5,7 @@
                 <text class="label">日榜</text>
                 <view class="rank-con" @tap="toRank(1)">
                     <view v-if="!userRankInfo.isTodayRankWin" class="rank-info">
-                        <text class="number" v-if="userRankInfo.todayRank">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank?'名':'暂无排名'}}
+                        <text class="number" v-if="userRankInfo.todayRank&&userRankInfo.todayRank!=-1">{{userRankInfo.todayRank}}</text>{{userRankInfo.todayRank&&userRankInfo.todayRank!=-1?'名':'暂无排名'}}
                     </view>
                     <view v-else class="award">
                         获得奖励
@@ -20,7 +20,7 @@
                 <text class="label">总榜</text>
                 <view class="rank-con"  @tap="toRank(2)">
                     <view v-if="!userRankInfo.isSumRankWin"  class="rank-info">
-                        <text class="number" v-if="userRankInfo.sumRank">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank?'名':'暂无排名'}}
+                        <text class="number" v-if="userRankInfo.sumRank&&userRankInfo.sumRank!=-1">{{userRankInfo.sumRank}}</text>{{userRankInfo.sumRank&&userRankInfo.sumRank!=-1?'名':'暂无排名'}}
                     </view>
                     <view v-else class="award">
                         获得奖励

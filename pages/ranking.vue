@@ -12,6 +12,8 @@
                     :activityId="activityId" 
                     :type="curIndex" 
                     :isRankWin="isRankWin"
+                    :isSumRankWin="isSumRankWin"
+                    :isTodayRankWin="isTodayRankWin"
                     :todayRankWinDate="todayRankWinDate"
                     :mineRank="mineRank"
                     v-if="curIndex == item.type" 
@@ -19,17 +21,19 @@
                 />
             </swiper-item>
         </swiper>
-        <view class="mine" v-if="curIndex!=3 && historyBest!=-1 && !isRankWin">
-            <template v-if="!isBlack && mineRank && mineScore">
+        <template v-if="curIndex!=3 && !isRankWin">
+            <view class="mine" v-if="!isBlack && mineRank!=-1 && mineScore!=-1">
                 <view class="rank-left">
                     <view class="number">{{mineRank}}</view>
                     <image class="wxHead" :src="wxUserInfo.wxHead"></image>
                     <view class="name">{{wxUserInfo.wxName}}</view>
                 </view>
                 <view class="time">{{mineScore}}秒</view>
-            </template>
-            <view class="blacker" v-else-if="isBlack">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
-        </view>
+            </view>
+            <view class="mine" v-else-if="isBlack && historyBest!=-1">
+                <view class="blacker">您已被列入黑名单，成绩不计入榜单\n如有疑问，请咨询在线客服</view>
+            </view>
+        </template>
         <view class="more-ranking" v-if="curIndex==3">
             <view class="more-btn" @tap="toHistory">更多历史榜单</view>
         </view>
@@ -57,8 +61,8 @@ export default {
             isSumRankWin:false,
             scrollHeight:"",
             wxUserInfo:{},
-            mineRank:0,
-            mineScore:"",
+            mineRank:-1,
+            mineScore:-1,
             historyBest:-1,
             isRankWin:false,
             todayRankWinDate:"",
@@ -80,6 +84,7 @@ export default {
         })
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         this.getUserRankInfo()
+
     },
     methods: {
         change(type,index){
@@ -95,8 +100,17 @@ export default {
             console.log("scrollHeight",h)
             this.scrollHeight =h;
         },
+        toHistory(){
+            let {activityId}=this;
+            uni.navigateTo({
+                url: `/pages/historyRanking?id=${activityId}`
+            })
+        },
         async getUserRankInfo(){
             let {activityId}=this;
+            this.mineRank=-1
+            this.mineScore=-1
+            this.historyBest=-1
             let {code,data = {}} = await api.getUserRankInfo({activityId})
             if(code==1){
                 this.mineRank = this.curIndex==1?data.todayRank:this.curIndex==2?data.sumRank:"";
@@ -122,6 +136,7 @@ export default {
         height: 100vh;
         background: #f8f8f8;
         overflow-x: hidden;
+        position:fixed;
     }
     .ranking-tab{
         position: fixed;
@@ -164,7 +179,7 @@ export default {
         padding-top: 88rpx;
         min-height: 100vh;
         box-sizing: border-box;
-        flex: 1;
+        position: fixed;
     }
     .chance-count{
         position: absolute;

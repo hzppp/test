@@ -1,7 +1,7 @@
 <template>
     <view :class="type=='jigsaw'?'jigsaw-tips':'tips'">
         <view class="contentBody">
-            <view class="title titleK">抽奖说明</view>
+            <view class="title titleK">{{type=='jigsaw'?'活动规则':'抽奖说明'}}</view>
             <view class="contentTips-outer">
                 <scroll-view scroll-y="true" class="contentTips">
                     <text>{{activityMemoArr}}</text>
