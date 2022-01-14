@@ -8,6 +8,33 @@
             @scrolltolower="loadMore" 
            >
             <view class="ranking-view">
+                <view class="collect-info" v-if="type!=3 && (type ==1 && isTodayRankWin) || (type ==2 && isSumRankWin)">
+                    <view class="win-txt">{{winTxt}}</view>
+                    <view class="info-form">
+                        <view class="form-item">
+                            <view class="input-label">邮寄姓名</view>
+                            <view class="input-con">
+                                <input type="text" :always-embed="true" v-model="saveInfo.userName" placeholder="请填写姓名"
+                                placeholder-class="placeholder"  class="input"></input>
+                            </view>
+                        </view>
+                        <view class="form-item">
+                            <view class="input-label">邮寄电话</view>
+                            <view class="input-con">
+                                <input type="text" :always-embed="true" v-model="saveInfo.mobile" placeholder="请填写电话号码"
+                                placeholder-class="placeholder" class="input"></input>
+                            </view>
+                        </view>
+                        <view class="form-item form-txtarea">
+                            <view class="input-label">邮寄地址</view>
+                            <view class="input-con">
+                                <textarea maxlength="80" placeholder="请填写收货地址"
+                                placeholder-class="placeholder" v-model="saveInfo.address" class="input"></textarea>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="submit" @tap='submit()'>{{formBtntxt}}</view>
+                </view>
                 <template v-if="(type ==1 && !isTodayRankWin) || (type ==2 && !isSumRankWin) || type == 3">
                     <template v-if="rankList.length>0">
                         <view class="podium">
@@ -41,33 +68,7 @@
                         <view class="no-data-txt">现在没有数据哦~</view>
                     </view>
                 </template>
-                <view class="collect-info" v-else-if="type!=3 && (isTodayRankWin ||isSumRankWin)">
-                    <view class="win-txt">{{winTxt}}</view>
-                    <view class="info-form">
-                        <view class="form-item">
-                            <view class="input-label">邮寄姓名</view>
-                            <view class="input-con">
-                                <input type="text" :always-embed="true" v-model="saveInfo.userName" placeholder="请填写姓名"
-                                placeholder-class="placeholder"  class="input"></input>
-                            </view>
-                        </view>
-                        <view class="form-item">
-                            <view class="input-label">邮寄电话</view>
-                            <view class="input-con">
-                                <input type="text" :always-embed="true" v-model="saveInfo.mobile" placeholder="请填写电话号码"
-                                placeholder-class="placeholder" class="input"></input>
-                            </view>
-                        </view>
-                        <view class="form-item form-txtarea">
-                            <view class="input-label">邮寄地址</view>
-                            <view class="input-con">
-                                <textarea maxlength="80" placeholder="请填写收货地址"
-                                placeholder-class="placeholder" v-model="saveInfo.address" class="input"></textarea>
-                            </view>
-                        </view>
-                    </view>
-                    <view class="submit" @tap='submit()'>{{formBtntxt}}</view>
-                </view>
+                
             </view>
         </scroll-view>
     </view>

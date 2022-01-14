@@ -61,8 +61,8 @@ export default {
             isSumRankWin:false,
             scrollHeight:"",
             wxUserInfo:{},
-            mineRank:0,
-            mineScore:"",
+            mineRank:-1,
+            mineScore:-1,
             historyBest:-1,
             isRankWin:false,
             todayRankWinDate:"",
@@ -108,6 +108,9 @@ export default {
         },
         async getUserRankInfo(){
             let {activityId}=this;
+            this.mineRank=-1
+            this.mineScore=-1
+            this.historyBest=-1
             let {code,data = {}} = await api.getUserRankInfo({activityId})
             if(code==1){
                 this.mineRank = this.curIndex==1?data.todayRank:this.curIndex==2?data.sumRank:"";
