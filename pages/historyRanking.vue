@@ -103,6 +103,8 @@ export default {
             if(new Date(that.createTime).getTime() >= new Date().getTime()){
                 this.$toast("超过当前时间")
             }
+            this.pageNum = 1;
+            this.rankList = []
             this.getRankList();
             
         },

@@ -429,7 +429,10 @@
 			"style": {
 				"navigationBarTitleText": "拼图游戏",
 				"enablePullDownRefresh": false,
-				"disableScroll":true
+				"disableScroll":true,
+				"app-plus":{
+					"bounce":"none" 
+				}
 			}
 	    },
 		{
