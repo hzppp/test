@@ -103,6 +103,8 @@ export default {
             if(new Date(that.createTime).getTime() >= new Date().getTime()){
                 this.$toast("超过当前时间")
             }
+            this.pageNum = 1;
+            this.rankList = []
             this.getRankList();
             
         },
@@ -135,6 +137,10 @@ export default {
 
 <style scoped lang="less">
     @import '@/static/less/public.less';
+    .ranking-page{
+        width: 100%;
+        overflow-x: hidden;
+    }
     .search{
         padding:8rpx 32rpx;
         .search-picker{
@@ -253,7 +259,8 @@ export default {
         margin-top: -50rpx;
         position: relative;
         z-index: 10;
-        padding:16rpx 33rpx 150rpx 43rpx;
+        padding:16rpx 33rpx 200rpx 43rpx;
+
         box-sizing: border-box;
         .rank-item{
             display: flex;

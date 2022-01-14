@@ -429,14 +429,18 @@
 			"style": {
 				"navigationBarTitleText": "拼图游戏",
 				"enablePullDownRefresh": false,
-				"disableScroll":true
+				"disableScroll":true,
+				"app-plus":{
+					"bounce":"none" 
+				}
 			}
 	    },
 		{
 			"path": "pages/ranking",
 			"style": {
 				"navigationBarTitleText": "排行榜",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"disableScroll":true
 			}
 	    },
 		{
