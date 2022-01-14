@@ -1,6 +1,12 @@
 <template>
     <view  class="rank-list">
-        <scroll-view scroll-y="true" @scrolltolower="loadMore()" :scroll-top='scrollTop' @scroll="scroll" class="scroll-view">
+        <scroll-view 
+            scroll-y="true" 
+            class="scroll-view" 
+            :scroll-top='scrollTop' 
+            @scroll="scroll"
+            @scrolltolower="loadMore" 
+           >
             <view class="ranking-view">
                 <template v-if="!isRankWin || type == 3">
                     <template v-if="rankList.length>0">
@@ -25,10 +31,9 @@
                                 </view>
                                 <view class="time">{{item.score}}秒</view>
                             </view>
+                            <view v-show="isLoadMore||isLoaded" class="loadStatus">{{loadStatus}}</view>
                         </view>
-                        <view v-show="isLoadMore">
-                            <uni-load-more :status="loadStatus"></uni-load-more>
-                        </view>
+
                         
                     </template>
                     <view class="noData" v-else>
@@ -169,6 +174,7 @@ export default {
             formBtntxt:"提交",
             loadStatus: 'loading', //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
 			isLoadMore: false, //是否加载中
+            isLoaded:false, //是否加载完成
             pageNum:1,
             pageSize:10,
             total:0
@@ -178,18 +184,22 @@ export default {
         loadMore() { //上拉触底函数
             console.log(333333333333 + '加载更多')
             if (!this.isLoadMore && this.pageNum<=this.total) { //此处判断，上锁，防止重复请求
-                 this.pageNum++
+                this.pageNum++
                 this.isLoadMore = true
-                // this.getRankList()
+                this.getRankList()
+            }
+            if(this.pageNum>this.total){
+                this.isLoaded=true;
+                this.loadStatus="没有更多了哟~"
             }
         },
         async getRankList(){
             let {activityId,type,createTime,pageNum,pageSize}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
+            let {code,data = {}} = await api.getRankInfo({activityId,type,createTime,pageNum,pageSize})
             if(code==1){
-                this.rankList = data;
+                this.rankList = [...this.rankList,...data.topRankList];
                 this.isLoadMore = false
-                // this.total = Math.ceil(data.total / pageSize)
+                this.total = data.pageTotal<=10 ? data.pageTotal : 10
                 this.getScrollHeight()
             }
         },
@@ -198,7 +208,7 @@ export default {
             let list = uni.createSelectorQuery().in(this).select('.ranking-view');
             setTimeout(() => {
                 list.boundingClientRect(data => {
-                console.log(data)
+                // console.log(data)
                 if (data) {
                     if (data.height && data.height == '' || data.height && data.height == null || data.height && data.height ==
                     'null') {
@@ -253,12 +263,6 @@ export default {
                 this.submiting = false
             }
         },
-        toHistory(){
-            let {activityId}=this;
-            uni.navigateTo({
-                url: `/pages/historyRanking?id=${activityId}`
-            })
-        },
         scroll(e) {
             console.log("scroll")
             this.old.scrollTop = e.detail.scrollTop
@@ -292,11 +296,14 @@ export default {
         width: 100%;
         overflow: hidden;
         box-sizing: border-box;
-        .ranking-view,.scroll-view{
-            min-height: calc(100vh - 88rpx);
+        .ranking-view{
+            min-height: calc(100% - 88rpx);
             position: relative;
             overflow: hidden;
         }   
+        .scroll-view{
+            height: 100vh;
+        }
         .podium{
             .setbg(750rpx,540rpx,'jigsaw/podium-bg.png');
             padding: 20rpx;
@@ -499,5 +506,11 @@ export default {
         line-height: 88rpx;
         margin:60rpx auto;
         color: #ffffff;
+    }
+    .loadStatus{
+        font-size: 28rpx;
+        color: #666666;
+        text-align: center;
+        margin-top: 20rpx;
     }
 </style>
