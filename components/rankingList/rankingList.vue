@@ -185,7 +185,7 @@ export default {
         },
         async getRankList(){
             let {activityId,type,createTime,pageNum,pageSize}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type,createTime})
+            let {code,data = {}} = await api.getRankInfo({activityId,type,createTime,pageNum,pageSize})
             if(code==1){
                 this.rankList = data;
                 this.isLoadMore = false
