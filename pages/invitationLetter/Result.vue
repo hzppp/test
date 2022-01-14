@@ -3,7 +3,8 @@
     <userBand v-if="showLogin" @hadLogin="hadLogin" @loginSuccess="loginSuccess" :fromInvitation="true" :cancleShow="true"></userBand>
     <view class="content" v-if="isLoad">
       <view class="title"
-        >尊敬的 <text class="name">{{ storeInvitation.customerName }}</text> {{ gender }}，您好！ 现诚挚邀请您试驾{{
+        >尊敬的 <text class="name">{{ storeInvitation.customerName }}</text> {{ gender }}，您好！ </br>
+        现诚挚邀请您试驾{{
           storeInvitation.intentSeries
         }}</view
       >
@@ -237,7 +238,6 @@ export default {
     box-sizing: border-box;
     .title {
       margin-bottom: 46rpx;
-      width: 431rpx;
       line-height: 56rpx;
       text-align: left;
       font-size: 36rpx;
