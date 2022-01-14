@@ -406,7 +406,7 @@ export default {
         position: relative;
         z-index: 10;
         padding:16rpx 33rpx 16rpx 43rpx;
-        padding-bottom: 150rpx;
+        padding-bottom: 250rpx;
         box-sizing: border-box;
         .rank-item{
             display: flex;

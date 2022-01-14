@@ -439,7 +439,8 @@
 			"path": "pages/ranking",
 			"style": {
 				"navigationBarTitleText": "排行榜",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"disableScroll":true
 			}
 	    },
 		{

@@ -84,6 +84,7 @@ export default {
         })
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         this.getUserRankInfo()
+
     },
     methods: {
         change(type,index){
@@ -132,6 +133,7 @@ export default {
         height: 100vh;
         background: #f8f8f8;
         overflow-x: hidden;
+        position:fixed;
     }
     .ranking-tab{
         position: fixed;
@@ -174,7 +176,7 @@ export default {
         padding-top: 88rpx;
         min-height: 100vh;
         box-sizing: border-box;
-        flex: 1;
+        position: fixed;
     }
     .chance-count{
         position: absolute;
