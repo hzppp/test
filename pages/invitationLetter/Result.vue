@@ -179,20 +179,17 @@ export default {
     // 留资
     async sendToStore(data) {
       try {
-        let { clueId: crmId, cusSource, customerName, gender, intentLevel, intentModel, intentPackage, intentSeries, secSource } = data
+        let { clueId: crmId, customerName, gender, intentModel, intentPackage, intentSeries } = data
         let params = {
           crmId,
-          cusSource,
           customerName,
           gender,
-          intentLevel,
+          intentLevel:"13101001",
           intentModel,
           intentPackage,
           intentSeries,
-          secSource,
         }
         const res = await api.sendToStore(params)
-        console.log("🚩Result @ ❨173❩🌸,%c res:", "color:#f6e7", res)
       } catch (error) {
         console.error(error)
       } finally {
