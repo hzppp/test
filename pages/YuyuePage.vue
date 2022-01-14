@@ -1,7 +1,7 @@
 <template> 
     <view>
 	<userBand @loginSuccess='getStoragePhone' ></userBand>
-    <view class="yuyue" v-if="serialData.id">
+    <view class="yuyue">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
         <view class="content">
@@ -225,9 +225,9 @@ const trackAttribute={
             this.getStoragePhone()
             this.serialId = options.serialId || ""
             this.from =options.from || ""
-			if(this.serialId == ""){
-				this.reqSerialScreenList();
-			}
+			// if(this.serialId == ""){
+			// 	this.reqSerialScreenList();
+			// }
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
 				console.log('currentDealer',this.currentDealer)
@@ -265,7 +265,7 @@ const trackAttribute={
 			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
 			        if(code === 1) {
 			          this.serialId = data[0].pcSerialGroupId
-					  this.reqSerialDetail(this.serialId,0)
+					  this.reqSerialDetail(this.serialId)
 			        }
 			    } catch (error) {
 			        console.error(error)
@@ -330,9 +330,7 @@ const trackAttribute={
             },
 
             //获取车系详情
-            //type=0，从首页预约试驾进入，没有选择车型，默认不显示车型名称
-            //type=1,其他情况则显示车型名称
-            async reqSerialDetail(sgId,type=1) {
+            async reqSerialDetail(sgId) {
 				if(!sgId){
 				  return
 				}
@@ -389,6 +387,10 @@ const trackAttribute={
                     ,'YCZ_province_var':'-'
                     ,'YCZ_city_var':this.currentCity.name
                     ,'YCZ_distributorName_var':this.currentDealer.name
+                })
+                if(!this.serialId) return uni.showToast({
+                    title:"请先选择车型",
+                    icon:"none"
                 })
                 if(!this.currentDealer.id) return uni.showToast({
                     title:"请先选择经销商",
