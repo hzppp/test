@@ -48,7 +48,8 @@ export default {
             activityId:"",
             start:"",
             end:"",
-            createTime:getYesterDayDate(),
+            nowTime:"",
+            createTime:"",
             rankList:[],
         };
     },
@@ -62,6 +63,7 @@ export default {
     },
     onLoad(options) {
         this.activityId = options.id
+        this.createTime = getYesterDayDate();
         this.getRankList();
         this.getActivityInfo()
     },
@@ -78,22 +80,32 @@ export default {
         bindDateChange (e) {
             let that = this
             that.createTime = e.detail.value
+            if(new Date(that.createTime).getTime() >= new Date().getTime()){
+                this.$toast("超过当前时间")
+            }
             this.getRankList();
+            
         },
         async getRankList(){
             let {activityId,createTime}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type:2,createTime})
+            let {code,data = {}} = await api.getRankInfo({activityId,type:3,createTime})
             if(code==1){
                 this.rankList = data;
             }
             console.log("this.rankList",this.rankList)
         },
         toActivity(){
-            uni.navigateTo({
-                url: `/pages/fissionActivity?id=${this.activityId}`
+            var pages = getCurrentPages();
+            pages.forEach((item,index)=>{
+                if(item.route == 'pages/fissionActivity'){
+                    uni.navigateBack({
+                        delta:pages.length-(index+1)
+                    });
+                }
             })
+            
         },
-
+   
     }
 
 };

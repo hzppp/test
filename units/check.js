@@ -51,9 +51,9 @@ export const checkVersion = function(v2) {
 
 
 };
-export const getYesterDayDate = function() {
+export const getYesterDayDate = function(number=1) {
 	//获取昨日
-	const date = new Date(new Date().getTime() - 3600 * 1000 * 24 * 1)
+	const date = new Date(new Date().getTime() - 3600 * 1000 * 24 * number)
 	let year = date.getFullYear();
 	let month = date.getMonth() + 1;
 	let day = date.getDate();

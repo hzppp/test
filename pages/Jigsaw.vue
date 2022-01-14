@@ -21,7 +21,7 @@
         </view>
         <template v-if="!isStarted">
             <view class="btn start-btn" id="start" @click="startGame()">开始游戏</view>
-            <view class="game-reminder">点击【开始挑战】即扣除挑战机会</view>
+            <view class="game-reminder">点击【开始游戏】即扣除挑战机会</view>
         </template>
         <view class="btn start-btn" @click="onceSuccess()" v-else>一键拼图成功</view>
         <uni-popup ref="resultPopup" type="center" :mask-click="false">
@@ -74,7 +74,7 @@
 </template>
 <script>
 import api from '@/public/api/index'
-let base64= require('../units/base64.js').Base64;
+import md5 from "@/units/md5";
 export default {
     data() {
         return {
@@ -112,15 +112,12 @@ export default {
         this.wxUserInfo = uni.getStorageSync('wxUserInfo')
         console.log("wxUserInfo",this.wxUserInfo)
         this.activityId = options.id
-        this.getActivityInfo(0)
         this.randomPictureConfig()
         
     },
     onShow() {
-        this.$refs.resultPopup.close()
-        this.pool = this.generateMatrix(3, 212, 212)
         this.getActivityInfo(0)
-        this.randomPictureConfig()
+        this.onceAgain()
     },
     async onShareAppMessage() {
         let {data = {}} = await api.getActivityContent(this.activityId)
@@ -321,8 +318,15 @@ export default {
             } 
         },
         async saveResult(){
-            let result = base64.encode(this.counttime); 
-            let {code,data={},msg=""} = await api.saveResult({activityId:this.activityId,result})
+            let timeStamp = new Date().getTime();
+            console.log("时间明文",`changan${this.activityId}${this.counttime}${timeStamp}auto555`)
+            console.log("时间加密",md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`)))
+            let {code,data={},msg=""} = await api.saveResult({
+                activityId:this.activityId,
+                timeStamp,
+                score:this.counttime,
+                signStr:md5.hex_md5(md5.hex_md5(`changan${this.activityId}${this.counttime}${timeStamp}auto555`))    
+            })
             if(code == 1){
                 this.isSuccess = true;
                 this.getActivityInfo()
