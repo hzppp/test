@@ -316,7 +316,7 @@ const trackAttribute={
 					this.smsCodeShow = false
 				}
 			   if(this.phoneNum  && this.currentCity.id && ((this.phoneNum != uni.getStorageSync('userPhone') && this.codeNum) || this
-					.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id) {
+					.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id && this.serialId) {
 			       this.isAllSelect = true
 			   }else {
 			       this.isAllSelect = false
