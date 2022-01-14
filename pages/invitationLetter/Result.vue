@@ -51,7 +51,7 @@ export default {
       id: "", // 当前的邀请函id
       showLogin: false, // 是否需要登录
       isLoad: false, // 是否加载完成
-      storeInvitation: {},
+      storeInvitation: {}, // 线索信息
       title: "x",
       wxPosition: {},
       marks: [
@@ -67,7 +67,6 @@ export default {
     }
   },
   async onLoad(option) {
-    console.log("🚩Result @ ❨70❩🌸,%c this.wxPosition:", "color:#f6e7", this.wxPosition)
     this.showLogin = option.showLogin || false
     if (!option.showLogin) {
       // 不是分享的 不需要注册，同样要获取地址信息 分享先走useband内的是否登录
@@ -94,7 +93,7 @@ export default {
       let lat = this.wxPosition.latitude
       let m = distance.countLatLng(lat, long, this.marks[0].latitude, this.marks[0].longitude)
       let show = "" // 展示的距离
-      if (typeof m !== "number") {
+      if (typeof m !== "number" || isNaN(m)) {
         show = ""
       } else if (m > 999) {
         show = "距您约" + parseFloat((m / 1000).toFixed(2)) + "km"
@@ -161,13 +160,6 @@ export default {
             },
           ]
           this.marks = mark
-          setTimeout(()=>{
-            let distance = this.currentDistance.m
-            if (distance <= 100) {
-              // 到店留资
-              this.sendToStore(res.data)
-            }
-          },1000)
         }
       } catch (error) {
         console.error(error)
@@ -189,10 +181,16 @@ export default {
           intentPackage,
           intentSeries,
         }
-        const res = await api.sendToStore(params)
+        await api.sendToStore(params)
       } catch (error) {
         console.error(error)
       } finally {
+      }
+    },
+    // 判断距离
+    judgmentDistance(){
+      if(this.currentDistance.m <= 100) {
+        this.sendToStore(this.storeInvitation)
       }
     },
     goDealer() {
@@ -204,6 +202,17 @@ export default {
       })
     },
   },
+  watch:{
+    wxPosition:{ // 监听是不是定位了
+      handler(v){
+        if(v.latitude&&v.longitude) {
+          this.judgmentDistance()
+        }
+      },
+       immediate:true,
+       deep:true
+    }
+  }
 }
 </script>
 
