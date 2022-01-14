@@ -27,7 +27,9 @@
                     </view>
                     <view class="time">{{item.score}}秒</view>
                 </view>
+                <view v-show="isLoadMore||isLoaded" class="loadStatus">{{loadStatus}}</view>
             </view>
+            
         </template>
         <view class="noData" v-else>
             <view class="no-data-icon"></view>
@@ -51,6 +53,12 @@ export default {
             nowTime:"",
             createTime:"",
             rankList:[],
+            loadStatus: 'loading', //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
+			isLoadMore: false, //是否加载中
+            isLoaded:false,
+            pageNum:1,
+            pageSize:10,
+            total:0
         };
     },
     computed: {
@@ -66,6 +74,18 @@ export default {
         this.createTime = getYesterDayDate();
         this.getRankList();
         this.getActivityInfo()
+    },
+    onReachBottom() {
+        console.log(333333333333 + '加载更多',this.pageNum)
+        if (!this.isLoadMore && this.pageNum<=this.total) { //此处判断，上锁，防止重复请求
+            this.pageNum++
+            this.isLoadMore = true
+            this.getRankList()
+        }
+        if(this.pageNum>this.total){
+            this.isLoaded=true;
+            this.loadStatus="没有更多了哟~"
+        }
     },
     methods: {
         async getActivityInfo(){
@@ -87,12 +107,14 @@ export default {
             
         },
         async getRankList(){
-            let {activityId,createTime}=this;
-            let {code,data = {}} = await api.getRankInfo({activityId,type:3,createTime})
+            let {activityId,createTime,pageNum,pageSize}=this;
+            let {code,data = {}} = await api.getRankInfo({activityId,type:3,createTime,pageNum,pageSize})
             if(code==1){
-                this.rankList = data;
+                this.rankList = [...this.rankList,...data.topRankList];
+                this.isLoadMore = false
+                this.total = data.pageTotal<=10 ? data.pageTotal : 10
+                
             }
-            console.log("this.rankList",this.rankList)
         },
         toActivity(){
             var pages = getCurrentPages();
@@ -231,7 +253,7 @@ export default {
         margin-top: -50rpx;
         position: relative;
         z-index: 10;
-        padding:16rpx 33rpx 16rpx 43rpx;
+        padding:16rpx 33rpx 150rpx 43rpx;
         box-sizing: border-box;
         .rank-item{
             display: flex;
@@ -293,6 +315,12 @@ export default {
             
         }
     }
+    .loadStatus{
+        font-size: 28rpx;
+        color: #666666;
+        text-align: center;
+        margin-top: 20rpx;
+    }
     .noData{
         display: flex;
         align-items: center;
@@ -305,7 +333,7 @@ export default {
         .no-data-txt{
             font-size: 28rpx;
             color: #999999;
-            margin-top: 20rpx;
+            margin-top: 30rpx;
         }
     }
 </style>

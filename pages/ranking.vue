@@ -95,6 +95,12 @@ export default {
             console.log("scrollHeight",h)
             this.scrollHeight =h;
         },
+        toHistory(){
+            let {activityId}=this;
+            uni.navigateTo({
+                url: `/pages/historyRanking?id=${activityId}`
+            })
+        },
         async getUserRankInfo(){
             let {activityId}=this;
             let {code,data = {}} = await api.getUserRankInfo({activityId})
