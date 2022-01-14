@@ -334,6 +334,9 @@ const config = {
 		//拼团活动获取团信息
 		getGroupBuyInfo: `${DOMAIN.changan}/api/xcx/activity/selectGroupBuyInfo`,
 
+		//小程序预约到店邀请函信息
+		getInvitaionLetter: `${DOMAIN.changan}/api/xcx/clue/toStoreInvitation`,
+		sendToStore: `${DOMAIN.changan}/api/xcx/clue/toStoreSend`,
 		
 		//随机生成图片
 		randomPictureConfig: `${DOMAIN.changan}/api/xcx/jigsaw/randomPictureConfig`,

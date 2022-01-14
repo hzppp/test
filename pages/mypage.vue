@@ -50,6 +50,13 @@
 			</view>
 
 			<view class="box">
+				<!-- 上线需要删掉 start -->
+				<view class="line"></view>
+				<navigator url="/pages/invitationLetter/Search" redirect hover-class="className" class="box-list list3">
+					<view class="p1">测试跳邀请函搜索</view>
+					<view class="right isApprove"></view>
+				</navigator>
+				<!-- 上线需要删掉 end -->
 				<!--  #ifdef MP-WEIXIN  -->
 					<view class="box-list list2" @tap="toMyicon">
 						<view class="p1">积分商城</view>
@@ -96,7 +103,8 @@
 						<view class="right isApprove"></view>
 					</view>
 				<!-- #endif -->
-				
+
+
 			
 				
 			
