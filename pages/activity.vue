@@ -19,6 +19,7 @@
 				<image class="content-image"
 				:src="content.detailPic"
 				mode="widthFix"
+				show-menu-by-longpress="true"
 				lazy-load="false"
 				style="height:auto"
 				@click="imgClick"></image>
