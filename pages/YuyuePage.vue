@@ -342,10 +342,7 @@ const trackAttribute={
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1) {
                         this.serialData = data
-                        if(type!=0){
-                            this.currentCaraSerial = data.name
-                             
-                        }
+                        this.currentCaraSerial = data.name 
                     }
                 } catch (error) {
                     console.error(error)
