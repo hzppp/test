@@ -1,7 +1,7 @@
 <template>
     <view class="red-package-page">
        <view class="package-top" :style="'top:' + navHeight + 'px'">
-            <!-- 中奖纪录 -->
+            <!-- 中奖记录 -->
 			<win-records :winnerRecords="winnerRecords" :autoplay="autoplay" v-if="winnerRecords && winnerRecords.length>=3"/>
             <!-- 我的红包 -->
             <view class="mypackage-btn" @tap="goMyPackage">我的红包</view>
@@ -57,7 +57,7 @@ export default {
         }
     },
     components: {
-        winRecords,//中奖纪录
+        winRecords,//中奖记录
         inviteRecords,//邀请记录
         drawTips,//抽奖说明
         packetPopup //中奖弹窗
@@ -84,7 +84,7 @@ export default {
             })
         },
         async getActivityInfo(){
-            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,isRedPacketActivity:1})
+            let {code,data={},msg=""} = await api.getLotteryActInfo({activityId:this.activityId,activityType:1})
             if(code == 1){
                 this.chanceCount = data.chanceCount;
                 console.log("获取当前抽奖机会",this.chanceCount)
@@ -119,9 +119,6 @@ export default {
     }
 }
 </script>
-<style lang="css" scoped>
-    
-</style>
 <style lang="less" scoped>
     
     @import '@/static/less/public.less';

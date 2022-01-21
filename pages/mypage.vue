@@ -4,7 +4,7 @@
 		<!-- <page-top :background.sync="'#f6f7f8'" :titleys.sync="'#000'" :btnys.sync="''" :title.sync="'综合服务区'"></page-top> -->
 		<pageTopCity ref="pagetop" :background="'#e2ebf4'" :titleys="'#000'" :btnys="''" :title.sync="title"></pageTopCity>
 		<button v-if="!haveUserInfoAuth" class="getUserInfo_name_info_mask_body" lang="zh_CN"
-			@tap="getWxUserInfoAuth(callback)"></button>
+			@tap="getWxUserInfoAuth(callback,'myPage')"></button>
 		<view class="top-wrap">
 			<view class="top" style="display: block;">
 				<block v-if="haveUserInfoAuth">
@@ -23,7 +23,7 @@
 							<view v-if="photo" class="phoneV">
 								<image class="phoneVicon"
 									src="https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/caphoto.png"></image>
-								<view class="phonetitle">{{photo}}</view>
+								<view class="phonetitle">{{photo?photo:'-'}}</view>
 							</view>
 							<view v-if="score" class="phoneV">
 								<image class="scoreVicon"
@@ -50,6 +50,13 @@
 			</view>
 
 			<view class="box">
+				<!-- 上线需要删掉 start -->
+				<!-- <view class="line"></view>
+				<navigator url="/pages/invitationLetter/Search" redirect hover-class="className" class="box-list list3">
+					<view class="p1">测试跳邀请函搜索</view>
+					<view class="right isApprove"></view>
+				</navigator> -->
+				<!-- 上线需要删掉 end -->
 				<!--  #ifdef MP-WEIXIN  -->
 					<view class="box-list list2" @tap="toMyicon">
 						<view class="p1">积分商城</view>
@@ -72,11 +79,13 @@
 					<view class="p1">我的中奖记录</view>
 					<view class="right isApprove"></view>
 				</view>
+				<!--  #ifdef MP-WEIXIN  -->
 				<view class="line"></view>
 				<view class="box-list list3" @tap="tomyvideo">
 					<view class="p1">新媒体营销查询</view>
 					<view class="right isApprove"></view>
 				</view>
+				<!-- #endif -->
 				
 				
 				<!--  #ifdef MP-TOUTIAO  -->
@@ -88,13 +97,14 @@
 				<!-- #endif -->
 				<!-- #ifdef MP-WEIXIN  -->
 					<view class="line"></view>
-					<button class="list7Btn"  open-type="contact" bindcontact="handleContact" @click="contactKefu"></button>
+					<button class="list7Btn"   @click="contactKefu"></button>
 					<view class="box-list list7">
 						<view class="p1">联系客服</view>
 						<view class="right isApprove"></view>
 					</view>
 				<!-- #endif -->
-				
+
+
 			
 				
 			
@@ -130,7 +140,7 @@
 	import toast from '@/units/showToast'
     import userBand from '@/components/userBand/userBand'
 	import domain from '@/configs/interface';
-	
+	import {checkVersion} from '@/units/check';
 	let app = getApp()
 	export default {
 		components: {
@@ -210,6 +220,8 @@
 			// this.qdIndex = index
 			// this.signInList = data.data
 			// this.signInList
+			await login.checkLogin(api)
+			await login.checkOauthMobile(api)
 
 			// console.log('getsignIn', data)
 
@@ -217,6 +229,20 @@
 		methods: {
 			
 			contactKefu(){
+				
+				let res =  checkVersion('2.19.0')
+				if(res >= 0){
+					wx.openCustomerServiceChat({
+					  extInfo: {url: 'https://work.weixin.qq.com/kfid/kfc205ab4705fdf1977?enc_scene=ENC7b8LYeCE9dP3mAYRTDtKWDkmjD7N2jPJVpCPAfe4yP9Y3UiDetwkvKG7sUi4yRh47q'},
+					  corpId: 'wx2b418a3d21bf8228',
+					  success(res) {}
+					})
+				}else{
+				 	uni.showToast({
+				 		title:'当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试',
+						icon:'none'
+				 	})
+				}
 				
 				this.$gdp( 'YCZ_contactCustomerServiceClick')
 				
@@ -320,7 +346,7 @@
 			},
 			toMylotteryRecord() {
 				
-				this.$gdp('track', 'YCZ_myWinningRecordClick')
+				this.$gdp('YCZ_myWinningRecordClick')
 				
 				
 				uni.navigateTo({

@@ -168,10 +168,9 @@
 	
 			toLiveDet(item) {
 				wx.aldstat.sendEvent('直播点击')
-				
+				let that = this
 				// 点击某个直播间时触发埋点
-				
-				this.$gdp('YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+				that.$gdp('YCZ_livePositionClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 				
 				
 				if (item) {
@@ -189,12 +188,12 @@
 						success(res) {
 							// 打开成功 
 							
-							this.$gdp( 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							that.$gdp( 'YCZ_allowButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 							
 						},
 						fail(res){
 							
-							this.$gdp('YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
+							that.$gdp('YCZ_cancelButtonClick',{'YCZ_liveID_var':item.id,'YCZ_liveName_var':item.name})
 							
 						}
 					})

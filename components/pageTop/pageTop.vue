@@ -26,15 +26,13 @@
 			};
 		},
 		async created(){
-      console.log('tttttt')
-      let {
+      		let {
 				bottom,height,left,right,top,width
 			} = uni.getMenuButtonBoundingClientRect()
 			this.height = height + top + Math.floor(top/3)
 			this.jnHeight = height
 			this.jnTop = top
 			this.getPages()
-			console.log('son==',this.height)
 			this.$emit('getTopNavHeigth',this.height)
 		},
 		methods:{

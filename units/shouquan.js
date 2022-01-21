@@ -8,7 +8,6 @@ export default {
         }
     },
     onLoad() {
-        console.log('mixins shouquan')
         this.getStorageUserInfo()
     },
     onShow() {
@@ -22,10 +21,10 @@ export default {
                 this.haveUserInfoAuth = app.globalData.haveUserInfoAuth
             }
         },
-        getWxUserInfoAuth(callback) {
-            // console.log('getWxUserInfoAuth', e)
+        getWxUserInfoAuth(callback,from="") {
             if(app.globalData.hasAuthorized) return;
             app.globalData.hasAuthorized = true;
+
             // #ifdef MP-TOUTIAO
             console.log('#ifdef TOUTIAO')
             uni.getUserInfo({
@@ -109,15 +108,16 @@ export default {
 
 			// #ifdef MP-WEIXIN
             console.log('#ifdef MP-WEIXIN')
+            if(from == 'myPage'){
+                this.$gdp('YCZ_loginClick')
+            }
             uni.getUserProfile({
                 desc: '完善信息',
                 success: async (res) => {
 					console.log('res',res)
                     // 申请使用微信昵称、头像，点击允许触发
-                    
                     this.$gdp( 'YCZ_nicknameHeadPortraitGrantPermissions')
-                    
-                    
+
                     let info = res
                     await api.saveWXuserInfo({
                         encryptedData: info.encryptedData,
@@ -128,6 +128,15 @@ export default {
                         console.log('saveWXuserInfo',sRes)
                         const {data,code} = sRes
                         if(code == 1) {
+                            console.log("登陆成功时触发")
+                            if(data.nickName){
+                                data['wxName']=data.nickName
+                            }
+                            if(data.avatarUrl){
+                                data['wxHead']=data.avatarUrl
+                            }
+                            //登陆成功时触发
+			                this.$gdp('YCZ_loginSuccess')
                             uni.setStorageSync('haveUserInfoAuth',true)
                             app.globalData.haveUserInfoAuth = true
                             this.haveUserInfoAuth = true
@@ -146,6 +155,12 @@ export default {
                                 console.log('sssres',sRes)
                                 let {data,code} = sRes
                                 if(code == 1) {
+                                    if(data.nickName){
+										data['wxName']=data.nickName
+									}
+									if(data.avatarUrl){
+										data['wxHead']=data.avatarUrl
+									}
                                     uni.setStorageSync('haveUserInfoAuth',true)
                                     app.globalData.haveUserInfoAuth = !!sRes.wxName
                                     this.haveUserInfoAuth = !!sRes.wxName
@@ -160,6 +175,9 @@ export default {
                 fail: (res) => {
                     //拒绝授权
                     console.log('拒绝授权', res)
+                    if(from == 'activity'){
+                        this.$toast('需要授权信息后才可以报名活动哦～')
+                    }
                     uni.setStorageSync('haveUserInfoAuth',false)
                     app.globalData.haveUserInfoAuth = false
                     this.haveUserInfoAuth = false

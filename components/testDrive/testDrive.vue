@@ -4,7 +4,7 @@
   		<movable-area class="movableArea">
   			<movable-view class="movableView" :position="position" :x="x" :y="y" :direction="direction"
   				:damping="damping" :inertia="true" @change="onChange" @touchend="onTouchend">
-  				<button class="btn" @tap="goTestDrive"></button>
+  				<button :class="type=='custservice'?'btn1':'btn'" @tap="goTestDrive"></button>
   			</movable-view>
   		</movable-area>
   		<!--  #endif  -->
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import {checkVersion} from '@/units/check';
+
 const app = getApp()
 
 export default {
@@ -43,6 +45,10 @@ name: "testDrive",
       type: Number,
       default: 4
     },
+	type: {
+	  type: String,
+	  default: ""
+	},
     from:{
       type: String,
       default: ""
@@ -71,17 +77,40 @@ name: "testDrive",
 		// #endif
         
       }
-      uni.navigateTo({
-         url: `/pages/YuyuePage?from=${this.from}`
-      })
-      let sourcePage={
-        "index":"首页",
-        "myPage":"我的页面",
-        "activity":"活动页面"
-      }
-      
-      this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": sourcePage[this.from], "YCZ_sourceButtonName_var": '悬浮按钮预约试驾' })
-      
+	  
+	  if(this.type=='custservice'){
+		  
+		let res =  checkVersion('2.19.0')
+		if(res >= 0){
+			wx.openCustomerServiceChat({
+			  extInfo: {url: 'https://work.weixin.qq.com/kfid/kfc205ab4705fdf1977?enc_scene=ENC7b8LYeCE9dP3mAYRTDtKWDkmjD7N2jPJVpCPAfe4yP9Y3UiDetwkvKG7sUi4yRh47q'},
+			  corpId: 'wx2b418a3d21bf8228',
+			  success(res) {
+				  
+			  },
+			  fail(error){
+				  console.log('error',error)
+			  }
+			})
+		}else{
+		 	uni.showToast({
+		 		title:'当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试',
+				icon:'none'
+		 	})
+		}
+		 
+	  }else{
+		uni.navigateTo({
+		   url: `/pages/YuyuePage?from=${this.from}`
+		})
+		let sourcePage={
+		  "index":"首页",
+		  "myPage":"我的页面",
+		  "activity":"活动页面"
+		}
+		
+		this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": sourcePage[this.from], "YCZ_sourceButtonName_var": '悬浮按钮预约试驾' })  
+	  }
     },
     onChange(e) {
       if (e.detail.source === "touch") {
@@ -105,6 +134,11 @@ name: "testDrive",
   created() {
     this.x = app.globalData.testDriveX
     this.y = app.globalData.testDriveY
+	
+	if(this.type == 'custservice'){
+		this.y += 70
+	}
+	
   }
 }
 </script>
@@ -116,6 +150,15 @@ name: "testDrive",
   width: 110rpx;
   height: 116rpx;
   background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDriveNew.png");
+  background-size: cover;
+  // background: #007AFF;
+}
+.btn1 {
+  //right: 10rpx;
+  //bottom: 308rpx;
+  width: 110rpx;
+  height: 116rpx;
+  background: url("https://www1.pcauto.com.cn/zt/gz20210530/changan/xcx/img/testDriveNew1.png");
   background-size: cover;
   // background: #007AFF;
 }

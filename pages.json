@@ -237,7 +237,7 @@
 			}
          },
 		 {
-		 	"path": "pages/lbActivity",
+		 	"path": "pages/fissionActivity",
 		 	"style": {
 		 		"navigationBarTitleText": "活动详情",
 		 		"enablePullDownRefresh": false,
@@ -401,6 +401,53 @@
 				"navigationBarTitleText": "我的红包",
 				"enablePullDownRefresh": false
 				
+			}
+		},
+		{
+			"path": "pages/mallUpdate",
+			"style": {
+				"navigationBarTitleText": "商城升级中",
+				"enablePullDownRefresh": false
+			}
+	   },
+		{
+			"path": "pages/invitationLetter/Search",
+			"style": {
+				"navigationBarTitleText": "到店邀请函",
+				"enablePullDownRefresh": false
+			}
+			},
+		{
+			"path": "pages/invitationLetter/Result",
+			"style": {
+				"navigationBarTitleText": "到店邀请函",
+				"enablePullDownRefresh": false
+			}
+	   },
+		{
+			"path": "pages/Jigsaw",
+			"style": {
+				"navigationBarTitleText": "拼图游戏",
+				"enablePullDownRefresh": false,
+				"disableScroll":true,
+				"app-plus":{
+					"bounce":"none" 
+				}
+			}
+	    },
+		{
+			"path": "pages/ranking",
+			"style": {
+				"navigationBarTitleText": "排行榜",
+				"enablePullDownRefresh": false,
+				"disableScroll":true
+			}
+	    },
+		{
+			"path": "pages/historyRanking",
+			"style": {
+				"navigationBarTitleText": "排行榜",
+				"enablePullDownRefresh": true
 			}
 		}
 

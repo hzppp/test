@@ -47,13 +47,16 @@ export default {
 		};
 	},
 	watch: {
-		PropsSmartData(v) {
-			this.smartData = v;
-			console.log("smartData :>> ", v);
-			v.map((v) => {
-				this.tagList.push(v.name);
-			});
-		},
+		PropsSmartData: {
+			immediate: true, // 很重要！！！
+			handler (v) {
+				this.smartData = v;
+				console.log("smartData :>> ", v);
+				v.map((v) => {
+					this.tagList.push(v.name);
+				});
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {
@@ -61,10 +64,12 @@ export default {
 				
 				var names = model.name.toString().split(' ')
 				
-				this.$gdp('YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
-																		'YCZ_price_var':model.price+'万',
-																		'YCZ_carModel_var':names[0],
-																		'YCZ_carSeries_var':''})
+				this.$gdp('YCZ_modelParameterConfigurePageModelClick',
+					{'YCZ_configure_var':names[names.length-1],
+					'YCZ_price_var':model.price+'万',
+					'YCZ_carModel_var':model.name,
+					'YCZ_carSeries_var':'-'
+					})
 				
 			}
 			if (type == 1) {

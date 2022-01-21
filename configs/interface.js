@@ -4,8 +4,8 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.TEST; 
-const version = 1055;
+const CUR_ENV = ENV.RELEASE; 
+const version = 1076;
 
 
 
@@ -28,9 +28,11 @@ var DOMAIN_T = {
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
 	changan:"https://tccar.pcauto.com.cn",
+	// changan:"http://192.168.30.207:7080",
 	// changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
+	// webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/', //埋点测试
 	UPC:'https://qa-upc2.pc.com.cn',
 	mystore:'https://ssl.mall.changan.com.cn/reactcaecapp/member/home?biz=9'
 }
@@ -41,14 +43,16 @@ var CONFIG_T = {
 	accountID:'ac8e9fff9218d0b4',
 	datasourceID:'a8baef5711ad838e',
 	appId:'wxb36fb5205e5afb36',
-	host:'https://cbd-api.changan.com.cn:9090'
+	host:'//cbd-api.changan.com.cn:9090',
+	version:version
 }
 //正式环境
 var CONFIG_R = {
 	accountID:'b17c69986984a3be',
 	datasourceID:'8c8866d4dd9f349c',
 	appId:'wxe6ffa5dceb3b003b',
-	host:'https://cbd-api.changan.com.cn:9092'
+	host:'cbd-api.changan.com.cn:9092',
+	version:version
 }
 
 const DOMAIN = (CUR_ENV === ENV.RELEASE) ? DOMAIN_R : DOMAIN_T;
@@ -327,6 +331,27 @@ const config = {
 		fetchPacketRecords: `${DOMAIN.changan}/api/xcx/redPacket/user/record`,
 		//开启红包
 		openRedPacket: `${DOMAIN.changan}/api/xcx/redPacket/redPacketOpen`,
+		//拼团活动获取团信息
+		getGroupBuyInfo: `${DOMAIN.changan}/api/xcx/activity/selectGroupBuyInfo`,
+
+		//小程序预约到店邀请函信息
+		getInvitaionLetter: `${DOMAIN.changan}/api/xcx/clue/toStoreInvitation`,
+		sendToStore: `${DOMAIN.changan}/api/xcx/clue/toStoreSend`,
+		
+		//随机生成图片
+		randomPictureConfig: `${DOMAIN.changan}/api/xcx/jigsaw/randomPictureConfig`,
+		//成绩记录
+		saveResult: `${DOMAIN.changan}/api/xcx/jigsaw/saveResult`,
+		//排行榜
+		getRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/selectRank`,
+		//开始拼图
+		startJigsaw: `${DOMAIN.changan}/api/xcx/jigsaw/startJigsaw`,
+		//用户排名信息
+		getUserRankInfo: `${DOMAIN.changan}/api/xcx/jigsaw/userRankInfo`,
+		//录入中奖信息
+		saveWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/saveInfo`,
+		//查询中奖信息
+		selectWinInfo: `${DOMAIN.changan}/api/xcx/winPrize/selectInfo`,
 	},
 	getAPI(key) {
 		let url;
@@ -341,3 +366,4 @@ const config = {
 }
 
 module.exports = config;
+

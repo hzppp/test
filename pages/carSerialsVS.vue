@@ -75,6 +75,13 @@
 		computed: {
 			pageData() {
 				return this.$store.state.pageData
+			},
+			midObj(){
+				const {mid1,mid2} = this; 
+				return {
+					mid1,
+					mid2
+				}
 			}
 		},
 		onUnload() {
@@ -89,12 +96,18 @@
 				}
 				this.init()
 			},
-            mid1() {
-                this.getVsDownData(this.mid1,this.mid2)
-            },
-            mid2() {
-                this.getVsDownData(this.mid1,this.mid2)
-            },
+			midObj (val) {
+				console.log(val,val.mid1,val.mid2)
+				if(val.mid1 && val.mid2){
+					this.getVsDownData(this.mid1,this.mid2)
+				}
+			},
+            // mid1() {
+            //     this.getVsDownData(this.mid1,this.mid2)
+            // },
+            // mid2() {
+            //     this.getVsDownData(this.mid1,this.mid2)
+            // },
             leftSerialId() {
                 this.reqModelsBySerialId("left", this.leftSerialId)
                 this.getVsData()
@@ -149,6 +162,7 @@
             this.mid2 = options.mid2 || ''
             this.leftSerialId = options.leftSerialId || ''
             this.rightSerialId = options.rightSerialId || ''
+			
 		},
 		methods: {
 			// async init() {
@@ -223,6 +237,13 @@
                             this.rightSerial = data.rightSerial
                             // reolve({...data,worthRead:this.setArr(data.leftSerial.worthRead,data.rightSerial.worthRead)})
                             uni.hideLoading()
+							//YCZ_车型对比页曝光
+							this.$gdp( 'YCZ_modelContrastPageView',{
+								'YCZ_carModel1_var':this.leftSerial.name,
+								'YCZ_carSeries1_var':"-",
+								'YCZ_carModel2_var':this.rightSerial.name,
+								'YCZ_carSeries2_var':"-"
+							})
                         },
                         fail:err=>{
                             resject(err)

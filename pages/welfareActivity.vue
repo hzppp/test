@@ -194,6 +194,7 @@
 			}
 		},
 		onReachBottom() {
+			console.log("onReachBottom")
 			this.getactivity()
 		},
 		methods: {
@@ -284,17 +285,18 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动点击')
 				// #endif	
-
-				console.log('item.redirectType', item)
+				
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
-						'changan://lbcjactivity')) {
-					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
-						uni.showToast({
-							title: "活动结束啦",
-							icon: "none"
-						})
-						return
+						'changan://lbcjactivity')) {		
+					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType == 0){
+						if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+							uni.showToast({
+								title: "活动结束啦",
+								icon: "none"
+							})
+							return
+						}
 					}
 				}
 		
@@ -303,7 +305,7 @@
 				switch (item.redirectType) {
 					case 0: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -338,7 +340,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
+						   if(item.miniUrl.indexOf('fissionActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
 							   // 跳转到本喜爱但不是活动页
 							   api.fetchActivityVisit({
 							   	'activityId': item.id
@@ -376,7 +378,7 @@
 					}
 					default: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -396,7 +398,6 @@
 				this.welfarePageNumber = 1
 				this.isLoadGetActivity = true
 				this.activityListPageNumber = 1
-				this.activityList = []
 				this.welfareList = []
 				this.isActivityInit = false
 				this.isWelfareInit = false
@@ -411,7 +412,7 @@
 						let {
 							rows
 						} = await api.getactivity(cityId, 5, this.activityListPageNumber)
-						this.activityListPageNumber++
+						
 						if (rows.length > 0) {
 							this.isLoadGetActivity = true
 						}
@@ -432,18 +433,22 @@
 							}
 							obj.typeText = typeText
 						}
+						this.activityListPageNumber++
+						
 						// #ifndef MP-WEIXIN
 							rows = rows.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.duibaUrl.indexOf('banH=true') == -1)
 							console.log("过滤后的rows",rows)
-							if(rows.length<4){
+							if(rows.length<4 && this.activityList.length==0){
 								this.activityList = [...this.activityList, ...rows]
 								console.log('activityList', this.activityList)
 								this.getactivity()
 								return;
 							}
 						// #endif
+						if(this.activityListPageNumber == 1){
+							this.activityList = []
+						}
 						this.activityList = [...this.activityList, ...rows]
-
 						console.log('activityList', this.activityList)
 					} catch (err) {
 						console.error(err)

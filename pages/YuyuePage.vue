@@ -1,7 +1,7 @@
 <template> 
     <view>
 	<userBand @loginSuccess='getStoragePhone' ></userBand>
-    <view class="yuyue" v-if="serialData.id">
+    <view class="yuyue">
         <pop ref="pop"></pop>
         <image mode="widthFix" src="../static/images/yuyue_banner.png" />
         <view class="content">
@@ -103,7 +103,7 @@ const trackAttribute={
         pageFrom:"车型参配-参数配置页"
     },
     exhibitionTotal:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆总页"
     },
     exhibitionInner:{
@@ -111,7 +111,7 @@ const trackAttribute={
         pageFrom:"云展厅内饰页"
     },
     exhibitionCar:{
-        btnFrom:"询低价",
+        btnFrom:"询底价",
         pageFrom:"云展厅车辆页"
     },
 }
@@ -154,32 +154,38 @@ const trackAttribute={
                 isFocus:false,
                 isNoData:false,
 				TOUTIAO:'',
-				smsCodeShow: false
+				smsCodeShow: false,
+                from:""
             }
         },
         watch: {
             currentCity(n) {
-				
+				//YCZ_城市选择埋点
 				this.$gdp('YCZ_chooseCity',{'YCZ_city_var':n.name})
-				
                 this.reqDealersList(n.id)  
             },
             currentRegion(n) {
-				
+				//YCZ_地区选择埋点
 				this.$gdp('YCZ_cityProperChoice',{'YCZ_cityProper_var':n.name})
-				
                 this.reqDealersList(this.currentCity.id,n.id)  
             },
 			serialId(n){
-				
 				 this.reqDealersList(this.currentCity.id, this.currentRegion.id)    
 			},
 			currentCaraSerial(n){
+<<<<<<< HEAD
 
 				this.$gdp( 'YCZ_CarModelChoice',{'YCZ_carModel_var':n,
 															'YCZ_carSeries_var':'-'})
 				
 				
+=======
+                //车型选择埋点
+				this.$gdp( 'YCZ_CarModelChoice',{
+                    'YCZ_carModel_var':n,
+					'YCZ_carSeries_var':'-'
+                })
+>>>>>>> 7ad196fbdf432970a60cd750f20b914d3a170117
 			},
 			phoneNum(n){
 				if(n.length > 11){
@@ -193,17 +199,25 @@ const trackAttribute={
 				this.checkInfo()
 			},
 			currentDealer(n){
-				
+                //YCZ_经销商选择埋点    
 				this.$gdp('YCZ_distributorChoice',{'YCZ_distributorName_var':n.name})
 				
 			}
         },
-        onShow() {
+        async onShow() {
 			if(this.show && this.serialId){
-				 this.reqSerialDetail(this.serialId)
-				 this.show = false
-				 
+                await this.reqSerialDetail(this.serialId)
+                this.show = false
+                if(this.from){
+                    this.$gdp('YCZ_leaveAssetsPageView',{
+                        YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                        YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                        YCZ_sourceCarModel_var:this.currentCaraSerial?this.currentCaraSerial:"-",
+                        YCZ_sourceCarSeries_var:"-"
+                    })
+                } 
 			}
+
 			//  console.log('22222options :>> ', this.serialId);
             this.checkInfo()
         },
@@ -218,9 +232,10 @@ const trackAttribute={
 			 console.log("options.from=======",options)
             this.getStoragePhone()
             this.serialId = options.serialId || ""
-			if(this.serialId == ""){
-				this.reqSerialScreenList();
-			}
+            this.from =options.from || ""
+			// if(this.serialId == ""){
+			// 	this.reqSerialScreenList();
+			// }
 			if(options.nearDealer){
 				this.currentDealer = JSON.parse(options.nearDealer)
 				console.log('currentDealer',this.currentDealer)
@@ -239,16 +254,23 @@ const trackAttribute={
                 this.$set(this.currentCity,'name',cityData.city )
                 this.$set(this.currentCity,'provinceId',cityData.proId )
             }
-            this.reqSerialDetail(options.serialId)
-            
-            if(options.from){
+            await this.reqSerialDetail(options.serialId)
+            if(this.from){
                 this.$gdp('YCZ_leaveAssetsPageView',{
+<<<<<<< HEAD
                     YCZ_sourceButtonName_var:trackAttribute[options.from].btnFrom,
                     YCZ_sourcePage_var:trackAttribute[options.from].pageFrom,
                     YCZ_sourceCarModel_var:"-",
                     YCZ_sourceCarSeries_var:this.currentCaraSerial
+=======
+                    YCZ_sourceButtonName_var:trackAttribute[this.from].btnFrom,
+                    YCZ_sourcePage_var:trackAttribute[this.from].pageFrom,
+                    YCZ_sourceCarModel_var:this.currentCaraSerial?this.currentCaraSerial:"-",
+                    YCZ_sourceCarSeries_var:"-"
+>>>>>>> 7ad196fbdf432970a60cd750f20b914d3a170117
                 })
             }
+            
             
         },
         methods: {
@@ -258,7 +280,7 @@ const trackAttribute={
 			        const {code,data} = await api.fetchSerialScreenList({showPrice:0})
 			        if(code === 1) {
 			          this.serialId = data[0].pcSerialGroupId
-					  this.reqSerialDetail(this.serialId,0)
+					  this.reqSerialDetail(this.serialId)
 			        }
 			    } catch (error) {
 			        console.error(error)
@@ -309,7 +331,7 @@ const trackAttribute={
 					this.smsCodeShow = false
 				}
 			   if(this.phoneNum  && this.currentCity.id && ((this.phoneNum != uni.getStorageSync('userPhone') && this.codeNum) || this
-					.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id) {
+					.phoneNum == uni.getStorageSync('userPhone')) && this.currentDealer.id && this.serialId) {
 			       this.isAllSelect = true
 			   }else {
 			       this.isAllSelect = false
@@ -323,9 +345,7 @@ const trackAttribute={
             },
 
             //获取车系详情
-            //type=0，从首页预约试驾进入，没有选择车型，默认不显示车型名称
-            //type=1,其他情况则显示车型名称
-            async reqSerialDetail(sgId,type=1) {
+            async reqSerialDetail(sgId) {
 				if(!sgId){
 				  return
 				}
@@ -337,14 +357,13 @@ const trackAttribute={
                     const {code,data} = await api.fetchSerialDetail({sgId})
                     if(code ===1) {
                         this.serialData = data
-                        if(type!=0){
-                            this.currentCaraSerial = data.name
-                        }
+                        this.currentCaraSerial = data.name 
                     }
                 } catch (error) {
                     console.error(error)
                 } finally {
                     uni.hideLoading()
+                    
                 }
             },
             //获取验证码
@@ -373,6 +392,7 @@ const trackAttribute={
 
             //立即预约
             async yuYue() {
+<<<<<<< HEAD
 				
 				
 				this.$gdp('YCZ_leaveAssetsButtonClick',{'YCZ_carModel_var':this.currentCaraSerial
@@ -382,6 +402,20 @@ const trackAttribute={
 															,'YCZ_distributorName_var':this.currentDealer.name})
 				
 				
+=======
+                //YCZ_留资按钮点击埋点
+				this.$gdp('YCZ_leaveAssetsButtonClick',{
+                    'YCZ_carModel_var':this.currentCaraSerial
+                    ,'YCZ_mobile_var':this.phoneNum
+                    ,'YCZ_province_var':'-'
+                    ,'YCZ_city_var':this.currentCity.name
+                    ,'YCZ_distributorName_var':this.currentDealer.name
+                })
+                if(!this.serialId) return uni.showToast({
+                    title:"请先选择车型",
+                    icon:"none"
+                })
+>>>>>>> 7ad196fbdf432970a60cd750f20b914d3a170117
                 if(!this.currentDealer.id) return uni.showToast({
                     title:"请先选择经销商",
                     icon:"none"
@@ -395,7 +429,9 @@ const trackAttribute={
                     title:"请输入正确的验证码",
                     icon:"none"
                 })
-            
+
+                
+
                 try {
                     uni.showLoading({
                         title: '正在加载...',
@@ -414,6 +450,7 @@ const trackAttribute={
                         sourceId:this.serialId
                     })
                     if(res.code === 1) {
+<<<<<<< HEAD
 						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:""
 						
 						this.$gdp( 'YCZ_leaveListSubmitSuccess',{'YCZ_sourcePage_var':sourcePage
@@ -422,6 +459,18 @@ const trackAttribute={
 																	,'YCZ_province_var':'-'
 																	,'YCZ_city_var':this.currentCity.name
 																	,'YCZ_distributorName_var':this.currentDealer.name})
+=======
+						let sourcePage = getCurrentPages().length>1?getCurrentPages()[getCurrentPages().length-2].route:"-"
+						//YCZ_留资单提交成功埋点
+						this.$gdp( 'YCZ_leaveListSubmitSuccess',{
+                            'YCZ_sourcePage_var':sourcePage
+                            ,'YCZ_carModel_var':this.currentCaraSerial
+                            ,'YCZ_mobile_var':this.phoneNum
+                            ,'YCZ_province_var':'-'
+                            ,'YCZ_city_var':this.currentCity.name
+                            ,'YCZ_distributorName_var':this.currentDealer.name
+                        })
+>>>>>>> 7ad196fbdf432970a60cd750f20b914d3a170117
 						
 						
 						// #ifdef MP-WEIXIN

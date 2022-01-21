@@ -114,26 +114,26 @@
 				// #ifdef MP-WEIXIN
 				wx.aldstat.sendEvent('活动点击')
 				// #endif	
-
-				console.log('item.redirectType', item)
+				
 				// web 小程序  
 				if ((item.redirectType == 1 || item.redirectType == 2) && !(item.duibaUrl && item.duibaUrl ==
 						'changan://lbcjactivity')) {
-					if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
-						uni.showToast({
-							title: "活动结束啦",
-							icon: "none"
-						})
-						return
+					if((item.miniUrl && item.miniUrl.indexOf('type=buyorder')==-1) && item.activityType == 0){
+						if (new Date().getTime() - new Date(item.endTime.replace(/-/g, '/')).getTime() >= 0) {
+							uni.showToast({
+								title: "活动结束啦",
+								icon: "none"
+							})
+							return
+						}
 					}
 				}
-		
 				// if(item.redirectType == 2 && item.miniUrl && item.miniUrl.split('&')[1])
 				//0:标准活动(不涉及外跳),1:H5外链,2:外部小程序
 				switch (item.redirectType) {
 					case 0: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -167,7 +167,7 @@
 								this.$toast('请在微信搜索本小程序参与')
 							}
 							// #endif
-						   if(item.miniUrl.indexOf('lbActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
+						   if(item.miniUrl.indexOf('fissionActivity') == -1  &&  item.miniUrl.indexOf('activity') == -1 && item.miniUrl.indexOf('CqMarathon') == -1){
 							   // 跳转到本喜爱但不是活动页
 							   api.fetchActivityVisit({
 							   	'activityId': item.id
@@ -205,7 +205,7 @@
 					}
 					default: {
 						if (item.duibaUrl && item.duibaUrl == 'changan://lbcjactivity') {
-							let url = '/pages/lbActivity?id=' + item.id
+							let url = '/pages/fissionActivity?id=' + item.id
 							uni.navigateTo({
 								url
 							})
@@ -264,7 +264,7 @@
 				// #ifndef MP-WEIXIN
 					rows = rows.filter(item=>item.miniUrl.indexOf('banH=true') == -1 && item.duibaUrl.indexOf('banH=true') == -1)
 					console.log("过滤后的rows",rows)
-					if(rows.length<4){
+					if(rows.length<4 && this.activityList.length==0){
 						this.activityList = [...this.activityList, ...rows]
 						console.log('activityList', this.activityList)
 						this.getList()

@@ -1,5 +1,5 @@
 <template>
-    <view class="a-pop-mask" v-if="isShow">
+    <view :class="['a-pop-mask',{'fromInvitation':fromInvitation}]" v-if="isShow">
         <view class="pop-content">
             <view class="title1">温馨提示</view>
             <view class="text">请授权手机号注册长安会员</view>
@@ -20,7 +20,11 @@ import api from '@/public/api/index.js'
 			cancleShow: {
 			      type: Boolean,
 			      default:false
-			    }
+			    },
+			fromInvitation:{
+				type:Boolean,
+				default:false
+			}
 		},
         data() {
             return {
@@ -44,6 +48,7 @@ import api from '@/public/api/index.js'
 			}
 		 }else{
 		    await login.checkExpireTime(api)	 
+			this.$emit('hadLogin')
 		 }
         },
         methods: {
@@ -209,5 +214,24 @@ import api from '@/public/api/index.js'
             background-size: cover;
         }
     }
+	&.fromInvitation {
+		.pop-content {
+			width: 560rpx;
+			height: 306rpx;
+		}
+		.title1 {
+			margin-top: 30rpx;
+			color: #333333;
+			font-weight: bold;
+		}
+		.text {
+			margin-top: 22rpx;
+			color: #333333;
+		}
+		.btnv2 {
+			width: 320rpx;
+			background-color: #ff884f;
+		}
+	}
 }
 </style>

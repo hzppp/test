@@ -42,10 +42,13 @@ export default {
 		};
 	},
 	watch: {
-		PropsInternalData(v) {
-			this.internalData = v;
-			console.log("internalData :>> ", v);
-		},
+		PropsInternalData: {
+			immediate: true, 
+			handler (v) {
+				this.internalData = v;
+				console.log("internalData :>> ", v);
+			}
+		}
 	},
 	methods: {
 		goCanpei(id, type,model) {
@@ -55,8 +58,8 @@ export default {
 				
 				this.$gdp('YCZ_modelParameterConfigurePageModelClick',{'YCZ_configure_var':names[names.length-1],
 																		'YCZ_price_var':model.price+'万',
-																		'YCZ_carModel_var':names[0],
-																		'YCZ_carSeries_var':''})
+																		'YCZ_carModel_var':model.name,
+																		'YCZ_carSeries_var':'-'})
 				
 			}
 			if (type == 1) {

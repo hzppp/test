@@ -2,9 +2,9 @@
 	<view class="formpop" v-if="isShowFormPop">
 		<view :class="'form ' + from" v-if="popName == 'form'">
 			<view class="header">
+				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 				<view class="p1">{{title}}</view>
-
-				<view class="p2" v-if="from == 'lbactivity'">要提交报名信息才可以参与抽奖哦~</view>
+				<view class="p2" v-if="from == 'lbactivity' && currentObj.activityType !=2">要提交报名信息才可以参与抽奖哦~</view>
 				<view class="p2" v-else>为了给您提供更好的服务，请完善基础信息</view>
 			</view>
 			<view class="content">
@@ -42,7 +42,7 @@
 				</block>
 				<!-- 经销商 E -->
 				<!-- 	<view class="input-view mobile-input name-input">
-					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name"
+					<input type="text" :always-embed="true" @input="getValue('name',$event)" :value="name"	
 						maxlength="12" placeholder="请填写您的姓名" placeholder-class="placeholder"></input>
 				</view> -->
 				<view class="input-view mobile-input">
@@ -57,7 +57,7 @@
 					
 			
 				</view>
-				<view class="lbactivityphoto" v-if="from == 'lbactivity'">报名手机号需要跟购车手机号一致哦~~</view>
+				<view class="lbactivityphoto" v-if="from == 'lbactivity' && currentObj.activityType !=2">报名手机号需要跟购车手机号一致哦~~</view>
 				<view class="input-view mobile-input sms-code-input" v-if="smsCodeShow">
 					<input type="text" :always-embed="true" v-model="smsCode" placeholder="请输入验证码"
 						placeholder-class="placeholder"></input>
@@ -66,10 +66,9 @@
 						{{smsCodeText}}
 					</view>
 				</view>
-				<view :class="canSubmit?'btn':'btnMr'" @tap="submit" v-if="from == 'lbactivity'">提交去抽奖</view>
+				<view :class="canSubmit?'btn':'btnMr'" @tap="submit" v-if="from == 'lbactivity'">提交{{currentObj.activityType !=2 ?'去抽奖':''}}</view>
 				<view :class="canSubmit?'btn':'btnMr'" @tap="submit" v-else>提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
-				<view class="close-btn-bd" @tap="closeBtnClick"></view>
 				<view class="pyview" @tap="doPy">
 					<span class="title1">点击按钮即视为同意</span><span class="title2">《用户隐私协议》</span>
 				</view>
@@ -515,6 +514,7 @@
 				}
 
 				let pam = {
+					activityType:lydx.activityType>=0?lydx.activityType:"",
 					mobile: this.phone,
 					name: this.name,
 					cityId: this.crtCityItem.id,
@@ -540,13 +540,14 @@
 				if (data.code == 1) { //成功留资
 					
 					//成功报名埋点
-					
-					this.$gdp('YCZ_activitySignUp',{'YCZ_activityId_var':this.currentObj.id,
-																'YCZ_activityName_var':this.currentObj.name,
-																'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
-																'YCZ_gender_var':app.globalData.wxUserInfo.gender,
-																'YCZ_mobile_var':this.phone,
-																'YCZ_likes_var':''})
+					this.$gdp('YCZ_activitySignUp',{
+						'YCZ_activityId_var':this.currentObj.id,
+						'YCZ_activityName_var':this.currentObj.name,
+						'YCZ_userName_var':app.globalData.wxUserInfo.wxName,
+						'YCZ_gender_var':'-',
+						'YCZ_mobile_var':this.phone,
+						'YCZ_likes_var':'-'
+					})
 					
 					
 					console.log("成功留资",ly ,lydx.from,lydx.activityType)
@@ -580,7 +581,7 @@
 								})
 							}else if(lydx.activityType == 'checkIn'){
 								this.popName = 'checkin-success-pop'
-							} else if(lydx.activityType != 'packets'){
+							} else if(lydx.activityType != 'packets' && lydx.activityType != 2){
 								uni.reLaunch({
 									url: '/pages/lotteryPage?activityId=' + lydx.id + '&lotteryType=' + lydx
 										.lotteryType + "&shareURL=" + encodeURIComponent(lydx.shareURL)
@@ -591,7 +592,7 @@
 						this.isShowFormPop = false;
 						this.popName = 'lbactivity' 
 
-						if(lydx.activityType == 'checkIn' || lydx.activityType == 'packets'){
+						if(lydx.activityType == 'checkIn' || lydx.activityType == 'packets' || lydx.activityType == 2){
 							this.$emit('subSuccess')
 							
 						}
@@ -641,7 +642,7 @@
 					}
 					this.popName = popname
 					
-					if(lydx.activityType == 'packets'){
+					if(lydx.activityType == 'packets' || lydx.activityType == 2){
 						this.$emit('subSuccess')
 					}
 
@@ -712,7 +713,6 @@
 						const res = await api.fetchProvinceCityList()
 						if (res.code == 1) {
 							this.provinceList = res.data
-							 console.log(this.provinceList)
 							if (this.provinceList && this.provinceList.length) {
 								this.cities = this.provinceList[0].cities
 							}

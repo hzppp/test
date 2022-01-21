@@ -97,6 +97,7 @@ export default {
         if(!lat1){
           return
         }
+		if(lat1 === lat2 && lng1 === lng2) return 0
         var EARTH_RADIUS = 6378137.0;    //单位M
         var PI = Math.PI;
       
@@ -169,7 +170,7 @@ export default {
 		let longitude =  crtPosition.longitude
 		let latitude   =  crtPosition.latitude
 		if(longitude && latitude){
-			console.log('用户当前定位',longitude,latitude)
+			// console.log('用户当前定位',longitude,latitude)
 			list.forEach((item,index)=>{
 				if(item.lngX && item.lngY){
 				item.distance  =  this.countLatLng(parseFloat(latitude),parseFloat(longitude),parseFloat(item.lngY),parseFloat(item.lngX))

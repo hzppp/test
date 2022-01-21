@@ -278,7 +278,7 @@
 				// #endif
 				 var nearDealer = JSON.stringify(nearDealer);
 				uni.navigateTo({
-					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}&frome=moreDealer`
+					url: `/pages/NearDealerYuyuePage?nearDealer=${nearDealer}&cityId=${this.crtCityItem.cityId}&proId=${this.crtProvinceItem.proId}&cityName=${this.crtCityItem.name}&from=moreDealer`
 				})
 				
 				
