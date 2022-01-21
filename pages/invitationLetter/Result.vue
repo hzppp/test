@@ -188,9 +188,9 @@ export default {
       } finally {
       }
     },
-    // 判断距离
+    // 判断是否留资
     judgmentDistance(){
-      if(this.currentDistance.m <= 100) {
+      if(this.currentDistance.m <= 100 && this.showLogin) {
         this.sendToStore(this.storeInvitation)
       }
     },
