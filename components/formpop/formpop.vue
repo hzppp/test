@@ -70,7 +70,7 @@
 				<block v-if="from == 'activity' && currentObj.type!=5">
 					<picker v-if="jobList.length && from == 'activity'" @change="bindMultiPickerColumnChangecar" mode="selector"
 						:range="jobList" :range-key="'name'"
-						:class="'input-view job-input ' + (showJobText == '请选择您的职业' ? 'placeholder':'')">
+						:class="'input-view job-input ' + (showJobText == '您的身份是？' ? 'placeholder':'')">
 						<view>{{showJobText}}</view>
 					</picker>
 					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无职业')">
@@ -223,7 +223,7 @@
 			},
 			
 			showJobText() {
-				let text = '请选择您的职业'
+				let text = '您的身份是？'
 				if (this.careerInformation) {
 					text = this.careerInformation
 				}
