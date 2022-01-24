@@ -210,6 +210,11 @@
 			},
 			smsCode(code) {
 				this.canSubmit = this.ifcanSubmit()
+			},
+			careerInformation(dic) {
+				
+				this.canSubmit = this.ifcanSubmit()
+				console.log(this.canSubmit,this.careerInformation,dic)
 			}
 		},
 
@@ -716,16 +721,17 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
+				if(!this.careerInformation && this.currentObj.type!=5){
+					console.log("-------------------------------")
+					return false
+				}
 				if ((this.phone.length == 11 && this.phone != uni.getStorageSync('userPhone') && this.smsCode) || this
 					.phone == uni.getStorageSync('userPhone')) {
 					return true
 				} else {
 					return false
 				}
-				//在普通活动页面下，要选择职业
-				if(!this.careerInformation && this.currentObj.type!=5){
-					return false
-				}
+
 				return true
 			},
 
