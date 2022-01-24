@@ -22,15 +22,26 @@
             <image mode='widthFix' lazy-load :src='item' style="height:auto" />
 
         </view>
-
-        <view class="btn-wrap">
-            <button class="yuyue-btn" @tap="goYuyue">
-                预约试驾
-            </button>
+		<!--  #ifdef MP-TOUTIAO  -->
+		<view class="btn-wrap">
+		    <button class="yuyue-btn" @tap="goYuyue">
+		        预约试驾
+		    </button>
 			<button class="yuyue-btn1" @tap="goXundijia">
 			    获取实时底价
 			</button>
-        </view>
+		</view>
+		<!-- #endif -->
+		<!--  #ifndef MP-TOUTIAO  -->
+		<view class="btn-wrap">
+			<button class="yuyue-btn2" @tap="goXundijia">
+			    寻底价
+			</button>
+		</view>
+		<!-- #endif -->
+		
+		<get-pfl :serialId='serialId' :currentCity='currentCity'></get-pfl>
+
 
 	</view>
 </template>
@@ -40,23 +51,51 @@
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
+import getpfl from '@/components/get-preferential/get-pfl'
+import distance from '@/units/distance'
 let app = getApp()
 
 export default {
-    components: {btnWrap},
+    components: {btnWrap,
+	'get-pfl':getpfl
+	},
     data() {
         return {
             serialData: {}, //车系详情
             ids:'', //车系对应的前两个车型的id集合字符串，
             serialId: "" ,//车系id
-			id:''
+			id:'',
+			currentCity:{}
 
         }
     },
-    onLoad(options) {
-		console.log(options)
+	watch:{
+	  currentCity(n) {
+		  if(n){
+			  n.num = Math.floor(Math.random() * 10000)
+			 this.currentCity = n  
+		  }
+	  
+	  },	
+	},
+   async onLoad(options) {
+		console.log('options')
 		this.id = options.id
-        this.reqSerialDetail(options.id)
+		
+		
+		
+		// zijie
+		await distance.getLocation()
+		const cityData = app.globalData.currentLocation.selectedCityData
+		console.log('cityData',cityData)
+		this.currentCity.id =  cityData.cityId
+		this.currentCity.name =  cityData.city
+		this.currentCity.provinceId =  cityData.proId
+		
+	
+	
+	    
+        await this.reqSerialDetail(options.id)
     },
 	methods: {
         async reqSerialDetail(sgId) {
@@ -256,6 +295,17 @@ export default {
 			border-style:solid;
 			border-width: 2rpx;
 			border-color:  #fa8943;
+		}
+		.yuyue-btn2 {
+			width: 686rpx;
+			height: 88rpx;
+			border-radius: 88rpx;
+			line-height: 88rpx;
+			margin-left: 32rpx;
+			margin-right: 26rpx;
+			font-size: 32rpx;
+			color: #ffffff;
+			background-color: #FA8845;
 		}
     }
 }
