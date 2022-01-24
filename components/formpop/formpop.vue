@@ -66,6 +66,18 @@
 						{{smsCodeText}}
 					</view>
 				</view>
+				
+				<block v-if="from == 'activity' && currentObj.type!=5">
+					<picker v-if="jobList.length && from == 'activity'" @change="bindMultiPickerColumnChangecar" mode="selector"
+						:range="jobList" :range-key="'name'"
+						:class="'input-view job-input ' + (showJobText == '请选择您的职业' ? 'placeholder':'')">
+						<view>{{showJobText}}</view>
+					</picker>
+					<view v-else class="input-view auto-input placeholder" @tap="showToast('暂无职业')">
+						<view>暂无职业</view>
+					</view>
+				</block>
+				
 				<view :class="canSubmit?'btn':'btnMr'" @tap="submit" v-if="from == 'lbactivity'">提交{{currentObj.activityType !=2 ?'去抽奖':''}}</view>
 				<view :class="canSubmit?'btn':'btnMr'" @tap="submit" v-else>提交</view>
 				<view v-if="isActLink" class="reminder">提交成功可抽奖</view>
@@ -155,6 +167,7 @@
 				currentObj: {},
 				from: "",
 				serialList: [],
+				jobList:[{name:'公务员'},{name:'教职工'},{name:'医护人员'},{name:'兵装集团员工'},{name:'总对总企业员工'},{name:'其他'}],//选择职业
 				provinceList: [],
 				cities: [],
 				districtList: [],
@@ -167,6 +180,7 @@
 				isShowFormPop: false,
 				popName: '',
 				phone: "",
+				careerInformation:'',
 				isphone: false,
 				name: "",
 				isActLink: false,
@@ -207,6 +221,16 @@
 				}
 				return text
 			},
+			
+			showJobText() {
+				let text = '请选择您的职业'
+				if (this.careerInformation) {
+					text = this.careerInformation
+				}
+				console.log("test",this.careerInformation,text)
+				return text
+			},
+			
 			showProvinceCityText() {
 				let text = '请选择省市'
 				if (this.crtProvinceItem.id && this.crtCityItem.id) {
@@ -264,6 +288,10 @@
 					await this.reqProvincecities()
 					this.getpreClue()
 				}
+				// if(from =='activity'){
+					
+				// 	this.jobList=['医护人员','教师','公务员/事业单位','程序员','程序员']
+				// }
 			},
 			doPy() {
 				uni.navigateTo({
@@ -429,6 +457,12 @@
 				this.crtSerialItem = this.serialList[detail.value]
 				this.reqDealerListByCityId(this.crtCityItem.id, this.crtDistrictItem.id)
 			},
+			bindMultiPickerColumnChangecar(e){
+				let {
+					detail
+				} = e
+				this.careerInformation = this.jobList[detail.value].name
+			},
 			bindMultiPickerColumnChangeArea(e) {
 				let {
 					detail
@@ -525,6 +559,7 @@
 					areaId: this.crtDistrictItem.id,
 					provinceId: this.crtProvinceItem.id,
 					smsCode: this.smsCode,
+					careerInformation: this.careerInformation,
 
 				}
 				console.log(app.globalData.wxUserInfo.gender,"??????????????")
@@ -685,6 +720,10 @@
 					.phone == uni.getStorageSync('userPhone')) {
 					return true
 				} else {
+					return false
+				}
+				//在普通活动页面下，要选择职业
+				if(!this.careerInformation && this.currentObj.type!=5){
 					return false
 				}
 				return true
