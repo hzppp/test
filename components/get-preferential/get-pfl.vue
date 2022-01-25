@@ -3,7 +3,7 @@
 		<view class="get-preferential" v-if="serialData.id">
 			<pop ref="pop"></pop>
 			<!-- 顶部提示S -->
-			<view class="top-tit">填写手机号等信息即可免费获得车型优惠</view>
+			<view class="top-tit">立即询价获取优惠</view>
 			<!-- 顶部提示E -->
 			<!-- 头部信息S -->
 			<view class="head-info">
@@ -62,17 +62,17 @@
 				</view> -->
 				<!-- 地区选择S -->
 				<!-- 经销商S -->
-				<view class="list models">
+			<!-- 	<view class="list models">
 					<view class="list-title">经销商</view>
 					<view class="select" @tap="changDealers">
 						{{currentDealer.name? currentDealer.name : '暂无对应经销商'}}
 					</view>
 					<view v-show="currentDealer.name" class="arrow"></view>
-				</view>
+				</view> -->
 				<!-- 经销商E -->
 				<view class="btn-area">
-					<view class="tit">提交后经销商会尽快与您联系</view>
-					<button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">立即提交</button>
+					<!-- <view class="tit">提交后经销商会尽快与您联系</view> -->
+					<button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">获取底价</button>
 				</view>
 			</view>
 			<pyBoomV></pyBoomV>
@@ -278,7 +278,6 @@
 					})
 					if (code === 1) {
 						this.serialData = data
-						console.log('serialData',serialData)
 
 					} else {
 						this.isNoData = true
@@ -572,6 +571,8 @@
 	.get-preferential {
 		overflow: hidden;
 		background: #FFFFFF;
+		width: 100%;
+		height: 100%;
 	
 		.getPhoneBtn {
 			background-color: transparent;
@@ -587,9 +588,9 @@
 		.top-tit {
 			width: 100%;
 			height: 64rpx;
-			background-color: #f5f5f5;
-			font-size: 24rpx;
-			color: #999999;
+			background-color: #F8F8F8;
+			font-size: 36rpx;
+			color: #333333;
 			padding: 0 26rpx;
 			line-height: 64rpx;
 		}

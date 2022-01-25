@@ -40,7 +40,7 @@
 		</view>
 		<!-- #endif -->
 		
-		<view class="get-pfl-popv" v-if="getpflshow">
+		<view class="get-pfl-popv" v-show="getpflshow">
 			<get-pfl :serialId='serialId' :currentCity='currentCity' class="pfl-content"></get-pfl>
 		</view>
 
@@ -318,16 +318,19 @@ export default {
     }
 	.get-pfl-popv{
 	    position: fixed;
+		bottom: 0;
 		left: 0;
-		top: 0;
 		width: 750rpx;
 	    height: 100vh;
 		z-index: 1000;
-		 background-color: rgba(0,0,0,0.5);
+		background-color: rgba(0,0,0,0.5);
 		 
 		 .pfl-content{
+			 position: absolute;
+			 bottom: 0;
+			 left: 0;
 			 width: 750rpx;
-			 height:814rpx;
+			 // height:844rpx;
 		 }
 	}
 }
