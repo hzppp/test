@@ -643,11 +643,10 @@
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
+				await this.getFission()
 				if(this.activityType=="packets"){
-					await this.getFission()
 					this.$refs.redPackets.getActivityInfo()
 				}else if(this.activityType == 2){
-					await this.getFission()
 					this.$refs.jigsaw.getActivityInfo()
 				}
 				let wxUserInfo = uni.getStorageSync('wxUserInfo')
