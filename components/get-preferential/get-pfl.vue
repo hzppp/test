@@ -278,6 +278,7 @@
 					})
 					if (code === 1) {
 						this.serialData = data
+						console.log('serialData',serialData)
 
 					} else {
 						this.isNoData = true
@@ -570,7 +571,8 @@
 
 	.get-preferential {
 		overflow: hidden;
-
+		background: #FFFFFF;
+	
 		.getPhoneBtn {
 			background-color: transparent;
 			color: #777777;
