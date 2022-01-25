@@ -643,16 +643,17 @@
 				api.fetchActivityVisit({
 					'activityId': this.activityId
 				})
-				if(this.activityType=="packets"){
-					await this.getFission()
+				await this.getFission()
+				console.log("this.activityType",this.activityType)
+				if(this.activityType=="packets" && this.$refs.redPackets){
 					this.$refs.redPackets.getActivityInfo()
-				}else if(this.activityType == 2){
-					await this.getFission()
+				}else if(this.activityType == 2 && this.$refs.jigsaw){
 					this.$refs.jigsaw.getActivityInfo()
 				}
 				let wxUserInfo = uni.getStorageSync('wxUserInfo')
-				console.log("getData wxUserInfo",wxUserInfo)
 				this.phone = wxUserInfo.mobile
+				console.log("getData wxUserInfo",wxUserInfo)
+				console.log("this.phone",this.phone)
 				if(wxUserInfo){
 					if(this.lotteryType == 'Vouchers'){
 						this.formShowTitle = '领取代金券'
