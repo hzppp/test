@@ -67,7 +67,7 @@
 					</view>
 				</view>
 				
-				<block v-if="from == 'activity' && currentObj.type!=5">
+				<block v-if="from == 'activity' && currentObj.type!=5 && currentObj.careerInformation==1">
 					<picker v-if="jobList.length && from == 'activity'" @change="bindMultiPickerColumnChangecar" mode="selector"
 						:range="jobList" :range-key="'name'"
 						:class="'input-view job-input ' + (showJobText == '您的身份是？' ? 'placeholder':'')">
@@ -212,9 +212,7 @@
 				this.canSubmit = this.ifcanSubmit()
 			},
 			careerInformation(dic) {
-				
 				this.canSubmit = this.ifcanSubmit()
-				console.log(this.canSubmit,this.careerInformation,dic)
 			}
 		},
 
@@ -294,7 +292,7 @@
 					this.getpreClue()
 				}
 				// if(from =='activity'){
-					
+				console.log("this.currentObj",this.currentObj)
 				// 	this.jobList=['医护人员','教师','公务员/事业单位','程序员','程序员']
 				// }
 			},
@@ -721,7 +719,7 @@
 					// this.showToast('请选择经销商')
 					return false
 				}
-				if(!this.careerInformation && this.currentObj.type!=5){
+				if(!this.careerInformation && this.currentObj.type!=5 && this.currentObj.careerInformation==1){
 					console.log("-------------------------------")
 					return false
 				}
@@ -781,6 +779,7 @@
 				await distance.getLocation()
 				// 省市区 经销商
 				let currentLocation = app.globalData.currentLocation
+				console.log("currentLocation",currentLocation)
 				let ifding = true 
 				if(currentLocation.wxPosition.provider && currentLocation.wxPosition.provider == 'default'){
 					// 没有开启定位不出默认
