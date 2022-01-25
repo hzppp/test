@@ -399,6 +399,7 @@
 				this.isLoadGetActivity = true
 				this.activityListPageNumber = 1
 				this.welfareList = []
+				this.activityList = []
 				this.isActivityInit = false
 				this.isWelfareInit = false
 			},
