@@ -167,7 +167,7 @@
 				currentObj: {},
 				from: "",
 				serialList: [],
-				jobList:[{name:'公务员'},{name:'教职工'},{name:'医护人员'},{name:'兵装集团员工'},{name:'总对总企业员工'},{name:'其他'}],//选择职业
+				jobList:[{name:'公务员'},{name:'兵装集团员工'}],//选择职业
 				provinceList: [],
 				cities: [],
 				districtList: [],
