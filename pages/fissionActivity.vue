@@ -1186,7 +1186,7 @@
 		position: absolute;
 		left:50%;
 		transform: translate(-50%,-145%);
-		height:180rpx;
+		/* height:180rpx; */
 	}
 	/deep/.red-package-page .enroll-btn{
 		font-size: 36rpx;
