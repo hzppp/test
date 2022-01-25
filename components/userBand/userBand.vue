@@ -24,7 +24,12 @@ import api from '@/public/api/index.js'
 			fromInvitation:{
 				type:Boolean,
 				default:false
+			},
+			noback:{
+				type:Boolean,
+				default:false
 			}
+			
 		},
         data() {
             return {
@@ -53,19 +58,21 @@ import api from '@/public/api/index.js'
         },
         methods: {
             closeShow() {
-				let pages = getCurrentPages()
-				let len = pages.length
-				if(len>1){
-					uni.navigateBack({
-						
-					})
+				if(this.noback){
+					this.$emit('gohidden')
 				}else{
-					uni.reLaunch({
-						url:"/pages/authorization"
-					})
+					let pages = getCurrentPages()
+					let len = pages.length
+					if(len>1){
+						uni.navigateBack({
+							
+						})
+					}else{
+						uni.reLaunch({
+							url:"/pages/authorization"
+						})
+					}
 				}
-				
-				
                 this.isShow = false
 				
             },

@@ -20,9 +20,8 @@
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' style="height:auto" />
-
         </view>
-		<!--  #ifdef MP-TOUTIAO  -->
+		<!--  #ifndef MP-TOUTIAO  -->
 		<view class="btn-wrap">
 		    <button class="yuyue-btn" @tap="goYuyue">
 		        预约试驾
@@ -32,17 +31,18 @@
 			</button>
 		</view>
 		<!-- #endif -->
-		<!--  #ifndef MP-TOUTIAO  -->
+		<!--  #ifdef MP-TOUTIAO  -->
 		<view class="btn-wrap">
 			<button class="yuyue-btn2" @tap="goXundijia">
 			    询底价
 			</button>
 		</view>
+		<view class="get-pfl-popv" v-if="getpflshow">
+			<get-pfl ref='pfl' :serialId='serialId' :currentCity='currentCity' class="pfl-content" @getpflclose='getpflshow=false'></get-pfl>
+		</view>
 		<!-- #endif -->
 		
-		<view class="get-pfl-popv" v-show="getpflshow">
-			<get-pfl :serialId='serialId' :currentCity='currentCity' class="pfl-content"></get-pfl>
-		</view>
+	
 
 
 	</view>
@@ -87,21 +87,18 @@ export default {
 		
 		
 		
-		// zijie
-		await distance.getLocation()
-		const cityData = app.globalData.currentLocation.selectedCityData
-		console.log('cityData',cityData)
-		this.currentCity.id =  cityData.cityId
-		this.currentCity.name =  cityData.city
-		this.currentCity.provinceId =  cityData.proId
-		
-	
-	    
+		// #ifdef MP-TOUTIAO
+		  await distance.getLocation()
+		  const cityData = app.globalData.currentLocation.selectedCityData
+		  console.log('cityData',cityData)
+		  this.currentCity.id =  cityData.cityId
+		  this.currentCity.name =  cityData.city
+		  this.currentCity.provinceId =  cityData.proId
+		  if(options.adDealerId){
+			 app.globalData.adDealerId  =  options.adDealerId
+		  }
+		// #endif
         await this.reqSerialDetail(options.id)
-		
-		setTimeout(()=>{
-			this.getpflshow = true
-		},2000)
 		
 		
     },
@@ -173,13 +170,24 @@ export default {
 		goXundijia(){
 			// #ifdef MP-WEIXIN
 			 wx.aldstat.sendEvent('车系页获取实时底价点击')
+			 uni.navigateTo({
+			 	url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
+			 })
 			// #endif
-			uni.navigateTo({
-				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
-			})
+			
+			
+			// #ifdef MP-TOUTIAO
+		 	this.getpflshow = true
+			// #endif
+			
+		
 			
 			
 			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			
+		
+			
+			
 			
 		},
         //跳转VR
@@ -207,7 +215,13 @@ export default {
         },
 		onShareAppMessage() {
 				let title = this.serialData.name
+				
+				// #ifdef MP-WEIXIN
 				let path = `pages/LookCar?id=${this.id}`
+				// #endif
+				// #ifdef MP-TOUTIAO
+				let path = `pages/LookCar?id=${this.id}&adDealerId=changan`
+				// #endif
 				let imageUrl = this.serialData.picCoverUrl
 				return {
 					title: title,

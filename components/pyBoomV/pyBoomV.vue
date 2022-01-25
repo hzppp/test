@@ -1,12 +1,18 @@
 <template>
 		<view class="pyview" @tap="doPy">
-				<span class="title1">点击按钮即视为同意</span><span class="title2">《用户隐私协议》</span>
+				<span class="title1">点击按钮即视为同意</span><span class="title2" :style="'color: ' + titlecolor">《用户隐私协议》</span>
 		</view>
 </template>
 
 <script>
 	export default {
 		name: "pyBoomV",
+		props:{
+			titlecolor:{
+				type:String,
+				default:'#5A94E1'
+			}
+		},
 		data() {
 			return {
 

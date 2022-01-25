@@ -1,9 +1,10 @@
 <template>
 	<view>
 		<view class="get-preferential" v-if="serialData.id">
-			<pop ref="pop"></pop>
+			<userBand @gohidden='close' :noback='true' @loginSuccess='getStoragePhone'></userBand>
+			<pop ref="pop" @closeShow='close'></pop>
 			<!-- 顶部提示S -->
-			<view class="top-tit">立即询价获取优惠</view>
+			<view class="top-tit" @tap='close'>立即询价获取优惠</view>
 			<!-- 顶部提示E -->
 			<!-- 头部信息S -->
 			<view class="head-info">
@@ -75,7 +76,7 @@
 					<button class="btn" @tap="yuYue" :class="{'origin':isAllSelect}">获取底价</button>
 				</view>
 			</view>
-			<pyBoomV></pyBoomV>
+			<pyBoomV titlecolor="#FA8845"></pyBoomV>
 		</view>
 
 		<view v-if="isNoData && !serialData.id" class="no-data">暂无数据</view>
@@ -88,6 +89,7 @@
 	import distance from '@/units/distance'
 	import login from '@/units/login'
 	import pyBoomV from '@/components/pyBoomV/pyBoomV'
+	import userBand from '@/components/userBand/userBand'
 	let app = getApp()
 
 	/* *
@@ -118,17 +120,20 @@
 	export default {
 		components: {
 			pop,
-			pyBoomV
+			pyBoomV,
+			userBand
 		},
 		props: {
 			serialId:{
 			    type: String,
-			    default: ""
+			    default: "",
+			
 			},
 			currentCity:{
 				type:Object,
 				default:null
 			}
+			
 		},
 		data() {
 			return {
@@ -193,21 +198,30 @@
 				})
 
 			},
-			serialId(n) {
-				console.log('serialId',n)
-				this.serialId = n
-				this.reqSerialDetail(this.serialId)
-				this.reqDealersList(this.currentCity.id, this.currentRegion.id)
+			
+			serialId:{
+				handler(n){
+					console.log('serialId',n)
+					this.serialId = n
+					this.reqSerialDetail(this.serialId)
+					this.reqDealersList(this.currentCity.id, this.currentRegion.id)
+				},
+				immediate: true
+				
 			},
-			phoneNum(n) {
-				if (n && n.length > 11) {
-					this.phoneNum = n.substring(0, 11)
-				} else if (n.length == 11) {
-
-					this.$gdp('YCZ_iphoneInput')
-
-				}
-				this.checkInfo()
+			phoneNum: {
+				handler(n){
+					if (n && n.length > 11) {
+						this.phoneNum = n.substring(0, 11)
+					} else if (n.length == 11) {
+					
+						this.$gdp('YCZ_iphoneInput')
+					
+					}
+					this.checkInfo()
+				},
+				immediate: true
+				
 			}
 
 
@@ -220,10 +234,17 @@
 			await login.checkLogin(api)
 			await login.checkOauthMobile(api)
 			this.getStoragePhone()
-			console.log('this.currentCity',this.currentCity)
+			// console.log('this.currentCity',this.currentCity)
+			
+			// this.reqSerialDetail(this.serialId)
+			// this.reqDealersList(this.currentCity.id, this.currentRegion.id)
 
 		},
 		methods: {
+			close(){
+				console.log('close')
+				this.$emit('getpflclose')
+			},
 			getStoragePhone() {
 				let phone = uni.getStorageSync('userPhone');
 				if (phone) {
@@ -237,10 +258,10 @@
 				} = e
 				if (detail.iv) {
 					try {
-						uni.showLoading({
-							title: '正在加载...',
-							mask: true
-						})
+						// uni.showLoading({
+						// 	title: '正在加载...',
+						// 	mask: true
+						// })
 						console.log('encryptedData = ', detail.encryptedData, 'detailiv == ', detail.iv)
 						let {
 							data
@@ -250,13 +271,13 @@
 							this.phoneNum = data.phoneNumber
 						}
 					} catch (error) {
-						uni.showToast({
-							icon: "none",
-							title: "手机授权失败"
-						})
+						// uni.showToast({
+						// 	icon: "none",
+						// 	title: "手机授权失败"
+						// })
 						this.isFocus = true
 					} finally {
-						uni.hideLoading()
+						// uni.hideLoading()
 					}
 				} else {
 					this.isFocus = true
@@ -427,15 +448,15 @@
 					icon: "none"
 				})
 				if (!this.currentDealer.id) return uni.showToast({
-					title: "请先选择经销商",
+					title: "无对应经销商",
 					icon: "none"
 				})
 
 				try {
-					uni.showLoading({
-						title: '正在加载...',
-						mask: true
-					})
+					// uni.showLoading({
+					// 	title: '正在加载...',
+					// 	mask: true
+					// })
 					const res = await api.submitClue({
 						areaId: this.currentRegion.id || "",
 						cityId: this.currentCity.id,
@@ -456,7 +477,8 @@
 						// #endif
 
 						// #ifdef MP-TOUTIAO
-						this.$children[2].isShow = true
+						// this.$refs.pop.isShow = true
+						this.$children[1].isShow = true
 						// #endif
 						console.log('res :>> ', res);
 						//YCZ_留资单提交成功埋点
@@ -573,6 +595,10 @@
 		background: #FFFFFF;
 		width: 100%;
 		height: 100%;
+		padding-bottom: constant(safe-area-inset-bottom) ;
+		padding-bottom: env(safe-area-inset-bottom) ;
+		
+		
 	
 		.getPhoneBtn {
 			background-color: transparent;
@@ -587,12 +613,24 @@
 
 		.top-tit {
 			width: 100%;
-			height: 64rpx;
+			height: 74rpx;
 			background-color: #F8F8F8;
 			font-size: 36rpx;
 			color: #333333;
 			padding: 0 26rpx;
-			line-height: 64rpx;
+			line-height: 74rpx;
+			&:after {
+				content: '';
+				width: 30rpx;
+				height: 30rpx;
+				position: absolute;
+				right: 32rpx;
+				top:31rpx;
+				margin-top: -4rpx;
+				background: url(../../static/images/get-pfl-clsoe.png) 0 0 no-repeat;
+				background-size: 25rpx 25rpx;
+		
+			}
 		}
 
 		.head-info {
