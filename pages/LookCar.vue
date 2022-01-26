@@ -20,17 +20,30 @@
 
         <view class="image-wrap" v-for="(item,index) in serialData.picUrlArray" :key="index">
             <image mode='widthFix' lazy-load :src='item' style="height:auto" />
-
         </view>
-
-        <view class="btn-wrap">
-            <button class="yuyue-btn" @tap="goYuyue">
-                预约试驾
-            </button>
+		<!--  #ifndef MP-TOUTIAO  -->
+		<view class="btn-wrap">
+		    <button class="yuyue-btn" @tap="goYuyue">
+		        预约试驾
+		    </button>
 			<button class="yuyue-btn1" @tap="goXundijia">
 			    获取实时底价
 			</button>
-        </view>
+		</view>
+		<!-- #endif -->
+		<!--  #ifdef MP-TOUTIAO  -->
+		<view class="btn-wrap">
+			<button class="yuyue-btn2" @tap="goXundijia">
+			    询底价
+			</button>
+		</view>
+		<view class="get-pfl-popv" v-if="getpflshow">
+			<get-pfl ref='pfl' :serialId='serialId' :currentCity='currentCity' class="pfl-content" @getpflclose='getpflshow=false'></get-pfl>
+		</view>
+		<!-- #endif -->
+		
+	
+
 
 	</view>
 </template>
@@ -40,23 +53,54 @@
 import btnWrap from '@/components/lookCar/LookCar';
 import api from '@/public/api/index'
 import domain from '@/configs/interface';
+import getpfl from '@/components/get-preferential/get-pfl'
+import distance from '@/units/distance'
 let app = getApp()
 
 export default {
-    components: {btnWrap},
+    components: {btnWrap,
+	'get-pfl':getpfl
+	},
     data() {
         return {
             serialData: {}, //车系详情
             ids:'', //车系对应的前两个车型的id集合字符串，
             serialId: "" ,//车系id
-			id:''
+			id:'',
+			currentCity:{},
+			getpflshow:false
 
         }
     },
-    onLoad(options) {
-		console.log(options)
+	watch:{
+	  currentCity(n) {
+		  if(n){
+			  n.num = Math.floor(Math.random() * 10000)
+			 this.currentCity = n  
+		  }
+	  
+	  },	
+	},
+   async onLoad(options) {
+		console.log('options')
 		this.id = options.id
-        this.reqSerialDetail(options.id)
+		
+		
+		
+		// #ifdef MP-TOUTIAO
+		  await distance.getLocation()
+		  const cityData = app.globalData.currentLocation.selectedCityData
+		  console.log('cityData',cityData)
+		  this.currentCity.id =  cityData.cityId
+		  this.currentCity.name =  cityData.city
+		  this.currentCity.provinceId =  cityData.proId
+		  if(options.adDealerId){
+			 app.globalData.adDealerId  =  options.adDealerId
+		  }
+		// #endif
+        await this.reqSerialDetail(options.id)
+		
+		
     },
 	methods: {
         async reqSerialDetail(sgId) {
@@ -126,13 +170,24 @@ export default {
 		goXundijia(){
 			// #ifdef MP-WEIXIN
 			 wx.aldstat.sendEvent('车系页获取实时底价点击')
+			 uni.navigateTo({
+			 	url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
+			 })
 			// #endif
-			uni.navigateTo({
-				url:'/pages/GetPreferential?' + 'serialId='+this.serialId+"&from=carDetPrice"
-			})
+			
+			
+			// #ifdef MP-TOUTIAO
+		 	this.getpflshow = true
+			// #endif
+			
+		
 			
 			
 			this.$gdp('YCZ_leaveAssetsEntranceButtonClick', { "YCZ_sourcePage_var": '车辆详情页', "YCZ_sourceButtonName_var": '获取实时底价' })
+			
+		
+			
+			
 			
 		},
         //跳转VR
@@ -160,7 +215,13 @@ export default {
         },
 		onShareAppMessage() {
 				let title = this.serialData.name
+				
+				// #ifdef MP-WEIXIN
 				let path = `pages/LookCar?id=${this.id}`
+				// #endif
+				// #ifdef MP-TOUTIAO
+				let path = `pages/LookCar?id=${this.id}&adDealerId=changan`
+				// #endif
 				let imageUrl = this.serialData.picCoverUrl
 				return {
 					title: title,
@@ -257,6 +318,34 @@ export default {
 			border-width: 2rpx;
 			border-color:  #fa8943;
 		}
+		.yuyue-btn2 {
+			width: 686rpx;
+			height: 88rpx;
+			border-radius: 88rpx;
+			line-height: 88rpx;
+			margin-left: 32rpx;
+			margin-right: 26rpx;
+			font-size: 32rpx;
+			color: #ffffff;
+			background-color: #FA8845;
+		}
     }
+	.get-pfl-popv{
+	    position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 750rpx;
+	    height: 100vh;
+		z-index: 1000;
+		background-color: rgba(0,0,0,0.5);
+		 
+		 .pfl-content{
+			 position: absolute;
+			 bottom: 0;
+			 left: 0;
+			 width: 750rpx;
+			 // height:844rpx;
+		 }
+	}
 }
 </style>

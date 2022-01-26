@@ -24,7 +24,12 @@ import api from '@/public/api/index.js'
 			fromInvitation:{
 				type:Boolean,
 				default:false
+			},
+			noback:{
+				type:Boolean,
+				default:false
 			}
+			
 		},
         data() {
             return {
@@ -53,19 +58,21 @@ import api from '@/public/api/index.js'
         },
         methods: {
             closeShow() {
-				let pages = getCurrentPages()
-				let len = pages.length
-				if(len>1){
-					uni.navigateBack({
-						
-					})
+				if(this.noback){
+					this.$emit('gohidden')
 				}else{
-					uni.reLaunch({
-						url:"/pages/authorization"
-					})
+					let pages = getCurrentPages()
+					let len = pages.length
+					if(len>1){
+						uni.navigateBack({
+							
+						})
+					}else{
+						uni.reLaunch({
+							url:"/pages/authorization"
+						})
+					}
 				}
-				
-				
                 this.isShow = false
 				
             },
@@ -108,7 +115,7 @@ import api from '@/public/api/index.js'
 				console.log('userBand token'+token)
 				if(!token){
 					this.isShow = true
-					this.$toast('登录失败,请稍后重试')
+					this.$toast('注册失败,请稍后重试')
 				}else{
 					this.isShow = false
 					//注册成功时触发
@@ -120,7 +127,7 @@ import api from '@/public/api/index.js'
 				this.$emit('loginSuccess')
 				uni.hideLoading()
 			  }else{
-				  this.$toast('登录失败,请重试')
+				  this.$toast('注册失败,请重试')
 			  }
 			
 			  
