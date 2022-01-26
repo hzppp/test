@@ -115,7 +115,7 @@ import api from '@/public/api/index.js'
 				console.log('userBand token'+token)
 				if(!token){
 					this.isShow = true
-					this.$toast('登录失败,请稍后重试')
+					this.$toast('注册失败,请稍后重试')
 				}else{
 					this.isShow = false
 					//注册成功时触发
@@ -127,7 +127,7 @@ import api from '@/public/api/index.js'
 				this.$emit('loginSuccess')
 				uni.hideLoading()
 			  }else{
-				  this.$toast('登录失败,请重试')
+				  this.$toast('注册失败,请重试')
 			  }
 			
 			  

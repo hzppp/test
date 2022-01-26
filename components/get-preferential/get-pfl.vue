@@ -4,7 +4,9 @@
 			<userBand @gohidden='close' :noback='true' @loginSuccess='getStoragePhone'></userBand>
 			<pop ref="pop" @closeShow='close'></pop>
 			<!-- 顶部提示S -->
-			<view class="top-tit" @tap='close'>立即询价获取优惠</view>
+			<view class="top-tit">立即询价获取优惠
+			<view class="close"  @tap='close'></view>
+			</view>
 			<!-- 顶部提示E -->
 			<!-- 头部信息S -->
 			<view class="head-info">
@@ -619,7 +621,7 @@
 			color: #333333;
 			padding: 0 26rpx;
 			line-height: 74rpx;
-			&:after {
+			.close  {
 				content: '';
 				width: 30rpx;
 				height: 30rpx;
