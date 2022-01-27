@@ -1,6 +1,6 @@
 <template>
 	<view class="cars-page">
-        <view class="image-wrap" v-if="serialData.videoUrl">
+        <view class="image-wrap" v-if="serialData.videoUrl && btnWrapShow" >
             <video  object-fit="cover" lazy-load :src='serialData.videoUrl' :poster="serialData.videoCoverUrl" style="vertical-align:top;" @play="playVideo()"></video>
             <!-- <i class="video-icon"></i> -->
         </view>
@@ -8,7 +8,7 @@
         <!-- <btnWrap :ids="ids" :serialId="serialId" v-if="serialData.videoUrl"></btnWrap> -->
 
 
-        <view class="image-wrap">
+        <view class="image-wrap" v-if="btnWrapShow">
 			<image src='../static/images/lookcarVRIcon.png' class="vsIcon" mode="scaleToFill" @tap="toVR" v-if="serialData.hasPhoto == 1"></image>
             <image mode='widthFix' lazy-load :src='serialData.picHeadUrl' />
 		    <!-- 按钮 -->
@@ -68,7 +68,10 @@ export default {
             serialId: "" ,//车系id
 			id:'',
 			currentCity:{},
-			getpflshow:false
+			getpflshow:false,
+			btnWrapShow:true
+			
+			
 
         }
     },
@@ -96,6 +99,7 @@ export default {
 		  this.currentCity.provinceId =  cityData.proId
 		  if(options.adDealerId){
 			 app.globalData.adDealerId  =  options.adDealerId
+			 this.btnWrapShow = false
 		  }
 		// #endif
         await this.reqSerialDetail(options.id)
