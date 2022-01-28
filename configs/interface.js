@@ -4,7 +4,7 @@ var ENV = {
 	TEST: 1, //测试环境  wxb36fb5205e5afb36
 }
 //当前环境 （上线前检查）！！！！
-const CUR_ENV = ENV.RELEASE; 
+const CUR_ENV = ENV.TEST; 
 const version = 1085;
 
 
@@ -27,9 +27,9 @@ var DOMAIN_T = {
 	whoisHost:"https://whois.pconline.com.cn",//位置信息
 	host:"https://testpocket2.pcauto.com.cn",
 	pcauto: 'https://magear.pcauto.com.cn', //测试域名
-	changan:"https://tccar.pcauto.com.cn",
+	// changan:"https://tccar.pcauto.com.cn",
 	// changan:"http://192.168.30.207:7080",
-	// changan:'https://devqd-changan.pcauto.com.cn',
+	changan:'https://devqd-changan.pcauto.com.cn',
 	// mock:"https://www.fastmock.site/mock/4b94bbec30c646fb92f631fac3d6ab4c",
 	webUrl:'https://cdc.pcauto.com.cn/vue/hall/a/' ,//云展厅
 	// webUrl:'https://www1.pcauto.com.cn/test/gz20211217/yzt/changan/', //埋点测试

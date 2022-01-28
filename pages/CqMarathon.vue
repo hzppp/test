@@ -84,7 +84,7 @@
 						<button
 							:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 							:class="['btn', isComplete ? '' : 'not_up_to_standard']"
-							@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
+							@click="isComplete ? toDraw() : isApply == 1 ? shareChoise() : formShow()"
 						>
 							{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
 						</button>
@@ -237,6 +237,7 @@ export default {
 
 			nums: 0, // 需要邀请 几人
 			sourceUserId: "", // 邀请人id
+			sourceThirdId:"",//邀请人thirdId,用于根据thirdId查询用户信息
 			sourceUserAvatar: "", // 邀请人头像src
 			sourceUserName: "", // 邀请人名字
 			inviteRecordList: [], //
@@ -270,6 +271,7 @@ export default {
 		await login.checkLogin(api)
 		await login.checkOauthMobile(api)
 		this.sourceUserId = options.sourceUserId || ""
+		this.sourceThirdId = options.sourceThirdId || ""
 		this.activityId = options.id || ""
 		this.nums = options.nums || 0
 
@@ -282,8 +284,9 @@ export default {
 		}
 		this.cs = cs.substr(0, cs.length - 1)
 		let wxUserInfo = uni.getStorageSync("wxUserInfo")
+		console.log("wxUserInfo",wxUserInfo)
 		if (wxUserInfo) {
-			this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}`
+			this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}&sourceThirdId=${wxUserInfo.thirdId}`
 		}
 		if (app.Interval) {
 			clearInterval(app.Interval)
@@ -315,12 +318,12 @@ export default {
 			}
 
 			// this.activityStatus = data.status
-			if (options.sourceUserId) {
+			if (options.sourceThirdId) {
 				this.queryingUserInfor()
 			}
 			this.getInviteredInfo()
 			this.headBg = data.detailPic
-			this.ruleImg = data.activityPic
+			this.ruleImg = data.cheerDescPicture
 			this.phone = uni.getStorageSync("userPhone")
 			this.content = data || {}
 			console.log("🚩CqMarathon.vue @ ❨227❩🌸,%c this.content:", "color:#f6e75a", this.content)
@@ -380,6 +383,7 @@ export default {
 	onShareAppMessage() {
 		let title = this.content.name
 		let imageUrl = this.content.sharePic || this.content.detailPic
+		console.log("shareURL",this.shareURL)
 		return {
 			title: title,
 			path: this.shareURL,
@@ -460,6 +464,7 @@ export default {
 			try {
 				const { code, data } = await api.queryingUserInfor({
 					id: this.sourceUserId,
+					thirdUserId:this.sourceThirdId,
 					type,
 				})
 				if (code == 1 && data) {
@@ -531,7 +536,12 @@ export default {
 			})
 			this.$refs.popup.close()
 		},
-
+		//去抽奖
+		toDraw(){
+			uni.reLaunch({
+				url: '/pages/lotteryPage?activityId=' + this.activityId + '&lotteryType=grid&activityType=3'
+			})
+		},
 		// 表单留资
 		formShow() {
 			// #ifdef MP-WEIXIN
@@ -553,7 +563,11 @@ export default {
 				activityId: this.activityId,
 			})
 			let wxUserInfo = uni.getStorageSync("wxUserInfo")
+			if (wxUserInfo) {
+				this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}&sourceThirdId=${wxUserInfo.thirdId}`
+			}
 			this.phone = wxUserInfo.mobile
+			this.queryingUserInfor()
 		},
 		subSuccess() {
 			this.isApply = 1
@@ -575,6 +589,7 @@ export default {
 				url = url.replace("A", "actSelect")
 				url = url.replace("O", "sourceUserId")
 				url = url.replace("V", "Vouchers")
+				url = url.replace("T", "sourceThirdId")
 			} else {
 				// 旧
 				//dd=69&ll=gg&tt=ww&aa=1&ss=66
