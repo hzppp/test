@@ -22,6 +22,11 @@
         },
         methods: {
             closeShow() {
+				
+				// zijie
+				this.$emit('closeShow')
+				
+				
                 this.isShow = false
 				uni.navigateBack()
             }
