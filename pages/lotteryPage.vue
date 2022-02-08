@@ -681,7 +681,8 @@
 				})
 					
 				await api.getLotteryActInfo({
-					'activityId':this.activityId
+					'activityId':this.activityId,
+					activityType:this.activityType>=0 ?this.activityType :""
 				}).then(res => {
 					uni.hideLoading()
 					if (res.code == 1) {

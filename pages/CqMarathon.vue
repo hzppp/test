@@ -10,7 +10,7 @@
 			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
 			<view id="middleWrap">
 				<!-- 被邀请页面 -->
-				<view class="inviteInfo be_invite" v-if="sourceUserId && activityStatus == 1 && isApply === 0">
+				<view class="inviteInfo be_invite" v-if="sourceUserId && sourceThirdId && activityStatus == 1 && isApply === 0">
 					<view class="be_invite_bg">
 						<image class="invite_avatar" :src="sourceUserAvatar" mode="widthFix"></image>
 						<view class="instructions invite_name_wrap"
@@ -35,9 +35,9 @@
 				<view class="inviteInfo" v-else-if="isApply === 1 && activityStatus == 1">
 					<view class="instructions">
 						<!-- 已经邀请的人的头像 -->
-						<view class="invitered">
+						<view :class="inviteredList.length<=5 ?'invitered inline':'invitered'">
 							<!--  #ifdef MP-WEIXIN  -->
-							<view v-if="content.sharePosterPic">
+							<template v-if="content.sharePosterPic">
 								<view
 									class="invitered_item"
 									v-for="(item, index) in inviteredList"
@@ -46,8 +46,8 @@
 								>
 									<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
 								</view>
-							</view>
-							<view v-else>
+							</template>
+							<template v-else>
 								<button
 									class="invitered_item btn_share"
 									v-for="(item, index) in inviteredList"
@@ -56,7 +56,7 @@
 								>
 									<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
 								</button>
-							</view>
+							</template>
 							<!-- #endif -->
 
 							<!--  #ifndef MP-WEIXIN  -->
@@ -86,21 +86,21 @@
 							:class="['btn', isComplete ? '' : 'not_up_to_standard']"
 							@click="isComplete ? toDraw() : isApply == 1 ? shareChoise() : formShow()"
 						>
-							{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+							{{ isComplete ? "邀请达标,点击去抽奖" : "邀请好友报名" }}
 						</button>
 					</view>
 					<!-- #endif -->
 
 					<!--  #ifndef MP-WEIXIN  -->
 					<button :class="['btn', isComplete ? '' : 'not_up_to_standard']" hover-class="none" open-type="share" @click="shareBtnClick">
-						{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+						{{ isComplete ? "邀请达标,点击去抽奖" : "邀请好友报名" }}
 					</button>
 					<!-- #endif -->
 				</view>
 				<!-- 活动未开始 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 0">
 					<view class="instructions no_padding">
-						<view class="not_started">朋友你来早啦,活动还未开始哦~</view>
+						<view class="not_started">朋友，你来早啦,活动还未开始哦~</view>
 						<view class="start_time">活动时间:{{ activityTimeRang }}</view>
 					</view>
 					<view class="btn finish">活动未开始</view>
@@ -108,7 +108,7 @@
 				<!-- 活动已经结束 -->
 				<view class="inviteInfo" v-else-if="activityStatus == 2">
 					<view class="instructions finished">
-						<view>朋友你来晚啦,活动已经结束了</view>
+						<view>朋友，你来晚啦,活动已经结束了</view>
 						<view>答应我下一个活动一定要早点来看我哦~</view>
 					</view>
 					<view class="btn finish">活动已结束</view>
@@ -144,7 +144,7 @@
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
 					<template>
-						<view class="invitered_count" @click="goInviteRecord">还差{{ nums - inviteCount }}位好友报名即可达标</view>
+						<view class="invitered_count">还差{{ nums - inviteCount }}位好友报名即可达标</view>
 					</template>
 				</view>
 				<view class="bottom_sigin_text" v-else> 报名后才可以参与哦~ </view>
@@ -158,7 +158,7 @@
 						:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
 						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
 					>
-						{{ isComplete ? "邀请达标,请等待活动抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
+						{{ isComplete ? "邀请达标,点击去抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
 					</button>
 				</template>
 				<!-- #endif -->
@@ -173,7 +173,7 @@
 						open-type="share"
 						@click="shareBtnClick"
 					>
-						{{ isComplete ? "邀请达标,请等待活动抽奖" : "邀请好友报名" }}
+						{{ isComplete ? "邀请达标,点击去抽奖" : "邀请好友报名" }}
 					</button>
 					<button v-else class="btn onApply" @click="formShow()">报名活动</button>
 				</template>
@@ -270,20 +270,23 @@ export default {
 		}
 		await login.checkLogin(api)
 		await login.checkOauthMobile(api)
-		this.sourceUserId = options.sourceUserId || ""
-		this.sourceThirdId = options.sourceThirdId || ""
+		
 		this.activityId = options.id || ""
 		this.nums = options.nums || 0
 
 		// 分享用
 		let cs = ""
 		for (let i in options) {
-			if (i != "scene" && i != "sourceUserId") {
+			if (i != "scene" && i != "sourceUserId" && i != "sourceThirdId") {
 				cs += `${i}=${options[i]}&`
 			}
 		}
 		this.cs = cs.substr(0, cs.length - 1)
 		let wxUserInfo = uni.getStorageSync("wxUserInfo")
+		if(options.sourceUserId && options.sourceUserId != wxUserInfo.id && options.sourceThirdId&& options.sourceThirdId!=wxUserInfo.thirdId){
+			this.sourceUserId = options.sourceUserId || ""
+			this.sourceThirdId = options.sourceThirdId || ""
+		}
 		console.log("wxUserInfo",wxUserInfo)
 		if (wxUserInfo) {
 			this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}&sourceThirdId=${wxUserInfo.thirdId}`
@@ -321,7 +324,7 @@ export default {
 			if (options.sourceThirdId) {
 				this.queryingUserInfor()
 			}
-			this.getInviteredInfo()
+			await this.getInviteredInfo()
 			this.headBg = data.detailPic
 			this.ruleImg = data.cheerDescPicture
 			this.phone = uni.getStorageSync("userPhone")
@@ -654,6 +657,12 @@ export default {
 			overflow: hidden;
 			margin-left: -18.75rpx;
 			margin-right: -18.75rpx;
+		}
+		.invitered.inline{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-wrap: wrap;
 		}
 		.invitered_item {
 			width: 100rpx;

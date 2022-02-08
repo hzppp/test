@@ -231,6 +231,16 @@ const trackAttribute={
 
             
         },
+        onShareAppMessage() {
+            let title = "获取实时底价"
+            let path = `pages/GetPreferential?serialId=${this.serialId}&from=${this.from}`
+            let imageUrl = this.serialData.picCoverUrl
+            return {
+                title: title,
+                path: path,
+                imageUrl: imageUrl
+            }
+        },
         methods: {
             getStoragePhone() {
 				let phone = uni.getStorageSync('userPhone');
