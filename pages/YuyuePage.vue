@@ -258,6 +258,16 @@ const trackAttribute={
             
             
         },
+        onShareAppMessage() {
+            let title = "长安汽车预约试驾"
+            let path = `pages/YuyuePage?serialId=${this.serialId}&from=${this.from}`
+            let imageUrl = this.serialData.picCoverUrl
+            return {
+                title: title,
+                path: path,
+                imageUrl: imageUrl
+            }
+        },
         methods: {
 			// 获取车型信息
 			async reqSerialScreenList() {

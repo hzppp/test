@@ -52,15 +52,16 @@
 						次抽奖机会
 						<view :class="'refChangBtn'+  (lotteryType == 'grid'?' girdchangBtn':'')" @tap='refChangBtn()'></view>
 					</view>
-					<view v-if="lotteryType == 'grid'" class="btnBackV">
-						<!--  #ifdef MP-WEIXIN  -->
-						<button v-if="sharePosterPic" class="shareFiedv" @tap='shareChoise()'></button>
-						<button v-else class="shareFiedv" open-type="share"></button>
-						<!-- #endif -->
-						<!--  #ifndef MP-WEIXIN  -->
-						<button class="shareFiedv" open-type="share"></button>
-						<!-- #endif -->
-
+					<view v-if="lotteryType == 'grid'" :class="['btnBackV',{'btnOne':activityType==3}]">
+						<template v-if="activityType!=3">
+							<!--  #ifdef MP-WEIXIN  -->
+							<button v-if="sharePosterPic" class="shareFiedv" @tap='shareChoise()'></button>
+							<button v-else class="shareFiedv" open-type="share"></button>
+							<!-- #endif -->
+							<!--  #ifndef MP-WEIXIN  -->
+							<button class="shareFiedv" open-type="share"></button>
+							<!-- #endif -->
+						</template>
 						<button class="goGirldv" @tap='gridStart()'></button>
 					</view>
 
@@ -68,7 +69,7 @@
 				<view :class="lotteryType != 'grid'?'list':'list girdList'">
 					<button v-if="lotteryType != 'grid'" open-type="share" class="invite"></button>
 					<!-- 邀请记录 -->
-					<invite-records :activityId="activityId"/>
+					<invite-records :activityId="activityId" v-if="activityType!=3"/>
 				</view>
 				<!-- 抽奖说明 -->
 				<draw-tips :activityMemoArr="activityMemoArr"/>
@@ -283,12 +284,14 @@
 				title: '正在加载...'
 			})
 			const {
-				activityId = 0
+				activityId = 0,
+				activityType = 0
 			} = options
 			this.activityId = activityId
 			// await login.checkLogin(api)
 			this.lotteryActInfo = await api.getLotteryActInfo({
-				activityId
+				activityId,
+				activityType:activityType>=0 ?activityType :""
 			}).then(res => {
 				if (res.code == 1) {
 					return res.data || {
@@ -678,7 +681,8 @@
 				})
 					
 				await api.getLotteryActInfo({
-					'activityId':this.activityId
+					'activityId':this.activityId,
+					activityType:this.activityType>=0 ?this.activityType :""
 				}).then(res => {
 					uni.hideLoading()
 					if (res.code == 1) {
@@ -1020,7 +1024,7 @@
 				width: 100%;
 				// background: #007AFF;
 				text-align: center;
-
+				
 				.shareFiedv {
 					margin-left: 42rpx;
 					.setbg(311rpx, 109rpx, 'sFiedv.png');
@@ -1029,6 +1033,13 @@
 				.goGirldv {
 					margin-left: 42rpx;
 					.setbg(311rpx, 109rpx, 'goGirldv.png');
+				}
+				&.btnOne{
+					justify-content: center;
+					.goGirldv{
+						margin-left: auto;
+						margin:0 auto;
+					}
 				}
 			}
 

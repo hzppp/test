@@ -174,7 +174,8 @@ const COUNTDOWN = 60
             this.checkInfo()
         },
         async onLoad(options) {
-            // console.log('111111options :>> ', options);
+
+            console.log('111111options :>> ', options);
            await login.checkLogin(api)
            await login.checkOauthMobile(api)
 			
@@ -199,6 +200,21 @@ const COUNTDOWN = 60
 			}
             
             
+        },
+		async onShareAppMessage() {
+            let title = "长安汽车预约试驾"
+            let path = `pages/NearDealerYuyuePage?nearDealer=${JSON.stringify(this.currentDealer)}&cityId=${this.currentCity.id}&proId=${this.currentCity.proId}&cityName=${this.currentCity.name}&from=${this.from}`
+			const {code,data} = await api.fetchSerialDetail({sgId:this.serialData.pcSerialGroupId})
+			let imageUrl = ""
+			if(code ===1) {
+				imageUrl=data.picCoverUrl
+			}
+            console.log({path})
+            return {
+                title: title,
+                path: path,
+                imageUrl: imageUrl
+            }
         },
         methods: {
 			async reqSerialScreenList() {
@@ -239,6 +255,7 @@ const COUNTDOWN = 60
 			    }
 			
 			},
+
             getStoragePhone() {
 				console.log('登录成功触发')
 				let phone = uni.getStorageSync('userPhone');
