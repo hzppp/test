@@ -7,7 +7,7 @@
 			<page-top :background="'#fff'" :titleys="'#000'" :btnys="''" :title="'活动详情'" :noShowHouse="!!(isApply == 0)">
 			</page-top>
 			<form-pop ref="formpop" @subSuccess="subSuccess()"></form-pop>
-			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false"></image>
+			<image v-if="headBg" class="content-image" :src="headBg" mode="widthFix" lazy-load="false" show-menu-by-longpress="true" style="height:auto"></image>
 			<view id="middleWrap">
 				<!-- 被邀请页面 -->
 				<view class="inviteInfo be_invite" v-if="sourceUserId && sourceThirdId && activityStatus == 1 && isApply === 0">
@@ -92,7 +92,12 @@
 					<!-- #endif -->
 
 					<!--  #ifndef MP-WEIXIN  -->
-					<button :class="['btn', isComplete ? '' : 'not_up_to_standard']" hover-class="none" open-type="share" @click="shareBtnClick">
+					<button 
+						:open-type="!isComplete && isApply == 1 ?'share' :''"
+						:class="['btn', isComplete ? '' : 'not_up_to_standard']" 
+						hover-class="none"  
+						@click="isComplete ? toDraw() : isApply == 1 ? '' : formShow()"
+					>
 						{{ isComplete ? "邀请达标,点击去抽奖" : "邀请好友报名" }}
 					</button>
 					<!-- #endif -->
@@ -114,7 +119,14 @@
 					<view class="btn finish">活动已结束</view>
 				</view>
 			</view>
-			<image class="content-image" :src="ruleImg" mode="widthFix" lazy-load="false"></image>
+			<image 
+				class="content-image" 
+				:src="ruleImg" 
+				mode="widthFix" 
+				show-menu-by-longpress="true"
+				lazy-load="false"
+				style="height:auto"
+			></image>
 			<!-- 底部按钮区域S -->
 			<view class="bottom_btn inviteInfo" id="bottomBtn" v-show="isShowBottomBtn && activityStatus == 1 && !isComplete">
 				<view class="instructions" v-if="isApply == 1">
@@ -141,6 +153,16 @@
 							</button>
 						</view>
 						<!-- #endif -->
+						<!--  #ifndef MP-WEIXIN  -->
+							<button
+								class="invitered_item btn_share"
+								v-for="(item, index) in inviteredList.slice(0, 5)"
+								:key="index"
+								:open-type="[!!!item.userId ? 'share' : '']"
+							>
+								<image :class="['invitered__avatar', item.userId ? 'had_border' : '']" :src="item.wxHead"></image>
+							</button>
+						<!-- #endif -->
 					</view>
 					<!-- <view class="invitered_count">已有{{ inviteCount }}位好友报名</view> -->
 					<template>
@@ -156,7 +178,7 @@
 						v-else
 						class="btn bottom"
 						:open-type="[content.sharePosterPic  ? '' : (isApply == 1 ?'share' :'')]"
-						@click="isComplete ? '' : isApply == 1 ? shareChoise() : formShow()"
+						@click="isComplete ? toDraw() : isApply == 1 ? shareChoise() : formShow()"
 					>
 						{{ isComplete ? "邀请达标,点击去抽奖" : isApply == 1 ? "邀请好友报名" : "报名活动" }}
 					</button>
@@ -170,8 +192,8 @@
 						v-if="isApply == 1"
 						:class="['btn bottom', isComplete ? '' : 'not_up_to_standard']"
 						hover-class="none"
-						open-type="share"
-						@click="shareBtnClick"
+						:open-type="isComplete ? '' :'share' "
+						@click="isComplete ? toDraw() : '' "
 					>
 						{{ isComplete ? "邀请达标,点击去抽奖" : "邀请好友报名" }}
 					</button>
@@ -273,7 +295,6 @@ export default {
 		
 		this.activityId = options.id || ""
 		this.nums = options.nums || 0
-
 		// 分享用
 		let cs = ""
 		for (let i in options) {
@@ -560,11 +581,12 @@ export default {
 		shareBtnClick() {
 			wx.aldstat.sendEvent("活动分享点击")
 		},
-		getData() {
+		async getData() {
 			// 访问活动 记录活动访问次数
 			api.fetchActivityVisit({
 				activityId: this.activityId,
 			})
+			await this.getFission()
 			let wxUserInfo = uni.getStorageSync("wxUserInfo")
 			if (wxUserInfo) {
 				this.shareURL = `/pages/CqMarathon?${this.cs}&sourceUserId=${wxUserInfo.id}&sourceThirdId=${wxUserInfo.thirdId}`
@@ -657,6 +679,9 @@ export default {
 			overflow: hidden;
 			margin-left: -18.75rpx;
 			margin-right: -18.75rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 		.invitered.inline{
 			display: flex;
