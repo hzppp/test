@@ -571,10 +571,12 @@ export default {
 			// #ifdef MP-WEIXIN
 			wx.aldstat.sendEvent("报名活动")
 			// #endif
-			this.$refs.formpop.formShow("form", "marathon", this.content, "报名活动")
-
+	
 			// #ifdef MP-TOUTIAO
 			this.$children[2].formShow("form", "marathon", this.content, "报名活动")
+			// #endif
+			// #ifndef MP-TOUTIAO
+			this.$refs.formpop.formShow("form", "marathon", this.content, "报名活动")
 			// #endif
 		},
 		// 分享按钮被点击
