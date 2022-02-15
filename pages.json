@@ -449,9 +449,15 @@
 				"navigationBarTitleText": "排行榜",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/register",
+			"style": {
+				"navigationBarTitleText": "到店登记",
+				"enablePullDownRefresh": false
+			}
 		}
-
-	],
+    ],
 	"tabBar": {
 		"custom": true,
 		"color": "#999999",
